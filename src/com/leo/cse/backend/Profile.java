@@ -5,29 +5,86 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * The interface class between a Java application and a Cave Story profile.
+ * 
+ * @author Leo
+ *
+ */
 public class Profile {
 
+	/**
+	 * Make sure an instance of this class cannot be created.
+	 */
 	private Profile() {
 	}
 
+	/**
+	 * The expected file length.
+	 */
 	public static final int FILE_LENGTH = 1540;
+	/**
+	 * The header string.
+	 */
 	public static final String HEADER = "Do041220";
+	/**
+	 * The flag section header string.
+	 */
 	public static final String FLAG = "FLAG";
 
+	/**
+	 * Structural class for weapons.
+	 * 
+	 * @author Leo
+	 *
+	 */
 	public static class Weapon {
 
+		/**
+		 * Starting position for weapon data.
+		 */
 		public static final int BASE_POINTER = 0x38;
 
+		/**
+		 * The weapon's type.
+		 */
 		private int id;
+		/**
+		 * The weapon's level.
+		 */
 		private int level;
+		/**
+		 * The weapon's extra EXP.
+		 */
 		private int exp;
+		/**
+		 * The weapon's maximum ammo capacity.
+		 */
 		private int maxAmmo;
+		/**
+		 * The weapon's current ammo amount.
+		 */
 		private int curAmmo;
 
+		/**
+		 * Gets the starting position for a weapon slot.
+		 * 
+		 * @param slot
+		 *            weapon slot
+		 * @return starting position
+		 */
 		public static int getPointer(int slot) {
 			return BASE_POINTER + slot * (5 * ByteUtils.INT_SIZE);
 		}
 
+		/**
+		 * Creates a new weapon based on data from a byte array.
+		 * 
+		 * @param data
+		 *            byte array
+		 * @param slot
+		 *            weapon slot
+		 */
 		public Weapon(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			id = ByteUtils.readInt(data, ptr);
@@ -37,6 +94,14 @@ public class Profile {
 			curAmmo = ByteUtils.readInt(data, ptr + ByteUtils.INT_SIZE * 4);
 		}
 
+		/**
+		 * Saves the weapon data to a byte array.
+		 * 
+		 * @param data
+		 *            byte array
+		 * @param slot
+		 *            weapon slot
+		 */
 		public void save(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			ByteUtils.writeInt(data, ptr, id);
@@ -86,6 +151,13 @@ public class Profile {
 			this.curAmmo = curAmmo;
 		}
 
+		/**
+		 * Returns a string representation of the object.
+		 * 
+		 * @param indent
+		 *            amount of spaces to indent with
+		 * @return a string representation of the object
+		 */
 		public String toString(int indent) {
 			String in = "";
 			for (int i = 0; i < indent; i++) {
@@ -106,23 +178,61 @@ public class Profile {
 
 	}
 
-	public static class Teleporter {
+	/**
+	 * Structural class for warps.
+	 * 
+	 * @author Leo
+	 *
+	 */
+	public static class Warp {
 
+		/**
+		 * Starting position for warp data.
+		 */
 		public static final int BASE_POINTER = 0x158;
 
+		/**
+		 * The warp's slot graphic.
+		 */
 		private int id;
+		/**
+		 * The warp's location event.
+		 */
 		private int location;
 
+		/**
+		 * Gets the starting position for a warp slot.
+		 * 
+		 * @param slot
+		 *            warp slot
+		 * @return starting position
+		 */
 		public static int getPointer(int slot) {
 			return BASE_POINTER + slot * (2 * ByteUtils.INT_SIZE);
 		}
 
-		public Teleporter(byte[] data, int slot) {
+		/**
+		 * Creates a new warp based on data from a byte array.
+		 * 
+		 * @param data
+		 *            byte array
+		 * @param slot
+		 *            warp slot
+		 */
+		public Warp(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			id = ByteUtils.readInt(data, ptr);
 			location = ByteUtils.readInt(data, ptr + ByteUtils.INT_SIZE);
 		}
 
+		/**
+		 * Saves the warp data to a byte array.
+		 * 
+		 * @param data
+		 *            byte array
+		 * @param slot
+		 *            warp slot
+		 */
 		public void save(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			ByteUtils.writeInt(data, ptr, id);
@@ -145,6 +255,13 @@ public class Profile {
 			this.location = location;
 		}
 
+		/**
+		 * Returns a string representation of the object.
+		 * 
+		 * @param indent
+		 *            amount of spaces to indent with
+		 * @return a string representation of the object
+		 */
 		public String toString(int indent) {
 			String in = "";
 			for (int i = 0; i < indent; i++) {
@@ -162,31 +279,95 @@ public class Profile {
 		}
 
 	}
-	
+
+	/**
+	 * The profile file.
+	 */
 	private static File file = null;
+	/**
+	 * If <code>true</code>, a profile has been loaded.
+	 */
 	private static boolean loaded = false;
 	// reference for pointers: http://www.cavestory.org/guides/profile.txt
+	/**
+	 * The current map ID.
+	 */
 	private static int map = 0;
+	/**
+	 * The currently playing song ID.
+	 */
 	private static int song = 0;
-	private static short x = 0, y = 0;
+	/**
+	 * The player's X position.
+	 */
+	private static short x = 0;
+	/**
+	 * The player's Y position.
+	 */
+	private static short y = 0;
+	/**
+	 * The direction the player is facing in.
+	 */
 	private static int direction = 0;
+	/**
+	 * Maximum health.
+	 */
 	private static short maxHealth = 0;
+	/**
+	 * Number of Whimsical Stars.
+	 */
 	private static short starCount = 0;
+	/**
+	 * Current health.
+	 */
 	private static short curHealth = 0;
+	/**
+	 * Currently selected weapon slot.
+	 */
 	private static int curWeapon = 0;
+	/**
+	 * Equipment (<code>&lt;EQ+</code>/<code>&lt;EQ-</code>).
+	 */
 	private static boolean[] equips = null;
+	/**
+	 * Time played.
+	 */
 	private static int time = 0;
+	/**
+	 * Weapons.
+	 * 
+	 * @see Weapon
+	 */
 	private static Weapon[] weapons = null;
+	/**
+	 * Items.
+	 */
 	private static int[] items = null;
-	private static Teleporter[] tele = null;
+	/**
+	 * Warps.
+	 * 
+	 * @see Warp
+	 */
+	private static Warp[] tele = null;
+	/**
+	 * Flags.
+	 */
 	private static boolean[] flags = null;
 
+	/**
+	 * Reads a profile file.
+	 * 
+	 * @param file
+	 *            file to read
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void read(File file) throws IOException {
 		Profile.file = file;
 		// read data
 		byte[] data = new byte[FILE_LENGTH];
 		try (FileInputStream fis = new FileInputStream(file)) {
-			if(fis.read(data) != data.length)
+			if (fis.read(data) != data.length)
 				throw new IOException("file is too small");
 		}
 		// check header
@@ -211,9 +392,9 @@ public class Profile {
 		}
 		items = new int[30];
 		ByteUtils.readInts(data, 0xD8, items);
-		tele = new Teleporter[7];
+		tele = new Warp[7];
 		for (int i = 0; i < tele.length; i++) {
-			tele[i] = new Teleporter(data, i);
+			tele[i] = new Warp(data, i);
 		}
 		String flag = ByteUtils.readString(data, 0x218, FLAG.length());
 		if (!FLAG.equals(flag)) {
@@ -224,10 +405,24 @@ public class Profile {
 		loaded = true;
 	}
 
+	/**
+	 * Reads a profile file.
+	 * 
+	 * @param path
+	 *            path to file to read
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void read(String path) throws IOException {
 		read(new File(path));
 	}
 
+	/**
+	 * Writes the profile file.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void write() throws IOException {
 		if (!loaded)
 			return;
@@ -277,7 +472,7 @@ public class Profile {
 			}
 		}
 	}
-	
+
 	public static boolean isLoaded() {
 		return loaded;
 	}
@@ -390,7 +585,7 @@ public class Profile {
 		items[id] = value;
 	}
 
-	public static Teleporter getTeleporter(int id) {
+	public static Warp getTeleporter(int id) {
 		return tele[id];
 	}
 
@@ -410,6 +605,11 @@ public class Profile {
 		flags[id] = set;
 	}
 
+	/**
+	 * Creates a text-based dump of the information stored in the profile.
+	 * 
+	 * @return information dump
+	 */
 	public static String dumpData() {
 		String ret = "";
 		ret += "Map: " + map;
