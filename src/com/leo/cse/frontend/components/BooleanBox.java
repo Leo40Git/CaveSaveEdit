@@ -32,7 +32,7 @@ public class BooleanBox extends Component {
 			return;
 		} else
 			disabled = false;
-		g.drawImage((vSup.get() ? Resources.checkboxOff : Resources.checkboxOn), x, y, null);
+		g.drawImage((vSup.get() ? Resources.checkboxOn : Resources.checkboxOff), x, y, null);
 		FrontUtils.drawString(g, t, x + 17, y - 3);
 	}
 

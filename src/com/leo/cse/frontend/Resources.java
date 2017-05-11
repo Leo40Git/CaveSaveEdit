@@ -16,8 +16,9 @@ public class Resources {
 	
 	public static BufferedImage icon;
 	public static BufferedImage ui;
-	public static BufferedImage checkboxOn, checkboxOff;
-	public static BufferedImage checkboxOnS, checkboxOffS;
+	public static BufferedImage checkboxOff, checkboxOn;
+	public static BufferedImage checkboxOffS, checkboxOnS;
+	public static BufferedImage radioOff, radioOn;
 	public static BufferedImage dialogClose;
 	public static BufferedImage[] editorTabIcons, toolbarIcons;
 
@@ -27,10 +28,12 @@ public class Resources {
 		fontS = fontB.deriveFont(Font.PLAIN, 9.0f);
 		icon = ImageIO.read(Resources.class.getResourceAsStream("icon.png"));
 		ui = ImageIO.read(Resources.class.getResourceAsStream("ui.png"));
-		checkboxOn = ui.getSubimage(0, 0, 16, 16);
-		checkboxOff = ui.getSubimage(16, 0, 16, 16);
-		checkboxOnS = ui.getSubimage(32, 0, 8, 8);
-		checkboxOffS = ui.getSubimage(40, 0, 8, 8);
+		checkboxOff = ui.getSubimage(0, 0, 16, 16);
+		checkboxOn = ui.getSubimage(16, 0, 16, 16);
+		checkboxOffS = ui.getSubimage(32, 0, 8, 8);
+		checkboxOnS = ui.getSubimage(40, 0, 8, 8);
+		radioOff = ui.getSubimage(32, 8, 8, 8);
+		radioOn = ui.getSubimage(40, 8, 8, 8);
 		dialogClose = ui.getSubimage(48, 0, 14, 14);
 		editorTabIcons = new BufferedImage[4];
 		for (int i = 0; i < editorTabIcons.length; i++)

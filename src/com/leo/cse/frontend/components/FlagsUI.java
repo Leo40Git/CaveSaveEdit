@@ -36,7 +36,7 @@ public class FlagsUI extends Component {
 		int yy = 10;
 		for (int i = page * FLAGS_PER_PAGE; i < Math.min(flagList.size(), (page + 1) * FLAGS_PER_PAGE); i++) {
 			final Map.Entry<Integer, String> entry = flagList.get(i);
-			g.drawImage((Profile.getFlag(entry.getKey()) ? Resources.checkboxOffS : Resources.checkboxOnS), 4, yy - 8,
+			g.drawImage((Profile.getFlag(entry.getKey()) ? Resources.checkboxOnS : Resources.checkboxOffS), 4, yy - 8,
 					null);
 			g.drawString(FrontUtils.padLeft(Integer.toString(entry.getKey()), "0", 4), 18, yy);
 			g.setFont(Resources.fontS);

@@ -23,16 +23,17 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.Profile;
-import com.leo.cse.frontend.components.AboutDialog;
 import com.leo.cse.frontend.components.BooleanBox;
 import com.leo.cse.frontend.components.Component;
 import com.leo.cse.frontend.components.DefineBox;
-import com.leo.cse.frontend.components.DefineDialog;
-import com.leo.cse.frontend.components.DialogBox;
 import com.leo.cse.frontend.components.FlagsUI;
 import com.leo.cse.frontend.components.IntegerBox;
 import com.leo.cse.frontend.components.Label;
+import com.leo.cse.frontend.components.RadioBoxes;
 import com.leo.cse.frontend.components.ShortBox;
+import com.leo.cse.frontend.dialogs.AboutDialog;
+import com.leo.cse.frontend.dialogs.DefineDialog;
+import com.leo.cse.frontend.dialogs.DialogBox;
 
 public class SaveEditorPanel extends JPanel implements MouseListener {
 
@@ -206,8 +207,21 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 		// inventory tab
 		cl = compListMap.get(EditorTab.INVENTORY);
 		int xx = 4;
+		cl.add(new RadioBoxes(xx + 50, 2, xx + (122 * 5), 5, new Supplier<Integer>() {
+			@Override
+			public Integer get() {
+				return Profile.getCurWeapon();
+			}
+		}, new Function<Integer, Integer>() {
+			@Override
+			public Integer apply(Integer t) {
+				Profile.setCurWeapon(t);
+				return t;
+			}
+		}));
 		for (int i = 0; i < 5; i++) {
 			final int i2 = i;
+			cl.add(new Label("Selected:", xx, -4));
 			cl.add(new Label("Weapon Slot " + (i + 1) + ":", xx, 6));
 			cl.add(new DefineBox(xx, 22, 120, 16, new Supplier<Integer>() {
 				@Override
