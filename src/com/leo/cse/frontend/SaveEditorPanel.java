@@ -68,6 +68,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 	private Dialog dBox;
 
 	private int flagScroll;
+	private boolean flagHideUndefined;
 
 	public SaveEditorPanel() {
 		panel = this;
@@ -411,6 +412,13 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			}
 		}, (Integer t) -> {
 			flagScroll = t;
+		}, new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return flagHideUndefined;
+			}
+		}, (Boolean t) -> {
+			flagHideUndefined = t;
 		}));
 	}
 

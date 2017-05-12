@@ -3,6 +3,8 @@ package com.leo.cse.frontend.components;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -14,15 +16,22 @@ import com.leo.cse.frontend.Resources;
 
 public class FlagsUI extends Component implements IScrollable {
 
-	private static final int FLAGS_PER_SCROLL = 23;
+	private static final int FLAGS_PER_SCROLL = 22;
 
 	private Supplier<Integer> sSup;
-	private Consumer<Integer> update;
+	private Consumer<Integer> sUpdate;
+	private Supplier<Boolean> hSup;
+	private Consumer<Boolean> hUpdate;
 
-	public FlagsUI(Supplier<Integer> sSup, Consumer<Integer> update) {
+	private List<Integer> shownFlags;
+
+	public FlagsUI(Supplier<Integer> sSup, Consumer<Integer> sUpdate, Supplier<Boolean> hSup,
+			Consumer<Boolean> hUpdate) {
 		super(0, 0, Main.WINDOW_SIZE.width, Main.WINDOW_SIZE.height - 33);
 		this.sSup = sSup;
-		this.update = update;
+		this.sUpdate = sUpdate;
+		this.hSup = hSup;
+		this.hUpdate = hUpdate;
 	}
 
 	private boolean flagIsValid(int id) {
@@ -51,35 +60,49 @@ public class FlagsUI extends Component implements IScrollable {
 		return Defines.get("Flag", id);
 	}
 
+	private void calculateShownFlags() {
+		if (shownFlags == null)
+			shownFlags = new ArrayList<Integer>();
+		shownFlags.clear();
+		for (int i = 0; i < Profile.getFlags().length; i++)
+			if (!hSup.get() || !Defines.get("Flag.None").equals(Defines.get("Flag", i)))
+				shownFlags.add(i);
+	}
+
 	@Override
 	public void render(Graphics g) {
+		calculateShownFlags();
 		final Dimension winSize = Main.window.getActualSize(true);
-		final boolean[] flags = Profile.getFlags();
 		final int xx = 4;
 		int yy = 16;
-		for (int i = sSup.get(); i < Math.min(flags.length, sSup.get() + FLAGS_PER_SCROLL); i++) {
+		for (int i = sSup.get(); i < Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL); i++) {
+			final int flagId = shownFlags.get(i);
 			Image chkImage = Resources.checkboxDisabled;
-			if (flagIsValid(i))
-				chkImage = (Profile.getFlag(i) ? Resources.checkboxOn : Resources.checkboxOff);
+			if (flagIsValid(flagId))
+				chkImage = (Profile.getFlag(flagId) ? Resources.checkboxOn : Resources.checkboxOff);
 			g.drawImage(chkImage, xx - 2, yy - 12, null);
-			g.drawString(FrontUtils.padLeft(Integer.toString(i), "0", 4), xx + 16, yy);
-			g.drawString(getFlagDescription(i), xx + 42, yy);
+			g.drawString(FrontUtils.padLeft(Integer.toString(flagId), "0", 4), xx + 16, yy);
+			g.drawString(getFlagDescription(flagId), xx + 42, yy);
 			yy += 18;
 		}
-		g.drawLine(winSize.width - 20, 0, winSize.width - 20, winSize.height);
+		g.drawImage((hSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, 16 + 18 * FLAGS_PER_SCROLL - 7,
+				null);
+		g.drawString("Hide Undefined Flags?", xx + 16, 16 + 18 * FLAGS_PER_SCROLL + 5);
+		g.drawLine(winSize.width - 20, 0, winSize.width - 20, winSize.height - 20);
 		g.drawLine(winSize.width - 20, 20, winSize.width, 20);
 		g.drawImage(Resources.arrowUp, winSize.width - 14, 6, null);
-		g.drawLine(winSize.width - 20, winSize.height - 22, winSize.width, winSize.height - 22);
-		g.drawLine(winSize.width - 20, winSize.height - 2, winSize.width, winSize.height - 2);
-		g.drawImage(Resources.arrowDown, winSize.width - 14, winSize.height - 15, null);
+		g.drawLine(winSize.width - 20, winSize.height - 40, winSize.width, winSize.height - 40);
+		g.drawLine(0, winSize.height - 20, winSize.width, winSize.height - 20);
+		g.drawImage(Resources.arrowDown, winSize.width - 14, winSize.height - 33, null);
 		g.drawRect(winSize.width - 18,
-				22 + (int) (((float) sSup.get() / (flags.length - FLAGS_PER_SCROLL)) * (winSize.height - 62)), 16, 16);
+				22 + (int) (((float) sSup.get() / (shownFlags.size() - FLAGS_PER_SCROLL)) * (winSize.height - 80)), 16,
+				16);
 	}
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		calculateShownFlags();
 		final Dimension winSize = Main.window.getActualSize(true);
-		final boolean[] flags = Profile.getFlags();
 		if (x >= winSize.width - 20) {
 			int amount = 1;
 			if (shiftDown)
@@ -87,26 +110,32 @@ public class FlagsUI extends Component implements IScrollable {
 			if (ctrlDown)
 				amount *= 100;
 			if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, 0, 20, 20))
-				update.accept(Math.max(sSup.get() - amount, 0));
-			else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 22, 20, 20))
-				update.accept(Math.min(sSup.get() + amount, flags.length - FLAGS_PER_SCROLL));
+				sUpdate.accept(Math.max(sSup.get() - amount, 0));
+			else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 40, 20, 20))
+				sUpdate.accept(Math.min(sSup.get() + amount, shownFlags.size() - FLAGS_PER_SCROLL));
 		} else {
 			final int xx = 4;
 			int yy = 16;
-			for (int i = sSup.get(); i < Math.min(flags.length, sSup.get() + FLAGS_PER_SCROLL); i++) {
-				if (flagIsValid(i) && FrontUtils.pointInRectangle(x, y, xx, yy - 16, 16, 16)) {
-					Profile.setFlag(i, !flags[i]);
+			for (int i = sSup.get(); i < Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL); i++) {
+				final int flagId = shownFlags.get(i);
+				if (flagIsValid(flagId) && FrontUtils.pointInRectangle(x, y, xx, yy - 16, 16, 16)) {
+					Profile.setFlag(flagId, !Profile.getFlag(flagId));
 					break;
 				}
 				yy += 18;
+			}
+			if (FrontUtils.pointInRectangle(x, y, xx, 16 + 18 * FLAGS_PER_SCROLL - 9, 16, 16)) {
+				hUpdate.accept(!hSup.get());
+				calculateShownFlags();
+				sUpdate.accept(Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL));
 			}
 		}
 	}
 
 	@Override
 	public void onScroll(int rotations, boolean shiftDown, boolean ctrlDown) {
-		update.accept(Math.max(0, Math.min(sSup.get() + (rotations * (shiftDown ? 10 : 1)) * (ctrlDown ? 100 : 1),
-				Profile.getFlags().length - FLAGS_PER_SCROLL)));
+		sUpdate.accept(Math.max(0, Math.min(sSup.get() + (rotations * (shiftDown ? 10 : 1)) * (ctrlDown ? 100 : 1),
+				shownFlags.size() - FLAGS_PER_SCROLL)));
 	}
 
 }

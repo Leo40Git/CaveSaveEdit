@@ -3,6 +3,7 @@ package com.leo.cse.frontend;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -15,11 +16,19 @@ public class Defines {
 	private static Properties defines = new Properties();
 
 	public static void readDefault() throws IOException {
-		defines.load(Defines.class.getResourceAsStream("defines.properties"));
+		try (InputStream is = Defines.class.getResourceAsStream("defines.properties")) {
+			defines.load(is);
+		}
 	}
 
 	public static void read(File file) throws IOException {
-		defines.load(new FileInputStream(file));
+		try (FileInputStream fis = new FileInputStream(file)) {
+			defines.load(fis);
+		}
+	}
+
+	public static boolean contains(String key) {
+		return defines.containsKey(key);
 	}
 
 	public static String get(String key) {
@@ -28,11 +37,20 @@ public class Defines {
 
 	public static String get(String type, String value) {
 		final String key = type + "." + value;
-		return defines.getProperty(key, defines.getProperty(type + ".None", key));
+		return defines.getProperty(key, defines.getProperty(type + ".None", defines.getProperty("General.None", key)));
 	}
 
 	public static String get(String type, int id) {
 		return get(type, Integer.toString(id));
+	}
+
+	public static String getNullable(String type, String value) {
+		final String key = type + "." + value;
+		return defines.getProperty(key);
+	}
+
+	public static String getNullable(String type, int id) {
+		return getNullable(type, Integer.toString(id));
 	}
 
 	public static int getNumber(String type) {
