@@ -68,7 +68,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 	private Dialog dBox;
 
 	private int flagScroll;
-	private boolean flagHideUndefined;
+	private boolean flagHideUndefined = true;
 
 	public SaveEditorPanel() {
 		panel = this;
