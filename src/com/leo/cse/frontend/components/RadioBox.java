@@ -21,7 +21,7 @@ class RadioBox extends Component {
 	}
 
 	@Override
-	public void onClick(int x, int y) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		parent.setSelected(id);
 	}
 

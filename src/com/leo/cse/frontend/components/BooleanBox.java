@@ -27,17 +27,17 @@ public class BooleanBox extends Component {
 		String t = label;
 		if (t.contains("."))
 			t = Defines.get(t);
-		if (t == null) {
+		if (label.equals(t)) {
 			disabled = true;
 			return;
 		} else
 			disabled = false;
 		g.drawImage((vSup.get() ? Resources.checkboxOn : Resources.checkboxOff), x, y, null);
-		FrontUtils.drawString(g, t, x + 17, y - 3);
+		FrontUtils.drawString(g, t, x + 18, y - 3);
 	}
 
 	@Override
-	public void onClick(int x, int y) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (disabled)
 			return;
 		update.apply(!vSup.get());

@@ -31,11 +31,11 @@ public class DefineBox extends IntegerBox {
 	public void render(Graphics g) {
 		g.setColor(Color.black);
 		g.drawRect(x, y, width, height);
-		FrontUtils.drawString(g, Defines.get(type, vSup.get()), x + 2, y);
+		FrontUtils.drawString(g, Defines.get(type, vSup.get()), x + 3, y);
 	}
 
 	@Override
-	public void onClick(int x, int y) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		String nVal = (String) JOptionPane.showInputDialog(Main.window, "", "Select " + typeName,
 				JOptionPane.PLAIN_MESSAGE, null, Defines.getAll(type).values().toArray(new String[] {}),
 				Defines.get(type, vSup.get()));

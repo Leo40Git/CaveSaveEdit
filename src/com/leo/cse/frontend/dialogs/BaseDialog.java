@@ -8,7 +8,7 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
-public class BaseDialog extends DialogBox {
+public class BaseDialog extends Dialog {
 
 	protected String title, message;
 	protected int width, height;
@@ -25,12 +25,12 @@ public class BaseDialog extends DialogBox {
 	}
 
 	protected int getWindowX() {
-		final Dimension winSize = Main.window.getActualSize();
+		final Dimension winSize = Main.window.getActualSize(false);
 		return winSize.width / 2 - width / 2;
 	}
 
 	protected int getWindowY(boolean excludeHead) {
-		final Dimension winSize = Main.window.getActualSize();
+		final Dimension winSize = Main.window.getActualSize(false);
 		return winSize.height / 2 - height / 2 - (excludeHead ? 0 : 18);
 	}
 

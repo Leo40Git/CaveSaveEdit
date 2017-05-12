@@ -42,11 +42,11 @@ public class RadioBoxes extends Component {
 	}
 
 	@Override
-	public void onClick(int x, int y) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		for (RadioBox comp : radioBoxes) {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			if (FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh)) {
-				comp.onClick(x, y);
+				comp.onClick(x, y, shiftDown, ctrlDown);
 			}
 		}
 	}

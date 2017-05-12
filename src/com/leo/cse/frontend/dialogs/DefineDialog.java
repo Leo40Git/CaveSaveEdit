@@ -38,7 +38,10 @@ public class DefineDialog extends BaseDialog {
 			return true;
 		final int wx = getWindowX(), wy = getWindowY(false);
 		if (FrontUtils.pointInRectangle(x, y, wx, wy + height - 18, 150, 16)) {
-			return loadDefines();
+			boolean ret = loadDefines();
+			if (ret)
+				SaveEditorPanel.panel.addComponents();
+			return ret;
 		} else if (FrontUtils.pointInRectangle(x, y, wx + width - 150, wy + height - 18, 150, 16)) {
 			try {
 				Defines.readDefault();

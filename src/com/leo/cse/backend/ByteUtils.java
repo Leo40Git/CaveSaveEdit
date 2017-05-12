@@ -41,13 +41,26 @@ public class ByteUtils {
 		BB = ByteBuffer.allocate(LONG_SIZE);
 		BB.order(ByteOrder.LITTLE_ENDIAN);
 	}
+	
+	/**
+	 * Converts an array of bytes into a <code>long</code>.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @return converted long
+	 */
+	public static long bytesToLong(byte[] data) {
+		BB.clear();
+		BB.put(data);
+		return BB.getLong(0);
+	}
 
 	/**
 	 * Converts an array of bytes into a <code>short</code>.
 	 * 
 	 * @param data
 	 *            byte array
-	 * @return short
+	 * @return converted short
 	 */
 	public static short bytesToShort(byte[] data) {
 		BB.clear();
@@ -60,7 +73,7 @@ public class ByteUtils {
 	 * 
 	 * @param data
 	 *            byte array
-	 * @return integer
+	 * @return converted integer
 	 */
 	public static int bytesToInt(byte[] data) {
 		BB.clear();

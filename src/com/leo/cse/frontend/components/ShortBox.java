@@ -25,11 +25,11 @@ public class ShortBox extends Component {
 	public void render(Graphics g) {
 		g.setColor(Color.black);
 		g.drawRect(x, y, width, height);
-		FrontUtils.drawString(g, Short.toString(vSup.get()), x + 2, y);
+		FrontUtils.drawString(g, Short.toString(vSup.get()), x + 3, y);
 	}
 
 	@Override
-	public void onClick(int x, int y) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for this field:", vSup.get());
 		if (nVal == null)
 			return;

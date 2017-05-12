@@ -22,7 +22,7 @@ public class Profile {
 	/**
 	 * The expected file length.
 	 */
-	public static final int FILE_LENGTH = 1540;
+	public static final int FILE_LENGTH = 0x604;
 	/**
 	 * The header string.
 	 */
@@ -43,7 +43,7 @@ public class Profile {
 		/**
 		 * Starting position for weapon data.
 		 */
-		public static final int BASE_POINTER = 0x38;
+		public static final int BASE_POINTER = 0x038;
 
 		/**
 		 * The weapon's type.
@@ -281,13 +281,21 @@ public class Profile {
 	}
 
 	/**
+	 * If <code>true</code>, a profile has been loaded.
+	 */
+	private static boolean loaded = false;
+	/**
 	 * The profile file.
 	 */
 	private static File file = null;
 	/**
-	 * If <code>true</code>, a profile has been loaded.
+	 * The byte array the file is loaded into. Contains raw data.
+	 * <p>
+	 * <i>This is NOT updated when standard field commands are used and this
+	 * does NOT update other fields when modified.</i>
 	 */
-	private static boolean loaded = false;
+	private static byte[] data = null;
+
 	// reference for pointers: http://www.cavestory.org/guides/profile.txt
 	/**
 	 * The current map ID.
@@ -355,6 +363,69 @@ public class Profile {
 	private static boolean[] flags = null;
 
 	/**
+	 * Pulls changes from the byte array. This should be called after modifying
+	 * the array's contents.
+	 */
+	public static void pull() {
+		if (data == null)
+			return;
+		map = ByteUtils.readInt(data, 0x008);
+		song = ByteUtils.readInt(data, 0x00C);
+		x = ByteUtils.readShort(data, 0x011);
+		y = ByteUtils.readShort(data, 0x015);
+		direction = ByteUtils.readInt(data, 0x018);
+		maxHealth = ByteUtils.readShort(data, 0x01C);
+		starCount = ByteUtils.readShort(data, 0x01E);
+		curHealth = ByteUtils.readShort(data, 0x020);
+		curWeapon = ByteUtils.readInt(data, 0x024);
+		equips = new boolean[ByteUtils.SHORT_SIZE * 8];
+		ByteUtils.readFlags(data, 0x02C, equips);
+		time = ByteUtils.readInt(data, 0x034);
+		weapons = new Weapon[7];
+		for (int i = 0; i < weapons.length; i++) {
+			weapons[i] = new Weapon(data, i);
+		}
+		items = new int[30];
+		ByteUtils.readInts(data, 0x0D8, items);
+		tele = new Warp[7];
+		for (int i = 0; i < tele.length; i++) {
+			tele[i] = new Warp(data, i);
+		}
+		flags = new boolean[8000];
+		ByteUtils.readFlags(data, 0x21C, flags);
+	}
+
+	/**
+	 * Pushes changes to the byte array. This should be called before modifying
+	 * or reading the array's contents.
+	 */
+	public static void push() {
+		if (data == null)
+			data = new byte[FILE_LENGTH];
+		ByteUtils.writeString(data, 0, HEADER);
+		ByteUtils.writeInt(data, 0x008, map);
+		ByteUtils.writeInt(data, 0x00C, song);
+		ByteUtils.writeInt(data, 0x011, x);
+		ByteUtils.writeInt(data, 0x015, y);
+		ByteUtils.writeInt(data, 0x018, direction);
+		ByteUtils.writeShort(data, 0x01C, maxHealth);
+		ByteUtils.writeShort(data, 0x01E, starCount);
+		ByteUtils.writeShort(data, 0x020, curHealth);
+		ByteUtils.writeInt(data, 0x024, curWeapon);
+		ByteUtils.writeFlags(data, 0x02C, equips);
+		ByteUtils.writeInt(data, 0x034, time);
+		for (int i = 0; i < weapons.length; i++) {
+			weapons[i].save(data, i);
+		}
+		ByteUtils.writeInts(data, 0x0D8, items);
+		for (int i = 0; i < tele.length; i++) {
+			tele[i].save(data, i);
+		}
+		ByteUtils.writeString(data, 0x218, FLAG);
+		ByteUtils.writeFlags(data, 0x21C, flags);
+	}
+
+	/**
 	 * Reads a profile file.
 	 * 
 	 * @param file
@@ -365,43 +436,19 @@ public class Profile {
 	public static void read(File file) throws IOException {
 		Profile.file = file;
 		// read data
-		byte[] data = new byte[FILE_LENGTH];
+		data = new byte[FILE_LENGTH];
 		try (FileInputStream fis = new FileInputStream(file)) {
 			if (fis.read(data) != data.length)
 				throw new IOException("file is too small");
 		}
 		// check header
-		String header = ByteUtils.readString(data, 0x00, HEADER.length());
+		String header = ByteUtils.readString(data, 0, HEADER.length());
 		if (!HEADER.equals(header))
 			throw new IOException("invalid file header");
-		map = ByteUtils.readInt(data, 0x08);
-		song = ByteUtils.readInt(data, 0x0C);
-		x = ByteUtils.readShort(data, 0x11);
-		y = ByteUtils.readShort(data, 0x15);
-		direction = ByteUtils.readInt(data, 0x18);
-		maxHealth = ByteUtils.readShort(data, 0x1C);
-		starCount = ByteUtils.readShort(data, 0x1E);
-		curHealth = ByteUtils.readShort(data, 0x20);
-		curWeapon = ByteUtils.readInt(data, 0x24);
-		equips = new boolean[ByteUtils.SHORT_SIZE * 8];
-		ByteUtils.readFlags(data, 0x2C, equips);
-		time = ByteUtils.readInt(data, 0x34);
-		weapons = new Weapon[5];
-		for (int i = 0; i < weapons.length; i++) {
-			weapons[i] = new Weapon(data, i);
-		}
-		items = new int[30];
-		ByteUtils.readInts(data, 0xD8, items);
-		tele = new Warp[7];
-		for (int i = 0; i < tele.length; i++) {
-			tele[i] = new Warp(data, i);
-		}
 		String flag = ByteUtils.readString(data, 0x218, FLAG.length());
-		if (!FLAG.equals(flag)) {
+		if (!FLAG.equals(flag))
 			throw new IOException("Flag header is missing!");
-		}
-		flags = new boolean[8000];
-		ByteUtils.readFlags(data, 0x21C, flags);
+		pull();
 		loaded = true;
 	}
 
@@ -438,29 +485,8 @@ public class Profile {
 			fos.write(data);
 		}
 		// start writing
+		push();
 		try (FileOutputStream fos = new FileOutputStream(file)) {
-			byte[] data = new byte[FILE_LENGTH];
-			ByteUtils.writeString(data, 0x00, HEADER);
-			ByteUtils.writeInt(data, 0x08, map);
-			ByteUtils.writeInt(data, 0x0C, song);
-			ByteUtils.writeInt(data, 0x11, x);
-			ByteUtils.writeInt(data, 0x15, y);
-			ByteUtils.writeInt(data, 0x18, direction);
-			ByteUtils.writeShort(data, 0x1C, maxHealth);
-			ByteUtils.writeShort(data, 0x1E, starCount);
-			ByteUtils.writeShort(data, 0x20, curHealth);
-			ByteUtils.writeInt(data, 0x24, curWeapon);
-			ByteUtils.writeFlags(data, 0x2C, equips);
-			ByteUtils.writeInt(data, 0x34, time);
-			for (int i = 0; i < weapons.length; i++) {
-				weapons[i].save(data, i);
-			}
-			ByteUtils.writeInts(data, 0xD8, items);
-			for (int i = 0; i < tele.length; i++) {
-				tele[i].save(data, i);
-			}
-			ByteUtils.writeString(data, 0x218, FLAG);
-			ByteUtils.writeFlags(data, 0x21C, flags);
 			fos.write(data);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -553,10 +579,27 @@ public class Profile {
 		return equips;
 	}
 
+	/**
+	 * Gets the state of a specific equipment.
+	 * 
+	 * @param id
+	 *            equipment id
+	 * @return <code>true</code> if equipment is equipped, <code>false</code>
+	 *         otherwise
+	 */
 	public static boolean getEquip(int id) {
 		return equips[id];
 	}
 
+	/**
+	 * Sets the state of a specific equipment.
+	 * 
+	 * @param id
+	 *            equipment id
+	 * @param equipped
+	 *            <code>true</code> if equipment is equipped, <code>false</code>
+	 *            otherwise
+	 */
 	public static void setEquip(int id, boolean equipped) {
 		equips[id] = equipped;
 	}
@@ -569,6 +612,13 @@ public class Profile {
 		Profile.time = time;
 	}
 
+	/**
+	 * Gets weapon data from a specific slot.
+	 * 
+	 * @param id
+	 *            weapon slot
+	 * @return weapon data in slot
+	 */
 	public static Weapon getWeapon(int id) {
 		return weapons[id];
 	}
@@ -577,14 +627,36 @@ public class Profile {
 		return items;
 	}
 
+	/**
+	 * Gets the item in a specific slot.
+	 * 
+	 * @param id
+	 *            item slot
+	 * @return item ID
+	 */
 	public static int getItem(int id) {
 		return items[id];
 	}
 
+	/**
+	 * Sets the item in a specific slot.
+	 * 
+	 * @param id
+	 *            item slot
+	 * @param value
+	 *            new item ID
+	 */
 	public static void setItem(int id, int value) {
 		items[id] = value;
 	}
 
+	/**
+	 * Gets warp data in a specific slot.
+	 * 
+	 * @param id
+	 *            warp slot
+	 * @return warp data in slot
+	 */
 	public static Warp getTeleporter(int id) {
 		return tele[id];
 	}
@@ -593,16 +665,85 @@ public class Profile {
 		return flags;
 	}
 
+	/**
+	 * Gets the state of a specific flag.
+	 * 
+	 * @param id
+	 *            flag ID
+	 * @return <code>true</code> if flag is set, <code>false</code> otherwise
+	 */
 	public static boolean getFlag(int id) {
 		if (flags == null)
 			return false;
 		return flags[id];
 	}
 
+	/**
+	 * Sets the state of a specific flag.
+	 * 
+	 * @param id
+	 *            flag ID
+	 * @param set
+	 *            <code>true</code> if flag is set, <code>false</code> otherwise
+	 */
 	public static void setFlag(int id, boolean set) {
 		if (flags == null)
 			return;
 		flags[id] = set;
+	}
+
+	/// ------------------------
+	/// Special ASM hack support
+	/// ------------------------
+
+	/**
+	 * Gets the current &lt;MIM costume.
+	 * 
+	 * @return current costume
+	 */
+	public static long getMimCostume() {
+		long ret = 0;
+		for (int i = 7968; i < 7993; i++)
+			if (getFlag(i))
+				ret |= (long) Math.pow(2, i - 7968);
+		return ret;
+	}
+
+	/**
+	 * Sets the current &lt;MIM costume.
+	 * 
+	 * @param costume
+	 *            new costume
+	 */
+	public static void setMimCostume(long costume) {
+		for (int i = 7968; i < 7993; i++)
+			setFlag(i, (costume & (long) Math.pow(2, i - 7968)) != 0);
+	}
+
+	/**
+	 * Gets the value of a &lt;VAR variable.
+	 * 
+	 * @param id
+	 *            variable id
+	 * @return value
+	 */
+	public static short getVariable(int id) {
+		push();
+		return ByteUtils.readShort(data, 0x21C + id * Short.BYTES);
+	}
+
+	/**
+	 * Sets a &lt;VAR variable to a value.
+	 * 
+	 * @param id
+	 *            variable id
+	 * @param value
+	 *            new value
+	 */
+	public static void setVariable(int id, short value) {
+		push();
+		ByteUtils.writeShort(data, 0x21C + id * Short.BYTES, value);
+		pull();
 	}
 
 	/**

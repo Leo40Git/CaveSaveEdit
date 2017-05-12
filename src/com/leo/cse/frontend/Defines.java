@@ -23,7 +23,7 @@ public class Defines {
 	}
 
 	public static String get(String key) {
-		return defines.getProperty(key);
+		return defines.getProperty(key, key);
 	}
 
 	public static String get(String type, String value) {
@@ -71,6 +71,10 @@ public class Defines {
 				return entry.getKey();
 		}
 		return -1;
+	}
+
+	public static boolean getSpecial(String value) {
+		return Boolean.parseBoolean(defines.getProperty("Special." + value, "false"));
 	}
 
 }

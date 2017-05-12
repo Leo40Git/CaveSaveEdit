@@ -8,6 +8,8 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,15 +29,17 @@ import com.leo.cse.frontend.components.BooleanBox;
 import com.leo.cse.frontend.components.Component;
 import com.leo.cse.frontend.components.DefineBox;
 import com.leo.cse.frontend.components.FlagsUI;
+import com.leo.cse.frontend.components.IScrollable;
 import com.leo.cse.frontend.components.IntegerBox;
 import com.leo.cse.frontend.components.Label;
+import com.leo.cse.frontend.components.LongBox;
 import com.leo.cse.frontend.components.RadioBoxes;
 import com.leo.cse.frontend.components.ShortBox;
 import com.leo.cse.frontend.dialogs.AboutDialog;
 import com.leo.cse.frontend.dialogs.DefineDialog;
-import com.leo.cse.frontend.dialogs.DialogBox;
+import com.leo.cse.frontend.dialogs.Dialog;
 
-public class SaveEditorPanel extends JPanel implements MouseListener {
+public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheelListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
@@ -43,7 +47,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 	private static final String[] TOOLBAR = new String[] { "Load profile", "Defines settings", "Save", "About" };
 
 	public enum EditorTab {
-		STATS("Stats"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags");
+		PLAYER("Player"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags");
 
 		private String label;
 
@@ -56,23 +60,31 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 		}
 	}
 
+	public static SaveEditorPanel panel;
 	public static JFileChooser fc;
 
 	private EditorTab currentTab;
 	private Map<EditorTab, List<Component>> compListMap;
-	private DialogBox dBox;
+	private Dialog dBox;
+
+	private int flagScroll;
 
 	public SaveEditorPanel() {
-		currentTab = EditorTab.STATS;
+		panel = this;
+		currentTab = EditorTab.PLAYER;
+		addComponents();
+	}
+
+	public void addComponents() {
 		compListMap = new HashMap<EditorTab, List<Component>>();
 		for (EditorTab key : EditorTab.values())
 			compListMap.put(key, new ArrayList<Component>());
 		List<Component> cl = null;
 		final Dimension winSize = Main.WINDOW_SIZE;
-		// stats tab
-		cl = compListMap.get(EditorTab.STATS);
+		// player tab
+		cl = compListMap.get(EditorTab.PLAYER);
 		cl.add(new Label("Map:", 4, 4));
-		cl.add(new DefineBox(36, 4, 120, 16, new Supplier<Integer>() {
+		cl.add(new DefineBox(36, 4, 240, 16, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
 				return Profile.getMap();
@@ -85,7 +97,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 			}
 		}, "Map"));
 		cl.add(new Label("Song:", 4, 24));
-		cl.add(new DefineBox(36, 24, 120, 16, new Supplier<Integer>() {
+		cl.add(new DefineBox(36, 24, 240, 16, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
 				return Profile.getSong();
@@ -204,10 +216,27 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 			}
 		}));
 		cl.add(new Label("(resets at 4294967295)", 192, 124));
+		if (Defines.getSpecial("VarHack")) {
+			// TODO <VAR and <PHY support
+		} else if (Defines.getSpecial("MimHack")) {
+			cl.add(new Label("<MIM Costume:", 4, 144));
+			cl.add(new LongBox(78, 144, 120, 16, new Supplier<Long>() {
+				@Override
+				public Long get() {
+					return Profile.getMimCostume();
+				}
+			}, new Function<Long, Long>() {
+				@Override
+				public Long apply(Long t) {
+					Profile.setMimCostume(t);
+					return t;
+				}
+			}));
+		}
 		// inventory tab
 		cl = compListMap.get(EditorTab.INVENTORY);
 		int xx = 4;
-		cl.add(new RadioBoxes(xx + 50, 2, xx + (122 * 5), 5, new Supplier<Integer>() {
+		cl.add(new RadioBoxes(xx + 50, 2, xx + (122 * 7), 7, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
 				return Profile.getCurWeapon();
@@ -219,7 +248,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 				return t;
 			}
 		}));
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
 			cl.add(new Label("Selected:", xx, -4));
 			cl.add(new Label("Weapon Slot " + (i + 1) + ":", xx, 6));
@@ -261,7 +290,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 					return t;
 				}
 			}));
-			cl.add(new Label("Ammo:", xx, 102));
+			cl.add(new Label("Ammo:", xx + 10, 102));
 			cl.add(new IntegerBox(xx + 10, 118, 110, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
@@ -274,7 +303,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 					return t;
 				}
 			}));
-			cl.add(new Label("/", xx, 134));
+			cl.add(new Label("/", xx + 2, 134));
 			cl.add(new IntegerBox(xx + 10, 134, 110, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
@@ -293,7 +322,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 		for (int i = 0; i < 6; i++) {
 			for (int j = 0; j < 5; j++) {
 				final int ii2 = itemId;
-				cl.add(new DefineBox(j * (winSize.width / 5), 166 + i * 16, winSize.width / 5 - 7, 16,
+				cl.add(new DefineBox(j * (winSize.width / 5), 166 + i * 16, winSize.width / 5 - 5, 16,
 						new Supplier<Integer>() {
 							@Override
 							public Integer get() {
@@ -375,17 +404,26 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 		}
 		// flags tab
 		cl = compListMap.get(EditorTab.FLAGS);
-		cl.add(new FlagsUI());
+		cl.add(new FlagsUI(new Supplier<Integer>() {
+			@Override
+			public Integer get() {
+				return flagScroll;
+			}
+		}, (Integer t) -> {
+			flagScroll = t;
+		}));
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		final Dimension winSize = Main.window.getActualSize();
+		final Dimension winSize2 = Main.window.getActualSize(false);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2d.clearRect(0, 0, winSize.width, winSize.height);
+		g2d.clearRect(0, 0, winSize2.width, winSize2.height);
 		g2d.setColor(Color.black);
 		g2d.setFont(Resources.font);
+		// toolbar
 		g2d.drawLine(0, 0, winSize.width, 0);
 		g2d.drawLine(0, 17, winSize.width, 17);
 		int bi = 0;
@@ -400,8 +438,9 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 			FrontUtils.drawString(g2d, TOOLBAR[bi], xx + 18, 0);
 			bi++;
 		}
-		g2d.translate(0, 17);
+		// components
 		if (Profile.isLoaded()) {
+			g2d.translate(0, 17);
 			for (Component comp : compListMap.get(currentTab)) {
 				comp.render(g2d);
 				if (DEBUG) {
@@ -411,26 +450,28 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 					g2d.setColor(oc);
 				}
 			}
+			g2d.translate(0, -17);
 		} else {
 			g2d.setColor(new Color(0, 0, 0, 0.5f));
-			g2d.fillRect(0, 0, winSize.width, winSize.height - 33);
+			g2d.fillRect(0, 0, winSize2.width, winSize2.height);
 		}
-		g2d.translate(0, -17);
+		// dialog box
 		if (dBox != null)
 			dBox.render(g);
+		// editor tabs
 		g2d.setColor((Profile.isLoaded() ? Color.white : Color.gray));
-		g2d.fillRect(0, winSize.height - 17, winSize.width, winSize.height);
+		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
 		g2d.setColor(Color.black);
-		g2d.drawLine(0, winSize.height - 17, winSize.width, winSize.height - 17);
+		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
 		int ti = 0;
-		for (int xx = -1; xx < winSize.width; xx += winSize.width / 4 + 1) {
+		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / 4 + 1) {
 			final EditorTab t = EditorTab.values()[ti];
-			g2d.drawLine(xx, winSize.height - 17, xx, winSize.height - 1);
-			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize.height - 16, null);
-			FrontUtils.drawString(g2d, t.label(), xx + 18, winSize.height - 20);
+			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
+			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
+			FrontUtils.drawString(g2d, t.label(), xx + 18, winSize2.height - 20);
 			if (Profile.isLoaded() && t == currentTab) {
 				g2d.setColor((Profile.isLoaded() ? Color.white : Color.gray));
-				g2d.drawLine(xx + 1, winSize.height - 17, xx + winSize.width / 4 + 1, winSize.height - 17);
+				g2d.drawLine(xx + 1, winSize2.height - 17, xx + winSize2.width / 4 + 1, winSize2.height - 17);
 				g2d.setColor(Color.black);
 			}
 			ti++;
@@ -445,17 +486,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 		fc.setCurrentDirectory(new File("."));
 		int returnVal = fc.showOpenDialog(Main.window);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
-			try {
-				Profile.read(fc.getSelectedFile());
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the profile file:\n" + e.getMessage(),
-						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
-				return;
-			} finally {
-				JOptionPane.showMessageDialog(Main.window, "The profile file was loaded successfully.",
-						"Profile loaded successfully", JOptionPane.INFORMATION_MESSAGE);
-			}
+			Main.loadProfile(fc.getSelectedFile());
 		else
 			return;
 	}
@@ -465,7 +496,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
 		final Dimension winSize = Main.window.getActualSize();
+		final Dimension winSize2 = Main.window.getActualSize(false);
+		final int mod = e.getModifiersEx();
+		final boolean shift = (mod & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK,
+				ctrl = (mod & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK;
 		if (py <= 17) {
+			// toolbar
 			int bi = 0;
 			for (int xx = -1; xx < winSize.width; xx += winSize.width / 4 + 1) {
 				if (FrontUtils.pointInRectangle(px, py, xx, 0, winSize.width / 4 + 1, 17)) {
@@ -475,7 +511,6 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 						break;
 					case 1: // load defines
 						dBox = new DefineDialog();
-						// loadDefines();
 						break;
 					case 2: // save
 						if (!Profile.isLoaded()) {
@@ -508,10 +543,11 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 				}
 				bi++;
 			}
-		} else if (py >= winSize.height - 17 && Profile.isLoaded()) {
+		} else if (py >= winSize2.height - 17 && Profile.isLoaded()) {
+			// editor tabs
 			int ti = 0;
-			for (int xx = -1; xx < winSize.width; xx += winSize.width / 4 + 1) {
-				if (FrontUtils.pointInRectangle(px, py, xx, winSize.height - 17, winSize.width / 4 + 1, 16)) {
+			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / 4 + 1) {
+				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 17, winSize2.width / 4 + 1, 16)) {
 					currentTab = EditorTab.values()[ti];
 					repaint();
 					break;
@@ -519,16 +555,36 @@ public class SaveEditorPanel extends JPanel implements MouseListener {
 				ti++;
 			}
 		} else if (dBox != null) {
+			// dialog box
 			if (dBox.onClick(px, py))
 				dBox = null;
 			repaint();
 		} else if (Profile.isLoaded()) {
+			// components
 			for (Component comp : compListMap.get(currentTab)) {
 				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
-					comp.onClick(px, py - 17);
+					comp.onClick(px, py - 17, shift, ctrl);
 					repaint();
 				}
+			}
+		}
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		final Insets i = Main.window.getInsets();
+		final int px = e.getX() - i.left, py = e.getY() - i.top;
+		final int mod = e.getModifiersEx();
+		final boolean shift = (mod & MouseWheelEvent.SHIFT_DOWN_MASK) == MouseWheelEvent.SHIFT_DOWN_MASK,
+				ctrl = (mod & MouseWheelEvent.CTRL_DOWN_MASK) == MouseWheelEvent.CTRL_DOWN_MASK;
+		for (Component comp : compListMap.get(currentTab)) {
+			if (!(comp instanceof IScrollable))
+				continue;
+			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
+			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
+				((IScrollable) comp).onScroll(e.getWheelRotation(), shift, ctrl);
+				repaint();
 			}
 		}
 	}
