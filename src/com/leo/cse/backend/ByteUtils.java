@@ -12,36 +12,15 @@ import java.nio.ByteOrder;
 public class ByteUtils {
 
 	/**
-	 * The size of a <code>short</code> in bytes.
-	 */
-	public static final int SHORT_SIZE = Short.SIZE / 8;
-	/**
-	 * The size of an <code>int</code> in bytes.
-	 */
-	public static final int INT_SIZE = Integer.SIZE / 8;
-	/**
-	 * The size of a <code>long</code> in bytes.
-	 */
-	public static final int LONG_SIZE = Long.SIZE / 8;
-	/**
-	 * The size of a <code>float</code> in bytes.
-	 */
-	public static final int FLOAT_SIZE = Float.SIZE / 8;
-	/**
-	 * The size of a <code>double</code> in bytes.
-	 */
-	public static final int DOUBLE_SIZE = Double.SIZE / 8;
-
-	/**
 	 * Used for converting bytes to other number types.
 	 */
 	private static final ByteBuffer BB;
 
 	static {
-		BB = ByteBuffer.allocate(LONG_SIZE);
+		BB = ByteBuffer.allocate(Long.BYTES);
 		BB.order(ByteOrder.LITTLE_ENDIAN);
 	}
-	
+
 	/**
 	 * Converts an array of bytes into a <code>long</code>.
 	 * 
@@ -136,7 +115,7 @@ public class ByteUtils {
 	 * @return short
 	 */
 	public static short readShort(byte[] data, int ptr) {
-		readBytesToBuffer(data, ptr, SHORT_SIZE);
+		readBytesToBuffer(data, ptr, Short.BYTES);
 		return BB.getShort(0);
 	}
 
@@ -153,7 +132,7 @@ public class ByteUtils {
 	public static void readShorts(byte[] data, int ptr, short[] dest) {
 		for (int i = 0; i < dest.length; i++) {
 			dest[i] = readShort(data, ptr);
-			ptr += SHORT_SIZE;
+			ptr += Short.BYTES;
 		}
 	}
 
@@ -167,7 +146,7 @@ public class ByteUtils {
 	 * @return integer
 	 */
 	public static int readInt(byte[] data, int ptr) {
-		readBytesToBuffer(data, ptr, INT_SIZE);
+		readBytesToBuffer(data, ptr, Integer.BYTES);
 		return BB.getInt(0);
 	}
 
@@ -184,7 +163,7 @@ public class ByteUtils {
 	public static void readInts(byte[] data, int ptr, int[] dest) {
 		for (int i = 0; i < dest.length; i++) {
 			dest[i] = readInt(data, ptr);
-			ptr += INT_SIZE;
+			ptr += Integer.BYTES;
 		}
 	}
 
@@ -254,7 +233,7 @@ public class ByteUtils {
 	public static void writeShort(byte[] data, int ptr, short value) {
 		BB.clear();
 		BB.putShort(value);
-		writeBytesFromBuffer(data, ptr, SHORT_SIZE);
+		writeBytesFromBuffer(data, ptr, Short.BYTES);
 	}
 
 	/**
@@ -270,7 +249,7 @@ public class ByteUtils {
 	public static void writeShorts(byte[] data, int ptr, short[] value) {
 		for (int i = 0; i < value.length; i++) {
 			writeShort(data, ptr, value[i]);
-			ptr += SHORT_SIZE;
+			ptr += Short.BYTES;
 		}
 	}
 
@@ -287,7 +266,7 @@ public class ByteUtils {
 	public static void writeInt(byte[] data, int ptr, int value) {
 		BB.clear();
 		BB.putInt(value);
-		writeBytesFromBuffer(data, ptr, INT_SIZE);
+		writeBytesFromBuffer(data, ptr, Integer.BYTES);
 	}
 
 	/**
@@ -303,7 +282,7 @@ public class ByteUtils {
 	public static void writeInts(byte[] data, int ptr, int[] value) {
 		for (int i = 0; i < value.length; i++) {
 			writeInt(data, ptr, value[i]);
-			ptr += INT_SIZE;
+			ptr += Integer.BYTES;
 		}
 	}
 

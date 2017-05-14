@@ -69,6 +69,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 
 	private int flagScroll;
 	private boolean flagHideUndefined = true;
+	private boolean flagHideSystem = true;
 
 	public SaveEditorPanel() {
 		panel = this;
@@ -218,7 +219,58 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		}));
 		cl.add(new Label("(resets at 4294967295)", 192, 124));
 		if (Defines.getSpecial("VarHack")) {
-			// TODO <VAR and <PHY support
+			final int width = winSize.width / 8;
+			int varId = 0;
+			for (int i = 0; i < 16; i++) {
+				for (int j = 0; j < 8; j++) {
+					if (varId < 8 && varId != 6) {
+						varId++;
+						j--;
+						continue;
+					}
+					if (varId > 123)
+						break;
+					final int vi2 = varId + 1;
+					cl.add(new Label("V" + FrontUtils.padLeft(Integer.toString(varId), "0", 3) + ":", j * width + 2,
+							144 + i * 16));
+					cl.add(new ShortBox(j * width + 40, 144 + i * 16, width - 44, 16, new Supplier<Short>() {
+						@Override
+						public Short get() {
+							return Profile.getVariable(vi2);
+						}
+					}, new Function<Short, Short>() {
+						@Override
+						public Short apply(Short t) {
+							Profile.setVariable(vi2, t);
+							return t;
+						}
+					}));
+					varId++;
+				}
+			}
+			if (Defines.getSpecial("PhysVarHack")) {
+				varId = 0;
+				for (int i = 0; i < 2; i++) {
+					for (int j = 0; j < 8; j++) {
+						final int vi2 = varId + 1;
+						cl.add(new Label("PHY" + FrontUtils.padLeft(Integer.toString(varId), "0", 2) + ":",
+								j * width + 2, 384 + i * 16));
+						cl.add(new ShortBox(j * width + 40, 384 + i * 16, width - 44, 16, new Supplier<Short>() {
+							@Override
+							public Short get() {
+								return Profile.getPhysVariable(vi2);
+							}
+						}, new Function<Short, Short>() {
+							@Override
+							public Short apply(Short t) {
+								Profile.setPhysVariable(vi2, t);
+								return t;
+							}
+						}));
+						varId++;
+					}
+				}
+			}
 		} else if (Defines.getSpecial("MimHack")) {
 			cl.add(new Label("<MIM Costume:", 4, 144));
 			cl.add(new LongBox(78, 144, 120, 16, new Supplier<Long>() {
@@ -419,6 +471,13 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			}
 		}, (Boolean t) -> {
 			flagHideUndefined = t;
+		}, new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return flagHideSystem;
+			}
+		}, (Boolean t) -> {
+			flagHideSystem = t;
 		}));
 	}
 

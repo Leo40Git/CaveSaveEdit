@@ -74,7 +74,7 @@ public class Profile {
 		 * @return starting position
 		 */
 		public static int getPointer(int slot) {
-			return BASE_POINTER + slot * (5 * ByteUtils.INT_SIZE);
+			return BASE_POINTER + slot * (5 * Integer.BYTES);
 		}
 
 		/**
@@ -88,10 +88,10 @@ public class Profile {
 		public Weapon(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			id = ByteUtils.readInt(data, ptr);
-			level = ByteUtils.readInt(data, ptr + ByteUtils.INT_SIZE);
-			exp = ByteUtils.readInt(data, ptr + ByteUtils.INT_SIZE * 2);
-			maxAmmo = ByteUtils.readInt(data, ptr + ByteUtils.INT_SIZE * 3);
-			curAmmo = ByteUtils.readInt(data, ptr + ByteUtils.INT_SIZE * 4);
+			level = ByteUtils.readInt(data, ptr + Integer.BYTES);
+			exp = ByteUtils.readInt(data, ptr + Integer.BYTES * 2);
+			maxAmmo = ByteUtils.readInt(data, ptr + Integer.BYTES * 3);
+			curAmmo = ByteUtils.readInt(data, ptr + Integer.BYTES * 4);
 		}
 
 		/**
@@ -105,10 +105,10 @@ public class Profile {
 		public void save(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			ByteUtils.writeInt(data, ptr, id);
-			ByteUtils.writeInt(data, ptr + ByteUtils.INT_SIZE, level);
-			ByteUtils.writeInt(data, ptr + ByteUtils.INT_SIZE * 2, exp);
-			ByteUtils.writeInt(data, ptr + ByteUtils.INT_SIZE * 3, maxAmmo);
-			ByteUtils.writeInt(data, ptr + ByteUtils.INT_SIZE * 4, curAmmo);
+			ByteUtils.writeInt(data, ptr + Integer.BYTES, level);
+			ByteUtils.writeInt(data, ptr + Integer.BYTES * 2, exp);
+			ByteUtils.writeInt(data, ptr + Integer.BYTES * 3, maxAmmo);
+			ByteUtils.writeInt(data, ptr + Integer.BYTES * 4, curAmmo);
 		}
 
 		public int getId() {
@@ -208,7 +208,7 @@ public class Profile {
 		 * @return starting position
 		 */
 		public static int getPointer(int slot) {
-			return BASE_POINTER + slot * (2 * ByteUtils.INT_SIZE);
+			return BASE_POINTER + slot * (2 * Integer.BYTES);
 		}
 
 		/**
@@ -222,7 +222,7 @@ public class Profile {
 		public Warp(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			id = ByteUtils.readInt(data, ptr);
-			location = ByteUtils.readInt(data, ptr + ByteUtils.INT_SIZE);
+			location = ByteUtils.readInt(data, ptr + Integer.BYTES);
 		}
 
 		/**
@@ -236,7 +236,7 @@ public class Profile {
 		public void save(byte[] data, int slot) {
 			final int ptr = getPointer(slot);
 			ByteUtils.writeInt(data, ptr, id);
-			ByteUtils.writeInt(data, ptr + ByteUtils.INT_SIZE, location);
+			ByteUtils.writeInt(data, ptr + Integer.BYTES, location);
 		}
 
 		public int getId() {
@@ -366,7 +366,7 @@ public class Profile {
 	 * Pulls changes from the byte array. This should be called after modifying
 	 * the array's contents.
 	 */
-	public static void pull() {
+	public static void pullFromData() {
 		if (data == null)
 			return;
 		map = ByteUtils.readInt(data, 0x008);
@@ -378,7 +378,7 @@ public class Profile {
 		starCount = ByteUtils.readShort(data, 0x01E);
 		curHealth = ByteUtils.readShort(data, 0x020);
 		curWeapon = ByteUtils.readInt(data, 0x024);
-		equips = new boolean[ByteUtils.SHORT_SIZE * 8];
+		equips = new boolean[Short.SIZE];
 		ByteUtils.readFlags(data, 0x02C, equips);
 		time = ByteUtils.readInt(data, 0x034);
 		weapons = new Weapon[7];
@@ -399,7 +399,7 @@ public class Profile {
 	 * Pushes changes to the byte array. This should be called before modifying
 	 * or reading the array's contents.
 	 */
-	public static void push() {
+	public static void pushToData() {
 		if (data == null)
 			data = new byte[FILE_LENGTH];
 		ByteUtils.writeString(data, 0, HEADER);
@@ -448,7 +448,7 @@ public class Profile {
 		String flag = ByteUtils.readString(data, 0x218, FLAG.length());
 		if (!FLAG.equals(flag))
 			throw new IOException("Flag header is missing!");
-		pull();
+		pullFromData();
 		loaded = true;
 	}
 
@@ -485,7 +485,7 @@ public class Profile {
 			fos.write(data);
 		}
 		// start writing
-		push();
+		pushToData();
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(data);
 		} catch (Exception e) {
@@ -703,7 +703,7 @@ public class Profile {
 	 */
 	public static long getMimCostume() {
 		long ret = 0;
-		for (int i = 7968; i < 7993; i++)
+		for (int i = 7968; i < 7995; i++)
 			if (getFlag(i))
 				ret |= (long) Math.pow(2, i - 7968);
 		return ret;
@@ -716,7 +716,7 @@ public class Profile {
 	 *            new costume
 	 */
 	public static void setMimCostume(long costume) {
-		for (int i = 7968; i < 7993; i++)
+		for (int i = 7968; i < 7995; i++)
 			setFlag(i, (costume & (long) Math.pow(2, i - 7968)) != 0);
 	}
 
@@ -728,8 +728,8 @@ public class Profile {
 	 * @return value
 	 */
 	public static short getVariable(int id) {
-		push();
-		return ByteUtils.readShort(data, 0x21C + id * Short.BYTES);
+		pushToData();
+		return ByteUtils.readShort(data, 0x50A + id * Short.BYTES);
 	}
 
 	/**
@@ -741,9 +741,20 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setVariable(int id, short value) {
-		push();
-		ByteUtils.writeShort(data, 0x21C + id * Short.BYTES, value);
-		pull();
+		pushToData();
+		ByteUtils.writeShort(data, 0x50A + id * Short.BYTES, value);
+		pullFromData();
+	}
+	
+	public static short getPhysVariable(int id) {
+		pushToData();
+		return ByteUtils.readShort(data, 0x4DC + id * Short.BYTES);
+	}
+	
+	public static void setPhysVariable(int id, short value) {
+		pushToData();
+		ByteUtils.writeShort(data, 0x4DC + id * Short.BYTES, value);
+		pullFromData();
 	}
 
 	/**

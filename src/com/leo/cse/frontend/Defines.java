@@ -37,7 +37,7 @@ public class Defines {
 
 	public static String get(String type, String value) {
 		final String key = type + "." + value;
-		return defines.getProperty(key, defines.getProperty(type + ".None", defines.getProperty("General.None", key)));
+		return defines.getProperty(key, defines.getProperty(type + ".None", key));
 	}
 
 	public static String get(String type, int id) {
