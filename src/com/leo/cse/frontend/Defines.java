@@ -95,4 +95,15 @@ public class Defines {
 		return Boolean.parseBoolean(defines.getProperty("Special." + value, "false"));
 	}
 
+	public static String getSpecials() {
+		String ret = "None";
+		if (getSpecial("VarHack")) {
+			ret = "TSC+ <VAR Hack";
+			if (getSpecial("PhysVarHack"))
+				ret += " + <PHY Addon";
+		} else if (getSpecial("MimHack"))
+			ret = "<MIM Hack";
+		return ret;
+	}
+
 }

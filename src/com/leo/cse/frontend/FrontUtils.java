@@ -1,7 +1,6 @@
 package com.leo.cse.frontend;
 
 import java.awt.Graphics;
-import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -20,8 +19,7 @@ public class FrontUtils {
 	}
 
 	public static void drawStringCentered(Graphics g, String str, int x, int y) {
-		final Rectangle2D bounds = g.getFontMetrics().getStringBounds(str, g);
-		drawString(g, str, (int) (x - bounds.getWidth() / 2), (int) (y - bounds.getHeight() / 2));
+		drawString(g, str, (int) (x - g.getFontMetrics().getStringBounds(str, g).getWidth() / 2), y);
 	}
 
 	public static String intsToString(int... nums) {

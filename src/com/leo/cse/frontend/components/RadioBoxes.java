@@ -11,18 +11,21 @@ import com.leo.cse.frontend.FrontUtils;
 public class RadioBoxes extends Component {
 
 	private int number;
+	private String[] labels;
 	private Supplier<Integer> sSup;
 	private Function<Integer, Integer> update;
 	private List<RadioBox> radioBoxes;
 
-	public RadioBoxes(int x, int y, int width, int number, Supplier<Integer> sSup, Function<Integer, Integer> update) {
+	public RadioBoxes(int x, int y, int width, int number, String[] labels, Supplier<Integer> sSup,
+			Function<Integer, Integer> update) {
 		super(x, y, width, 8);
 		this.number = number;
+		this.labels = labels;
 		this.sSup = sSup;
 		this.update = update;
 		radioBoxes = new ArrayList<RadioBox>();
 		for (int i = 0; i < number; i++)
-			radioBoxes.add(new RadioBox(x + i * (this.width / number), y, this, i));
+			radioBoxes.add(new RadioBox(this.labels[i], x + i * (this.width / number), y, this, i));
 	}
 
 	public boolean isSelected(int id) {

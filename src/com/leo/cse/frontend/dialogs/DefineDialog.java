@@ -16,20 +16,19 @@ import com.leo.cse.frontend.SaveEditorPanel;
 public class DefineDialog extends BaseDialog {
 
 	public DefineDialog() {
-		super("Define Settings", 300, 80);
+		super("Define Settings", 300, 104);
 	}
 
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
 		final int x = getWindowX(), y = getWindowY();
-		FrontUtils.drawString(g,
-				"Current defines:\n" + Defines.get("General.Name") + "\nBy:\n" + Defines.get("General.Author"), x + 4,
-				y);
+		FrontUtils.drawString(g, "Current defines:\n" + Defines.get("Meta.Name") + "\nBy:\n"
+				+ Defines.get("Meta.Author") + "\nSpecial support:\n" + Defines.getSpecials(), x + 4, y);
 		g.drawLine(x, y + height - 34, x + width, y + height - 34);
 		g.drawLine(x + width - 150, y + height - 18, x + width - 150, y + height - 34);
-		FrontUtils.drawString(g, "Load defines", x + 4, y + height - 36);
-		FrontUtils.drawString(g, "Load default defines", x + width - 146, y + height - 36);
+		FrontUtils.drawStringCentered(g, "Load defines", x + width / 4, y + height - 36);
+		FrontUtils.drawStringCentered(g, "Load default defines", x + width - 150 + width / 4, y + height - 36);
 	}
 
 	@Override

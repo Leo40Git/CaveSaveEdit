@@ -83,10 +83,10 @@ public class Main extends JFrame {
 		}
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();
+			window.setVisible(true);
 			File p = new File("./Profile.dat");
 			if (p.exists())
 				loadProfile(p);
-			window.setVisible(true);
 		});
 	}
 

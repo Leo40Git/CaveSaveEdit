@@ -43,7 +43,6 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final boolean DEBUG = false;
 	private static final String[] TOOLBAR = new String[] { "Load profile", "Defines settings", "Save", "About" };
 
 	public enum EditorTab {
@@ -166,18 +165,18 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		}));
 		cl.add(new Label(") (1 tile = 16x16px)", 198, 64));
 		cl.add(new Label("Direction:", 4, 84));
-		cl.add(new DefineBox(54, 84, 120, 16, new Supplier<Integer>() {
+		cl.add(new RadioBoxes(54, 90, 80, 2, new String[] { "Left", "Right" }, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
-				return Profile.getDirection();
+				return (Profile.getDirection() == 2 ? 1 : 0);
 			}
 		}, new Function<Integer, Integer>() {
 			@Override
 			public Integer apply(Integer t) {
-				Profile.setDirection(t);
+				Profile.setDirection((t == 1 ? 2 : 0));
 				return t;
 			}
-		}, "Direction"));
+		}));
 		cl.add(new Label("Health:", 4, 104));
 		cl.add(new ShortBox(44, 104, 60, 16, new Supplier<Short>() {
 			@Override
@@ -218,7 +217,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			}
 		}));
 		cl.add(new Label("(resets at 4294967295)", 192, 124));
-		if (Defines.getSpecial("MimHack")) {
+		if (!Defines.getSpecial("VarHack") && Defines.getSpecial("MimHack")) {
 			cl.add(new Label("<MIM Costume:", 4, 144));
 			cl.add(new LongBox(78, 144, 120, 16, new Supplier<Long>() {
 				@Override
@@ -235,22 +234,23 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		}
 		// inventory tab
 		cl = compListMap.get(EditorTab.INVENTORY);
+		final String l = "Selected";
 		int xx = 4;
-		cl.add(new RadioBoxes(xx + 50, 2, xx + (122 * 7), 7, new Supplier<Integer>() {
-			@Override
-			public Integer get() {
-				return Profile.getCurWeapon();
-			}
-		}, new Function<Integer, Integer>() {
-			@Override
-			public Integer apply(Integer t) {
-				Profile.setCurWeapon(t);
-				return t;
-			}
-		}));
+		cl.add(new RadioBoxes(xx + 26, 2, xx + (122 * 7), 7, new String[] { l, l, l, l, l, l, l },
+				new Supplier<Integer>() {
+					@Override
+					public Integer get() {
+						return Profile.getCurWeapon();
+					}
+				}, new Function<Integer, Integer>() {
+					@Override
+					public Integer apply(Integer t) {
+						Profile.setCurWeapon(t);
+						return t;
+					}
+				}));
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
-			cl.add(new Label("Selected:", xx, -4));
 			cl.add(new Label("Weapon Slot " + (i + 1) + ":", xx, 6));
 			cl.add(new DefineBox(xx, 22, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -537,15 +537,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		// components
 		g2d.translate(0, 17);
 		if (Profile.isLoaded()) {
-			for (Component comp : compListMap.get(currentTab)) {
+			for (Component comp : compListMap.get(currentTab))
 				comp.render(g2d);
-				if (DEBUG) {
-					Color oc = g2d.getColor();
-					g2d.setColor(Color.red);
-					g2d.drawRect(comp.getX(), comp.getY(), comp.getWidth(), comp.getHeight());
-					g2d.setColor(oc);
-				}
-			}
 		} else {
 			g2d.setFont(Resources.fontL);
 			g2d.setColor(Color.black);
