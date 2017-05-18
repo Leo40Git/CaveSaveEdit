@@ -1,6 +1,7 @@
 package com.leo.cse.frontend;
 
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -15,8 +16,12 @@ public class FrontUtils {
 		for (String line : str.split("\n")) {
 			y += lineSpace;
 			g.drawString(line, x, y);
-
 		}
+	}
+
+	public static void drawStringCentered(Graphics g, String str, int x, int y) {
+		final Rectangle2D bounds = g.getFontMetrics().getStringBounds(str, g);
+		drawString(g, str, (int) (x - bounds.getWidth() / 2), (int) (y - bounds.getHeight() / 2));
 	}
 
 	public static String intsToString(int... nums) {
@@ -33,7 +38,7 @@ public class FrontUtils {
 	public static boolean pointInRectangle(int px, int py, int rx, int ry, int rw, int rh) {
 		return (px >= rx && px <= rx + rw) && (py >= ry && py <= ry + rh);
 	}
-	
+
 	public static <K extends Comparable<? super K>, V> Map<K, V> sortMapByKey(Map<K, V> map) {
 		List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
 		Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
@@ -61,7 +66,7 @@ public class FrontUtils {
 		}
 		return result;
 	}
-	
+
 	public static String padLeft(String str, String pad, int length) {
 		while (str.length() < length)
 			str = pad + str;

@@ -47,7 +47,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 	private static final String[] TOOLBAR = new String[] { "Load profile", "Defines settings", "Save", "About" };
 
 	public enum EditorTab {
-		PLAYER("Player"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags");
+		GENERAL("General"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags"), VARIABLES("Variables");
 
 		private String label;
 
@@ -73,7 +73,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 
 	public SaveEditorPanel() {
 		panel = this;
-		currentTab = EditorTab.PLAYER;
+		currentTab = EditorTab.GENERAL;
 		addComponents();
 	}
 
@@ -84,7 +84,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		List<Component> cl = null;
 		final Dimension winSize = Main.WINDOW_SIZE;
 		// player tab
-		cl = compListMap.get(EditorTab.PLAYER);
+		cl = compListMap.get(EditorTab.GENERAL);
 		cl.add(new Label("Map:", 4, 4));
 		cl.add(new DefineBox(36, 4, 240, 16, new Supplier<Integer>() {
 			@Override
@@ -218,60 +218,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			}
 		}));
 		cl.add(new Label("(resets at 4294967295)", 192, 124));
-		if (Defines.getSpecial("VarHack")) {
-			final int width = winSize.width / 8;
-			int varId = 0;
-			for (int i = 0; i < 16; i++) {
-				for (int j = 0; j < 8; j++) {
-					if (varId < 8 && varId != 6) {
-						varId++;
-						j--;
-						continue;
-					}
-					if (varId > 123)
-						break;
-					final int vi2 = varId + 1;
-					cl.add(new Label("V" + FrontUtils.padLeft(Integer.toString(varId), "0", 3) + ":", j * width + 2,
-							144 + i * 16));
-					cl.add(new ShortBox(j * width + 40, 144 + i * 16, width - 44, 16, new Supplier<Short>() {
-						@Override
-						public Short get() {
-							return Profile.getVariable(vi2);
-						}
-					}, new Function<Short, Short>() {
-						@Override
-						public Short apply(Short t) {
-							Profile.setVariable(vi2, t);
-							return t;
-						}
-					}));
-					varId++;
-				}
-			}
-			if (Defines.getSpecial("PhysVarHack")) {
-				varId = 0;
-				for (int i = 0; i < 2; i++) {
-					for (int j = 0; j < 8; j++) {
-						final int vi2 = varId + 1;
-						cl.add(new Label("PHY" + FrontUtils.padLeft(Integer.toString(varId), "0", 2) + ":",
-								j * width + 2, 384 + i * 16));
-						cl.add(new ShortBox(j * width + 40, 384 + i * 16, width - 44, 16, new Supplier<Short>() {
-							@Override
-							public Short get() {
-								return Profile.getPhysVariable(vi2);
-							}
-						}, new Function<Short, Short>() {
-							@Override
-							public Short apply(Short t) {
-								Profile.setPhysVariable(vi2, t);
-								return t;
-							}
-						}));
-						varId++;
-					}
-				}
-			}
-		} else if (Defines.getSpecial("MimHack")) {
+		if (Defines.getSpecial("MimHack")) {
 			cl.add(new Label("<MIM Costume:", 4, 144));
 			cl.add(new LongBox(78, 144, 120, 16, new Supplier<Long>() {
 				@Override
@@ -479,6 +426,88 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		}, (Boolean t) -> {
 			flagHideSystem = t;
 		}));
+		// variables tab
+		if (Defines.getSpecial("VarHack")) {
+			cl = compListMap.get(EditorTab.VARIABLES);
+			cl.add(new Label("Variables:", 4, 4));
+			final int width = winSize.width / 8;
+			int varId = 0;
+			for (int i = 0; i < 16; i++) {
+				for (int j = 0; j < 8; j++) {
+					if (varId < 8 && varId != 6) {
+						varId++;
+						j--;
+						continue;
+					}
+					if (varId > 123)
+						break;
+					final int vi2 = varId + 1;
+					cl.add(new Label("V" + FrontUtils.padLeft(Integer.toString(varId), "0", 3) + ":", j * width + 2,
+							24 + i * 16));
+					cl.add(new ShortBox(j * width + 40, 24 + i * 16, width - 44, 16, new Supplier<Short>() {
+						@Override
+						public Short get() {
+							return Profile.getVariable(vi2);
+						}
+					}, new Function<Short, Short>() {
+						@Override
+						public Short apply(Short t) {
+							Profile.setVariable(vi2, t);
+							return t;
+						}
+					}));
+					varId++;
+				}
+			}
+			if (Defines.getSpecial("PhysVarHack")) {
+				final String[] pvl = { "Max Walk Speed", "Max Fall Speed", "Gravity", "Alt Gravity", "Walk Accel",
+						"Jump Control", "Friction", "Jump Force" };
+				cl.add(new Label("Physics Variables:", 4, 264));
+				varId = 0;
+				int label = 0;
+				boolean labelWater = false;
+				for (int i = 0; i < 4; i += 2) {
+					for (int j = 0; j < 8; j++) {
+						if (varId > 15)
+							break;
+						final int vi2 = varId;
+						cl.add(new Label(pvl[label] + (labelWater ? " (W)" : "") + ":", j * width + 2, 284 + i * 16));
+						cl.add(new ShortBox(j * width + 2, 300 + i * 16, width - 6, 16, new Supplier<Short>() {
+							@Override
+							public Short get() {
+								return Profile.getPhysVariable(vi2);
+							}
+						}, new Function<Short, Short>() {
+							@Override
+							public Short apply(Short t) {
+								Profile.setPhysVariable(vi2, t);
+								return t;
+							}
+						}));
+						varId++;
+						label++;
+						if (label > 7) {
+							label = 0;
+							labelWater = true;
+						}
+					}
+				}
+				cl.add(new Label("(W) - Water physics variable", 4, 350));
+				cl.add(new BooleanBox("Water doesn't cause splash and trigger air timer", 4, 374,
+						new Supplier<Boolean>() {
+							@Override
+							public Boolean get() {
+								return (Profile.getPhysVariable(16) == 1 ? true : false);
+							}
+						}, new Function<Boolean, Boolean>() {
+							@Override
+							public Boolean apply(Boolean t) {
+								Profile.setPhysVariable(16, (short) (t ? 1 : 0));
+								return t;
+							}
+						}));
+			}
+		}
 	}
 
 	@Override
@@ -506,8 +535,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			bi++;
 		}
 		// components
+		g2d.translate(0, 17);
 		if (Profile.isLoaded()) {
-			g2d.translate(0, 17);
 			for (Component comp : compListMap.get(currentTab)) {
 				comp.render(g2d);
 				if (DEBUG) {
@@ -517,11 +546,15 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					g2d.setColor(oc);
 				}
 			}
-			g2d.translate(0, -17);
 		} else {
+			g2d.setFont(Resources.fontL);
+			g2d.setColor(Color.black);
+			FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2);
+			g2d.setFont(Resources.font);
 			g2d.setColor(new Color(0, 0, 0, 0.5f));
 			g2d.fillRect(0, 0, winSize2.width, winSize2.height);
 		}
+		g2d.translate(0, -17);
 		// dialog box
 		if (dBox != null)
 			dBox.render(g);
@@ -530,15 +563,19 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
 		g2d.setColor(Color.black);
 		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
+		final EditorTab[] tv = EditorTab.values();
+		int tn = tv.length;
+		if (!Defines.getSpecial("VarHack"))
+			tn--;
 		int ti = 0;
-		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / 4 + 1) {
-			final EditorTab t = EditorTab.values()[ti];
+		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
+			final EditorTab t = tv[ti];
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
 			FrontUtils.drawString(g2d, t.label(), xx + 18, winSize2.height - 20);
 			if (Profile.isLoaded() && t == currentTab) {
 				g2d.setColor((Profile.isLoaded() ? Color.white : Color.gray));
-				g2d.drawLine(xx + 1, winSize2.height - 17, xx + winSize2.width / 4 + 1, winSize2.height - 17);
+				g2d.drawLine(xx + 1, winSize2.height - 17, xx + winSize2.width / tn + 1, winSize2.height - 17);
 				g2d.setColor(Color.black);
 			}
 			ti++;
@@ -612,10 +649,14 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			}
 		} else if (py >= winSize2.height - 17 && Profile.isLoaded()) {
 			// editor tabs
+			final EditorTab[] tv = EditorTab.values();
+			int tn = tv.length;
+			if (!Defines.getSpecial("VarHack"))
+				tn--;
 			int ti = 0;
-			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / 4 + 1) {
-				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 17, winSize2.width / 4 + 1, 16)) {
-					currentTab = EditorTab.values()[ti];
+			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
+				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 17, winSize2.width / tn + 1, 16)) {
+					currentTab = tv[ti];
 					repaint();
 					break;
 				}
@@ -633,6 +674,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 					comp.onClick(px, py - 17, shift, ctrl);
 					repaint();
+					break;
 				}
 			}
 		}

@@ -12,8 +12,8 @@ public class Resources {
 	private Resources() {
 	}
 
-	public static Font fontB, font, fontS;
-	
+	public static Font fontB, font, fontS, fontL;
+
 	public static BufferedImage icon;
 	public static BufferedImage ui;
 	public static BufferedImage checkboxOff, checkboxOn, checkboxDisabled;
@@ -27,6 +27,7 @@ public class Resources {
 		fontB = new Font("Arial", Font.PLAIN, 1);
 		font = fontB.deriveFont(Font.PLAIN, 11.0f);
 		fontS = fontB.deriveFont(Font.PLAIN, 9.0f);
+		fontL = fontB.deriveFont(Font.BOLD, 48.0f);
 		icon = ImageIO.read(Resources.class.getResourceAsStream("icon.png"));
 		ui = ImageIO.read(Resources.class.getResourceAsStream("ui.png"));
 		checkboxOff = ui.getSubimage(0, 0, 16, 16);
@@ -39,9 +40,10 @@ public class Resources {
 		arrowDown = ui.getSubimage(64, 0, 8, 8);
 		arrowUp = ui.getSubimage(72, 0, 8, 8);
 		checkboxDisabled = ui.getSubimage(64, 8, 16, 16);
-		editorTabIcons = new BufferedImage[4];
-		for (int i = 0; i < editorTabIcons.length; i++)
+		editorTabIcons = new BufferedImage[5];
+		for (int i = 0; i < 4; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
+		editorTabIcons[4] = ui.getSubimage(64, 24, 16, 16);
 		toolbarIcons = new BufferedImage[4];
 		for (int i = 0; i < toolbarIcons.length; i++)
 			toolbarIcons[i] = ui.getSubimage(i * 16, 32, 16, 16);

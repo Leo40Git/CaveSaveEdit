@@ -25,13 +25,14 @@ public class BooleanBox extends Component {
 	@Override
 	public void render(Graphics g) {
 		String t = label;
-		if (t.contains("."))
+		if (t.contains(".")) {
 			t = Defines.get(t);
-		if (label.equals(t)) {
-			disabled = true;
-			return;
-		} else
-			disabled = false;
+			if (label.equals(t)) {
+				disabled = true;
+				return;
+			} else
+				disabled = false;
+		}
 		g.drawImage((vSup.get() ? Resources.checkboxOn : Resources.checkboxOff), x, y, null);
 		FrontUtils.drawString(g, t, x + 18, y - 3);
 	}
