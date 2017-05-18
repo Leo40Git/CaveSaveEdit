@@ -3,6 +3,8 @@ package com.leo.cse.frontend;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +16,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import com.leo.cse.backend.Profile;
 
-public class Main extends JFrame {
+public class Main extends JFrame implements MouseListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
@@ -35,12 +37,13 @@ public class Main extends JFrame {
 			System.exit(1);
 		}
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle("CaveSaveEdit");
+		setTitle(this);
 		setBackground(Color.white);
 		setIconImage(Resources.icon);
 		SaveEditorPanel sep = new SaveEditorPanel();
 		add(sep);
 		addMouseListener(sep);
+		addMouseListener(this);
 		addMouseWheelListener(sep);
 		setMaximumSize(WINDOW_SIZE);
 		setMinimumSize(WINDOW_SIZE);
@@ -69,9 +72,20 @@ public class Main extends JFrame {
 					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 			return;
 		} finally {
+			setTitle(window);
 			JOptionPane.showMessageDialog(Main.window, "The profile file was loaded successfully.",
 					"Profile loaded successfully", JOptionPane.INFORMATION_MESSAGE);
 		}
+	}
+
+	public static void setTitle(Main window) {
+		if (window == null)
+			window = Main.window;
+		if (Profile.isLoaded() && Profile.getFile() != null)
+			window.setTitle(
+					"CaveSaveEdit - " + Profile.getFile().getAbsolutePath() + (Profile.isModified() ? "*" : ""));
+		else
+			window.setTitle("CaveSaveEdit");
 	}
 
 	public static void main(String[] args) {
@@ -84,10 +98,31 @@ public class Main extends JFrame {
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();
 			window.setVisible(true);
-			File p = new File("./Profile.dat");
+			File p = new File("Profile.dat");
 			if (p.exists())
 				loadProfile(p);
 		});
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		setTitle(window);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
 	}
 
 }

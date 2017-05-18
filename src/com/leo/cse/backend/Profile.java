@@ -116,6 +116,7 @@ public class Profile {
 		}
 
 		public void setId(int id) {
+			modified = true;
 			this.id = id;
 		}
 
@@ -124,6 +125,7 @@ public class Profile {
 		}
 
 		public void setLevel(int level) {
+			modified = true;
 			this.level = level;
 		}
 
@@ -132,6 +134,7 @@ public class Profile {
 		}
 
 		public void setExp(int exp) {
+			modified = true;
 			this.exp = exp;
 		}
 
@@ -140,6 +143,7 @@ public class Profile {
 		}
 
 		public void setMaxAmmo(int maxAmmo) {
+			modified = true;
 			this.maxAmmo = maxAmmo;
 		}
 
@@ -148,6 +152,7 @@ public class Profile {
 		}
 
 		public void setCurrentAmmo(int curAmmo) {
+			modified = true;
 			this.curAmmo = curAmmo;
 		}
 
@@ -244,6 +249,7 @@ public class Profile {
 		}
 
 		public void setId(int id) {
+			modified = true;
 			this.id = id;
 		}
 
@@ -252,6 +258,7 @@ public class Profile {
 		}
 
 		public void setLocation(int location) {
+			modified = true;
 			this.location = location;
 		}
 
@@ -281,7 +288,7 @@ public class Profile {
 	}
 
 	/**
-	 * If <code>true</code>, a profile has been loaded.
+	 * Loaded flag. If <code>true</code>, a profile has been loaded.
 	 */
 	private static boolean loaded = false;
 	/**
@@ -295,6 +302,10 @@ public class Profile {
 	 * does NOT update other fields when modified.</i>
 	 */
 	private static byte[] data = null;
+	/**
+	 * Modified flag. If <code>true</code>, the currently loaded profile has been modified.
+	 */
+	private static boolean modified = false;
 
 	// reference for pointers: http://www.cavestory.org/guides/profile.txt
 	/**
@@ -497,10 +508,24 @@ public class Profile {
 				fos.write(data);
 			}
 		}
+		// unset modified flag
+		modified = false;
 	}
 
 	public static boolean isLoaded() {
 		return loaded;
+	}
+	
+	public static File getFile() {
+		return file;
+	}
+	
+	public static byte[] getData() {
+		return data;
+	}
+	
+	public static boolean isModified() {
+		return modified;
 	}
 
 	public static int getMap() {
@@ -508,6 +533,7 @@ public class Profile {
 	}
 
 	public static void setMap(int map) {
+		modified = true;
 		Profile.map = map;
 	}
 
@@ -516,6 +542,7 @@ public class Profile {
 	}
 
 	public static void setSong(int song) {
+		modified = true;
 		Profile.song = song;
 	}
 
@@ -524,6 +551,7 @@ public class Profile {
 	}
 
 	public static void setX(short x) {
+		modified = true;
 		Profile.x = x;
 	}
 
@@ -532,6 +560,7 @@ public class Profile {
 	}
 
 	public static void setY(short y) {
+		modified = true;
 		Profile.y = y;
 	}
 
@@ -540,6 +569,7 @@ public class Profile {
 	}
 
 	public static void setDirection(int direction) {
+		modified = true;
 		Profile.direction = direction;
 	}
 
@@ -548,6 +578,7 @@ public class Profile {
 	}
 
 	public static void setMaxHealth(short maxHealth) {
+		modified = true;
 		Profile.maxHealth = maxHealth;
 	}
 
@@ -556,6 +587,7 @@ public class Profile {
 	}
 
 	public static void setStarCount(short starCount) {
+		modified = true;
 		Profile.starCount = starCount;
 	}
 
@@ -564,6 +596,7 @@ public class Profile {
 	}
 
 	public static void setCurHealth(short curHealth) {
+		modified = true;
 		Profile.curHealth = curHealth;
 	}
 
@@ -572,6 +605,7 @@ public class Profile {
 	}
 
 	public static void setCurWeapon(int curWeapon) {
+		modified = true;
 		Profile.curWeapon = curWeapon;
 	}
 
@@ -601,6 +635,7 @@ public class Profile {
 	 *            otherwise
 	 */
 	public static void setEquip(int id, boolean equipped) {
+		modified = true;
 		equips[id] = equipped;
 	}
 
@@ -609,6 +644,7 @@ public class Profile {
 	}
 
 	public static void setTime(int time) {
+		modified = true;
 		Profile.time = time;
 	}
 
@@ -647,6 +683,7 @@ public class Profile {
 	 *            new item ID
 	 */
 	public static void setItem(int id, int value) {
+		modified = true;
 		items[id] = value;
 	}
 
@@ -689,6 +726,7 @@ public class Profile {
 	public static void setFlag(int id, boolean set) {
 		if (flags == null)
 			return;
+		modified = true;
 		flags[id] = set;
 	}
 
@@ -716,6 +754,7 @@ public class Profile {
 	 *            new costume
 	 */
 	public static void setMimCostume(long costume) {
+		modified = true;
 		for (int i = 7968; i < 7995; i++)
 			setFlag(i, (costume & (long) Math.pow(2, i - 7968)) != 0);
 	}
@@ -741,6 +780,7 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setVariable(int id, short value) {
+		modified = true;
 		pushToData();
 		ByteUtils.writeShort(data, 0x50A + id * Short.BYTES, value);
 		pullFromData();
@@ -752,6 +792,7 @@ public class Profile {
 	}
 	
 	public static void setPhysVariable(int id, short value) {
+		modified = true;
 		pushToData();
 		ByteUtils.writeShort(data, 0x4DC + id * Short.BYTES, value);
 		pullFromData();
