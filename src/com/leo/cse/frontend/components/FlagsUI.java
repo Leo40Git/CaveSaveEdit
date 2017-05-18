@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.components;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -100,10 +101,17 @@ public class FlagsUI extends Component implements IScrollable {
 		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148,
 				16 + 18 * FLAGS_PER_SCROLL - 7, null);
 		g.drawString("Hide System Flags?", xx + 166, 16 + 18 * FLAGS_PER_SCROLL + 5);
-		g.drawString("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 326, 16 + 18 * FLAGS_PER_SCROLL + 5);
+		g.drawString("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 326,
+				16 + 18 * FLAGS_PER_SCROLL + 5);
+		g.setColor(Color.white);
+		g.fillRect(winSize.width - 20, 1, 20, 19);
+		g.setColor(Color.black);
 		g.drawLine(winSize.width - 20, 0, winSize.width - 20, winSize.height - 20);
 		g.drawLine(winSize.width - 20, 20, winSize.width, 20);
 		g.drawImage(Resources.arrowUp, winSize.width - 14, 6, null);
+		g.setColor(Color.white);
+		g.fillRect(winSize.width - 19, winSize.height - 39, 21, 19);
+		g.setColor(Color.black);
 		g.drawLine(winSize.width - 20, winSize.height - 40, winSize.width, winSize.height - 40);
 		g.drawLine(0, winSize.height - 20, winSize.width, winSize.height - 20);
 		g.drawImage(Resources.arrowDown, winSize.width - 14, winSize.height - 33, null);

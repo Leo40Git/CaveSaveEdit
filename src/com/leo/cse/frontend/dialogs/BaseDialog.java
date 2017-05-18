@@ -41,7 +41,10 @@ public class BaseDialog extends Dialog {
 	@Override
 	public void render(Graphics g) {
 		final int x = getWindowX(), y = getWindowY(false);
-		g.clearRect(x, y, width, height);
+		g.setColor(Color.white);
+		g.fillRect(x, y, width, 18);
+		g.setColor(Main.BG_COLOR);
+		g.fillRect(x, y + 18, width, height - 18);
 		g.setColor(Color.black);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, title, x + 4, y);

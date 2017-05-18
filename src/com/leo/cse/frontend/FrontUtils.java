@@ -18,8 +18,14 @@ public class FrontUtils {
 		}
 	}
 
-	public static void drawStringCentered(Graphics g, String str, int x, int y) {
+	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean vert) {
+		if (vert)
+			y -= g.getFontMetrics().getStringBounds(str, g).getHeight() / 2;
 		drawString(g, str, (int) (x - g.getFontMetrics().getStringBounds(str, g).getWidth() / 2), y);
+	}
+
+	public static void drawStringCentered(Graphics g, String str, int x, int y) {
+		drawStringCentered(g, str, x, y, false);
 	}
 
 	public static String intsToString(int... nums) {

@@ -23,6 +23,8 @@ public class ShortBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
+		g.setColor(Color.white);
+		g.fillRect(x, y, width, height);
 		g.setColor(Color.black);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, Short.toString(vSup.get()), x + 3, y);

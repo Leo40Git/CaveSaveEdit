@@ -303,7 +303,8 @@ public class Profile {
 	 */
 	private static byte[] data = null;
 	/**
-	 * Modified flag. If <code>true</code>, the currently loaded profile has been modified.
+	 * Modified flag. If <code>true</code>, the currently loaded profile has
+	 * been modified.
 	 */
 	private static boolean modified = false;
 
@@ -456,11 +457,16 @@ public class Profile {
 		String header = ByteUtils.readString(data, 0, HEADER.length());
 		if (!HEADER.equals(header))
 			throw new IOException("invalid file header");
+		// check flag header
 		String flag = ByteUtils.readString(data, 0x218, FLAG.length());
 		if (!FLAG.equals(flag))
 			throw new IOException("Flag header is missing!");
+		// pull values from data
 		pullFromData();
+		// set loaded flag
 		loaded = true;
+		// unset modified flag
+		modified = false;
 	}
 
 	/**
@@ -515,15 +521,15 @@ public class Profile {
 	public static boolean isLoaded() {
 		return loaded;
 	}
-	
+
 	public static File getFile() {
 		return file;
 	}
-	
+
 	public static byte[] getData() {
 		return data;
 	}
-	
+
 	public static boolean isModified() {
 		return modified;
 	}
@@ -785,12 +791,12 @@ public class Profile {
 		ByteUtils.writeShort(data, 0x50A + id * Short.BYTES, value);
 		pullFromData();
 	}
-	
+
 	public static short getPhysVariable(int id) {
 		pushToData();
 		return ByteUtils.readShort(data, 0x4DC + id * Short.BYTES);
 	}
-	
+
 	public static void setPhysVariable(int id, short value) {
 		modified = true;
 		pushToData();

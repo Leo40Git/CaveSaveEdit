@@ -29,6 +29,8 @@ public class DefineBox extends IntegerBox {
 
 	@Override
 	public void render(Graphics g) {
+		g.setColor(Color.white);
+		g.fillRect(x, y, width, height);
 		g.setColor(Color.black);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, Defines.get(type, vSup.get()), x + 3, y);

@@ -516,10 +516,14 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2d.clearRect(0, 0, winSize2.width, winSize2.height);
+		g2d.setColor(Main.BG_COLOR);
+		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
 		g2d.setColor(Color.black);
 		g2d.setFont(Resources.font);
 		// toolbar
+		g2d.setColor(Color.white);
+		g2d.fillRect(0, 0, winSize2.width, 17);
+		g2d.setColor(Color.black);
 		g2d.drawLine(0, 0, winSize.width, 0);
 		g2d.drawLine(0, 17, winSize.width, 17);
 		int bi = 0;
@@ -540,17 +544,14 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			for (Component comp : compListMap.get(currentTab))
 				comp.render(g2d);
 		} else {
-			g2d.setFont(Resources.fontL);
-			g2d.setColor(Color.black);
-			FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2);
-			g2d.setFont(Resources.font);
 			g2d.setColor(new Color(0, 0, 0, 0.5f));
 			g2d.fillRect(0, 0, winSize2.width, winSize2.height);
+			g2d.setFont(Resources.fontL);
+			g2d.setColor(Color.black);
+			FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true);
+			g2d.setFont(Resources.font);
 		}
 		g2d.translate(0, -17);
-		// dialog box
-		if (dBox != null)
-			dBox.render(g);
 		// editor tabs
 		g2d.setColor((Profile.isLoaded() ? Color.white : Color.gray));
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
@@ -563,19 +564,29 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		int ti = 0;
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 			final EditorTab t = tv[ti];
+			if (Profile.isLoaded() && t == currentTab) {
+				g2d.setColor((Profile.isLoaded() ? Main.BG_COLOR : Color.gray));
+				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 17);
+				g2d.setColor(Color.black);
+			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
 			FrontUtils.drawString(g2d, t.label(), xx + 18, winSize2.height - 20);
-			if (Profile.isLoaded() && t == currentTab) {
-				g2d.setColor((Profile.isLoaded() ? Color.white : Color.gray));
-				g2d.drawLine(xx + 1, winSize2.height - 17, xx + winSize2.width / tn + 1, winSize2.height - 17);
-				g2d.setColor(Color.black);
-			}
 			ti++;
 		}
+		// dialog box
+		if (dBox != null)
+			dBox.render(g);
 	}
 
 	private void loadProfile() {
+		if (Profile.isLoaded() && Profile.isModified()) {
+			int sel = JOptionPane.showConfirmDialog(Main.window,
+					"Are you sure you want to load a new profile?\nUnsaved changes will be lost!",
+					"Unsaved changes detected", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (sel == JOptionPane.NO_OPTION)
+				return;
+		}
 		if (fc == null)
 			fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Profile Files", "dat");
