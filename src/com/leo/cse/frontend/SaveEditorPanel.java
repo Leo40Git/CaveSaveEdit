@@ -96,7 +96,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setMap(t);
 				return t;
 			}
-		}, "Map", "Map"));
+		}, "Map", "map"));
 		cl.add(new Label("Song:", 4, 24));
 		cl.add(new DefineBox(36, 24, 240, 16, new Supplier<Integer>() {
 			@Override
@@ -109,7 +109,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setSong(t);
 				return t;
 			}
-		}, "Song", "Song"));
+		}, "Song", "song"));
 		cl.add(new Label("Position: (", 4, 44));
 		cl.add(new ShortBox(54, 44, 60, 16, new Supplier<Short>() {
 			@Override
@@ -122,7 +122,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setX((short) (t * 16));
 				return t;
 			}
-		}));
+		}, "X position"));
 		cl.add(new Label(",", 118, 44));
 		cl.add(new ShortBox(124, 44, 60, 16, new Supplier<Short>() {
 			@Override
@@ -135,7 +135,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setY((short) (t * 16));
 				return t;
 			}
-		}));
+		}, "Y position"));
 		cl.add(new Label(")", 188, 44));
 		cl.add(new Label("Exact Pos: (", 4, 64));
 		cl.add(new ShortBox(64, 64, 60, 16, new Supplier<Short>() {
@@ -149,7 +149,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setX(t);
 				return t;
 			}
-		}));
+		}, "exact X position"));
 		cl.add(new Label(",", 128, 64));
 		cl.add(new ShortBox(134, 64, 60, 16, new Supplier<Short>() {
 			@Override
@@ -162,7 +162,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setY(t);
 				return t;
 			}
-		}));
+		}, "exacct Y position"));
 		cl.add(new Label(") (1 tile = 16x16px)", 198, 64));
 		cl.add(new Label("Direction:", 4, 84));
 		cl.add(new RadioBoxes(54, 90, 80, 2, new String[] { "Left", "Right" }, new Supplier<Integer>() {
@@ -189,7 +189,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setCurHealth(t);
 				return t;
 			}
-		}));
+		}, "current health"));
 		cl.add(new Label("/", 108, 104));
 		cl.add(new ShortBox(114, 104, 60, 16, new Supplier<Short>() {
 			@Override
@@ -202,7 +202,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setMaxHealth(t);
 				return t;
 			}
-		}));
+		}, "maximum health"));
 		cl.add(new Label("Time Played:", 4, 124));
 		cl.add(new IntegerBox(68, 124, 120, 16, new Supplier<Integer>() {
 			@Override
@@ -215,7 +215,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setTime(t);
 				return t;
 			}
-		}));
+		}, "time played"));
 		cl.add(new Label("(resets at 4294967295)", 192, 124));
 		if (!Defines.getSpecial("VarHack") && Defines.getSpecial("MimHack")) {
 			cl.add(new Label("<MIM Costume:", 4, 144));
@@ -230,7 +230,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.setMimCostume(t);
 					return t;
 				}
-			}));
+			}, "<MIM costume"));
 		}
 		// inventory tab
 		cl = compListMap.get(EditorTab.INVENTORY);
@@ -263,7 +263,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getWeapon(i2).setId(t);
 					return t;
 				}
-			}, "Weapon", "Weapon " + (i + 1)));
+			}, "Weapon", "weapon " + (i + 1)));
 			cl.add(new Label("Level:", xx, 38));
 			cl.add(new IntegerBox(xx, 54, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -276,7 +276,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getWeapon(i2).setLevel(t);
 					return t;
 				}
-			}));
+			}, "weapon " + (i + 1) + " level"));
 			cl.add(new Label("Extra EXP:", xx, 70));
 			cl.add(new IntegerBox(xx, 86, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -289,7 +289,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getWeapon(i2).setExp(t);
 					return t;
 				}
-			}));
+			}, "weapon " + (i + 1) + " extra EXP"));
 			cl.add(new Label("Ammo:", xx + 10, 102));
 			cl.add(new IntegerBox(xx + 10, 118, 110, 16, new Supplier<Integer>() {
 				@Override
@@ -302,7 +302,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getWeapon(i2).setCurrentAmmo(t);
 					return t;
 				}
-			}));
+			}, "weapon " + (i + 1) + " current ammo"));
 			cl.add(new Label("/", xx + 2, 134));
 			cl.add(new IntegerBox(xx + 10, 134, 110, 16, new Supplier<Integer>() {
 				@Override
@@ -315,7 +315,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getWeapon(i2).setMaxAmmo(t);
 					return t;
 				}
-			}));
+			}, "weapon " + (i + 1) + " maximum ammo"));
 			xx += 122;
 		}
 		int itemId = 0;
@@ -334,7 +334,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 								Profile.setItem(ii2, t);
 								return t;
 							}
-						}, "Item", "Item " + (itemId + 1)));
+						}, "Item", "item " + (itemId + 1)));
 				itemId++;
 			}
 		}
@@ -370,7 +370,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setStarCount(t);
 				return t;
 			}
-		}));
+		}, "Whimsical Star count"));
 		// warps tab
 		cl = compListMap.get(EditorTab.WARPS);
 		for (int i = 0; i < 7; i++) {
@@ -387,7 +387,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getTeleporter(i2).setId(t);
 					return t;
 				}
-			}, "Warp", "Warp " + (i + 1)));
+			}, "Warp", "warp " + (i + 1)));
 			cl.add(new Label("Location:", 192, yy));
 			cl.add(new DefineBox(242, yy, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -400,7 +400,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getTeleporter(i2).setLocation(t);
 					return t;
 				}
-			}, "WarpLoc", "Warp " + (i + 1) + " Location"));
+			}, "WarpLoc", "warp " + (i + 1) + "'s location"));
 		}
 		// flags tab
 		cl = compListMap.get(EditorTab.FLAGS);
@@ -455,7 +455,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 							Profile.setVariable(vi2, t);
 							return t;
 						}
-					}));
+					}, "variable " + varId));
 					varId++;
 				}
 			}
@@ -483,7 +483,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 								Profile.setPhysVariable(vi2, t);
 								return t;
 							}
-						}));
+						}, (labelWater ? "water " : "") + pvl[label].toLowerCase()));
 						varId++;
 						label++;
 						if (label > 7) {

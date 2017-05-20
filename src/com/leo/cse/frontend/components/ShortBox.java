@@ -14,11 +14,13 @@ public class ShortBox extends Component {
 	
 	private Supplier<Short> vSup;
 	private Function<Short, Short> update;
+	private String description;
 
-	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update) {
+	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update, String description) {
 		super(x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
+		this.description = description;
 	}
 
 	@Override
@@ -32,7 +34,7 @@ public class ShortBox extends Component {
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for this field:", vSup.get());
+		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":", vSup.get());
 		if (nVal == null)
 			return;
 		try {

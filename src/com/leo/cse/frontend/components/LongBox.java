@@ -14,11 +14,14 @@ public class LongBox extends Component {
 
 	private Supplier<Long> vSup;
 	private Function<Long, Long> update;
+	private String description;
 
-	public LongBox(int x, int y, int width, int height, Supplier<Long> vSup, Function<Long, Long> update) {
+	public LongBox(int x, int y, int width, int height, Supplier<Long> vSup, Function<Long, Long> update,
+			String description) {
 		super(x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
+		this.description = description;
 	}
 
 	@Override
@@ -32,7 +35,7 @@ public class LongBox extends Component {
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for this field:",
+		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":",
 				Long.toUnsignedString(vSup.get()));
 		if (nVal == null)
 			return;

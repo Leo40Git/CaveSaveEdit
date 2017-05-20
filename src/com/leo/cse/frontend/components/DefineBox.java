@@ -13,13 +13,12 @@ import com.leo.cse.frontend.Main;
 
 public class DefineBox extends IntegerBox {
 
-	private String type, description;
+	private String type;
 
 	public DefineBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
 			String type, String description) {
-		super(x, y, width, height, vSup, update);
+		super(x, y, width, height, vSup, update, description);
 		this.type = type;
-		this.description = description;
 	}
 
 	@Override
