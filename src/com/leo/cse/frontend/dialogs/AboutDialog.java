@@ -17,7 +17,7 @@ public class AboutDialog extends BaseDialog {
 		super.render(g);
 		final int x = getWindowX(), y = getWindowY();
 		g.drawImage(Resources.icon, x + 4, y + 4, null);
-		FrontUtils.drawString(g, "CaveSaveEdit version " + Main.VERSION + "\nWritten by Leo40Story\nEarly testing done by zxin", x + 36, y + 4);
+		FrontUtils.drawString(g, "CaveSaveEdit version " + Main.VERSION + "\nWritten by Leo40Story\nEarly testing done by zxin", x + 36, y);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.dialogs;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,9 @@ public class DefineDialog extends BaseDialog {
 		final int x = getWindowX(), y = getWindowY();
 		FrontUtils.drawString(g, "Current defines:\n" + Defines.get("Meta.Name") + "\nBy:\n"
 				+ Defines.get("Meta.Author") + "\nSpecial support:\n" + Defines.getSpecials(), x + 4, y);
+		g.setColor(Color.white);
+		g.fillRect(x + 1, y + height - 34, 299, 16);
+		g.setColor(Color.black);
 		g.drawLine(x, y + height - 34, x + width, y + height - 34);
 		g.drawLine(x + width - 150, y + height - 18, x + width - 150, y + height - 34);
 		FrontUtils.drawStringCentered(g, "Load defines", x + width / 4, y + height - 36);

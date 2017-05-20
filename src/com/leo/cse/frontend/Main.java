@@ -35,8 +35,8 @@ public class Main extends JFrame implements MouseListener {
 			if (Profile.isLoaded() && Profile.isModified()) {
 				int sel = JOptionPane.showConfirmDialog(window,
 						"Are you sure you want to close the editor?\nUnsaved changes will be lost!",
-						"Unsaved changes detected", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-				if (sel == JOptionPane.NO_OPTION)
+						"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (sel == JOptionPane.CANCEL_OPTION)
 					return;
 			}
 			System.exit(0);

@@ -13,18 +13,13 @@ import com.leo.cse.frontend.Main;
 
 public class DefineBox extends IntegerBox {
 
-	private String type, typeName;
+	private String type, description;
 
 	public DefineBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
-			String type, String typeName) {
+			String type, String description) {
 		super(x, y, width, height, vSup, update);
 		this.type = type;
-		this.typeName = typeName;
-	}
-
-	public DefineBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
-			String type) {
-		this(x, y, width, height, vSup, update, type, type);
+		this.description = description;
 	}
 
 	@Override
@@ -38,7 +33,7 @@ public class DefineBox extends IntegerBox {
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		String nVal = (String) JOptionPane.showInputDialog(Main.window, "", "Select " + typeName,
+		String nVal = (String) JOptionPane.showInputDialog(Main.window, "", "Select " + description,
 				JOptionPane.PLAIN_MESSAGE, null, Defines.getAll(type).values().toArray(new String[] {}),
 				Defines.get(type, vSup.get()));
 		if (nVal == null)

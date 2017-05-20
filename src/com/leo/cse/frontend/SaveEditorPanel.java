@@ -96,7 +96,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setMap(t);
 				return t;
 			}
-		}, "Map"));
+		}, "Map", "Map"));
 		cl.add(new Label("Song:", 4, 24));
 		cl.add(new DefineBox(36, 24, 240, 16, new Supplier<Integer>() {
 			@Override
@@ -109,7 +109,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setSong(t);
 				return t;
 			}
-		}, "Song"));
+		}, "Song", "Song"));
 		cl.add(new Label("Position: (", 4, 44));
 		cl.add(new ShortBox(54, 44, 60, 16, new Supplier<Short>() {
 			@Override
@@ -263,7 +263,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getWeapon(i2).setId(t);
 					return t;
 				}
-			}, "Weapon"));
+			}, "Weapon", "Weapon " + (i + 1)));
 			cl.add(new Label("Level:", xx, 38));
 			cl.add(new IntegerBox(xx, 54, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -334,7 +334,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 								Profile.setItem(ii2, t);
 								return t;
 							}
-						}, "Item"));
+						}, "Item", "Item " + (itemId + 1)));
 				itemId++;
 			}
 		}
@@ -387,7 +387,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getTeleporter(i2).setId(t);
 					return t;
 				}
-			}, "Warp"));
+			}, "Warp", "Warp " + (i + 1)));
 			cl.add(new Label("Location:", 192, yy));
 			cl.add(new DefineBox(242, yy, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -400,7 +400,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					Profile.getTeleporter(i2).setLocation(t);
 					return t;
 				}
-			}, "WarpLoc", "Warp Location"));
+			}, "WarpLoc", "Warp " + (i + 1) + " Location"));
 		}
 		// flags tab
 		cl = compListMap.get(EditorTab.FLAGS);
@@ -583,8 +583,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		if (Profile.isLoaded() && Profile.isModified()) {
 			int sel = JOptionPane.showConfirmDialog(Main.window,
 					"Are you sure you want to load a new profile?\nUnsaved changes will be lost!",
-					"Unsaved changes detected", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-			if (sel == JOptionPane.NO_OPTION)
+					"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (sel == JOptionPane.CANCEL_OPTION)
 				return;
 		}
 		if (fc == null)
