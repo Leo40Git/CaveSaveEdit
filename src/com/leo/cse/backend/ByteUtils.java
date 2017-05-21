@@ -181,7 +181,7 @@ public class ByteUtils {
 		int s = 0;
 		for (int i = 0; i < dest.length; i++) {
 			byte v = data[ptr];
-			dest[i] = ((v & (byte) Math.pow(2, s)) != 0);
+			dest[i] = ((v & (1 << s)) != 0);
 			s++;
 			if (s >= 8) {
 				ptr++;
@@ -304,7 +304,7 @@ public class ByteUtils {
 		int vi = 0, s = 0;
 		for (int i = 0; i < value.length; i++) {
 			if (value[i])
-				v[vi] |= (byte) Math.pow(2, s);
+				v[vi] |= 1 << s;
 			s++;
 			if (s >= 8) {
 				vi++;

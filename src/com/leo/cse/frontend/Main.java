@@ -25,7 +25,7 @@ public class Main extends JFrame implements MouseListener {
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 452 + 33);
 	public static final String VERSION = "1.0";
-	public static final Color BG_COLOR = Color.decode("0xF0F0F0");
+	public static final Color COLOR_BG = Color.decode("0xFFFFB1");
 
 	public static Main window;
 
@@ -57,7 +57,7 @@ public class Main extends JFrame implements MouseListener {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
-		setBackground(BG_COLOR);
+		setBackground(COLOR_BG);
 		setIconImage(Resources.icon);
 		SaveEditorPanel sep = new SaveEditorPanel();
 		add(sep);
@@ -91,6 +91,7 @@ public class Main extends JFrame implements MouseListener {
 					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 			return;
 		} finally {
+			Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
 			setTitle(window);
 			window.repaint();
 			JOptionPane.showMessageDialog(Main.window, "The profile file was loaded successfully.",

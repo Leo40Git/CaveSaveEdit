@@ -9,6 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.Defines;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
@@ -29,7 +30,7 @@ public class DefineDialog extends BaseDialog {
 		g.setColor(Color.white);
 		g.fillRect(x + 1, y + height - 34, 299, 16);
 		g.setColor(Color.black);
-		g.drawLine(x, y + height - 34, x + width, y + height - 34);
+		g.drawRect(x, y + height - 35, width, 17);
 		g.drawLine(x + width - 150, y + height - 18, x + width - 150, y + height - 34);
 		FrontUtils.drawStringCentered(g, "Load defines", x + width / 4, y + height - 36);
 		FrontUtils.drawStringCentered(g, "Load default defines", x + width - 150 + width / 4, y + height - 36);
@@ -64,21 +65,23 @@ public class DefineDialog extends BaseDialog {
 			SaveEditorPanel.fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Defines Files", "properties");
 		SaveEditorPanel.fc.setFileFilter(filter);
-		SaveEditorPanel.fc.setCurrentDirectory(new File("."));
+		SaveEditorPanel.fc.setCurrentDirectory(new File(Config.get(Config.KEY_LAST_DEFINES, ".")));
 		int returnVal = SaveEditorPanel.fc.showOpenDialog(Main.window);
-		if (returnVal == JFileChooser.APPROVE_OPTION)
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = SaveEditorPanel.fc.getSelectedFile();
 			try {
-				Defines.read(SaveEditorPanel.fc.getSelectedFile());
+				Defines.read(file);
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(Main.window,
 						"An error occured while loading the defines file:\n" + e.getMessage(),
 						"Could not load defines file!", JOptionPane.ERROR_MESSAGE);
 				return false;
 			} finally {
+				Config.set(Config.KEY_LAST_DEFINES, file.getAbsolutePath());
 				JOptionPane.showMessageDialog(Main.window, "The defines file was loaded successfully.",
 						"Defines loaded successfully", JOptionPane.INFORMATION_MESSAGE);
 			}
-		else
+		} else
 			return false;
 		return true;
 	}

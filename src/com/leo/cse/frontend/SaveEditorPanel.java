@@ -516,7 +516,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2d.setColor(Main.BG_COLOR);
+		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
 		g2d.setColor(Color.black);
 		g2d.setFont(Resources.font);
@@ -565,7 +565,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 			final EditorTab t = tv[ti];
 			if (Profile.isLoaded() && t == currentTab) {
-				g2d.setColor((Profile.isLoaded() ? Main.BG_COLOR : Color.gray));
+				g2d.setColor((Profile.isLoaded() ? Main.COLOR_BG : Color.gray));
 				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 17);
 				g2d.setColor(Color.black);
 			}
@@ -591,7 +591,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Profile Files", "dat");
 		fc.setFileFilter(filter);
-		fc.setCurrentDirectory(new File("."));
+		fc.setCurrentDirectory(new File(Config.get(Config.KEY_LAST_PROFIE, ".")));
 		int returnVal = fc.showOpenDialog(Main.window);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 			Main.loadProfile(fc.getSelectedFile());
@@ -611,8 +611,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		if (py <= 17) {
 			// toolbar
 			int bi = 0;
-			for (int xx = -1; xx < winSize.width; xx += winSize.width / 4 + 1) {
-				if (FrontUtils.pointInRectangle(px, py, xx, 0, winSize.width / 4 + 1, 17)) {
+			for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
+				if (FrontUtils.pointInRectangle(px, py, xx, 0, winSize.width / TOOLBAR.length + 1, 17)) {
 					switch (bi) {
 					case 0: // load profile
 						loadProfile();

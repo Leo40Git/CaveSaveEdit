@@ -9,6 +9,11 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class BaseDialog extends Dialog {
+	
+	public static final Color COLOR_DIALOG = Color.decode("0xFFFFB1");
+	public static final Color COLOR_DIALOG_BORDER = Color.decode("0xB1A671");
+	public static final Color COLOR_TITLE = Color.decode("0x327CB1");
+	public static final Color COLOR_TITLE_BORDER = Color.decode("0x325771");
 
 	protected String title, message;
 	protected int width, height;
@@ -41,14 +46,19 @@ public class BaseDialog extends Dialog {
 	@Override
 	public void render(Graphics g) {
 		final int x = getWindowX(), y = getWindowY(false);
-		g.setColor(Color.white);
+		g.setColor(COLOR_TITLE);
 		g.fillRect(x, y, width, 18);
-		g.setColor(Main.BG_COLOR);
+		g.setColor(COLOR_TITLE_BORDER);
+		g.drawRect(x, y, width, 18);
+		g.setColor(COLOR_DIALOG);
 		g.fillRect(x, y + 18, width, height - 18);
-		g.setColor(Color.black);
-		g.drawRect(x, y, width, height);
+		g.setColor(COLOR_DIALOG_BORDER);
+		g.drawRect(x, y + 18, width, height - 18);
+		g.setColor(Color.white);
 		FrontUtils.drawString(g, title, x + 4, y);
+		g.setColor(COLOR_TITLE_BORDER);
 		g.drawLine(x, y + 18, x + width, y + 18);
+		g.setColor(Color.black);
 		g.drawImage(Resources.dialogClose, x + width - 16, y + 2, null);
 		if (message != null)
 			FrontUtils.drawString(g, message, x + 4, y + 22);

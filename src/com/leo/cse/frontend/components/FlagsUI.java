@@ -115,6 +115,9 @@ public class FlagsUI extends Component implements IScrollable {
 		g.drawLine(winSize.width - 20, winSize.height - 40, winSize.width, winSize.height - 40);
 		g.drawLine(0, winSize.height - 20, winSize.width, winSize.height - 20);
 		g.drawImage(Resources.arrowDown, winSize.width - 14, winSize.height - 33, null);
+		g.setColor(Color.lightGray);
+		g.fillRect(winSize.width - 19, 21, 19, 362);
+		g.setColor(Color.black);
 		g.drawRect(winSize.width - 18,
 				22 + (int) (((float) sSup.get() / (shownFlags.size() - FLAGS_PER_SCROLL)) * (winSize.height - 80)), 16,
 				16);
