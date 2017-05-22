@@ -103,6 +103,11 @@ public class Defines {
 				ret += " + <PHY Addon";
 		} else if (getSpecial("MimHack"))
 			ret = "<MIM Hack";
+		if (getSpecial("DoubleRes"))
+			if (ret.equals("None"))
+				ret = "2x Res";
+			else
+				ret += ", 2x Res";
 		return ret;
 	}
 

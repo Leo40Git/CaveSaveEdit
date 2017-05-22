@@ -21,7 +21,7 @@ public class FrontUtils {
 
 	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean vert) {
 		if (vert)
-			y -= g.getFontMetrics().getStringBounds(str, g).getHeight() / 2;
+			y -= (g.getFontMetrics().getStringBounds(str, g).getHeight() / 4) * 3;
 		drawString(g, str, (int) (x - g.getFontMetrics().getStringBounds(str, g).getWidth() / 2), y);
 	}
 

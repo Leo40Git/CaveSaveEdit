@@ -9,7 +9,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,12 +17,14 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.leo.cse.backend.Profile;
+import com.leo.cse.frontend.data.CSData;
+import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class Main extends JFrame implements MouseListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
-	public static final Dimension WINDOW_SIZE = new Dimension(867, 452 + 33);
+	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
 	public static final String VERSION = "1.0";
 	public static final Color COLOR_BG = Color.decode("0xFFFFB1");
 
@@ -85,12 +86,24 @@ public class Main extends JFrame implements MouseListener {
 	public static void loadProfile(File file) {
 		try {
 			Profile.read(file);
-		} catch (IOException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(Main.window,
 					"An error occured while loading the profile file:\n" + e.getMessage(),
 					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 			return;
 		} finally {
+			// unload existing exe
+			CSData.unload();
+			// try to load exe
+			File exe = new File(file.getAbsoluteFile().getParent() + "/" + Defines.get("Game.ExeName") + ".exe");
+			if (exe.exists())
+				try {
+					CSData.load(exe);
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.err.println("EXE loading failed.");
+				}
 			Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
 			setTitle(window);
 			window.repaint();

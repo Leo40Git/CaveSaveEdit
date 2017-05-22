@@ -13,5 +13,8 @@ hs_err_pid*
 
 /bin/
 /.settings/
+/test/
+/data/
+*.exe
 *.dat
-*.dat.bkp
+window.rect

@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.components;
+package com.leo.cse.frontend.ui.components;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,7 +17,7 @@ import com.leo.cse.frontend.Resources;
 
 public class FlagsUI extends Component implements IScrollable {
 
-	private static final int FLAGS_PER_SCROLL = 22;
+	private static final int FLAGS_PER_SCROLL = 35;
 
 	private Supplier<Integer> sSup;
 	private Consumer<Integer> sUpdate;
@@ -84,7 +84,7 @@ public class FlagsUI extends Component implements IScrollable {
 		calculateShownFlags();
 		final Dimension winSize = Main.window.getActualSize(true);
 		final int xx = 4;
-		int yy = 16;
+		int yy = 15;
 		for (int i = sSup.get(); i < Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL); i++) {
 			final int flagId = shownFlags.get(i);
 			Image chkImage = Resources.checkboxDisabled;
@@ -95,14 +95,12 @@ public class FlagsUI extends Component implements IScrollable {
 			g.drawString(getFlagDescription(flagId), xx + 42, yy);
 			yy += 18;
 		}
-		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2,
-				16 + 18 * FLAGS_PER_SCROLL - 7, null);
-		g.drawString("Hide Undefined Flags?", xx + 16, 16 + 18 * FLAGS_PER_SCROLL + 5);
-		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148,
-				16 + 18 * FLAGS_PER_SCROLL - 7, null);
-		g.drawString("Hide System Flags?", xx + 166, 16 + 18 * FLAGS_PER_SCROLL + 5);
-		g.drawString("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 326,
-				16 + 18 * FLAGS_PER_SCROLL + 5);
+		final int cy = 16 + 18 * FLAGS_PER_SCROLL - 4;
+		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 7, null);
+		g.drawString("Hide Undefined Flags?", xx + 16, cy + 5);
+		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148, cy - 7, null);
+		g.drawString("Hide System Flags?", xx + 166, cy + 5);
+		g.drawString("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 326, cy + 5);
 		g.setColor(Color.white);
 		g.fillRect(winSize.width - 20, 1, 20, 19);
 		g.setColor(Color.black);
@@ -116,7 +114,7 @@ public class FlagsUI extends Component implements IScrollable {
 		g.drawLine(0, winSize.height - 20, winSize.width, winSize.height - 20);
 		g.drawImage(Resources.arrowDown, winSize.width - 14, winSize.height - 33, null);
 		g.setColor(Color.lightGray);
-		g.fillRect(winSize.width - 19, 21, 19, 362);
+		g.fillRect(winSize.width - 19, 21, 19, winSize.height - 61);
 		g.setColor(Color.black);
 		g.drawRect(winSize.width - 18,
 				22 + (int) (((float) sSup.get() / (shownFlags.size() - FLAGS_PER_SCROLL)) * (winSize.height - 80)), 16,
@@ -136,10 +134,10 @@ public class FlagsUI extends Component implements IScrollable {
 			if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, 0, 20, 20))
 				sUpdate.accept(Math.max(sSup.get() - amount, 0));
 			else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 40, 20, 20))
-				sUpdate.accept(Math.min(sSup.get() + amount, shownFlags.size() - FLAGS_PER_SCROLL));
+				sUpdate.accept(Math.max(0, Math.min(sSup.get() + amount, shownFlags.size() - FLAGS_PER_SCROLL)));
 		} else {
 			final int xx = 4;
-			int yy = 16;
+			int yy = 15;
 			for (int i = sSup.get(); i < Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL); i++) {
 				final int flagId = shownFlags.get(i);
 				if (flagIsValid(flagId) && FrontUtils.pointInRectangle(x, y, xx, yy - 16, 16, 16)) {
@@ -148,15 +146,16 @@ public class FlagsUI extends Component implements IScrollable {
 				}
 				yy += 18;
 			}
-			if (FrontUtils.pointInRectangle(x, y, xx, 16 + 18 * FLAGS_PER_SCROLL - 9, 16, 16)) {
+			final int cy = 16 + 18 * FLAGS_PER_SCROLL - 4;
+			if (FrontUtils.pointInRectangle(x, y, xx, cy - 7, 16, 16)) {
 				huUpdate.accept(!huSup.get());
 				calculateShownFlags();
-				sUpdate.accept(Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL));
+				sUpdate.accept(Math.max(0, Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL)));
 			}
-			if (FrontUtils.pointInRectangle(x, y, xx + 148, 16 + 18 * FLAGS_PER_SCROLL - 9, 16, 16)) {
+			if (FrontUtils.pointInRectangle(x, y, xx + 148, cy - 7, 16, 16)) {
 				hsUpdate.accept(!hsSup.get());
 				calculateShownFlags();
-				sUpdate.accept(Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL));
+				sUpdate.accept(Math.max(0, Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL)));
 			}
 		}
 	}

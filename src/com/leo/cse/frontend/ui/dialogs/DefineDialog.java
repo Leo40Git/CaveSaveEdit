@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.dialogs;
+package com.leo.cse.frontend.ui.dialogs;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,7 +13,7 @@ import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.Defines;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.SaveEditorPanel;
+import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class DefineDialog extends BaseDialog {
 

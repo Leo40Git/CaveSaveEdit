@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.components;
+package com.leo.cse.frontend.ui.components;
 
 public interface IScrollable {
 	

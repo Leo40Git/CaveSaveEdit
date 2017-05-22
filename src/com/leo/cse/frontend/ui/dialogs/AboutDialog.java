@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.dialogs;
+package com.leo.cse.frontend.ui.dialogs;
 
 import java.awt.Graphics;
 

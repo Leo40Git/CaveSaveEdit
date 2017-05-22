@@ -1,4 +1,4 @@
-package com.leo.cse.frontend;
+package com.leo.cse.frontend.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,19 +25,25 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.Profile;
-import com.leo.cse.frontend.components.BooleanBox;
-import com.leo.cse.frontend.components.Component;
-import com.leo.cse.frontend.components.DefineBox;
-import com.leo.cse.frontend.components.FlagsUI;
-import com.leo.cse.frontend.components.IScrollable;
-import com.leo.cse.frontend.components.IntegerBox;
-import com.leo.cse.frontend.components.Label;
-import com.leo.cse.frontend.components.LongBox;
-import com.leo.cse.frontend.components.RadioBoxes;
-import com.leo.cse.frontend.components.ShortBox;
-import com.leo.cse.frontend.dialogs.AboutDialog;
-import com.leo.cse.frontend.dialogs.DefineDialog;
-import com.leo.cse.frontend.dialogs.Dialog;
+import com.leo.cse.frontend.Config;
+import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.FrontUtils;
+import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.ui.components.BooleanBox;
+import com.leo.cse.frontend.ui.components.Component;
+import com.leo.cse.frontend.ui.components.DefineBox;
+import com.leo.cse.frontend.ui.components.FlagsUI;
+import com.leo.cse.frontend.ui.components.IScrollable;
+import com.leo.cse.frontend.ui.components.IntegerBox;
+import com.leo.cse.frontend.ui.components.Label;
+import com.leo.cse.frontend.ui.components.LongBox;
+import com.leo.cse.frontend.ui.components.PositionPreview;
+import com.leo.cse.frontend.ui.components.RadioBoxes;
+import com.leo.cse.frontend.ui.components.ShortBox;
+import com.leo.cse.frontend.ui.dialogs.AboutDialog;
+import com.leo.cse.frontend.ui.dialogs.DefineDialog;
+import com.leo.cse.frontend.ui.dialogs.Dialog;
 
 public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheelListener {
 
@@ -114,12 +120,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		cl.add(new ShortBox(54, 44, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return (short) (Profile.getX() / 16);
+				return (short) (Profile.getX() / 32);
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setX((short) (t * 16));
+				Profile.setX((short) (t * 32));
 				return t;
 			}
 		}, "X position"));
@@ -127,12 +133,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		cl.add(new ShortBox(124, 44, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return (short) (Profile.getY() / 16);
+				return (short) (Profile.getY() / 32);
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setY((short) (t * 16));
+				Profile.setY((short) (t * 32));
 				return t;
 			}
 		}, "Y position"));
@@ -232,6 +238,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				}
 			}, "<MIM costume"));
 		}
+		cl.add(new PositionPreview(winSize.width / 2 - 320, 164, new Supplier<Integer>() {
+			@Override
+			public Integer get() {
+				return Profile.getMap();
+			}
+		}));
 		// inventory tab
 		cl = compListMap.get(EditorTab.INVENTORY);
 		final String l = "Selected";
@@ -544,15 +556,15 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			for (Component comp : compListMap.get(currentTab))
 				comp.render(g2d);
 		} else {
-			g2d.setColor(new Color(0, 0, 0, 0.5f));
-			g2d.fillRect(0, 0, winSize2.width, winSize2.height);
+			g2d.setColor(Color.gray);
+			g2d.fillRect(0, 1, winSize2.width, winSize2.height - 1);
 			g2d.setFont(Resources.fontL);
 			g2d.setColor(Color.black);
 			FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true);
-			g2d.setFont(Resources.font);
 		}
 		g2d.translate(0, -17);
 		// editor tabs
+		g2d.setFont(Resources.font);
 		g2d.setColor((Profile.isLoaded() ? Color.white : Color.gray));
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
 		g2d.setColor(Color.black);
@@ -591,12 +603,16 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Profile Files", "dat");
 		fc.setFileFilter(filter);
-		fc.setCurrentDirectory(new File(Config.get(Config.KEY_LAST_PROFIE, ".")));
+		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, "."));
+		while (!dir.isDirectory()) {
+			if (dir.getParentFile() == null)
+				return;
+			dir = dir.getParentFile();
+		}
+		fc.setCurrentDirectory(dir);
 		int returnVal = fc.showOpenDialog(Main.window);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 			Main.loadProfile(fc.getSelectedFile());
-		else
-			return;
 	}
 
 	@Override

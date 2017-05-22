@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.components;
+package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
