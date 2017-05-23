@@ -14,12 +14,15 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.carrotlord.string.StrTools;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code from it
 public class CSData {
@@ -44,14 +47,24 @@ public class CSData {
 			return;
 		File base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 		while (!base.exists()) {
-			String name = JOptionPane.showInputDialog(Main.window, "Enter the mod executable's name:", base.getName());
-			if (name == null)
+			/*
+			 * String name = JOptionPane.showInputDialog(Main.window,
+			 * "Enter the mod executable's name:", base.getName()); if (name == null)
+			 * return; if (!name.endsWith(".exe")) name += ".exe"; base = new
+			 * File(Profile.getFile().getAbsoluteFile().getParent() + "/" + name);
+			 */
+			JFileChooser fc = SaveEditorPanel.fc;
+			if (fc == null)
+				fc = new JFileChooser();
+			fc.setFileFilter(new FileNameExtensionFilter("Applications", "exe"));
+			fc.setCurrentDirectory(base);
+			int returnVal = fc.showOpenDialog(Main.window);
+			if (returnVal == JFileChooser.APPROVE_OPTION)
+				base = fc.getSelectedFile();
+			else
 				return;
-			if (!name.endsWith(".exe"))
-				name += ".exe";
-			base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + name);
 			if (!base.exists())
-				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + name + "\" does not exist!",
+				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + base.getName() + "\" does not exist!",
 						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
 		}
 		CSData.base = base;
@@ -446,7 +459,7 @@ public class CSData {
 					"Requested map number is " + num + ", but maximum map number is " + mapdata.size() + "!");
 		return mapInfo.get(num);
 	}
-	
+
 	public static int getMapInfoCount() {
 		return mapInfo.size();
 	}
