@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -53,7 +52,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final String[] TOOLBAR = new String[] { "Load profile", "MCI settings", "Save", "Set color",
+	private static final String[] TOOLBAR = new String[] { "Load profile", "MCI settings", "Save", "Change line color",
 			"About" };
 
 	public enum EditorTab {
@@ -646,9 +645,11 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 						}
 						break;
 					case 3: // set color
-						Color temp = JColorChooser.showDialog(this, "Select new color", Main.customColor);
-						if (temp != null)
+						Color temp = FrontUtils.showColorChooserDialog(this, "Select new color", Main.customColor, false);
+						if (temp != null) {
 							Main.customColor = temp;
+							Resources.colorImages(Main.customColor);
+						}
 						break;
 					case 4: // about
 						dBox = new AboutDialog();

@@ -1,16 +1,29 @@
 package com.leo.cse.frontend;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
 
 public class FrontUtils {
 
@@ -104,18 +117,122 @@ public class FrontUtils {
 		return str;
 	}
 
+	public static GraphicsConfiguration getGraphicsConfiguration() {
+		return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+	}
+
+	public static BufferedImage createCompatibleImage(int width, int height, int transparency) {
+		BufferedImage image = getGraphicsConfiguration().createCompatibleImage(width, height, transparency);
+		image.coerceData(true);
+		return image;
+	}
+
+	public static void applyQualityRenderingHints(Graphics2D g2d) {
+		g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+	}
+
+	public static BufferedImage generateMask(BufferedImage imgSource, Color color, float alpha) {
+		int imgWidth = imgSource.getWidth();
+		int imgHeight = imgSource.getHeight();
+
+		BufferedImage imgMask = createCompatibleImage(imgWidth, imgHeight, Transparency.TRANSLUCENT);
+		Graphics2D g2 = imgMask.createGraphics();
+		applyQualityRenderingHints(g2);
+
+		g2.drawImage(imgSource, 0, 0, null);
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, alpha));
+		g2.setColor(color);
+
+		g2.fillRect(0, 0, imgSource.getWidth(), imgSource.getHeight());
+		g2.dispose();
+
+		return imgMask;
+	}
+
+	public static BufferedImage tint(BufferedImage master, BufferedImage tint) {
+		int imgWidth = master.getWidth();
+		int imgHeight = master.getHeight();
+
+		BufferedImage tinted = createCompatibleImage(imgWidth, imgHeight, Transparency.TRANSLUCENT);
+		Graphics2D g2 = tinted.createGraphics();
+		applyQualityRenderingHints(g2);
+		g2.drawImage(master, 0, 0, null);
+		g2.drawImage(tint, 0, 0, null);
+		g2.dispose();
+
+		return tinted;
+	}
+
 	public static BufferedImage colorImage(BufferedImage loadImg, int red, int green, int blue) {
-		BufferedImage img = new BufferedImage(loadImg.getWidth(), loadImg.getHeight(), BufferedImage.TRANSLUCENT);
-		Graphics2D graphics = img.createGraphics();
-		Color newColor = new Color(red, green, blue, 0 /* alpha needs to be zero */);
-		graphics.setXORMode(newColor);
-		graphics.drawImage(loadImg, null, 0, 0);
-		graphics.dispose();
-		return img;
+		BufferedImage mask = generateMask(loadImg, new Color(red, green, blue), 1.0f);
+		return tint(loadImg, mask);
 	}
 
 	public static BufferedImage colorImage(BufferedImage loadImg, Color color) {
 		return colorImage(loadImg, color.getRed(), color.getGreen(), color.getBlue());
+	}
+	
+	/**
+     * Hides controls for configuring color transparency on the specified
+     * color chooser.
+     */
+    public static void hideTransparencyControls(JColorChooser cc) {
+        AbstractColorChooserPanel[] colorPanels = cc.getChooserPanels();
+        for (int i = 0; i < colorPanels.length; i++) {
+            AbstractColorChooserPanel cp = colorPanels[i];
+            try {
+                Field f = cp.getClass().getDeclaredField("panel");
+                f.setAccessible(true);
+                Object colorPanel = f.get(cp);
+
+                Field f2 = colorPanel.getClass().getDeclaredField("spinners");
+                f2.setAccessible(true);
+                Object sliders = f2.get(colorPanel);
+
+                Object transparencySlider = java.lang.reflect.Array.get(sliders, 3);
+                if (i == colorPanels.length - 1)
+                    transparencySlider = java.lang.reflect.Array.get(sliders, 4);
+
+                Method setVisible = transparencySlider.getClass().getDeclaredMethod(
+                    "setVisible", boolean.class);
+                setVisible.setAccessible(true);
+                setVisible.invoke(transparencySlider, false);
+            } catch (Throwable t) {}
+        }
+    }
+
+	/**
+	 * Shows a modal color chooser dialog and blocks until the dialog is closed.
+	 * 
+	 * @param component
+	 *            the parent component for the dialog; may be null
+	 * @param title
+	 *            the dialog's title
+	 * @param initialColor
+	 *            the initial color set when the dialog is shown
+	 * @param showTransparencyControls
+	 *            whether to show controls for configuring the color's transparency
+	 * @return the chosen color or null if the user canceled the dialog
+	 */
+	public static Color showColorChooserDialog(Component component, String title, Color initialColor,
+			boolean showTransparencyControls) {
+		JColorChooser pane = new JColorChooser(initialColor != null ? initialColor : Color.white);
+		if (!showTransparencyControls)
+			hideTransparencyControls(pane);
+		Color[] result = new Color[1];
+		ActionListener okListener = e -> result[0] = pane.getColor();
+		@SuppressWarnings("static-access")
+		JDialog dialog = pane.createDialog(component, title, true, pane, okListener, null);
+		dialog.setVisible(true);
+		dialog.dispose();
+		return result[0];
 	}
 
 }

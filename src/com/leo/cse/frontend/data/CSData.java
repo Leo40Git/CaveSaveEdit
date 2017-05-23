@@ -14,10 +14,12 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import com.carrotlord.string.StrTools;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.MCI;
+import com.leo.cse.frontend.Main;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code from it
 public class CSData {
@@ -41,8 +43,20 @@ public class CSData {
 		if (!Profile.isLoaded() || Profile.getFile() == null)
 			return;
 		File base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
-		if (!base.exists())
-			return;
+		while (!base.exists()) {
+			String name = JOptionPane.showInputDialog(Main.window, "Enter the mod executable's name:", base.getName());
+			if (name == null) {
+				JOptionPane.showMessageDialog(Main.window, "Skipped loading the mod executable.", "EXE loading skipped",
+						JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			if (!name.endsWith(".exe"))
+				name += ".exe";
+			base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + name);
+			if (!base.exists())
+				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + name + "\" does not exist!",
+						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
+		}
 		CSData.base = base;
 		dataDir = new File(base.getParent() + "/data");
 		mapdata = new Vector<Mapdata>();
