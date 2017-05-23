@@ -8,12 +8,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 
+//credit to Noxid for making Booster's Lab open source so I could steal code from it
 public class MapInfo {
 
 	private int mapX;
 	private int mapY;
 	private int mapNumber;
-	protected int[][][] map;
+	protected int[][] map;
 	private File tileset;
 	private File bgImage;
 	private int scrollType;
@@ -30,8 +31,11 @@ public class MapInfo {
 
 	private void loadImageResource(Mapdata d, File directory) {
 		// load each image resource
+		System.out.println("Loading resources for map number " + d.getMapNum());
+		System.out.println("Loading tileset: " + directory + "/Stage/Prt" + d.getTileset());
 		tileset = ResUtils.getGraphicsFile(directory + "/Stage", "Prt" + d.getTileset());
 		CSData.addImage(tileset);
+		System.out.println("Loading BG: " + directory.toString() + "/" + d.getBgName());
 		bgImage = ResUtils.getGraphicsFile(directory.toString(), d.getBgName());
 		CSData.addImage(bgImage);
 	}
@@ -77,15 +81,10 @@ public class MapInfo {
 			mapY = 16;
 			mapBuf = ByteBuffer.allocate(mapY * mapX);
 		}
-		map = new int[4][mapY][mapX];
+		map = new int[mapY][mapX];
 		for (int y = 0; y < mapY; y++)
-			for (int x = 0; x < mapX; x++) {
-				int next = 0xFF & mapBuf.get();
-				if (calcPxa(next) < 0x20)
-					map[1][y][x] = next;
-				else
-					map[2][y][x] = next;
-			}
+			for (int x = 0; x < mapX; x++)
+				map[y][x] = 0xFF & mapBuf.get();
 	}
 
 	private void writeDummyPxm(File currentFile) throws IOException {
@@ -129,7 +128,7 @@ public class MapInfo {
 		return mapNumber;
 	}
 
-	public int[][][] getMap() {
+	public int[][] getMap() {
 		return map.clone();
 	}
 

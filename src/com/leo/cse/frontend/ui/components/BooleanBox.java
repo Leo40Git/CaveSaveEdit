@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Resources;
 
@@ -26,7 +26,7 @@ public class BooleanBox extends Component {
 	public void render(Graphics g) {
 		String t = label;
 		if (t.contains(".")) {
-			t = Defines.get(t);
+			t = MCI.get(t);
 			if (label.equals(t)) {
 				disabled = true;
 				return;

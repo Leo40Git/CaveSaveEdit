@@ -16,8 +16,9 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import com.carrotlord.string.StrTools;
-import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.MCI;
 
+// credit to Noxid for making Booster's Lab open source so I could steal code from it
 public class CSData {
 
 	private CSData() {
@@ -58,7 +59,7 @@ public class CSData {
 
 	private static void fillMapdata() throws IOException {
 		FileChannel inChan;
-		String encoding = Defines.get("Game.Encoding");
+		String encoding = MCI.get("Game.Encoding");
 
 		FileInputStream inStream;
 		inStream = new FileInputStream(base);
@@ -110,12 +111,12 @@ public class CSData {
 				uBuf.get(buffer, 0, 0x20);
 				newMap.setBgName(StrTools.CString(buffer, encoding));
 				uBuf.get(buffer, 0, 0x20);
-				newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
+				// newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
 				uBuf.get(buffer, 0, 0x20);
-				newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
-				newMap.setBossNum(uBuf.get());
+				// newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
+				// newMap.setBossNum(uBuf.get());
 				uBuf.get(buffer, 0, 0x23);
-				newMap.setMapName(StrTools.CString(buffer, encoding));
+				// newMap.setMapName(StrTools.CString(buffer, encoding));
 			} // for each map
 		} else { // exe has been edited probably
 			if (secHeaders[mapSec].contains(".csmap")) {
@@ -149,12 +150,12 @@ public class CSData {
 					uBuf.get(buffer, 0, 0x20);
 					newMap.setBgName(StrTools.CString(buffer, encoding));
 					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
+					// newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
 					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
-					newMap.setBossNum(uBuf.get());
+					// newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
+					// newMap.setBossNum(uBuf.get());
 					uBuf.get(buffer, 0, 0x23);
-					newMap.setMapName(StrTools.CString(buffer, encoding));
+					// newMap.setMapName(StrTools.CString(buffer, encoding));
 					mapdata.add(newMap);
 				} // for each map
 			} else {
@@ -190,12 +191,12 @@ public class CSData {
 					uBuf.get(buffer, 0, 0x20);
 					newMap.setBgName(StrTools.CString(buffer));
 					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet1(StrTools.CString(buffer));
+					// newMap.setNpcSheet1(StrTools.CString(buffer));
 					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet2(StrTools.CString(buffer));
-					newMap.setBossNum(uBuf.get());
+					// newMap.setNpcSheet2(StrTools.CString(buffer));
+					// newMap.setBossNum(uBuf.get());
 					uBuf.get(buffer, 0, 0x23);
-					newMap.setMapName(StrTools.CString(buffer));
+					// newMap.setMapName(StrTools.CString(buffer));
 					mapdata.add(newMap);
 					nMaps++;
 				} // for each map
@@ -211,10 +212,12 @@ public class CSData {
 	}
 
 	private static BufferedImage loadImage(File srcFile) throws IOException {
+		if (srcFile == null)
+			return null;
 		try (FileInputStream is = new FileInputStream(srcFile)) {
 			BufferedImage img = ImageIO.read(is);
 			img = ResUtils.black2Trans(img);
-			if (!Defines.getSpecial("DoubleRes")) {
+			if (!MCI.getSpecial("DoubleRes")) {
 				int w = img.getWidth(), h = img.getHeight();
 				BufferedImage after = new BufferedImage(w * 2, h * 2, BufferedImage.TYPE_INT_ARGB);
 				AffineTransform at = new AffineTransform();
@@ -228,7 +231,10 @@ public class CSData {
 	}
 
 	private static void loadGraphics() throws IOException {
-		File myCharFile = ResUtils.getGraphicsFile(dataDir.toString(), "MyChar");
+		String myCharName = MCI.getNullable("Game", "MyChar");
+		if (myCharName == null)
+			myCharName = "MyChar";
+		File myCharFile = ResUtils.getGraphicsFile(dataDir.toString(), myCharName);
 		myChar = loadImage(myCharFile);
 	}
 

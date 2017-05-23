@@ -47,7 +47,7 @@ public class Main extends JFrame implements MouseListener {
 	public Main() {
 		try {
 			Resources.load();
-			Defines.readDefault();
+			MCI.readDefault();
 		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this,
@@ -96,7 +96,7 @@ public class Main extends JFrame implements MouseListener {
 			// unload existing exe
 			CSData.unload();
 			// try to load exe
-			File exe = new File(file.getAbsoluteFile().getParent() + "/" + Defines.get("Game.ExeName") + ".exe");
+			File exe = new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 			if (exe.exists())
 				try {
 					CSData.load(exe);

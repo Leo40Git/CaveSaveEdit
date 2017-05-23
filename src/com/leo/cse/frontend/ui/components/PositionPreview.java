@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.Profile;
-import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.data.CSData;
@@ -21,7 +21,7 @@ public class PositionPreview extends Component {
 
 	private Supplier<Integer> mSup;
 	private MapInfo mapInfo;
-	private int[][][] map;
+	private int[][] map;
 	private BufferedImage tileset;
 	private int setWidth;
 
@@ -41,6 +41,14 @@ public class PositionPreview extends Component {
 			return;
 		}
 		mapInfo = CSData.getMapInfo(mSup.get());
+		if (mapInfo.getTileset() == null) {
+			g.setColor(COLOR_NULL);
+			g.fillRect(x, y, width, height);
+			g.setColor(Color.white);
+			g.setFont(Resources.fontL);
+			FrontUtils.drawStringCentered(g, "NO TILESET!", x + width / 2, y + height / 2, true);
+			return;
+		}
 		map = mapInfo.getMap();
 		tileset = CSData.getImg(mapInfo.getTileset());
 		setWidth = tileset.getWidth() / 32;
@@ -48,13 +56,12 @@ public class PositionPreview extends Component {
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, width, height);
-		int camX = Math.max(0, Math.min((map[0][0].length - 21) * 32, Profile.getX() - width / 2));
-		int camY = Math.max(0, Math.min((map[0].length - 16) * 32, Profile.getY() - height / 2));
+		int camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
+		int camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
 		drawBackground(sg);
 		sg.translate(-camX, -camY);
-		drawTiles(1, sg);
+		drawTiles(sg);
 		drawMyChar(sg);
-		drawTiles(2, sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos: (" + camX / 32 + "," + camY / 32 + ")",
 				camCoords2 = "ExactCPos: (" + camX + "," + camY + ")";
@@ -82,15 +89,14 @@ public class PositionPreview extends Component {
 		}
 	}
 
-	private void drawTiles(int layer, Graphics g) {
-		int[][] data = map[layer];
+	private void drawTiles(Graphics g) {
 		int xx = 0;
 		int yy = 0;
-		for (int i = 0; i < data.length; i++) {
-			for (int j = 0; j < data[i].length; j++) {
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
 				int xPixel = xx * 32 - 16;
 				int yPixel = yy * 32 - 16;
-				int tile = data[i][j];
+				int tile = map[i][j];
 				int sourceX = (tile % setWidth) * 32;
 				int sourceY = (tile / setWidth) * 32;
 				g.drawImage(tileset, xPixel, yPixel, xPixel + 32, yPixel + 32, sourceX, sourceY, sourceX + 32,
@@ -105,9 +111,9 @@ public class PositionPreview extends Component {
 	private void drawMyChar(Graphics g) {
 		int dir = (Profile.getDirection() == 2 ? 1 : 0);
 		long costume = 0;
-		if (Defines.getSpecial("VarHack"))
+		if (MCI.getSpecial("VarHack"))
 			costume = Profile.getVariable(6);
-		if (Defines.getSpecial("MimHack"))
+		if (MCI.getSpecial("MimHack"))
 			costume = Profile.getMimCostume();
 		else
 			costume = (Profile.getEquip(6) ? 1 : 0);

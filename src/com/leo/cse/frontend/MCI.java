@@ -8,36 +8,36 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class Defines {
+public class MCI {
 
-	private Defines() {
+	private MCI() {
 	}
 
-	private static Properties defines = new Properties();
+	private static Properties mci = new Properties();
 
 	public static void readDefault() throws IOException {
-		try (InputStream is = Defines.class.getResourceAsStream("defines.properties")) {
-			defines.load(is);
+		try (InputStream is = MCI.class.getResourceAsStream("default.mci")) {
+			mci.load(is);
 		}
 	}
 
 	public static void read(File file) throws IOException {
 		try (FileInputStream fis = new FileInputStream(file)) {
-			defines.load(fis);
+			mci.load(fis);
 		}
 	}
 
 	public static boolean contains(String key) {
-		return defines.containsKey(key);
+		return mci.containsKey(key);
 	}
 
 	public static String get(String key) {
-		return defines.getProperty(key, key);
+		return mci.getProperty(key, key);
 	}
 
 	public static String get(String type, String value) {
 		final String key = type + "." + value;
-		return defines.getProperty(key, defines.getProperty(type + ".None", key));
+		return mci.getProperty(key, mci.getProperty(type + ".None", key));
 	}
 
 	public static String get(String type, int id) {
@@ -46,7 +46,7 @@ public class Defines {
 
 	public static String getNullable(String type, String value) {
 		final String key = type + "." + value;
-		return defines.getProperty(key);
+		return mci.getProperty(key);
 	}
 
 	public static String getNullable(String type, int id) {
@@ -55,7 +55,7 @@ public class Defines {
 
 	public static int getNumber(String type) {
 		int ret = 0;
-		for (Object obj : defines.keySet()) {
+		for (Object obj : mci.keySet()) {
 			if (!(obj instanceof String))
 				continue;
 			String key = (String) obj;
@@ -67,7 +67,7 @@ public class Defines {
 
 	public static Map<Integer, String> getAll(String type) {
 		Map<Integer, String> ret = new HashMap<Integer, String>();
-		for (Map.Entry<Object, Object> entry : defines.entrySet())
+		for (Map.Entry<Object, Object> entry : mci.entrySet())
 			if (((String) entry.getKey()).startsWith(type + ".")) {
 				String key = (String) entry.getKey();
 				String id = key.substring(key.lastIndexOf('.') + 1);
@@ -92,7 +92,7 @@ public class Defines {
 	}
 
 	public static boolean getSpecial(String value) {
-		return Boolean.parseBoolean(defines.getProperty("Special." + value, "false"));
+		return Boolean.parseBoolean(mci.getProperty("Special." + value, "false"));
 	}
 
 	public static String getSpecials() {

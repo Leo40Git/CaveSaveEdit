@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.Profile;
-import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
@@ -42,12 +42,12 @@ public class FlagsUI extends Component implements IScrollable {
 	private boolean flagIsValid(int id) {
 		if (id <= 10)
 			return false;
-		if (Defines.getSpecial("VarHack")) {
+		if (MCI.getSpecial("VarHack")) {
 			boolean ret = (id < 5999 || id > 7999);
-			if (Defines.getSpecial("PhysVarHack"))
+			if (MCI.getSpecial("PhysVarHack"))
 				ret &= (id < 5632 || id > 5888);
 			return ret;
-		} else if (Defines.getSpecial("MimHack")) {
+		} else if (MCI.getSpecial("MimHack")) {
 			return (id < 7968 || id > 7995);
 		}
 		return true;
@@ -55,18 +55,18 @@ public class FlagsUI extends Component implements IScrollable {
 
 	private String getFlagDescription(int id) {
 		if (id <= 10)
-			return Defines.get("Flag.Engine");
-		if (Defines.getSpecial("VarHack")) {
+			return MCI.get("Flag.Engine");
+		if (MCI.getSpecial("VarHack")) {
 			if (id >= 6000 && id <= 8000)
-				return Defines.get("Flag.VarHack");
-			if (Defines.getSpecial("PhysVarHack"))
+				return MCI.get("Flag.VarHack");
+			if (MCI.getSpecial("PhysVarHack"))
 				if (id >= 5632 && id <= 5888)
-					return Defines.get("Flag.PhysVarHack");
-		} else if (Defines.getSpecial("MimHack")) {
+					return MCI.get("Flag.PhysVarHack");
+		} else if (MCI.getSpecial("MimHack")) {
 			if (id >= 7968 && id <= 7993)
-				return Defines.get("Flag.MimHack");
+				return MCI.get("Flag.MimHack");
 		}
-		return Defines.get("Flag", id);
+		return MCI.get("Flag", id);
 	}
 
 	private void calculateShownFlags() {
@@ -74,7 +74,7 @@ public class FlagsUI extends Component implements IScrollable {
 			shownFlags = new ArrayList<Integer>();
 		shownFlags.clear();
 		for (int i = 0; i < Profile.getFlags().length; i++)
-			if ((!huSup.get() || !Defines.get("Flag.None").equals(getFlagDescription(i)))
+			if ((!huSup.get() || !MCI.get("Flag.None").equals(getFlagDescription(i)))
 					&& (!hsSup.get() || flagIsValid(i)))
 				shownFlags.add(i);
 	}

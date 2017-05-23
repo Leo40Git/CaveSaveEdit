@@ -3,8 +3,9 @@ package com.leo.cse.frontend.data;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.MCI;
 
+//credit to Noxid for making Booster's Lab open source so I could steal code from it
 public class ResUtils {
 
 	private ResUtils() {
@@ -23,9 +24,9 @@ public class ResUtils {
 
 		return dest;
 	}
-	
+
 	public static File getGraphicsFile(String directory, String name) {
-		String ext = Defines.get("Game.GraphicsExtension");
+		String ext = MCI.get("Game.GraphicsExtension");
 		File ret = new File(directory + "/" + name + "." + ext);
 		if (ret.exists()) {
 			return ret;
@@ -39,8 +40,8 @@ public class ResUtils {
 			ret = new File(directory + "/" + name + "." + ext);
 			if (!ret.exists())
 				return null;
+			return ret;
 		}
-		return null;
 	}
 
 }

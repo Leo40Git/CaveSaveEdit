@@ -26,7 +26,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.Config;
-import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
@@ -42,14 +42,14 @@ import com.leo.cse.frontend.ui.components.PositionPreview;
 import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 import com.leo.cse.frontend.ui.dialogs.AboutDialog;
-import com.leo.cse.frontend.ui.dialogs.DefineDialog;
+import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
 
 public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheelListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final String[] TOOLBAR = new String[] { "Load profile", "Defines settings", "Save", "About" };
+	private static final String[] TOOLBAR = new String[] { "Load profile", "MCI settings", "Save", "About" };
 
 	public enum EditorTab {
 		GENERAL("General"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags"), VARIABLES("Variables");
@@ -223,7 +223,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			}
 		}, "time played"));
 		cl.add(new Label("(resets at 4294967295)", 192, 124));
-		if (!Defines.getSpecial("VarHack") && Defines.getSpecial("MimHack")) {
+		if (!MCI.getSpecial("VarHack") && MCI.getSpecial("MimHack")) {
 			cl.add(new Label("<MIM Costume:", 4, 144));
 			cl.add(new LongBox(78, 144, 120, 16, new Supplier<Long>() {
 				@Override
@@ -350,25 +350,20 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				itemId++;
 			}
 		}
-		int equipId = 0;
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 8; j++) {
-				final int ei2 = equipId;
-				cl.add(new BooleanBox("Equip." + equipId, 4 + (winSize.width / 4) * i, 278 + 18 * j,
-						new Supplier<Boolean>() {
-							@Override
-							public Boolean get() {
-								return Profile.getEquip(ei2);
-							}
-						}, new Function<Boolean, Boolean>() {
-							@Override
-							public Boolean apply(Boolean t) {
-								Profile.setEquip(ei2, t);
-								return t;
-							}
-						}));
-				equipId++;
-			}
+		for (int i = 0; i < 16; i++) {
+			final int i2 = i;
+			cl.add(new BooleanBox("Equip." + i, 4, 278 + 18 * i, new Supplier<Boolean>() {
+				@Override
+				public Boolean get() {
+					return Profile.getEquip(i2);
+				}
+			}, new Function<Boolean, Boolean>() {
+				@Override
+				public Boolean apply(Boolean t) {
+					Profile.setEquip(i2, t);
+					return t;
+				}
+			}));
 		}
 		cl.add(new Label("Whimsical Star Count:", 4 + winSize.width / 2, 278));
 		cl.add(new ShortBox(4 + winSize.width / 2, 294, 120, 16, new Supplier<Short>() {
@@ -439,7 +434,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			flagHideSystem = t;
 		}));
 		// variables tab
-		if (Defines.getSpecial("VarHack")) {
+		if (MCI.getSpecial("VarHack")) {
 			cl = compListMap.get(EditorTab.VARIABLES);
 			cl.add(new Label("Variables:", 4, 4));
 			final int width = winSize.width / 8;
@@ -471,7 +466,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					varId++;
 				}
 			}
-			if (Defines.getSpecial("PhysVarHack")) {
+			if (MCI.getSpecial("PhysVarHack")) {
 				final String[] pvl = { "Max Walk Speed", "Max Fall Speed", "Gravity", "Alt Gravity", "Walk Accel",
 						"Jump Control", "Friction", "Jump Force" };
 				cl.add(new Label("Physics Variables:", 4, 264));
@@ -571,7 +566,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
 		final EditorTab[] tv = EditorTab.values();
 		int tn = tv.length;
-		if (!Defines.getSpecial("VarHack"))
+		if (!MCI.getSpecial("VarHack"))
 			tn--;
 		int ti = 0;
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
@@ -634,7 +629,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 						loadProfile();
 						break;
 					case 1: // load defines
-						dBox = new DefineDialog();
+						dBox = new MCIDialog();
 						break;
 					case 2: // save
 						if (!Profile.isLoaded()) {
@@ -671,7 +666,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			// editor tabs
 			final EditorTab[] tv = EditorTab.values();
 			int tn = tv.length;
-			if (!Defines.getSpecial("VarHack"))
+			if (!MCI.getSpecial("VarHack"))
 				tn--;
 			int ti = 0;
 			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {

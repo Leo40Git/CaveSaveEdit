@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 import javax.swing.JOptionPane;
 
-import com.leo.cse.frontend.Defines;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 
@@ -27,17 +27,17 @@ public class DefineBox extends IntegerBox {
 		g.fillRect(x, y, width, height);
 		g.setColor(Color.black);
 		g.drawRect(x, y, width, height);
-		FrontUtils.drawString(g, Defines.get(type, vSup.get()), x + 3, y);
+		FrontUtils.drawString(g, MCI.get(type, vSup.get()), x + 3, y);
 	}
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		String nVal = (String) JOptionPane.showInputDialog(Main.window, "", "Select " + description,
-				JOptionPane.PLAIN_MESSAGE, null, Defines.getAll(type).values().toArray(new String[] {}),
-				Defines.get(type, vSup.get()));
+				JOptionPane.PLAIN_MESSAGE, null, MCI.getAll(type).values().toArray(new String[] {}),
+				MCI.get(type, vSup.get()));
 		if (nVal == null)
 			return;
-		int i = Defines.getId(type, nVal);
+		int i = MCI.getId(type, nVal);
 		if (i == -1) {
 			JOptionPane.showMessageDialog(Main.window, "Value \"" + nVal + "\" is unknown!", "Unknown value",
 					JOptionPane.ERROR_MESSAGE);

@@ -1,11 +1,12 @@
-# Default defines for vanilla Cave Story profile
+# Default MCI for vanilla Cave Story profile
 # Metadata
-Meta.Name=Default (Cave Story)
-Meta.Author=Leo40Story, zxin
+Meta.Name=Cave Story
+Meta.Author=Leo40Story, zxin (flag list)
 # Game information
 Game.Encoding=UTF-8
 Game.ExeName=Doukutsu
 Game.GraphicsExtension=bmp
+Game.MyChar=MyChar
 # Special support
 Special.MimHack=false
 Special.VarHack=false
@@ -159,7 +160,7 @@ Equip.4=Curly's Air Tank
 Equip.5=Booster v2.0
 Equip.6=Mimiga Mask
 Equip.7=Whimsical Star
-Equip.8=290 Counter
+Equip.8=Nikumaru Counter
 # Weapon names
 Weapon.0=None
 Weapon.1=Fireball
@@ -170,8 +171,8 @@ Weapon.5=Missile Launcher
 Weapon.7=Bubbler
 Weapon.9=Blade
 Weapon.10=Super Missile Launcher
-Weapon.12=Spur
-Weapon.13=Nemesis
+Weapon.12=Nemesis
+Weapon.13=Spur
 # Item names
 Item.0=None
 Item.1=Arthur's Key
