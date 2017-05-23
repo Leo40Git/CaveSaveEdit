@@ -31,11 +31,8 @@ public class MapInfo {
 
 	private void loadImageResource(Mapdata d, File directory) {
 		// load each image resource
-		System.out.println("Loading resources for map number " + d.getMapNum());
-		System.out.println("Loading tileset: " + directory + "/Stage/Prt" + d.getTileset());
 		tileset = ResUtils.getGraphicsFile(directory + "/Stage", "Prt" + d.getTileset());
 		CSData.addImage(tileset);
-		System.out.println("Loading BG: " + directory.toString() + "/" + d.getBgName());
 		bgImage = ResUtils.getGraphicsFile(directory.toString(), d.getBgName());
 		CSData.addImage(bgImage);
 	}
