@@ -8,6 +8,7 @@ public class Mapdata {
 	private String fileName;
 	private int scrollType;
 	private String bgName;
+	private String mapName;
 
 	public Mapdata(int mapNum) {
 		this.mapNum = mapNum;
@@ -55,6 +56,14 @@ public class Mapdata {
 
 	public void setBgName(String bgName) {
 		this.bgName = bgName;
+	}
+
+	public String getMapName() {
+		return mapName;
+	}
+
+	public void setMapName(String mapName) {
+		this.mapName = mapName;
 	}
 
 }

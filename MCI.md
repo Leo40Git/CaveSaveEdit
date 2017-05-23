@@ -5,7 +5,7 @@ The MCI system, or the **M**od **C**ompatibility **I**nformation system (origina
 The MCI system uses configuration files to define and declare values. An MCI file is simply a Java properties file with a different file extension ("\*.mci" instead of "\*.properties").  
 There are several groups of strings which are divided by their entry's prefix.  
 Each group serves a purpose in the save editor UI:
-- `Map` - Map names
+- `Map` - Default map names
 - `Song` - Song names
 - `Equip` - Equipment names
 - `Weapon` - Weapon names
@@ -49,6 +49,9 @@ This group is used for declaring if support for certain ASM hacks should be enab
 - `Boolean:VarHack`: Adds support for the <VAR (TSC+) hack. Prevents the used flags from being edited in the flag UI and adds a new tab for modifying the variables.
 - `Boolean:PhysVarHack`: Adds support for the <PHY (TSC+ PHY addon) hack. Prevents the used flags from being edited in the flag UI and adds new fields for modifying the physics variables.
 - `Boolean:DoubleRes`: Adds support for the 2x resolution hack. Makes all graphics use the correct framerects.
+
+## `Map` - Default map descriptions:
+Technically, all entries in this group are special, since they are only used if a mod executable has not been loaded.
 
 ## `Flag` - Flag descriptions:
 

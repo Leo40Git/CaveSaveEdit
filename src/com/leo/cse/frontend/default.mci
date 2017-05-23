@@ -3,7 +3,7 @@
 Meta.Name=Cave Story
 Meta.Author=Leo40Story, zxin (flag list)
 # Game information
-Game.Encoding=UTF-8
+Game.Encoding=Windows-1252
 Game.ExeName=Doukutsu
 Game.GraphicsExtension=bmp
 Game.MyChar=MyChar

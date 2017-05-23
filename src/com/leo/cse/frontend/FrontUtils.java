@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
@@ -111,10 +112,36 @@ public class FrontUtils {
 		return result;
 	}
 
+	public static <K> Map<K, String> sortStringMapByValue(Map<K, String> map, Function<String, String> processor) {
+		List<Map.Entry<K, String>> list = new LinkedList<Map.Entry<K, String>>(map.entrySet());
+		Collections.sort(list, new Comparator<Map.Entry<K, String>>() {
+			public int compare(Map.Entry<K, String> o1, Map.Entry<K, String> o2) {
+				String s1 = processor.apply(o1.getValue());
+				String s2 = processor.apply(o2.getValue());
+				return s1.compareTo(s2);
+			}
+		});
+		Map<K, String> result = new LinkedHashMap<K, String>();
+		for (Map.Entry<K, String> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
+	}
+
 	public static String padLeft(String str, String pad, int length) {
 		while (str.length() < length)
 			str = pad + str;
 		return str;
+	}
+
+	public static <K, V> K getKey(Map<K, V> map, V value) {
+		if (!map.containsValue(value))
+			return null;
+		for (Map.Entry<K, V> entry : map.entrySet()) {
+			if (entry.getValue().equals(value))
+				return entry.getKey();
+		}
+		return null;
 	}
 
 	public static GraphicsConfiguration getGraphicsConfiguration() {
@@ -163,6 +190,7 @@ public class FrontUtils {
 		BufferedImage tinted = createCompatibleImage(imgWidth, imgHeight, Transparency.TRANSLUCENT);
 		Graphics2D g2 = tinted.createGraphics();
 		applyQualityRenderingHints(g2);
+
 		g2.drawImage(master, 0, 0, null);
 		g2.drawImage(tint, 0, 0, null);
 		g2.dispose();
@@ -171,42 +199,41 @@ public class FrontUtils {
 	}
 
 	public static BufferedImage colorImage(BufferedImage loadImg, int red, int green, int blue) {
-		BufferedImage mask = generateMask(loadImg, new Color(red, green, blue), 1.0f);
-		return tint(loadImg, mask);
+		return generateMask(loadImg, new Color(red, green, blue), 1.0f);
 	}
 
 	public static BufferedImage colorImage(BufferedImage loadImg, Color color) {
 		return colorImage(loadImg, color.getRed(), color.getGreen(), color.getBlue());
 	}
-	
+
 	/**
-     * Hides controls for configuring color transparency on the specified
-     * color chooser.
-     */
-    public static void hideTransparencyControls(JColorChooser cc) {
-        AbstractColorChooserPanel[] colorPanels = cc.getChooserPanels();
-        for (int i = 0; i < colorPanels.length; i++) {
-            AbstractColorChooserPanel cp = colorPanels[i];
-            try {
-                Field f = cp.getClass().getDeclaredField("panel");
-                f.setAccessible(true);
-                Object colorPanel = f.get(cp);
+	 * Hides controls for configuring color transparency on the specified color
+	 * chooser.
+	 */
+	public static void hideTransparencyControls(JColorChooser cc) {
+		AbstractColorChooserPanel[] colorPanels = cc.getChooserPanels();
+		for (int i = 0; i < colorPanels.length; i++) {
+			AbstractColorChooserPanel cp = colorPanels[i];
+			try {
+				Field f = cp.getClass().getDeclaredField("panel");
+				f.setAccessible(true);
+				Object colorPanel = f.get(cp);
 
-                Field f2 = colorPanel.getClass().getDeclaredField("spinners");
-                f2.setAccessible(true);
-                Object sliders = f2.get(colorPanel);
+				Field f2 = colorPanel.getClass().getDeclaredField("spinners");
+				f2.setAccessible(true);
+				Object sliders = f2.get(colorPanel);
 
-                Object transparencySlider = java.lang.reflect.Array.get(sliders, 3);
-                if (i == colorPanels.length - 1)
-                    transparencySlider = java.lang.reflect.Array.get(sliders, 4);
+				Object transparencySlider = java.lang.reflect.Array.get(sliders, 3);
+				if (i == colorPanels.length - 1)
+					transparencySlider = java.lang.reflect.Array.get(sliders, 4);
 
-                Method setVisible = transparencySlider.getClass().getDeclaredMethod(
-                    "setVisible", boolean.class);
-                setVisible.setAccessible(true);
-                setVisible.invoke(transparencySlider, false);
-            } catch (Throwable t) {}
-        }
-    }
+				Method setVisible = transparencySlider.getClass().getDeclaredMethod("setVisible", boolean.class);
+				setVisible.setAccessible(true);
+				setVisible.invoke(transparencySlider, false);
+			} catch (Throwable t) {
+			}
+		}
+	}
 
 	/**
 	 * Shows a modal color chooser dialog and blocks until the dialog is closed.

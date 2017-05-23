@@ -39,6 +39,7 @@ import com.leo.cse.frontend.ui.components.IntegerBox;
 import com.leo.cse.frontend.ui.components.ItemBox;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.LongBox;
+import com.leo.cse.frontend.ui.components.MapBox;
 import com.leo.cse.frontend.ui.components.PositionPreview;
 import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
@@ -96,23 +97,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		// player tab
 		cl = compListMap.get(EditorTab.GENERAL);
 		cl.add(new Label("Map:", 4, 4));
-		cl.add(new DefineBox(36, 4, 240, 16, new Supplier<Integer>() {
-			@Override
-			public Integer get() {
-				return Profile.getMap();
-			}
-		}, new Function<Integer, Integer>() {
-			@Override
-			public Integer apply(Integer t) {
-				Profile.setMap(t);
-				return t;
-			}
-		}, new Supplier<Boolean>() {
+		cl.add(new MapBox(36, 4, 240, 16, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
 				return sortMapsAlphabetically;
 			}
-		}, "Map", "map"));
+		}));
 		cl.add(new BooleanBox("Sort alphabetically", 280, 4, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
@@ -645,7 +635,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 						}
 						break;
 					case 3: // set color
-						Color temp = FrontUtils.showColorChooserDialog(this, "Select new color", Main.customColor, false);
+						Color temp = FrontUtils.showColorChooserDialog(this, "Select new color", Main.customColor,
+								false);
 						if (temp != null) {
 							Main.customColor = temp;
 							Resources.colorImages(Main.customColor);

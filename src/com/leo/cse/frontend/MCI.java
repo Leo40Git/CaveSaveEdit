@@ -81,14 +81,10 @@ public class MCI {
 	}
 
 	public static int getId(String type, String value) {
-		final Map<Integer, String> map = getAll(type);
-		if (!map.containsValue(value))
+		Integer i = FrontUtils.getKey(getAll(type), value);
+		if (i == null)
 			return -1;
-		for (Map.Entry<Integer, String> entry : map.entrySet()) {
-			if (entry.getValue().equals(value))
-				return entry.getKey();
-		}
-		return -1;
+		return i;
 	}
 
 	public static boolean getSpecial(String value) {

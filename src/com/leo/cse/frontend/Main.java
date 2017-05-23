@@ -117,8 +117,6 @@ public class Main extends JFrame implements MouseListener {
 			Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
 			setTitle(window);
 			window.repaint();
-			JOptionPane.showMessageDialog(Main.window, "The profile file was loaded successfully.",
-					"Profile loaded successfully", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 

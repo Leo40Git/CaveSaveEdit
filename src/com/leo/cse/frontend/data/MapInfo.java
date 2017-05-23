@@ -17,11 +17,15 @@ public class MapInfo {
 	protected int[][] map;
 	private File tileset;
 	private File bgImage;
+	private String fileName;
 	private int scrollType;
+	private String mapName;
 	private File pxaFile;
 
 	public MapInfo(Mapdata d) {
+		fileName = d.getFileName();
 		scrollType = d.getScrollType();
+		mapName = d.getMapName();
 		File directory = CSData.getDataDir();
 		loadImageResource(d, directory);
 		pxaFile = new File(directory + "/Stage/" + d.getTileset() + ".pxa");
@@ -137,8 +141,16 @@ public class MapInfo {
 		return bgImage;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
 	public int getScrollType() {
 		return scrollType;
+	}
+
+	public String getMapName() {
+		return mapName;
 	}
 
 	public File getPxaFile() {

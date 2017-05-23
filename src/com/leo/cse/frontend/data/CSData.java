@@ -142,8 +142,9 @@ public class CSData {
 				uBuf.get(buffer, 0, 0x20);
 				// newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
 				// newMap.setBossNum(uBuf.get());
+				uBuf.get();
 				uBuf.get(buffer, 0, 0x23);
-				// newMap.setMapName(StrTools.CString(buffer, encoding));
+				newMap.setMapName(StrTools.CString(buffer, encoding));
 			} // for each map
 		} else { // exe has been edited probably
 			if (secHeaders[mapSec].contains(".csmap")) {
@@ -181,8 +182,9 @@ public class CSData {
 					uBuf.get(buffer, 0, 0x20);
 					// newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
 					// newMap.setBossNum(uBuf.get());
+					uBuf.get();
 					uBuf.get(buffer, 0, 0x23);
-					// newMap.setMapName(StrTools.CString(buffer, encoding));
+					newMap.setMapName(StrTools.CString(buffer, encoding));
 					mapdata.add(newMap);
 				} // for each map
 			} else {
@@ -222,8 +224,9 @@ public class CSData {
 					uBuf.get(buffer, 0, 0x20);
 					// newMap.setNpcSheet2(StrTools.CString(buffer));
 					// newMap.setBossNum(uBuf.get());
+					uBuf.get();
 					uBuf.get(buffer, 0, 0x23);
-					// newMap.setMapName(StrTools.CString(buffer));
+					newMap.setMapName(StrTools.CString(buffer));
 					mapdata.add(newMap);
 					nMaps++;
 				} // for each map
@@ -445,6 +448,10 @@ public class CSData {
 			throw new IndexOutOfBoundsException(
 					"Requested map number is " + num + ", but maximum map number is " + mapdata.size() + "!");
 		return mapInfo.get(num);
+	}
+	
+	public static int getMapInfoCount() {
+		return mapInfo.size();
 	}
 
 	public static BufferedImage getMyChar() {
