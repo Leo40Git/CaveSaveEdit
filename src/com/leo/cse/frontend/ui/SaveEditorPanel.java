@@ -169,7 +169,10 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				return t;
 			}
 		}, "exacct Y position"));
-		cl.add(new Label(") (1 tile = 16x16px)", 198, 64));
+		String tileSize = "16x16";
+		if (MCI.getSpecial("DoubleRes"))
+			tileSize = "32x32";
+		cl.add(new Label(") (1 tile = " + tileSize + "px)", 198, 64));
 		cl.add(new Label("Direction:", 4, 84));
 		cl.add(new RadioBoxes(54, 90, 80, 2, new String[] { "Left", "Right" }, new Supplier<Integer>() {
 			@Override
