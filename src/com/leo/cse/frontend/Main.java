@@ -27,7 +27,7 @@ public class Main extends JFrame implements MouseListener {
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
 	public static final String VERSION = "1.0";
-	public static final Color COLOR_BG = Color.decode("0xFFFFB1");
+	public static final Color COLOR_BG = new Color(0, 0, 25);
 
 	public static final Supplier<Boolean> FALSE_SUPPLIER = new Supplier<Boolean>() {
 		public Boolean get() {
@@ -36,6 +36,7 @@ public class Main extends JFrame implements MouseListener {
 	};
 
 	public static Main window;
+	public static Color customColor;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
@@ -47,12 +48,14 @@ public class Main extends JFrame implements MouseListener {
 				if (sel == JOptionPane.CANCEL_OPTION)
 					return;
 			}
+			Config.setColor(Config.KEY_CUSTOM_COLOR, customColor);
 			SaveEditorPanel.panel.saveSettings();
 			System.exit(0);
 		}
 	}
 
 	public Main() {
+		customColor = Config.getColor(Config.KEY_CUSTOM_COLOR, Color.white);
 		try {
 			Resources.load();
 			MCI.readDefault();

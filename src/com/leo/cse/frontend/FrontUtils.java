@@ -1,7 +1,10 @@
 package com.leo.cse.frontend;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -99,6 +102,20 @@ public class FrontUtils {
 		while (str.length() < length)
 			str = pad + str;
 		return str;
+	}
+
+	public static BufferedImage colorImage(BufferedImage loadImg, int red, int green, int blue) {
+		BufferedImage img = new BufferedImage(loadImg.getWidth(), loadImg.getHeight(), BufferedImage.TRANSLUCENT);
+		Graphics2D graphics = img.createGraphics();
+		Color newColor = new Color(red, green, blue, 0 /* alpha needs to be zero */);
+		graphics.setXORMode(newColor);
+		graphics.drawImage(loadImg, null, 0, 0);
+		graphics.dispose();
+		return img;
+	}
+
+	public static BufferedImage colorImage(BufferedImage loadImg, Color color) {
+		return colorImage(loadImg, color.getRed(), color.getGreen(), color.getBlue());
 	}
 
 }

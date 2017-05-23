@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
+import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.data.CSData;
 import com.leo.cse.frontend.data.MapInfo;
@@ -65,7 +66,7 @@ public class PositionPreview extends Component {
 				camCoords2 = "ExactCPos: (" + camX / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ","
 						+ camY / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ")";
 		g.setFont(Resources.fontS);
-		g.setColor(Color.black);
+		g.setColor(Main.customColor);
 		FrontUtils.drawString(g, camCoords, x + width, y);
 		FrontUtils.drawString(g, camCoords2, x + width, y + 16);
 		g.drawImage(surf, x, y, null);

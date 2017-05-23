@@ -1,5 +1,8 @@
 package com.leo.cse.frontend;
 
+import static com.leo.cse.frontend.FrontUtils.colorImage;
+
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
@@ -22,7 +25,6 @@ public class Resources {
 	public static BufferedImage dialogClose;
 	public static BufferedImage arrowDown, arrowUp;
 	public static BufferedImage[] editorTabIcons, toolbarIcons;
-	public static BufferedImage dialog, dialogTitle;
 
 	public static void load() throws IOException, FontFormatException {
 		loadFonts();
@@ -39,8 +41,19 @@ public class Resources {
 	}
 
 	private static void loadImages() {
+		reloadColorImages();
+		editorTabIcons = new BufferedImage[5];
+		for (int i = 0; i < editorTabIcons.length; i++)
+			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
+		toolbarIcons = new BufferedImage[5];
+		for (int i = 0; i < toolbarIcons.length; i++)
+			toolbarIcons[i] = ui.getSubimage(i * 16, 32, 16, 16);
+	}
+
+	private static void reloadColorImages() {
 		checkboxOff = ui.getSubimage(0, 0, 16, 16);
 		checkboxOn = ui.getSubimage(16, 0, 16, 16);
+		checkboxDisabled = ui.getSubimage(64, 0, 16, 16);
 		radioOff = ui.getSubimage(88, 0, 16, 16);
 		radioOffS = ui.getSubimage(32, 0, 8, 8);
 		radioOn = ui.getSubimage(88, 16, 16, 16);
@@ -48,15 +61,20 @@ public class Resources {
 		dialogClose = ui.getSubimage(48, 0, 14, 14);
 		arrowDown = ui.getSubimage(80, 0, 8, 8);
 		arrowUp = ui.getSubimage(80, 8, 8, 8);
-		checkboxDisabled = ui.getSubimage(64, 0, 16, 16);
-		editorTabIcons = new BufferedImage[5];
-		for (int i = 0; i < editorTabIcons.length; i++)
-			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
-		toolbarIcons = new BufferedImage[4];
-		for (int i = 0; i < toolbarIcons.length; i++)
-			toolbarIcons[i] = ui.getSubimage(i * 16, 32, 16, 16);
-		dialog = ui.getSubimage(80, 16, 9, 9);
-		dialogTitle = ui.getSubimage(80, 25, 9, 9);
+	}
+
+	public static void colorImages(Color tint) {
+		reloadColorImages();
+		checkboxOff = colorImage(checkboxOff, tint);
+		checkboxOn = colorImage(checkboxOn, tint);
+		checkboxDisabled = colorImage(checkboxDisabled, tint);
+		radioOff = colorImage(radioOff, tint);
+		radioOffS = colorImage(radioOffS, tint);
+		radioOn = colorImage(radioOn, tint);
+		radioOnS = colorImage(radioOnS, tint);
+		dialogClose = colorImage(dialogClose, tint);
+		arrowDown = colorImage(arrowDown, tint);
+		arrowUp = colorImage(arrowUp, tint);
 	}
 
 }

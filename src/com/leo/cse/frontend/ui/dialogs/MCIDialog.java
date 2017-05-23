@@ -1,6 +1,5 @@
 package com.leo.cse.frontend.ui.dialogs;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +9,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.frontend.Config;
-import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.data.CSData;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
@@ -28,9 +27,9 @@ public class MCIDialog extends BaseDialog {
 		final int x = getWindowX(), y = getWindowY();
 		FrontUtils.drawString(g, "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n" + MCI.get("Meta.Author")
 				+ "\nSpecial support:\n" + MCI.getSpecials(), x + 4, y);
-		g.setColor(Color.white);
+		g.setColor(Main.COLOR_BG);
 		g.fillRect(x + 1, y + height - 34, 299, 16);
-		g.setColor(Color.black);
+		g.setColor(Main.customColor);
 		g.drawRect(x, y + height - 35, width, 17);
 		g.drawLine(x + width - 150, y + height - 18, x + width - 150, y + height - 34);
 		FrontUtils.drawStringCentered(g, "Load MCI file", x + width / 4, y + height - 36);

@@ -1,6 +1,5 @@
 package com.leo.cse.frontend.ui.components;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -26,9 +25,9 @@ public class LongBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.white);
+		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Color.black);
+		g.setColor(Main.customColor);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, Long.toString(vSup.get()), x + 3, y);
 	}

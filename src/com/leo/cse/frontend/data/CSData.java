@@ -258,17 +258,17 @@ public class CSData {
 		if (armsImageName == null)
 			armsImageName = "ArmsImage";
 		File armsImageFile = ResUtils.getGraphicsFile(dataDir.toString(), armsImageName);
-		armsImage = loadImage(armsImageFile, false);
+		armsImage = loadImage(armsImageFile);
 		String itemImageName = MCI.getNullable("Game", "ItemImage");
 		if (itemImageName == null)
 			itemImageName = "ItemImage";
 		File itemImageFile = ResUtils.getGraphicsFile(dataDir.toString(), itemImageName);
-		itemImage = loadImage(itemImageFile, false);
+		itemImage = loadImage(itemImageFile);
 		String stageImageName = MCI.getNullable("Game", "StageImage");
 		if (stageImageName == null)
 			stageImageName = "StageImage";
 		File stageImageFile = ResUtils.getGraphicsFile(dataDir.toString(), stageImageName);
-		stageImage = loadImage(stageImageFile, false);
+		stageImage = loadImage(stageImageFile);
 	}
 
 	/**

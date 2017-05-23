@@ -1,6 +1,5 @@
 package com.leo.cse.frontend.ui.components;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -8,6 +7,7 @@ import java.util.function.Supplier;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
+import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.data.CSData;
 
 public class WeaponBox extends DefineBox {
@@ -29,9 +29,9 @@ public class WeaponBox extends DefineBox {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.black);
+		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Color.white);
+		g.setColor(Main.customColor);
 		g.drawRect(x, y, width, height);
 		int wep = vSup.get();
 		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 32);

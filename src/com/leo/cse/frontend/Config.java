@@ -1,5 +1,6 @@
 package com.leo.cse.frontend;
 
+import java.awt.Color;
 import java.util.prefs.Preferences;
 
 public class Config {
@@ -12,6 +13,7 @@ public class Config {
 	public static final String KEY_HIDE_UNDEFINED_FLAGS = "hide_undefined_flags";
 	public static final String KEY_HIDE_SYSTEM_FLAGS = "hide_system_flags";
 	public static final String KEY_SORT_MAPS_ALPHABETICALLY = "sort_maps_alphabetically";
+	public static final String KEY_CUSTOM_COLOR = "custom_color";
 
 	private static final Preferences CONFIG = Preferences.userNodeForPackage(Main.class);
 
@@ -29,6 +31,17 @@ public class Config {
 
 	public static void setBoolean(String key, boolean value) {
 		CONFIG.putBoolean(key, value);
+	}
+
+	public static Color getColor(String key, Color def) {
+		String nm = get(key, null);
+		if (nm == null)
+			return def;
+		return Color.decode(nm);
+	}
+
+	public static void setColor(String key, Color value) {
+		set(key, String.valueOf(value.getRGB()));
 	}
 
 }

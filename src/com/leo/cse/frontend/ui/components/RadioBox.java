@@ -1,9 +1,9 @@
 package com.leo.cse.frontend.ui.components;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import com.leo.cse.frontend.FrontUtils;
+import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 class RadioBox extends Component {
@@ -23,7 +23,7 @@ class RadioBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.black);
+		g.setColor(Main.customColor);
 		g.setFont(Resources.font);
 		if (small) {
 			g.drawImage((parent.isSelected(id) ? Resources.radioOnS : Resources.radioOffS), x, y, null);

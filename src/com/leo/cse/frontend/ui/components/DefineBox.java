@@ -1,6 +1,5 @@
 package com.leo.cse.frontend.ui.components;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Map;
 import java.util.function.Function;
@@ -31,9 +30,9 @@ public class DefineBox extends IntegerBox {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.white);
+		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Color.black);
+		g.setColor(Main.customColor);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, vSup.get() + " - " + MCI.get(type, vSup.get()), x + 3, y);
 	}

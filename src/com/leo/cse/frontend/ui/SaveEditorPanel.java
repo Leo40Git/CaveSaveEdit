@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -52,7 +53,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final String[] TOOLBAR = new String[] { "Load profile", "MCI settings", "Save", "About" };
+	private static final String[] TOOLBAR = new String[] { "Load profile", "MCI settings", "Save", "Set color",
+			"About" };
 
 	public enum EditorTab {
 		GENERAL("General"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags"), VARIABLES("Variables");
@@ -510,7 +512,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			}
 		}
 	}
-	
+
 	public void saveSettings() {
 		Config.setBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, sortMapsAlphabetically);
 		Config.setBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, hideSystemFlags);
@@ -525,21 +527,16 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
-		g2d.setColor(Color.black);
+		g2d.setColor(Main.customColor);
 		g2d.setFont(Resources.font);
 		// toolbar
-		g2d.setColor(Color.white);
+		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, 17);
-		g2d.setColor(Color.black);
+		g2d.setColor(Main.customColor);
 		g2d.drawLine(0, 0, winSize.width, 0);
 		g2d.drawLine(0, 17, winSize.width, 17);
 		int bi = 0;
 		for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
-			if (bi == 2 && !Profile.isLoaded()) {
-				g2d.setColor(new Color(0, 0, 0, 0.5f));
-				g2d.fillRect(xx, 1, winSize.width / TOOLBAR.length + 1, 17);
-				g2d.setColor(Color.black);
-			}
 			g2d.drawLine(xx, 1, xx, 17);
 			g2d.drawImage(Resources.toolbarIcons[bi], xx + 1, 1, null);
 			FrontUtils.drawString(g2d, TOOLBAR[bi], xx + 18, 0);
@@ -551,18 +548,16 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			for (Component comp : compListMap.get(currentTab))
 				comp.render(g2d);
 		} else {
-			g2d.setColor(Color.gray);
-			g2d.fillRect(0, 1, winSize2.width, winSize2.height - 1);
 			g2d.setFont(Resources.fontL);
-			g2d.setColor(Color.black);
+			g2d.setColor(Main.customColor);
 			FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true);
 		}
 		g2d.translate(0, -17);
 		// editor tabs
 		g2d.setFont(Resources.font);
-		g2d.setColor((Profile.isLoaded() ? Color.white : Color.gray));
+		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
-		g2d.setColor(Color.black);
+		g2d.setColor(Main.customColor);
 		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
 		final EditorTab[] tv = EditorTab.values();
 		int tn = tv.length;
@@ -572,9 +567,9 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 			final EditorTab t = tv[ti];
 			if (Profile.isLoaded() && t == currentTab) {
-				g2d.setColor((Profile.isLoaded() ? Main.COLOR_BG : Color.gray));
+				g2d.setColor(Main.COLOR_BG);
 				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 17);
-				g2d.setColor(Color.black);
+				g2d.setColor(Main.customColor);
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
@@ -650,7 +645,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 									"Profile saved successfully", JOptionPane.INFORMATION_MESSAGE);
 						}
 						break;
-					case 3: // about
+					case 3: // set color
+						Color temp = JColorChooser.showDialog(this, "Select new color", Main.customColor);
+						if (temp != null)
+							Main.customColor = temp;
+						break;
+					case 4: // about
 						dBox = new AboutDialog();
 						break;
 					default:

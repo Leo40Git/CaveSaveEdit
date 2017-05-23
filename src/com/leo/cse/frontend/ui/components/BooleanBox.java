@@ -1,12 +1,12 @@
 package com.leo.cse.frontend.ui.components;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
+import com.leo.cse.frontend.MCI;
+import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class BooleanBox extends Component {
@@ -34,7 +34,7 @@ public class BooleanBox extends Component {
 			} else
 				disabled = false;
 		}
-		g.setColor(Color.black);
+		g.setColor(Main.customColor);
 		g.setFont(Resources.font);
 		g.drawImage((vSup.get() ? Resources.checkboxOn : Resources.checkboxOff), x, y, null);
 		FrontUtils.drawString(g, t, x + 18, y - 3);
