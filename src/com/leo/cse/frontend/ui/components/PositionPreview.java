@@ -14,7 +14,7 @@ import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.data.CSData;
 import com.leo.cse.frontend.data.MapInfo;
 
-public class PositionPreview extends Component {
+public class PositionPreview extends Component implements IDraggable {
 
 	private static final Color COLOR_NULL = new Color(0, 0, 16);
 
@@ -129,6 +129,11 @@ public class PositionPreview extends Component {
 		int camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
 		Profile.setX((short) (x - this.x + camX));
 		Profile.setY((short) (y - this.y + camY));
+	}
+
+	@Override
+	public void onDrag(int x, int y) {
+		onClick(x, y, false, false);
 	}
 
 }

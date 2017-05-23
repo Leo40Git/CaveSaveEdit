@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
@@ -22,6 +21,7 @@ import java.util.function.Supplier;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.Profile;
@@ -34,6 +34,7 @@ import com.leo.cse.frontend.ui.components.BooleanBox;
 import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.FlagsUI;
+import com.leo.cse.frontend.ui.components.IDraggable;
 import com.leo.cse.frontend.ui.components.IScrollable;
 import com.leo.cse.frontend.ui.components.IntegerBox;
 import com.leo.cse.frontend.ui.components.ItemBox;
@@ -49,7 +50,7 @@ import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 
-public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheelListener {
+public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
@@ -680,10 +681,10 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 					comp.onClick(px, py - 17, shift, ctrl);
-					repaint();
 					break;
 				}
 			}
+			repaint();
 		}
 	}
 
@@ -698,8 +699,22 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			if (!(comp instanceof IScrollable))
 				continue;
 			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
-			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
+			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
 				((IScrollable) comp).onScroll(e.getWheelRotation(), shift, ctrl);
+		}
+		repaint();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		final Insets i = Main.window.getInsets();
+		final int px = e.getX() - i.left, py = e.getY() - i.top;
+		for (Component comp : compListMap.get(currentTab)) {
+			if (!(comp instanceof IDraggable))
+				continue;
+			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
+			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
+				((IDraggable) comp).onDrag(px, py);
 				repaint();
 			}
 		}
@@ -719,6 +734,10 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
 	}
 
 }

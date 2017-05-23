@@ -64,6 +64,7 @@ public class Main extends JFrame implements MouseListener {
 		add(sep);
 		addMouseListener(sep);
 		addMouseListener(this);
+		addMouseMotionListener(sep);
 		addMouseWheelListener(sep);
 		setMaximumSize(WINDOW_SIZE);
 		setMinimumSize(WINDOW_SIZE);
