@@ -1,16 +1,14 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.Profile;
-import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.data.CSData;
 import com.leo.cse.frontend.data.MapInfo;
@@ -64,15 +62,12 @@ public class PositionPreview extends Component {
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos: (" + camX / 32 + "," + camY / 32 + ")",
-				camCoords2 = "ExactCPos: (" + camX + "," + camY + ")";
-		sg.setFont(Resources.fontS);
-		final FontMetrics fm = sg.getFontMetrics();
-		sg.setColor(Color.black);
-		sg.fillRect(0, 0, Math.max(fm.stringWidth(camCoords), fm.stringWidth(camCoords2)), fm.getHeight() * 2);
-		sg.setColor(Color.white);
-		sg.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		FrontUtils.drawString(sg, camCoords, 0, -4);
-		FrontUtils.drawString(sg, camCoords2, 0, -4 + fm.getHeight());
+				camCoords2 = "ExactCPos: (" + camX / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ","
+						+ camY / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ")";
+		g.setFont(Resources.fontS);
+		g.setColor(Color.black);
+		FrontUtils.drawString(g, camCoords, x + width, y);
+		FrontUtils.drawString(g, camCoords2, x + width, y + 16);
 		g.drawImage(surf, x, y, null);
 	}
 
@@ -125,7 +120,14 @@ public class PositionPreview extends Component {
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-
+		if (!CSData.isLoaded())
+			return;
+		if (mapInfo.getTileset() == null)
+			return;
+		int camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
+		int camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
+		Profile.setX((short) (x - this.x + camX));
+		Profile.setY((short) (y - this.y + camY));
 	}
 
 }

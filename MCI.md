@@ -2,7 +2,7 @@
 The MCI system, or the **M**od **C**ompatibility **I**nformation system (originally just called the "defines" system) is the system this save editor uses for mod compatibility. It's exactly what it says on the tin.
 
 # How does MCI work?
-An MCI file is simply a Java properties file with a different file extension.  
+The MCI system uses configuration files to define and declare values. An MCI file is simply a Java properties file with a different file extension ("\*.mci" instead of "\*.properties").  
 There are several groups of strings which are divided by their entry's prefix.  
 Each group serves a purpose in the save editor UI:
 - `Map` - Map names
@@ -21,7 +21,7 @@ thereof.
 # Special entries
 
 Each group has it's entry's prefix shown in it's title.  
-These are formatted as `Type:Entry`, with `Type` being the type of the value (either `String` or `Boolean`) and `Entry` being the entry name.
+These are formatted as `Type:Entry`, with `Type` being the type of the value (either `String` , `Boolean` ("true" or "false") or `Integer`) and `Entry` being the entry name.
 
 ## `Meta` - Metadata:
 
@@ -35,7 +35,12 @@ This group is used for defining information about the mod this MCI file supports
 - `String:Encoding`: The encoding used in the mod.
 - `String:ExeName`: The expected name of the mod executable, *without file extension*.
 - `String:GraphicsExtension`: The file extension for graphics files. "bmp" and "pbm" are interchangeable.
-- `String:MyChar`: The file name for the `MyChar` graphics files, because apparently some mods (*cough*WTF Story*cough*) rename it. *This is optional, and defaults to "MyChar" if not specified.*
+- `String:MyChar`: The file name for the `MyChar` graphics file. *This is optional, and defaults to "MyChar" if not specified.*
+- `String:ArmsImage`: The file name for the `ArmsImage` graphics file. *This is optional, and defaults to "MyChar" if not specified.*
+- `Integer:ArmsImageYStart`: The starting Y position for weapon icons in the `ArmsImage` graphics file. If the mod is 1x res, multiply the position by 2 before writing it here. *This is optional, and defaults to 0 if not specified.*
+- `Integer:ArmsImageSize`: The size of the weapon icons in the `ArmsImage` graphics file. If the mod is 1x res, multiply the size by 2 before writing it here. *This is optional, and defaults to 32 if not specified.*
+- `String:ItemImage`: The file name for the `ItemImage` graphics file. *This is optional, and defaults to "ItemImage" if not specified.*
+- `String:StageImage`: The file name for the `StageImage` graphics file. *This is optional, and defaults to "StageImage" if not specified.*
 
 ## `Special` - Special support:
 

@@ -13,6 +13,7 @@ import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.data.CSData;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class MCIDialog extends BaseDialog {
@@ -25,8 +26,8 @@ public class MCIDialog extends BaseDialog {
 	public void render(Graphics g) {
 		super.render(g);
 		final int x = getWindowX(), y = getWindowY();
-		FrontUtils.drawString(g, "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n"
-				+ MCI.get("Meta.Author") + "\nSpecial support:\n" + MCI.getSpecials(), x + 4, y);
+		FrontUtils.drawString(g, "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n" + MCI.get("Meta.Author")
+				+ "\nSpecial support:\n" + MCI.getSpecials(), x + 4, y);
 		g.setColor(Color.white);
 		g.fillRect(x + 1, y + height - 34, 299, 16);
 		g.setColor(Color.black);
@@ -73,10 +74,14 @@ public class MCIDialog extends BaseDialog {
 				MCI.read(file);
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the MCI file:\n" + e.getMessage(),
-						"Could not load MCI file!", JOptionPane.ERROR_MESSAGE);
+						"An error occured while loading the MCI file:\n" + e.getMessage(), "Could not load MCI file!",
+						JOptionPane.ERROR_MESSAGE);
 				return false;
 			} finally {
+				try {
+					CSData.load();
+				} catch (IOException ignore) {
+				}
 				Config.set(Config.KEY_LAST_DEFINES, file.getAbsolutePath());
 				JOptionPane.showMessageDialog(Main.window, "The MCI file was loaded successfully.",
 						"MCI loaded successfully", JOptionPane.INFORMATION_MESSAGE);

@@ -298,13 +298,13 @@ public class Profile {
 	/**
 	 * The byte array the file is loaded into. Contains raw data.
 	 * <p>
-	 * <i>This is NOT updated when standard field commands are used and this
-	 * does NOT update other fields when modified.</i>
+	 * <i>This is NOT updated when standard field commands are used and this does
+	 * NOT update other fields when modified.</i>
 	 */
 	private static byte[] data = null;
 	/**
-	 * Modified flag. If <code>true</code>, the currently loaded profile has
-	 * been modified.
+	 * Modified flag. If <code>true</code>, the currently loaded profile has been
+	 * modified.
 	 */
 	private static boolean modified = false;
 
@@ -375,8 +375,8 @@ public class Profile {
 	private static boolean[] flags = null;
 
 	/**
-	 * Pulls changes from the byte array. This should be called after modifying
-	 * the array's contents.
+	 * Pulls changes from the byte array. This should be called after modifying the
+	 * array's contents.
 	 */
 	public static void pullFromData() {
 		if (data == null)
@@ -408,8 +408,8 @@ public class Profile {
 	}
 
 	/**
-	 * Pushes changes to the byte array. This should be called before modifying
-	 * or reading the array's contents.
+	 * Pushes changes to the byte array. This should be called before modifying or
+	 * reading the array's contents.
 	 */
 	public static void pushToData() {
 		if (data == null)
@@ -700,7 +700,7 @@ public class Profile {
 	 *            warp slot
 	 * @return warp data in slot
 	 */
-	public static Warp getTeleporter(int id) {
+	public static Warp getWarp(int id) {
 		return tele[id];
 	}
 
@@ -792,11 +792,26 @@ public class Profile {
 		pullFromData();
 	}
 
+	/**
+	 * Gets the value of a &lt;PHY variable.
+	 * 
+	 * @param id
+	 *            variable id
+	 * @return value
+	 */
 	public static short getPhysVariable(int id) {
 		pushToData();
 		return ByteUtils.readShort(data, 0x4DC + id * Short.BYTES);
 	}
 
+	/**
+	 * Sets a &lt;PHY variable to a value.
+	 * 
+	 * @param id
+	 *            variable id
+	 * @param value
+	 *            new value
+	 */
 	public static void setPhysVariable(int id, short value) {
 		modified = true;
 		pushToData();

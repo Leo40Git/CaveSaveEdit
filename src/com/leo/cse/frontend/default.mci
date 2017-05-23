@@ -7,6 +7,11 @@ Game.Encoding=UTF-8
 Game.ExeName=Doukutsu
 Game.GraphicsExtension=bmp
 Game.MyChar=MyChar
+Game.ArmsImage=ArmsImage
+Game.ArmsImageYStart=0
+Game.ArmsImageSize=32
+Game.ItemImage=ItemImage
+Game.StageImage=StageImage
 # Special support
 Special.MimHack=false
 Special.VarHack=false
@@ -163,14 +168,14 @@ Equip.7=Whimsical Star
 Equip.8=Nikumaru Counter
 # Weapon names
 Weapon.0=None
-Weapon.1=Fireball
+Weapon.1=Snake
 Weapon.2=Polar Star
-Weapon.3=Snake
+Weapon.3=Fireball
 Weapon.4=Machine Gun
 Weapon.5=Missile Launcher
 Weapon.7=Bubbler
 Weapon.9=Blade
-Weapon.10=Super Missile Launcher
+Weapon.10=Super Missile
 Weapon.12=Nemesis
 Weapon.13=Spur
 # Item names

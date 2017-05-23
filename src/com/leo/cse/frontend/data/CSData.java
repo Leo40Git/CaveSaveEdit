@@ -16,6 +16,7 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import com.carrotlord.string.StrTools;
+import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.MCI;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code from it
@@ -32,8 +33,16 @@ public class CSData {
 	private static Map<File, BufferedImage> imgMap;
 	private static Map<File, byte[]> pxaMap;
 	private static BufferedImage myChar;
+	private static BufferedImage armsImage;
+	private static BufferedImage itemImage;
+	private static BufferedImage stageImage;
 
-	public static void load(File base) throws IOException {
+	public static void load() throws IOException {
+		if (!Profile.isLoaded() || Profile.getFile() == null)
+			return;
+		File base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
+		if (!base.exists())
+			return;
 		CSData.base = base;
 		dataDir = new File(base.getParent() + "/data");
 		mapdata = new Vector<Mapdata>();
@@ -54,6 +63,10 @@ public class CSData {
 		mapInfo = null;
 		imgMap = null;
 		pxaMap = null;
+		myChar = null;
+		armsImage = null;
+		itemImage = null;
+		stageImage = null;
 		System.gc();
 	}
 
@@ -211,12 +224,13 @@ public class CSData {
 			mapInfo.add(new MapInfo(mapdata.get(i)));
 	}
 
-	private static BufferedImage loadImage(File srcFile) throws IOException {
+	private static BufferedImage loadImage(File srcFile, boolean trans) throws IOException {
 		if (srcFile == null)
 			return null;
 		try (FileInputStream is = new FileInputStream(srcFile)) {
 			BufferedImage img = ImageIO.read(is);
-			img = ResUtils.black2Trans(img);
+			if (trans)
+				img = ResUtils.black2Trans(img);
 			if (!MCI.getSpecial("DoubleRes")) {
 				int w = img.getWidth(), h = img.getHeight();
 				BufferedImage after = new BufferedImage(w * 2, h * 2, BufferedImage.TYPE_INT_ARGB);
@@ -230,12 +244,31 @@ public class CSData {
 		}
 	}
 
+	private static BufferedImage loadImage(File srcFile) throws IOException {
+		return loadImage(srcFile, true);
+	}
+
 	private static void loadGraphics() throws IOException {
 		String myCharName = MCI.getNullable("Game", "MyChar");
 		if (myCharName == null)
 			myCharName = "MyChar";
 		File myCharFile = ResUtils.getGraphicsFile(dataDir.toString(), myCharName);
 		myChar = loadImage(myCharFile);
+		String armsImageName = MCI.getNullable("Game", "ArmsImage");
+		if (armsImageName == null)
+			armsImageName = "ArmsImage";
+		File armsImageFile = ResUtils.getGraphicsFile(dataDir.toString(), armsImageName);
+		armsImage = loadImage(armsImageFile, false);
+		String itemImageName = MCI.getNullable("Game", "ItemImage");
+		if (itemImageName == null)
+			itemImageName = "ItemImage";
+		File itemImageFile = ResUtils.getGraphicsFile(dataDir.toString(), itemImageName);
+		itemImage = loadImage(itemImageFile, false);
+		String stageImageName = MCI.getNullable("Game", "StageImage");
+		if (stageImageName == null)
+			stageImageName = "StageImage";
+		File stageImageFile = ResUtils.getGraphicsFile(dataDir.toString(), stageImageName);
+		stageImage = loadImage(stageImageFile, false);
 	}
 
 	/**
@@ -300,7 +333,7 @@ public class CSData {
 	public static java.awt.Graphics getImgGraphics(File key) {
 		if (imgMap.containsKey(key))
 			return imgMap.get(key).getGraphics();
-		System.err.println("Key not found for getImgGraphics"); //$NON-NLS-1$
+		System.err.println("Key not found for getImgGraphics");
 		System.err.println(key);
 		return null;
 	}
@@ -308,7 +341,7 @@ public class CSData {
 	public static BufferedImage getImg(File key) {
 		if (imgMap.containsKey(key))
 			return imgMap.get(key);
-		System.err.println("Key not found for getImgGraphics"); //$NON-NLS-1$
+		System.err.println("Key not found for getImg");
 		System.err.println(key);
 		return null;
 	}
@@ -320,7 +353,7 @@ public class CSData {
 	public static int getImgH(File key) {
 		if (imgMap.containsKey(key))
 			return imgMap.get(key).getHeight();
-		System.err.println("Key not found for getImgGraphics"); //$NON-NLS-1$
+		System.err.println("Key not found for getImgH");
 		System.err.println(key);
 		return -1;
 	}
@@ -328,7 +361,7 @@ public class CSData {
 	public static int getImgW(File key) {
 		if (imgMap.containsKey(key))
 			return imgMap.get(key).getWidth();
-		System.err.println("Key not found for getImgGraphics"); //$NON-NLS-1$
+		System.err.println("Key not found for getImgW");
 		System.err.println(key);
 		return -1;
 	}
@@ -402,6 +435,18 @@ public class CSData {
 
 	public static BufferedImage getMyChar() {
 		return myChar;
+	}
+
+	public static BufferedImage getArmsImage() {
+		return armsImage;
+	}
+
+	public static BufferedImage getItemImage() {
+		return itemImage;
+	}
+
+	public static BufferedImage getStageImage() {
+		return stageImage;
 	}
 
 }

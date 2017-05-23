@@ -26,8 +26,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.Config;
-import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.FrontUtils;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.components.BooleanBox;
@@ -36,14 +36,17 @@ import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.FlagsUI;
 import com.leo.cse.frontend.ui.components.IScrollable;
 import com.leo.cse.frontend.ui.components.IntegerBox;
+import com.leo.cse.frontend.ui.components.ItemBox;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.LongBox;
 import com.leo.cse.frontend.ui.components.PositionPreview;
 import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
+import com.leo.cse.frontend.ui.components.WarpBox;
+import com.leo.cse.frontend.ui.components.WeaponBox;
 import com.leo.cse.frontend.ui.dialogs.AboutDialog;
-import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
+import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 
 public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheelListener {
 
@@ -72,9 +75,10 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 	private Map<EditorTab, List<Component>> compListMap;
 	private Dialog dBox;
 
+	private boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
 	private int flagScroll;
-	private boolean flagHideUndefined = true;
-	private boolean flagHideSystem = true;
+	private boolean hideSystemFlags = Config.getBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, true);
+	private boolean hideUndefinedFlags = Config.getBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, true);
 
 	public SaveEditorPanel() {
 		panel = this;
@@ -102,7 +106,24 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setMap(t);
 				return t;
 			}
+		}, new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return sortMapsAlphabetically;
+			}
 		}, "Map", "map"));
+		cl.add(new BooleanBox("Sort alphabetically", 280, 4, new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return sortMapsAlphabetically;
+			}
+		}, new Function<Boolean, Boolean>() {
+			@Override
+			public Boolean apply(Boolean t) {
+				sortMapsAlphabetically = t;
+				return t;
+			}
+		}));
 		cl.add(new Label("Song:", 4, 24));
 		cl.add(new DefineBox(36, 24, 240, 16, new Supplier<Integer>() {
 			@Override
@@ -147,12 +168,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		cl.add(new ShortBox(64, 64, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return Profile.getX();
+				return (short) (Profile.getX() / (MCI.getSpecial("DoubleRes") ? 1 : 2));
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setX(t);
+				Profile.setX((short) (t * (MCI.getSpecial("DoubleRes") ? 1 : 2)));
 				return t;
 			}
 		}, "exact X position"));
@@ -160,12 +181,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		cl.add(new ShortBox(134, 64, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return Profile.getY();
+				return (short) (Profile.getY() / (MCI.getSpecial("DoubleRes") ? 1 : 2));
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setY(t);
+				Profile.setY((short) (t * (MCI.getSpecial("DoubleRes") ? 1 : 2)));
 				return t;
 			}
 		}, "exacct Y position"));
@@ -174,7 +195,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 			tileSize = "32x32";
 		cl.add(new Label(") (1 tile = " + tileSize + "px)", 198, 64));
 		cl.add(new Label("Direction:", 4, 84));
-		cl.add(new RadioBoxes(54, 90, 80, 2, new String[] { "Left", "Right" }, new Supplier<Integer>() {
+		cl.add(new RadioBoxes(54, 84, 120, 2, new String[] { "Left", "Right" }, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
 				return (Profile.getDirection() == 2 ? 1 : 0);
@@ -185,7 +206,7 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 				Profile.setDirection((t == 1 ? 2 : 0));
 				return t;
 			}
-		}));
+		}, false));
 		cl.add(new Label("Health:", 4, 104));
 		cl.add(new ShortBox(44, 104, 60, 16, new Supplier<Short>() {
 			@Override
@@ -263,24 +284,13 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 						Profile.setCurWeapon(t);
 						return t;
 					}
-				}));
+				}, true));
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
 			cl.add(new Label("Weapon Slot " + (i + 1) + ":", xx, 6));
-			cl.add(new DefineBox(xx, 22, 120, 16, new Supplier<Integer>() {
-				@Override
-				public Integer get() {
-					return Profile.getWeapon(i2).getId();
-				}
-			}, new Function<Integer, Integer>() {
-				@Override
-				public Integer apply(Integer t) {
-					Profile.getWeapon(i2).setId(t);
-					return t;
-				}
-			}, "Weapon", "weapon " + (i + 1)));
-			cl.add(new Label("Level:", xx, 38));
-			cl.add(new IntegerBox(xx, 54, 120, 16, new Supplier<Integer>() {
+			cl.add(new WeaponBox(xx, 22, i));
+			cl.add(new Label("Level:", xx, 72));
+			cl.add(new IntegerBox(xx, 90, 120, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
 					return Profile.getWeapon(i2).getLevel();
@@ -292,8 +302,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					return t;
 				}
 			}, "weapon " + (i + 1) + " level"));
-			cl.add(new Label("Extra EXP:", xx, 70));
-			cl.add(new IntegerBox(xx, 86, 120, 16, new Supplier<Integer>() {
+			cl.add(new Label("Extra EXP:", xx, 108));
+			cl.add(new IntegerBox(xx, 126, 120, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
 					return Profile.getWeapon(i2).getExp();
@@ -305,8 +315,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					return t;
 				}
 			}, "weapon " + (i + 1) + " extra EXP"));
-			cl.add(new Label("Ammo:", xx + 10, 102));
-			cl.add(new IntegerBox(xx + 10, 118, 110, 16, new Supplier<Integer>() {
+			cl.add(new Label("Ammo:", xx + 10, 144));
+			cl.add(new IntegerBox(xx + 10, 162, 110, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
 					return Profile.getWeapon(i2).getCurrentAmmo();
@@ -318,8 +328,8 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 					return t;
 				}
 			}, "weapon " + (i + 1) + " current ammo"));
-			cl.add(new Label("/", xx + 2, 134));
-			cl.add(new IntegerBox(xx + 10, 134, 110, 16, new Supplier<Integer>() {
+			cl.add(new Label("/", xx + 2, 180));
+			cl.add(new IntegerBox(xx + 10, 180, 110, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
 					return Profile.getWeapon(i2).getMaxAmmo();
@@ -336,40 +346,32 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		int itemId = 0;
 		for (int i = 0; i < 6; i++) {
 			for (int j = 0; j < 5; j++) {
-				final int ii2 = itemId;
-				cl.add(new DefineBox(j * (winSize.width / 5), 166 + i * 16, winSize.width / 5 - 5, 16,
-						new Supplier<Integer>() {
-							@Override
-							public Integer get() {
-								return Profile.getItem(ii2);
-							}
-						}, new Function<Integer, Integer>() {
-							@Override
-							public Integer apply(Integer t) {
-								Profile.setItem(ii2, t);
-								return t;
-							}
-						}, "Item", "item " + (itemId + 1)));
+				cl.add(new ItemBox(j * (winSize.width / 5), 204 + i * 50, winSize.width / 5 - 5, 48, itemId));
 				itemId++;
 			}
 		}
-		for (int i = 0; i < 16; i++) {
-			final int i2 = i;
-			cl.add(new BooleanBox("Equip." + i, 4, 278 + 18 * i, new Supplier<Boolean>() {
-				@Override
-				public Boolean get() {
-					return Profile.getEquip(i2);
-				}
-			}, new Function<Boolean, Boolean>() {
-				@Override
-				public Boolean apply(Boolean t) {
-					Profile.setEquip(i2, t);
-					return t;
-				}
-			}));
+		int equipId = 0;
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 8; j++) {
+				final int i2 = equipId;
+				cl.add(new BooleanBox("Equip." + equipId, 4 + (winSize.width / 3) * i, 507 + 18 * j,
+						new Supplier<Boolean>() {
+							@Override
+							public Boolean get() {
+								return Profile.getEquip(i2);
+							}
+						}, new Function<Boolean, Boolean>() {
+							@Override
+							public Boolean apply(Boolean t) {
+								Profile.setEquip(i2, t);
+								return t;
+							}
+						}));
+				equipId++;
+			}
 		}
-		cl.add(new Label("Whimsical Star Count:", 4 + winSize.width / 2, 278));
-		cl.add(new ShortBox(4 + winSize.width / 2, 294, 120, 16, new Supplier<Short>() {
+		cl.add(new Label("Whimsical Star Count:", 4 + (winSize.width / 3) * 2, 505));
+		cl.add(new ShortBox(4 + (winSize.width / 3) * 2, 521, 120, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
 				return Profile.getStarCount();
@@ -384,30 +386,19 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		// warps tab
 		cl = compListMap.get(EditorTab.WARPS);
 		for (int i = 0; i < 7; i++) {
-			final int i2 = i, yy = 4 + i * 20;
-			cl.add(new Label("Warp Slot " + (i + 1) + ":", 4, yy));
-			cl.add(new DefineBox(68, yy, 120, 16, new Supplier<Integer>() {
+			final int i2 = i, yy = 4 + i * 50;
+			cl.add(new Label("Warp Slot " + (i + 1) + ":", 4, yy + 17));
+			cl.add(new WarpBox(68, yy, 120, 48, i2));
+			cl.add(new Label("Location:", 192, yy + 17));
+			cl.add(new DefineBox(242, yy + 17, 120, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
-					return Profile.getTeleporter(i2).getId();
+					return Profile.getWarp(i2).getLocation();
 				}
 			}, new Function<Integer, Integer>() {
 				@Override
 				public Integer apply(Integer t) {
-					Profile.getTeleporter(i2).setId(t);
-					return t;
-				}
-			}, "Warp", "warp " + (i + 1)));
-			cl.add(new Label("Location:", 192, yy));
-			cl.add(new DefineBox(242, yy, 120, 16, new Supplier<Integer>() {
-				@Override
-				public Integer get() {
-					return Profile.getTeleporter(i2).getLocation();
-				}
-			}, new Function<Integer, Integer>() {
-				@Override
-				public Integer apply(Integer t) {
-					Profile.getTeleporter(i2).setLocation(t);
+					Profile.getWarp(i2).setLocation(t);
 					return t;
 				}
 			}, "WarpLoc", "warp " + (i + 1) + "'s location"));
@@ -424,17 +415,17 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 		}, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
-				return flagHideUndefined;
+				return hideSystemFlags;
 			}
 		}, (Boolean t) -> {
-			flagHideUndefined = t;
+			hideSystemFlags = t;
 		}, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
-				return flagHideSystem;
+				return hideUndefinedFlags;
 			}
 		}, (Boolean t) -> {
-			flagHideSystem = t;
+			hideUndefinedFlags = t;
 		}));
 		// variables tab
 		if (MCI.getSpecial("VarHack")) {
@@ -518,6 +509,12 @@ public class SaveEditorPanel extends JPanel implements MouseListener, MouseWheel
 						}));
 			}
 		}
+	}
+	
+	public void saveSettings() {
+		Config.setBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, sortMapsAlphabetically);
+		Config.setBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, hideSystemFlags);
+		Config.setBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, hideUndefinedFlags);
 	}
 
 	@Override
