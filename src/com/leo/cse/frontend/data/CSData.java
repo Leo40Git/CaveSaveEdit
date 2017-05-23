@@ -45,11 +45,8 @@ public class CSData {
 		File base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 		while (!base.exists()) {
 			String name = JOptionPane.showInputDialog(Main.window, "Enter the mod executable's name:", base.getName());
-			if (name == null) {
-				JOptionPane.showMessageDialog(Main.window, "Skipped loading the mod executable.", "EXE loading skipped",
-						JOptionPane.INFORMATION_MESSAGE);
+			if (name == null)
 				return;
-			}
 			if (!name.endsWith(".exe"))
 				name += ".exe";
 			base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + name);

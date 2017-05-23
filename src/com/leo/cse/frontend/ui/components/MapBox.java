@@ -60,8 +60,8 @@ public class MapBox extends DefineBox {
 	}
 
 	private void loadMap() {
+		map = new HashMap<Integer, String>();
 		if (CSData.isLoaded()) {
-			map = new HashMap<Integer, String>();
 			for (int i = 0; i < CSData.getMapInfoCount(); i++) {
 				MapInfo mi = CSData.getMapInfo(i);
 				map.put(i, mi.getFileName() + " - " + mi.getMapName());
@@ -75,7 +75,6 @@ public class MapBox extends DefineBox {
 			map = FrontUtils.sortStringMapByValue(map, new Function<String, String>() {
 				@Override
 				public String apply(String t) {
-					System.out.println(t);
 					int i = t.lastIndexOf('-');
 					if (i < 0)
 						return t;

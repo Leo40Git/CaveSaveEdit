@@ -55,18 +55,6 @@ public class Main extends JFrame implements MouseListener {
 	}
 
 	public Main() {
-		customColor = Config.getColor(Config.KEY_CUSTOM_COLOR, Color.white);
-		try {
-			Resources.load();
-			Resources.colorImages(customColor);
-			MCI.readDefault();
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this,
-					"Could not load resources!\nPlease report this error to the programmer.",
-					"Could not load resources", JOptionPane.ERROR_MESSAGE);
-			System.exit(1);
-		}
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
@@ -140,6 +128,18 @@ public class Main extends JFrame implements MouseListener {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
+		}
+		customColor = Config.getColor(Config.KEY_CUSTOM_COLOR, Color.white);
+		try {
+			Resources.load();
+			Resources.colorImages(customColor);
+			MCI.readDefault();
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"Could not load resources!\nPlease report this error to the programmer.",
+					"Could not load resources", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
 		}
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();
