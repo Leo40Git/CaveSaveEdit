@@ -34,7 +34,7 @@ public class Resources {
 	}
 
 	private static void loadFonts() throws FontFormatException, IOException {	
-		fontB = Font.createFont(Font.TRUETYPE_FONT, Resources.class.getResourceAsStream("font.ttf"));
+		fontB = new Font(Font.SANS_SERIF, Font.PLAIN, 1);
 		font = fontB.deriveFont(Font.PLAIN, 10.0f);
 		fontS = fontB.deriveFont(Font.PLAIN, 8.0f);
 		fontL = fontB.deriveFont(Font.BOLD, 48.0f);

@@ -14,4 +14,3 @@ This application only uses a single library, namely [juniversalchardet](https://
 - **Noxid ([@taedixon](https://github.com/taedixon)):** CS executable code ([frontend.data](src/com/leo/cse/frontend/data))
 - **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites ([ui.png](src/com/leo/cse/frontend/ui.png))
 - **Carrotlord:** StrTools class ([StrTools.java](src/com/carrotlord/string/StrTools.java))
-- **[Google Internationalization](https://github.com/googlei18n):** Google Noto Sans font. Please see [LICENSE_OFL.txt](LICENSE_OFT.txt) for more details.
