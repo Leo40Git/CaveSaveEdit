@@ -63,6 +63,16 @@ public class CSData {
 				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + base.getName() + "\" does not exist!",
 						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
 		}
+		load0(base, true);
+	}
+
+	public static void reload() throws IOException {
+		if (!loaded || base == null)
+			return;
+		load0(base, false);
+	}
+
+	private static void load0(File base, boolean loadGraphics) throws IOException {
 		CSData.base = base;
 		dataDir = new File(base.getParent() + "/data");
 		mapdata = new Vector<Mapdata>();
@@ -71,7 +81,8 @@ public class CSData {
 		pxaMap = new HashMap<File, byte[]>();
 		fillMapdata();
 		loadMapInfo();
-		loadGraphics();
+		if (loadGraphics)
+			loadGraphics();
 		loaded = true;
 	}
 

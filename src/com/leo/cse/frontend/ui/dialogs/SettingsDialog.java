@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.dialogs;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
@@ -9,6 +10,7 @@ import javax.swing.JOptionPane;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.data.CSData;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class SettingsDialog extends BaseDialog {
@@ -43,7 +45,7 @@ public class SettingsDialog extends BaseDialog {
 			String e = null;
 			while (e == null) {
 				e = JOptionPane.showInputDialog(SaveEditorPanel.panel, "Enter new encoding:", Main.encoding);
-				if (e != null)
+				if (e != null) {
 					try {
 						new String(TEST_STRING, e);
 					} catch (UnsupportedEncodingException e1) {
@@ -51,8 +53,14 @@ public class SettingsDialog extends BaseDialog {
 								"Unsupported encoding", JOptionPane.ERROR_MESSAGE);
 						e = null;
 					}
+				} else
+					return false;
 			}
 			Main.encoding = e;
+			try {
+				CSData.reload();
+			} catch (IOException ignore) {
+			}
 		}
 		return false;
 	}
