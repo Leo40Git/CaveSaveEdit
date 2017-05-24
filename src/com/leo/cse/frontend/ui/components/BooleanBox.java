@@ -41,10 +41,11 @@ public class BooleanBox extends Component {
 	}
 
 	@Override
-	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (disabled)
-			return;
+			return false;
 		update.apply(!vSup.get());
+		return true;
 	}
 
 }

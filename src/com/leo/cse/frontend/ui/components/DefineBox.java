@@ -38,7 +38,7 @@ public class DefineBox extends IntegerBox {
 	}
 
 	@Override
-	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		Map<Integer, String> map = MCI.getAll(type);
 		if (sSup.get())
 			map = FrontUtils.sortMapByValue(map);
@@ -48,15 +48,15 @@ public class DefineBox extends IntegerBox {
 				JOptionPane.PLAIN_MESSAGE, null, map.values().toArray(new String[] {}),
 				vSup.get() + " - " + MCI.get(type, vSup.get()));
 		if (nVal == null)
-			return;
+			return true;
 		nVal = nVal.substring(nVal.indexOf('-') + 2);
 		int i = MCI.getId(type, nVal);
 		if (i == -1) {
 			JOptionPane.showMessageDialog(Main.window, "Value \"" + nVal + "\" is unknown!", "Unknown value",
 					JOptionPane.ERROR_MESSAGE);
-			return;
 		}
 		update.apply(i);
+		return true;
 	}
 
 }

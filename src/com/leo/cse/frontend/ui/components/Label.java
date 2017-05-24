@@ -23,7 +23,8 @@ public class Label extends Component {
 	}
 
 	@Override
-	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		return false;
 	}
 
 }

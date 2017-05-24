@@ -33,17 +33,18 @@ public class LongBox extends Component {
 	}
 
 	@Override
-	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":",
 				Long.toUnsignedString(vSup.get()));
 		if (nVal == null)
-			return;
+			return true;
 		try {
 			update.apply(Long.parseUnsignedLong(nVal));
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(Main.window, "Input was not a valid number!", "Error while parsing input!",
 					JOptionPane.ERROR_MESSAGE);
 		}
+		return true;
 	}
 
 }

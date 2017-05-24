@@ -12,6 +12,8 @@ Game.ArmsImageYStart=0
 Game.ArmsImageSize=32
 Game.ItemImage=ItemImage
 Game.StageImage=StageImage
+Game.NpcFolder=Npc
+Game.NpcSym=NpcSym
 # Special support
 Special.MimHack=false
 Special.VarHack=false

@@ -13,6 +13,7 @@ hs_err_pid*
 
 /bin/
 /.settings/
+/CaveStory/
 /test/
 /x2test/
 /data/

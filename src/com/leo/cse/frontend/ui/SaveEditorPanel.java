@@ -583,20 +583,21 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Profile Files", "dat");
 		fc.setFileFilter(filter);
-		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, "."));
-		while (!dir.isDirectory()) {
-			if (dir.getParentFile() == null)
-				return;
-			dir = dir.getParentFile();
-		}
-		fc.setCurrentDirectory(dir);
+		fc.setCurrentDirectory(new File(Config.get(Config.KEY_LAST_PROFIE, ".")));
+		fc.setDialogTitle("Open profile");
 		int returnVal = fc.showOpenDialog(Main.window);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 			Main.loadProfile(fc.getSelectedFile());
 	}
 
+	private boolean ignoreReleased = false, ignoreDragged = false;
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (ignoreReleased) {
+			ignoreReleased = false;
+			return;
+		}
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
 		final Dimension winSize = Main.window.getActualSize();
@@ -680,7 +681,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			for (Component comp : compListMap.get(currentTab)) {
 				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
-					comp.onClick(px, py - 17, shift, ctrl);
+					ignoreReleased = comp.onClick(px, py - 17, shift, ctrl);
+					ignoreDragged = ignoreReleased;
 					break;
 				}
 			}
@@ -707,6 +709,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (ignoreDragged) {
+			ignoreDragged = false;
+			return;
+		}
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
 		for (Component comp : compListMap.get(currentTab)) {

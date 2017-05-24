@@ -66,6 +66,7 @@ public class MCIDialog extends BaseDialog {
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("MCI Files", "mci");
 		SaveEditorPanel.fc.setFileFilter(filter);
 		SaveEditorPanel.fc.setCurrentDirectory(new File(Config.get(Config.KEY_LAST_DEFINES, ".")));
+		SaveEditorPanel.fc.setDialogTitle("Open MCI file");
 		int returnVal = SaveEditorPanel.fc.showOpenDialog(Main.window);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = SaveEditorPanel.fc.getSelectedFile();

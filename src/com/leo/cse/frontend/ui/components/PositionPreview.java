@@ -23,6 +23,8 @@ public class PositionPreview extends Component implements IDraggable {
 	private int[][] map;
 	private BufferedImage tileset;
 	private int setWidth;
+	private int camX = 0, camY = 0;
+	private int ignoreClick = 0;
 
 	public PositionPreview(int x, int y, Supplier<Integer> mSup) {
 		super(x, y, 640, 480);
@@ -55,8 +57,6 @@ public class PositionPreview extends Component implements IDraggable {
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, width, height);
-		int camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
-		int camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
 		drawBackground(sg);
 		sg.translate(-camX, -camY);
 		drawTiles(sg);
@@ -93,10 +93,16 @@ public class PositionPreview extends Component implements IDraggable {
 				int xPixel = xx * 32 - 16;
 				int yPixel = yy * 32 - 16;
 				int tile = map[i][j];
-				int sourceX = (tile % setWidth) * 32;
-				int sourceY = (tile / setWidth) * 32;
-				g.drawImage(tileset, xPixel, yPixel, xPixel + 32, yPixel + 32, sourceX, sourceY, sourceX + 32,
-						sourceY + 32, null);
+				if (mapInfo.calcPxa(tile) == 0x43) {
+					// draw breakable tile
+					g.drawImage(CSData.getNpcSym(), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96, 544, 128, null);
+				} else {
+					// draw normal tile
+					int sourceX = (tile % setWidth) * 32;
+					int sourceY = (tile / setWidth) * 32;
+					g.drawImage(tileset, xPixel, yPixel, xPixel + 32, yPixel + 32, sourceX, sourceY, sourceX + 32,
+							sourceY + 32, null);
+				}
 				xx++;
 			}
 			xx = 0;
@@ -120,20 +126,27 @@ public class PositionPreview extends Component implements IDraggable {
 	}
 
 	@Override
-	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!CSData.isLoaded())
-			return;
+			return false;
 		if (mapInfo.getTileset() == null)
-			return;
-		int camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
-		int camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
-		Profile.setX((short) (x - this.x + camX));
-		Profile.setY((short) (y - this.y + camY));
+			return false;
+		camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
+		camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
+		if (ignoreClick > 0)
+			ignoreClick--;
+		else {
+			Profile.setX((short) (x - this.x + camX));
+			Profile.setY((short) (y - this.y + camY));
+		}
+		return false;
 	}
 
 	@Override
 	public void onDrag(int x, int y) {
-		onClick(x, y, false, false);
+		Profile.setX((short) (x - this.x + camX));
+		Profile.setY((short) (y - this.y + camY));
+		ignoreClick = 2;
 	}
 
 }

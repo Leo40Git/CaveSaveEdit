@@ -122,7 +122,7 @@ public class FlagsUI extends Component implements IScrollable {
 	}
 
 	@Override
-	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		calculateShownFlags();
 		final Dimension winSize = Main.window.getActualSize(true);
 		if (x >= winSize.width - 20) {
@@ -158,6 +158,7 @@ public class FlagsUI extends Component implements IScrollable {
 				sUpdate.accept(Math.max(0, Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL)));
 			}
 		}
+		return false;
 	}
 
 	@Override

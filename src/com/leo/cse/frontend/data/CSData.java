@@ -41,26 +41,22 @@ public class CSData {
 	private static BufferedImage armsImage;
 	private static BufferedImage itemImage;
 	private static BufferedImage stageImage;
+	private static File npcFolder;
+	private static BufferedImage npcSym;
 
 	public static void load() throws IOException {
 		if (!Profile.isLoaded() || Profile.getFile() == null)
 			return;
 		File base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 		while (!base.exists()) {
-			/*
-			 * String name = JOptionPane.showInputDialog(Main.window,
-			 * "Enter the mod executable's name:", base.getName()); if (name == null)
-			 * return; if (!name.endsWith(".exe")) name += ".exe"; base = new
-			 * File(Profile.getFile().getAbsoluteFile().getParent() + "/" + name);
-			 */
-			JFileChooser fc = SaveEditorPanel.fc;
-			if (fc == null)
-				fc = new JFileChooser();
-			fc.setFileFilter(new FileNameExtensionFilter("Applications", "exe"));
-			fc.setCurrentDirectory(base);
-			int returnVal = fc.showOpenDialog(Main.window);
+			if (SaveEditorPanel.fc == null)
+				SaveEditorPanel.fc = new JFileChooser();
+			SaveEditorPanel.fc.setFileFilter(new FileNameExtensionFilter("Applications", "exe"));
+			SaveEditorPanel.fc.setCurrentDirectory(base);
+			SaveEditorPanel.fc.setDialogTitle("Open mod executable");
+			int returnVal = SaveEditorPanel.fc.showOpenDialog(Main.window);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
-				base = fc.getSelectedFile();
+				base = SaveEditorPanel.fc.getSelectedFile();
 			else
 				return;
 			if (!base.exists())
@@ -91,6 +87,8 @@ public class CSData {
 		armsImage = null;
 		itemImage = null;
 		stageImage = null;
+		npcFolder = null;
+		npcSym = null;
 		System.gc();
 	}
 
@@ -155,6 +153,7 @@ public class CSData {
 				uBuf.get();
 				uBuf.get(buffer, 0, 0x23);
 				newMap.setMapName(StrTools.CString(buffer, encoding));
+				mapdata.add(newMap);
 			} // for each map
 		} else { // exe has been edited probably
 			if (secHeaders[mapSec].contains(".csmap")) {
@@ -296,6 +295,15 @@ public class CSData {
 			stageImageName = "StageImage";
 		File stageImageFile = ResUtils.getGraphicsFile(dataDir.toString(), stageImageName);
 		stageImage = loadImage(stageImageFile);
+		String npcFolderName = MCI.getNullable("Game", "NpcFolder");
+		if (npcFolderName == null)
+			npcFolderName = "Npc";
+		npcFolder = new File(dataDir.toString() + "/" + npcFolderName);
+		String npcSymName = MCI.getNullable("Game", "NpcSym");
+		if (npcSymName == null)
+			npcSymName = "NpcSym";
+		File npcSymFile = ResUtils.getGraphicsFile(npcFolder.toString(), npcSymName);
+		npcSym = loadImage(npcSymFile);
 	}
 
 	/**
@@ -478,6 +486,10 @@ public class CSData {
 
 	public static BufferedImage getStageImage() {
 		return stageImage;
+	}
+
+	public static BufferedImage getNpcSym() {
+		return npcSym;
 	}
 
 }

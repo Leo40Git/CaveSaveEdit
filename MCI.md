@@ -41,6 +41,8 @@ This group is used for defining information about the mod this MCI file supports
 - `Integer:ArmsImageSize`: The size of the weapon icons in the `ArmsImage` graphics file. If the mod is 1x res, multiply the size by 2 before writing it here. *This is optional, and defaults to 32 if not specified.*
 - `String:ItemImage`: The file name for the `ItemImage` graphics file. *This is optional, and defaults to "ItemImage" if not specified.*
 - `String:StageImage`: The file name for the `StageImage` graphics file. *This is optional, and defaults to "StageImage" if not specified.*
+- `String:NpcFolder`: The folder name for the `Npc` graphics folder. *This is optional, and defaults to "Npc" if not specified.*
+- `String:NpcSym`: The file name for the `NpcSym` graphics file. *This is optional, and defaults to "NpcSym if not specified.*
 
 ## `Special` - Special support:
 

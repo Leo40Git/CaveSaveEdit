@@ -10,12 +10,13 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 
 public class ShortBox extends Component {
-	
+
 	private Supplier<Short> vSup;
 	private Function<Short, Short> update;
 	private String description;
 
-	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update, String description) {
+	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update,
+			String description) {
 		super(x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
@@ -32,16 +33,17 @@ public class ShortBox extends Component {
 	}
 
 	@Override
-	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":", vSup.get());
 		if (nVal == null)
-			return;
+			return true;
 		try {
 			update.apply(Short.parseShort(nVal));
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(Main.window, "Input was not a valid number!", "Error while parsing input!",
 					JOptionPane.ERROR_MESSAGE);
 		}
+		return true;
 	}
 
 }
