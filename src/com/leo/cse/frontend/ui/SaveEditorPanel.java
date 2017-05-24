@@ -514,7 +514,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
 		g2d.setColor(Main.lineColor);

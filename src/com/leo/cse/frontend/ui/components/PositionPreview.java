@@ -129,6 +129,8 @@ public class PositionPreview extends Component implements IDraggable {
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!CSData.isLoaded())
 			return false;
+		if (mapInfo == null)
+			return false;
 		if (mapInfo.getTileset() == null)
 			return false;
 		camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
