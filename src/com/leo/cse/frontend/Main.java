@@ -36,7 +36,8 @@ public class Main extends JFrame implements MouseListener {
 	};
 
 	public static Main window;
-	public static Color customColor;
+	public static Color lineColor;
+	public static String encoding;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
@@ -48,7 +49,8 @@ public class Main extends JFrame implements MouseListener {
 				if (sel == JOptionPane.CANCEL_OPTION)
 					return;
 			}
-			Config.setColor(Config.KEY_CUSTOM_COLOR, customColor);
+			Config.setColor(Config.KEY_LINE_COLOR, lineColor);
+			Config.set(Config.KEY_ENCODING, encoding);
 			SaveEditorPanel.panel.saveSettings();
 			System.exit(0);
 		}
@@ -130,10 +132,11 @@ public class Main extends JFrame implements MouseListener {
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
-		customColor = Config.getColor(Config.KEY_CUSTOM_COLOR, Color.white);
+		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
+		encoding = Config.get(Config.KEY_ENCODING, "UTF-8");
 		try {
 			Resources.load();
-			Resources.colorImages(customColor);
+			Resources.colorImages(lineColor);
 			MCI.readDefault();
 		} catch (Exception e) {
 			e.printStackTrace();

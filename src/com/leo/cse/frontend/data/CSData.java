@@ -94,7 +94,6 @@ public class CSData {
 
 	private static void fillMapdata() throws IOException {
 		FileChannel inChan;
-		String encoding = MCI.get("Game.Encoding");
 
 		FileInputStream inStream;
 		inStream = new FileInputStream(base);
@@ -126,8 +125,10 @@ public class CSData {
 			secHeaders[i] = segStr;
 		}
 
+		String encoding = Main.encoding;
 		if (mapSec == -1) // virgin executable
 		{
+
 			int numMaps = 95;
 			inChan.position(0x937B0); // seek to start of mapdatas
 			for (int i = 0; i < numMaps; i++) {

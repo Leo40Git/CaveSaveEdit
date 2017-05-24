@@ -32,7 +32,6 @@ This group is used for defining identifying information for this MCI file.
 ## `Game` - Game information:
 
 This group is used for defining information about the mod this MCI file supports.
-- `String:Encoding`: The encoding used in the mod.
 - `String:ExeName`: The expected name of the mod executable, *without file extension*.
 - `String:GraphicsExtension`: The file extension for graphics files. "bmp" and "pbm" are interchangeable.
 - `String:MyChar`: The file name for the `MyChar` graphics file. *This is optional, and defaults to "MyChar" if not specified.*

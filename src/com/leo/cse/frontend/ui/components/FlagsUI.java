@@ -95,7 +95,7 @@ public class FlagsUI extends Component implements IScrollable {
 			yy += 18;
 		}
 		final int cy = 16 + 18 * FLAGS_PER_SCROLL - 4;
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 7, null);
 		g.drawString("Hide Undefined Flags?", xx + 16, cy + 5);
 		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148, cy - 7, null);
@@ -103,19 +103,19 @@ public class FlagsUI extends Component implements IScrollable {
 		g.drawString("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 326, cy + 5);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(winSize.width - 20, 1, 20, 19);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawLine(winSize.width - 20, 0, winSize.width - 20, winSize.height - 20);
 		g.drawLine(winSize.width - 20, 20, winSize.width, 20);
 		g.drawImage(Resources.arrowUp, winSize.width - 14, 6, null);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(winSize.width - 19, winSize.height - 39, 21, 19);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawLine(winSize.width - 20, winSize.height - 40, winSize.width, winSize.height - 40);
 		g.drawLine(0, winSize.height - 20, winSize.width, winSize.height - 20);
 		g.drawImage(Resources.arrowDown, winSize.width - 14, winSize.height - 33, null);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(winSize.width - 19, 21, 19, winSize.height - 61);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawRect(winSize.width - 18,
 				22 + (int) (((float) sSup.get() / (shownFlags.size() - FLAGS_PER_SCROLL)) * (winSize.height - 80)), 16,
 				16);

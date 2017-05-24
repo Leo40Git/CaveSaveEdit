@@ -39,7 +39,7 @@ public class MapBox extends DefineBox {
 		loadMap();
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, map.get(vSup.get()), x + 3, y);
 	}

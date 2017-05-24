@@ -13,7 +13,8 @@ public class Config {
 	public static final String KEY_HIDE_UNDEFINED_FLAGS = "hide_undefined_flags";
 	public static final String KEY_HIDE_SYSTEM_FLAGS = "hide_system_flags";
 	public static final String KEY_SORT_MAPS_ALPHABETICALLY = "sort_maps_alphabetically";
-	public static final String KEY_CUSTOM_COLOR = "custom_color";
+	public static final String KEY_LINE_COLOR = "custom_color";
+	public static final String KEY_ENCODING = "encoding";
 
 	private static final Preferences CONFIG = Preferences.userNodeForPackage(Main.class);
 

@@ -34,7 +34,7 @@ public class BooleanBox extends Component {
 			} else
 				disabled = false;
 		}
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		g.drawImage((vSup.get() ? Resources.checkboxOn : Resources.checkboxOff), x, y, null);
 		FrontUtils.drawString(g, t, x + 18, y - 3);

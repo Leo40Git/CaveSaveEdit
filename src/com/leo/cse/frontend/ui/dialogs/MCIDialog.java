@@ -29,7 +29,7 @@ public class MCIDialog extends BaseDialog {
 				+ "\nSpecial support:\n" + MCI.getSpecials(), x + 4, y);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x + 1, y + height - 34, 299, 16);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawRect(x, y + height - 35, width, 17);
 		g.drawLine(x + width - 150, y + height - 18, x + width - 150, y + height - 34);
 		FrontUtils.drawStringCentered(g, "Load MCI file", x + width / 4, y + height - 36);

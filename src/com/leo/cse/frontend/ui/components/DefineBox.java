@@ -32,7 +32,7 @@ public class DefineBox extends IntegerBox {
 	public void render(Graphics g) {
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, vSup.get() + " - " + MCI.get(type, vSup.get()), x + 3, y);
 	}

@@ -27,7 +27,7 @@ public class ShortBox extends Component {
 	public void render(Graphics g) {
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, Short.toString(vSup.get()), x + 3, y);
 	}

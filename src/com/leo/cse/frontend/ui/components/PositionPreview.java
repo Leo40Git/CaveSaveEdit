@@ -66,7 +66,7 @@ public class PositionPreview extends Component implements IDraggable {
 				camCoords2 = "ExactCPos: (" + camX / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ","
 						+ camY / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ")";
 		g.setFont(Resources.fontS);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords, x + width, y);
 		FrontUtils.drawString(g, camCoords2, x + width, y + 16);
 		g.drawImage(surf, x, y, null);

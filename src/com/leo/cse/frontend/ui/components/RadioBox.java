@@ -23,7 +23,7 @@ class RadioBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		if (small) {
 			g.drawImage((parent.isSelected(id) ? Resources.radioOnS : Resources.radioOffS), x, y, null);

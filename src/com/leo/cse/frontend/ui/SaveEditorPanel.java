@@ -1,6 +1,5 @@
 package com.leo.cse.frontend.ui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -49,12 +48,13 @@ import com.leo.cse.frontend.ui.components.WeaponBox;
 import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.MCIDialog;
+import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 
 public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final String[] TOOLBAR = new String[] { "Load profile", "MCI settings", "Save", "Change line color",
+	private static final String[] TOOLBAR = new String[] { "Load Profile", "MCI Settings", "Save", "Editor Settings",
 			"About" };
 
 	public enum EditorTab {
@@ -517,12 +517,12 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
-		g2d.setColor(Main.customColor);
+		g2d.setColor(Main.lineColor);
 		g2d.setFont(Resources.font);
 		// toolbar
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, 17);
-		g2d.setColor(Main.customColor);
+		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, 0, winSize.width, 0);
 		g2d.drawLine(0, 17, winSize.width, 17);
 		int bi = 0;
@@ -539,7 +539,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				comp.render(g2d);
 		} else {
 			g2d.setFont(Resources.fontL);
-			g2d.setColor(Main.customColor);
+			g2d.setColor(Main.lineColor);
 			FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true);
 		}
 		g2d.translate(0, -17);
@@ -547,7 +547,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.setFont(Resources.font);
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
-		g2d.setColor(Main.customColor);
+		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
 		final EditorTab[] tv = EditorTab.values();
 		int tn = tv.length;
@@ -559,7 +559,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			if (Profile.isLoaded() && t == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
 				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 17);
-				g2d.setColor(Main.customColor);
+				g2d.setColor(Main.lineColor);
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
@@ -636,13 +636,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 									"Profile saved successfully", JOptionPane.INFORMATION_MESSAGE);
 						}
 						break;
-					case 3: // set color
-						Color temp = FrontUtils.showColorChooserDialog(this, "Select new color", Main.customColor,
-								false);
-						if (temp != null) {
-							Main.customColor = temp;
-							Resources.colorImages(Main.customColor);
-						}
+					case 3: // editor settings
+						dBox = new SettingsDialog();
 						break;
 					case 4: // about
 						dBox = new AboutDialog();

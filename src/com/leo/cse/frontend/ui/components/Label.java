@@ -17,7 +17,7 @@ public class Label extends Component {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		FrontUtils.drawString(g, text, x, y);
 	}

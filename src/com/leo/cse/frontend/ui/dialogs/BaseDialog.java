@@ -42,7 +42,7 @@ public class BaseDialog extends Dialog {
 		final int x = getWindowX(), y = getWindowY(false);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, title, x + 4, y);
 		g.drawLine(x, y + 18, x + width, y + 18);

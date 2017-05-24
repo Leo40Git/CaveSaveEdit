@@ -31,7 +31,7 @@ public class ItemBox extends DefineBox {
 	public void render(Graphics g) {
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
-		g.setColor(Main.customColor);
+		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height);
 		int item = vSup.get();
 		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 32);

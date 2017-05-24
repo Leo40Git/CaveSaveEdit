@@ -8,6 +8,8 @@ Yes, it's that simple!
 The MCI system is used for mod support.  
 This system allows users to add custom items, weapons, equipment and more to the save editor with ease.  
 See [the MCI readme](MCI.md) for more information about the MCI system.
+# Libraries
+This application only uses a single library, namely [juniversalchardet](https://code.google.com/archive/p/juniversalchardet/). If you want to compile from source, be sure to download version 1.0.3 and put it in the same folder as the .classpath file.
 # Credits
 - **Noxid ([@taedixon](https://github.com/taedixon)):** CS executable code ([frontend.data](src/com/leo/cse/frontend/data))
 - **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites ([ui.png](src/com/leo/cse/frontend/ui.png))
