@@ -9,7 +9,7 @@ public class Config {
 	}
 
 	public static final String KEY_LAST_PROFIE = "last_profile";
-	public static final String KEY_LAST_DEFINES = "last_defines";
+	public static final String KEY_LAST_MCI_FILE = "last_defines";
 	public static final String KEY_HIDE_UNDEFINED_FLAGS = "hide_undefined_flags";
 	public static final String KEY_HIDE_SYSTEM_FLAGS = "hide_system_flags";
 	public static final String KEY_SORT_MAPS_ALPHABETICALLY = "sort_maps_alphabetically";

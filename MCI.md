@@ -41,7 +41,7 @@ This group is used for defining information about the mod this MCI file supports
 - `String:ItemImage`: The file name for the `ItemImage` graphics file. *This is optional, and defaults to "ItemImage" if not specified.*
 - `String:StageImage`: The file name for the `StageImage` graphics file. *This is optional, and defaults to "StageImage" if not specified.*
 - `String:NpcFolder`: The folder name for the `Npc` graphics folder. *This is optional, and defaults to "Npc" if not specified.*
-- `String:NpcSym`: The file name for the `NpcSym` graphics file. *This is optional, and defaults to "NpcSym if not specified.*
+- `String:NpcSym`: The file name for the `NpcSym` graphics file. *This is optional, and defaults to "NpcSym" if not specified.*
 
 ## `Special` - Special support:
 
@@ -49,7 +49,7 @@ This group is used for declaring if support for certain ASM hacks should be enab
 - `Boolean:MimHack`: Adds support for the <MIM hack. Prevents the used flags from being edited in the flag UI and adds a new field for modifying the current costume ID. 
 - `Boolean:VarHack`: Adds support for the <VAR (TSC+) hack. Prevents the used flags from being edited in the flag UI and adds a new tab for modifying the variables.
 - `Boolean:PhysVarHack`: Adds support for the <PHY (TSC+ PHY addon) hack. Prevents the used flags from being edited in the flag UI and adds new fields for modifying the physics variables.
-- `Boolean:DoubleRes`: Adds support for the 2x resolution hack. Makes all graphics use the correct framerects.
+- `Integer:Resolution`: Adds support for an `N`x resolution hack, `N` being any integer divisible by 2. Makes all graphics use the correct framerects. *This is optional, and defaults to 1 if not specified.* 
 
 ## `Map` - Default map descriptions:
 Technically, all entries in this group are special, since they are only used if a mod executable has not been loaded.

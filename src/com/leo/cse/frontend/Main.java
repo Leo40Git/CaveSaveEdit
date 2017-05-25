@@ -123,7 +123,7 @@ public class Main extends JFrame implements MouseListener {
 
 	public static void main(String[] args) {
 		if (GraphicsEnvironment.isHeadless()) {
-			System.err.println("Headless mode is enabled!\nCaveSaveEdit cannot run in headless mode!");
+			System.out.println("Headless mode is enabled!\nCaveSaveEdit cannot run in headless mode!");
 			System.exit(0);
 		}
 		try {
@@ -148,7 +148,7 @@ public class Main extends JFrame implements MouseListener {
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();
 			window.setVisible(true);
-			File p = new File("Profile.dat");
+			File p = new File(System.getProperty("user.dir") + "/Profile.dat");
 			if (p.exists())
 				loadProfile(p);
 		});

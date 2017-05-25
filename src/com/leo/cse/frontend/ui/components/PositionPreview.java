@@ -52,19 +52,27 @@ public class PositionPreview extends Component implements IDraggable {
 		}
 		map = mapInfo.getMap();
 		tileset = CSData.getImg(mapInfo.getTileset());
-		setWidth = tileset.getWidth() / 32;
+		int res = MCI.getInteger("Special.Resolution", 1);
+		int oldRes = res;
+		if (res == 1)
+			res = 2;
+		setWidth = tileset.getWidth() / 16 * res;
+		res = oldRes;
 		BufferedImage surf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, width, height);
 		drawBackground(sg);
+		if (ignoreClick == 0) {
+			camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
+			camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
+		}
 		sg.translate(-camX, -camY);
 		drawTiles(sg);
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos: (" + camX / 32 + "," + camY / 32 + ")",
-				camCoords2 = "ExactCPos: (" + camX / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ","
-						+ camY / (MCI.getSpecial("DoubleRes") ? 1 : 2) + ")";
+				camCoords2 = "ExactCPos: (" + camX / res + "," + camY / res + ")";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords, x + width, y);
@@ -86,6 +94,8 @@ public class PositionPreview extends Component implements IDraggable {
 	}
 
 	private void drawTiles(Graphics g) {
+		int res = MCI.getInteger("Special.Resolution", 1);
+		if (res == 1) res = 2;
 		int xx = 0;
 		int yy = 0;
 		for (int i = 0; i < map.length; i++) {
@@ -98,8 +108,8 @@ public class PositionPreview extends Component implements IDraggable {
 					g.drawImage(CSData.getNpcSym(), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96, 544, 128, null);
 				} else {
 					// draw normal tile
-					int sourceX = (tile % setWidth) * 32;
-					int sourceY = (tile / setWidth) * 32;
+					int sourceX = (tile % setWidth) * 16 * res;
+					int sourceY = (tile / setWidth) * 16 * res;
 					g.drawImage(tileset, xPixel, yPixel, xPixel + 32, yPixel + 32, sourceX, sourceY, sourceX + 32,
 							sourceY + 32, null);
 				}
@@ -148,6 +158,13 @@ public class PositionPreview extends Component implements IDraggable {
 	public void onDrag(int x, int y) {
 		Profile.setX((short) (x - this.x + camX));
 		Profile.setY((short) (y - this.y + camY));
+		ignoreClick = 2;
+	}
+
+	@Override
+	public void onDragEnd(int px, int py) {
+		camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
+		camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
 		ignoreClick = 2;
 	}
 

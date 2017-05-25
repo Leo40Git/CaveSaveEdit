@@ -39,19 +39,7 @@ public class WeaponBox extends DefineBox {
 			return;
 		if (!CSData.isLoaded())
 			return;
-		int ystart = 0, size = 32;
-		String yss = MCI.getNullable("Game", "ArmsImageYStart");
-		if (yss != null)
-			try {
-				ystart = Integer.parseUnsignedInt(yss);
-			} catch (Exception ignore) {
-			}
-		String sis = MCI.getNullable("Game", "ArmsImageSize");
-		if (sis != null)
-			try {
-				size = Integer.parseUnsignedInt(sis);
-			} catch (Exception ignore) {
-			}
+		int ystart = MCI.getInteger("Game.ArmsImageYStart", 0), size = MCI.getInteger("Game.ArmsImageSize", 32);
 		g.drawImage(CSData.getArmsImage(), x + width / 2 - size / 2, y - (size - 32) + 1, x + width / 2 + size / 2,
 				y - (size - 32) + size + 1, wep * size, ystart, (wep + 1) * size, ystart + size, null);
 	}

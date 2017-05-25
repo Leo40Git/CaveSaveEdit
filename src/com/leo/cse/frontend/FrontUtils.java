@@ -32,7 +32,7 @@ public class FrontUtils {
 		final int lineSpace = g.getFontMetrics().getHeight();
 		for (String line : str.split("\n")) {
 			y += lineSpace;
-			g.drawString(line, x, y);
+			g.drawString(line, x, y - 1);
 		}
 	}
 

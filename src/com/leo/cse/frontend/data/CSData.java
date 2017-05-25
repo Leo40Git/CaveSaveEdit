@@ -49,14 +49,10 @@ public class CSData {
 			return;
 		File base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 		while (!base.exists()) {
-			if (SaveEditorPanel.fc == null)
-				SaveEditorPanel.fc = new JFileChooser();
-			SaveEditorPanel.fc.setFileFilter(new FileNameExtensionFilter("Applications", "exe"));
-			SaveEditorPanel.fc.setCurrentDirectory(base);
-			SaveEditorPanel.fc.setDialogTitle("Open mod executable");
-			int returnVal = SaveEditorPanel.fc.showOpenDialog(Main.window);
+			int returnVal = SaveEditorPanel.openFileChooser("Open mod executable",
+					new FileNameExtensionFilter("Applications", "exe"), base, false);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
-				base = SaveEditorPanel.fc.getSelectedFile();
+				base = SaveEditorPanel.getSelectedFile();
 			else
 				return;
 			if (!base.exists())
@@ -269,17 +265,27 @@ public class CSData {
 			BufferedImage img = ImageIO.read(is);
 			if (trans)
 				img = ResUtils.black2Trans(img);
-			if (!MCI.getSpecial("DoubleRes")) {
-				int w = img.getWidth(), h = img.getHeight();
-				BufferedImage after = new BufferedImage(w * 2, h * 2, BufferedImage.TYPE_INT_ARGB);
-				AffineTransform at = new AffineTransform();
-				at.scale(2.0, 2.0);
-				AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-				after = scaleOp.filter(img, after);
-				img = after;
-			}
-			return img;
+			int res = MCI.getInteger("Special.Resolution", 1);
+			if (res == 2)
+				return img;
+			int w = img.getWidth(), h = img.getHeight();
+			int oldRes = res;
+			if (res == 1)
+				res = 2;
+			BufferedImage after = new BufferedImage(w * res, h * res, BufferedImage.TYPE_INT_ARGB);
+			res = oldRes;
+			AffineTransform at = new AffineTransform();
+			double scale = 2 / (double) res;
+			if (scale == 1)
+				return img;
+			at.scale(scale, scale);
+			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+			after = scaleOp.filter(img, after);
+			return after;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	private static BufferedImage loadImage(File srcFile) throws IOException {
@@ -287,31 +293,31 @@ public class CSData {
 	}
 
 	private static void loadGraphics() throws IOException {
-		String myCharName = MCI.getNullable("Game", "MyChar");
+		String myCharName = MCI.getNullable("Game.MyChar");
 		if (myCharName == null)
 			myCharName = "MyChar";
 		File myCharFile = ResUtils.getGraphicsFile(dataDir.toString(), myCharName);
 		myChar = loadImage(myCharFile);
-		String armsImageName = MCI.getNullable("Game", "ArmsImage");
+		String armsImageName = MCI.getNullable("Game.ArmsImage");
 		if (armsImageName == null)
 			armsImageName = "ArmsImage";
 		File armsImageFile = ResUtils.getGraphicsFile(dataDir.toString(), armsImageName);
 		armsImage = loadImage(armsImageFile);
-		String itemImageName = MCI.getNullable("Game", "ItemImage");
+		String itemImageName = MCI.getNullable("Game.ItemImage");
 		if (itemImageName == null)
 			itemImageName = "ItemImage";
 		File itemImageFile = ResUtils.getGraphicsFile(dataDir.toString(), itemImageName);
 		itemImage = loadImage(itemImageFile);
-		String stageImageName = MCI.getNullable("Game", "StageImage");
+		String stageImageName = MCI.getNullable("Game.StageImage");
 		if (stageImageName == null)
 			stageImageName = "StageImage";
 		File stageImageFile = ResUtils.getGraphicsFile(dataDir.toString(), stageImageName);
 		stageImage = loadImage(stageImageFile);
-		String npcFolderName = MCI.getNullable("Game", "NpcFolder");
+		String npcFolderName = MCI.getNullable("Game.NpcFolder");
 		if (npcFolderName == null)
 			npcFolderName = "Npc";
 		npcFolder = new File(dataDir.toString() + "/" + npcFolderName);
-		String npcSymName = MCI.getNullable("Game", "NpcSym");
+		String npcSymName = MCI.getNullable("Game.NpcSym");
 		if (npcSymName == null)
 			npcSymName = "NpcSym";
 		File npcSymFile = ResUtils.getGraphicsFile(npcFolder.toString(), npcSymName);

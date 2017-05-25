@@ -10,21 +10,37 @@ import java.util.Properties;
 
 public class MCI {
 
+	public static class MCIException extends Exception {
+		private static final long serialVersionUID = 2809309984939251682L;
+
+		public MCIException(String message) {
+			super(message);
+		}
+	}
+
 	private MCI() {
 	}
 
 	private static Properties mci = new Properties();
 
-	public static void readDefault() throws IOException {
+	public static void readDefault() throws IOException, MCIException {
 		try (InputStream is = MCI.class.getResourceAsStream("default.mci")) {
 			mci.load(is);
 		}
+		validate();
 	}
 
-	public static void read(File file) throws IOException {
+	public static void read(File file) throws IOException, MCIException {
 		try (FileInputStream fis = new FileInputStream(file)) {
 			mci.load(fis);
 		}
+		validate();
+	}
+
+	private static void validate() throws MCIException {
+		double res = getInteger("Special.Resolution", 1);
+		if (res != 1 && res % 2 != 0)
+			throw new MCIException("Special.Resolution must be divisible by 2!");
 	}
 
 	public static boolean contains(String key) {
@@ -44,13 +60,30 @@ public class MCI {
 		return get(type, Integer.toString(id));
 	}
 
-	public static String getNullable(String type, String value) {
-		final String key = type + "." + value;
+	public static String getNullable(String key) {
 		return mci.getProperty(key);
+	}
+
+	public static String getNullable(String type, String value) {
+		return mci.getProperty(type + "." + value);
 	}
 
 	public static String getNullable(String type, int id) {
 		return getNullable(type, Integer.toString(id));
+	}
+
+	public static int getInteger(String key, int def) {
+		String val = getNullable(key);
+		if (val == null)
+			return def;
+		Integer ret;
+		try {
+			ret = Integer.parseUnsignedInt(val);
+		} catch (NumberFormatException ignore) {
+			return def;
+		}
+		System.out.println(val + "=" + ret);
+		return ret;
 	}
 
 	public static int getNumber(String type) {
@@ -99,11 +132,13 @@ public class MCI {
 				ret += " + <PHY Addon";
 		} else if (getSpecial("MimHack"))
 			ret = "<MIM Hack";
-		if (getSpecial("DoubleRes"))
+		int res = getInteger("Special.Resolution", 1);
+		if (res != 1) {
 			if (ret.equals("None"))
-				ret = "2x Res";
+				ret = res + "x Res";
 			else
-				ret += ", 2x Res";
+				ret += ", " + res + "x Res";
+		}
 		return ret;
 	}
 

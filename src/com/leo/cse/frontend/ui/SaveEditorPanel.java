@@ -21,6 +21,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.Profile;
@@ -30,6 +31,7 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.components.BooleanBox;
+import com.leo.cse.frontend.ui.components.Button;
 import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.FlagsUI;
@@ -49,6 +51,7 @@ import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
+import com.leo.cse.frontend.ui.dialogs.TestDialog;
 
 public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener {
 
@@ -72,7 +75,26 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	public static SaveEditorPanel panel;
-	public static JFileChooser fc;
+	private static JFileChooser fc;
+
+	public static int openFileChooser(String title, FileFilter filter, File dir, boolean openOrSave) {
+		fc = new JFileChooser();
+		fc.setDialogTitle(title);
+		fc.setFileFilter(filter);
+		fc.setCurrentDirectory(dir);
+		int ret = 0;
+		if (openOrSave)
+			ret = fc.showSaveDialog(Main.window);
+		else
+			ret = fc.showOpenDialog(Main.window);
+		return ret;
+	}
+
+	public static File getSelectedFile() {
+		if (fc == null)
+			return null;
+		return fc.getSelectedFile();
+	}
 
 	private EditorTab currentTab;
 	private Map<EditorTab, List<Component>> compListMap;
@@ -160,12 +182,12 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		cl.add(new ShortBox(64, 64, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return (short) (Profile.getX() / (MCI.getSpecial("DoubleRes") ? 1 : 2));
+				return (short) (Profile.getX() / (2 / (double) MCI.getInteger("Special.Resolution", 1)));
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setX((short) (t * (MCI.getSpecial("DoubleRes") ? 1 : 2)));
+				Profile.setX((short) (t * (2 / (double) MCI.getInteger("Special.Resolution", 1))));
 				return t;
 			}
 		}, "exact X position"));
@@ -173,18 +195,17 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		cl.add(new ShortBox(134, 64, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return (short) (Profile.getY() / (MCI.getSpecial("DoubleRes") ? 1 : 2));
+				return (short) (Profile.getY() / (2 / (double) MCI.getInteger("Special.Resolution", 1)));
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setY((short) (t * (MCI.getSpecial("DoubleRes") ? 1 : 2)));
+				Profile.setY((short) (t * (2 / (double) MCI.getInteger("Special.Resolution", 1))));
 				return t;
 			}
 		}, "exacct Y position"));
-		String tileSize = "16x16";
-		if (MCI.getSpecial("DoubleRes"))
-			tileSize = "32x32";
+		int tile = 16 * MCI.getInteger("Special.Resolution", 1);
+		String tileSize = tile + "x" + tile;
 		cl.add(new Label(") (1 tile = " + tileSize + "px)", 198, 64));
 		cl.add(new Label("Direction:", 4, 84));
 		cl.add(new RadioBoxes(54, 84, 120, 2, new String[] { "Left", "Right" }, new Supplier<Integer>() {
@@ -258,6 +279,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			@Override
 			public Integer get() {
 				return Profile.getMap();
+			}
+		}));
+		cl.add(new Button("spritesheet test", 500, 4, 120, 16, new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				dBox = new TestDialog(Main.window.getActualSize());
+				return false;
 			}
 		}));
 		// inventory tab
@@ -563,7 +591,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
-			FrontUtils.drawString(g2d, t.label(), xx + 18, winSize2.height - 20);
+			FrontUtils.drawString(g2d, t.label(), xx + 18, winSize2.height - 19);
 			ti++;
 		}
 		// dialog box
@@ -579,15 +607,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			if (sel == JOptionPane.CANCEL_OPTION)
 				return;
 		}
-		if (fc == null)
-			fc = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Profile Files", "dat");
-		fc.setFileFilter(filter);
-		fc.setCurrentDirectory(new File(Config.get(Config.KEY_LAST_PROFIE, ".")));
-		fc.setDialogTitle("Open profile");
-		int returnVal = fc.showOpenDialog(Main.window);
+		int returnVal = openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
+				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
-			Main.loadProfile(fc.getSelectedFile());
+			Main.loadProfile(getSelectedFile());
 	}
 
 	private boolean ignoreReleased = false, ignoreDragged = false;
@@ -704,6 +727,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		repaint();
 	}
 
+	private Map<IDraggable, Boolean> lastDragged;
+
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (dBox != null)
@@ -712,6 +737,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			ignoreDragged = false;
 			return;
 		}
+		if (lastDragged == null)
+			lastDragged = new HashMap<IDraggable, Boolean>();
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
 		for (Component comp : compListMap.get(currentTab)) {
@@ -720,7 +747,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 				((IDraggable) comp).onDrag(px, py);
+				lastDragged.put((IDraggable) comp, true);
 				repaint();
+			} else {
+				if (lastDragged.get((IDraggable) comp) != null) {
+					((IDraggable) comp).onDragEnd(px, py);
+					lastDragged.remove((IDraggable) comp);
+				}
 			}
 		}
 	}

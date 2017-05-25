@@ -17,6 +17,7 @@ hs_err_pid*
 /doukutsu/
 /test/
 /x2test/
+/x4test/
 /data/
 *.exe
 *.dat
