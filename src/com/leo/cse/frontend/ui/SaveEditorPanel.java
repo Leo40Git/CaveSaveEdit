@@ -1,10 +1,13 @@
 package com.leo.cse.frontend.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -51,12 +54,12 @@ import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 
-public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener {
+public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final String[] TOOLBAR = new String[] { "Load Profile", "MCI Settings", "Save", "Editor Settings",
-			"About" };
+	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "MCI Settings", "Save:Ctrl+S",
+			"Save As:Ctrl+Shift+S", "Editor Settings", "About" };
 
 	public enum EditorTab {
 		GENERAL("General"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags"), VARIABLES("Variables");
@@ -77,6 +80,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	public static int openFileChooser(String title, FileFilter filter, File dir, boolean openOrSave) {
 		fc = new JFileChooser();
+		fc.setMultiSelectionEnabled(false);
+		fc.setAcceptAllFileFilterUsed(false);
 		fc.setDialogTitle(title);
 		fc.setFileFilter(filter);
 		fc.setCurrentDirectory(dir);
@@ -180,12 +185,12 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		cl.add(new ShortBox(64, 64, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return (short) (Profile.getX() / (2 / (double) MCI.getInteger("Special.Resolution", 1)));
+				return (short) (Profile.getX() / (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)));
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setX((short) (t * (2 / (double) MCI.getInteger("Special.Resolution", 1))));
+				Profile.setX((short) (t * (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1))));
 				return t;
 			}
 		}, "exact X position"));
@@ -193,16 +198,16 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		cl.add(new ShortBox(134, 64, 60, 16, new Supplier<Short>() {
 			@Override
 			public Short get() {
-				return (short) (Profile.getY() / (2 / (double) MCI.getInteger("Special.Resolution", 1)));
+				return (short) (Profile.getY() / (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)));
 			}
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
-				Profile.setY((short) (t * (2 / (double) MCI.getInteger("Special.Resolution", 1))));
+				Profile.setY((short) (t * (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1))));
 				return t;
 			}
 		}, "exacct Y position"));
-		int tile = 16 * MCI.getInteger("Special.Resolution", 1);
+		int tile = 16 * MCI.getInteger("Game.GraphicsResolution", 1);
 		String tileSize = tile + "x" + tile;
 		cl.add(new Label(") (1 tile = " + tileSize + "px)", 198, 64));
 		cl.add(new Label("Direction:", 4, 84));
@@ -244,20 +249,21 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				return t;
 			}
 		}, "maximum health"));
-		cl.add(new Label("Time Played:", 4, 124));
-		cl.add(new IntegerBox(68, 124, 120, 16, new Supplier<Integer>() {
+		cl.add(new Label("Seconds Played:", 4, 124));
+		cl.add(new IntegerBox(88, 124, 120, 16, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
-				return Profile.getTime();
+				return Profile.getTime() / MCI.getInteger("Game.FPS", 50);
 			}
 		}, new Function<Integer, Integer>() {
 			@Override
 			public Integer apply(Integer t) {
-				Profile.setTime(t);
+				Profile.setTime(t * MCI.getInteger("Game.FPS", 50));
 				return t;
 			}
 		}, "time played"));
-		cl.add(new Label("(resets at 4294967295)", 192, 124));
+		// getInteger("Game.FPS", 50)
+		cl.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 212, 124));
 		if (!MCI.getSpecial("VarHack") && MCI.getSpecial("MimHack")) {
 			cl.add(new Label("<MIM Costume:", 4, 144));
 			cl.add(new LongBox(78, 144, 120, 16, new Supplier<Long>() {
@@ -283,7 +289,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		cl = compListMap.get(EditorTab.INVENTORY);
 		final String l = "Selected";
 		int xx = 4;
-		cl.add(new RadioBoxes(xx + 26, 2, xx + (122 * 7), 7, new String[] { l, l, l, l, l, l, l },
+		cl.add(new RadioBoxes(xx + 26, 6, xx + (122 * 7), 7, new String[] { l, l, l, l, l, l, l },
 				new Supplier<Integer>() {
 					@Override
 					public Integer get() {
@@ -298,7 +304,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}, true));
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
-			cl.add(new Label("Weapon Slot " + (i + 1) + ":", xx, 6));
 			cl.add(new WeaponBox(xx, 22, i));
 			cl.add(new Label("Level:", xx, 72));
 			cl.add(new IntegerBox(xx, 90, 120, 16, new Supplier<Integer>() {
@@ -527,7 +532,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		Config.setBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, hideSystemFlags);
 		Config.setBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, hideUndefinedFlags);
 	}
-	
+
 	public void setDialogBox(Dialog dBox) {
 		this.dBox = dBox;
 	}
@@ -552,7 +557,20 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
 			g2d.drawLine(xx, 1, xx, 17);
 			g2d.drawImage(Resources.toolbarIcons[bi], xx + 1, 1, null);
-			FrontUtils.drawString(g2d, TOOLBAR[bi], xx + 18, 0);
+			String ts = TOOLBAR[bi];
+			if (!ts.contains(":")) {
+				FrontUtils.drawString(g2d, ts, xx + 18, 0);
+				bi++;
+				continue;
+			}
+			String[] tsp = ts.split(":");
+			FrontUtils.drawString(g2d, tsp[0], xx + 18, 0);
+			Color oc = g2d.getColor();
+			Color faded = new Color(oc.getRed(), oc.getGreen(), oc.getBlue(), 127);
+			g2d.setColor(faded);
+			FrontUtils.drawString(g2d, tsp[1],
+					xx + winSize.width / TOOLBAR.length + 1 - g2d.getFontMetrics().stringWidth(tsp[1]), 0);
+			g2d.setColor(oc);
 			bi++;
 		}
 		// components
@@ -610,6 +628,54 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 	}
 
+	private boolean canSave() {
+		if (!Profile.isLoaded()) {
+			JOptionPane.showMessageDialog(Main.window, "There is no profile to save!\nPlease load a profile.",
+					"No profile to save", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
+
+	private void saveProfile() {
+		if (!canSave())
+			return;
+		try {
+			Profile.write();
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(Main.window,
+					"An error occured while saving the profile file:\n" + e1.getMessage(),
+					"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void saveProfileAs() {
+		if (!canSave())
+			return;
+		int returnVal = openFileChooser("Save profile", new FileNameExtensionFilter("Profile Files", "dat"),
+				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), true);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = getSelectedFile();
+			if (file.exists()) {
+				int confirmVal = JOptionPane.showConfirmDialog(Main.window,
+						"Are you sure you want to overwrite this file?", "Overwrite confirmation",
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (confirmVal != JOptionPane.YES_OPTION)
+					return;
+			}
+			try {
+				Profile.write(file);
+			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(Main.window,
+						"An error occured while saving the profile file:\n" + e1.getMessage(),
+						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
+				return;
+			} finally {
+				Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
+			}
+		}
+	}
+
 	private boolean ignoreReleased = false, ignoreDragged = false;
 
 	@Override
@@ -638,28 +704,15 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 						dBox = new MCIDialog();
 						break;
 					case 2: // save
-						if (!Profile.isLoaded()) {
-							JOptionPane.showMessageDialog(Main.window,
-									"There is no profile to save!\nPlease load a profile.", "No profile to save",
-									JOptionPane.ERROR_MESSAGE);
-							break;
-						}
-						try {
-							Profile.write();
-						} catch (IOException e1) {
-							JOptionPane.showMessageDialog(Main.window,
-									"An error occured while saving the profile file:\n" + e1.getMessage(),
-									"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
-							break;
-						} finally {
-							JOptionPane.showMessageDialog(Main.window, "The profile file was saved successfully.",
-									"Profile saved successfully", JOptionPane.INFORMATION_MESSAGE);
-						}
+						saveProfile();
 						break;
-					case 3: // editor settings
+					case 3: // save as
+						saveProfileAs();
+						break;
+					case 4: // editor settings
 						dBox = new SettingsDialog();
 						break;
-					case 4: // about
+					case 5: // about
 						dBox = new AboutDialog();
 						break;
 					default:
@@ -756,6 +809,28 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	@Override
+	public void keyPressed(KeyEvent e) {
+		int code = e.getKeyCode();
+		int mods = e.getModifiersEx();
+		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK;
+		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK;
+		if (code == KeyEvent.VK_O) {
+			if (ctrl)
+				loadProfile();
+		}
+		if (code == KeyEvent.VK_S) {
+			if (ctrl) {
+				if (shift)
+					saveProfileAs();
+				else {
+					saveProfile();
+					Main.setTitle(Main.window);
+				}
+			}
+		}
+	}
+
+	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
@@ -773,6 +848,14 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 	}
 
 }

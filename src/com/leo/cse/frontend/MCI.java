@@ -38,9 +38,12 @@ public class MCI {
 	}
 
 	private static void validate() throws MCIException {
-		double res = getInteger("Special.Resolution", 1);
+		double res = getInteger("Game.GraphicsResolution", 1);
 		if (res != 1 && res % 2 != 0)
-			throw new MCIException("Special.Resolution must be divisible by 2!");
+			throw new MCIException("Game.GraphicsResolution must be divisible by 2!");
+		int fps = getInteger("Game.FPS", 50);
+		if (fps == 0)
+			throw new MCIException("Game.FPS cannot be equal to 0!");
 	}
 
 	public static boolean contains(String key) {
@@ -131,7 +134,7 @@ public class MCI {
 				ret += " + <PHY Addon";
 		} else if (getSpecial("MimHack"))
 			ret = "<MIM Hack";
-		int res = getInteger("Special.Resolution", 1);
+		int res = getInteger("Game.GraphicsResolution", 1);
 		if (res != 1) {
 			if (ret.equals("None"))
 				ret = res + "x Res";

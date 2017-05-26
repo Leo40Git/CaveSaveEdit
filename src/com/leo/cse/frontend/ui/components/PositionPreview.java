@@ -70,8 +70,8 @@ public class PositionPreview extends Component implements IDraggable {
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos: (" + camX / 32 + "," + camY / 32 + ")",
-				camCoords2 = "ExactCPos: (" + camX / (2 / (double) MCI.getInteger("Special.Resolution", 1)) + ","
-						+ camY / (2 / (double) MCI.getInteger("Special.Resolution", 1)) + ")";
+				camCoords2 = "ExactCPos: (" + camX / (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
+						+ camY / (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords, x + width, y);

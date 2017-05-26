@@ -11,13 +11,12 @@ Game.ArmsImageYStart=0
 Game.ArmsImageSize=32
 Game.ItemImage=ItemImage
 Game.StageImage=StageImage
-Game.NpcFolder=Npc
-Game.NpcSym=NpcSym
+Game.FPS=50
+Game.GraphicsResolution=1
 # Special support
 Special.MimHack=false
 Special.VarHack=false
 Special.PhysVarHack=false
-Special.Resolution=1
 # Map names
 Map.0=Credits
 Map.1=Arthur's House (Normal)

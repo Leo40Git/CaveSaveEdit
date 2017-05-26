@@ -28,7 +28,7 @@ public class SettingsDialog extends BaseDialog {
 		g.setColor(Main.lineColor);
 		g.drawRect(x + 4, y + 4, 292, 17);
 		FrontUtils.drawStringCentered(g, "Change Line Color", x + 150, y + 4);
-		g.drawImage(Resources.toolbarIcons[5], x + 5, y + 5, null);
+		g.drawImage(Resources.toolbarIcons[Resources.toolbarIcons.length - 1], x + 5, y + 5, null);
 		FrontUtils.drawString(g, "Encoding:", x + 4, y + 22);
 		g.drawRect(x + 52, y + 23, 244, 17);
 		FrontUtils.drawString(g, Main.encoding, x + 54, y + 22);

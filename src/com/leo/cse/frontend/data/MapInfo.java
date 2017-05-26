@@ -19,6 +19,8 @@ public class MapInfo {
 	private File bgImage;
 	private String fileName;
 	private int scrollType;
+	private File npcSheet1;
+	private File npcSheet2;
 	private String mapName;
 	private File pxaFile;
 
@@ -39,6 +41,10 @@ public class MapInfo {
 		CSData.addImage(tileset);
 		bgImage = ResUtils.getGraphicsFile(directory.toString(), d.getBgName());
 		CSData.addImage(bgImage);
+		npcSheet1 = ResUtils.getGraphicsFile(directory + "/Npc", "Npc" + d.getNpcSheet1());
+		CSData.addImage(npcSheet1);
+		npcSheet2 = ResUtils.getGraphicsFile(directory + "/Npc", "Npc" + d.getNpcSheet2());
+		CSData.addImage(npcSheet2);
 	}
 
 	protected void loadMap(Mapdata d) {
@@ -147,6 +153,14 @@ public class MapInfo {
 
 	public int getScrollType() {
 		return scrollType;
+	}
+
+	public File getNpcSheet1() {
+		return npcSheet1;
+	}
+
+	public File getNpcSheet2() {
+		return npcSheet2;
 	}
 
 	public String getMapName() {

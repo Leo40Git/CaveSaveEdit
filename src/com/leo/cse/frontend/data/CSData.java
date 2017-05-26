@@ -42,6 +42,7 @@ public class CSData {
 	private static BufferedImage itemImage;
 	private static BufferedImage stageImage;
 	private static File npcFolder;
+	private static BufferedImage npcRegu;
 	private static BufferedImage npcSym;
 
 	public static void load() throws IOException {
@@ -154,9 +155,9 @@ public class CSData {
 				uBuf.get(buffer, 0, 0x20);
 				newMap.setBgName(StrTools.CString(buffer, encoding));
 				uBuf.get(buffer, 0, 0x20);
-				// newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
+				newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
 				uBuf.get(buffer, 0, 0x20);
-				// newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
+				newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
 				// newMap.setBossNum(uBuf.get());
 				uBuf.get();
 				uBuf.get(buffer, 0, 0x23);
@@ -195,9 +196,9 @@ public class CSData {
 					uBuf.get(buffer, 0, 0x20);
 					newMap.setBgName(StrTools.CString(buffer, encoding));
 					uBuf.get(buffer, 0, 0x20);
-					// newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
+					newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
 					uBuf.get(buffer, 0, 0x20);
-					// newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
+					newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
 					// newMap.setBossNum(uBuf.get());
 					uBuf.get();
 					uBuf.get(buffer, 0, 0x23);
@@ -237,9 +238,9 @@ public class CSData {
 					uBuf.get(buffer, 0, 0x20);
 					newMap.setBgName(StrTools.CString(buffer));
 					uBuf.get(buffer, 0, 0x20);
-					// newMap.setNpcSheet1(StrTools.CString(buffer));
+					newMap.setNpcSheet1(StrTools.CString(buffer));
 					uBuf.get(buffer, 0, 0x20);
-					// newMap.setNpcSheet2(StrTools.CString(buffer));
+					newMap.setNpcSheet2(StrTools.CString(buffer));
 					// newMap.setBossNum(uBuf.get());
 					uBuf.get();
 					uBuf.get(buffer, 0, 0x23);
@@ -265,7 +266,7 @@ public class CSData {
 			BufferedImage img = ImageIO.read(is);
 			if (trans)
 				img = ResUtils.black2Trans(img);
-			int res = MCI.getInteger("Special.Resolution", 1);
+			int res = MCI.getInteger("Game.GraphicsResolution", 1);
 			if (res == 2)
 				return img;
 			double scale = 2 / (double) res;
@@ -309,14 +310,10 @@ public class CSData {
 			stageImageName = "StageImage";
 		File stageImageFile = ResUtils.getGraphicsFile(dataDir.toString(), stageImageName);
 		stageImage = loadImage(stageImageFile);
-		String npcFolderName = MCI.getNullable("Game.NpcFolder");
-		if (npcFolderName == null)
-			npcFolderName = "Npc";
-		npcFolder = new File(dataDir.toString() + "/" + npcFolderName);
-		String npcSymName = MCI.getNullable("Game.NpcSym");
-		if (npcSymName == null)
-			npcSymName = "NpcSym";
-		File npcSymFile = ResUtils.getGraphicsFile(npcFolder.toString(), npcSymName);
+		npcFolder = new File(dataDir.toString() + "/Npc");
+		File npcReguFile = ResUtils.getGraphicsFile(npcFolder.toString(), "NpcRegu");
+		npcRegu = loadImage(npcReguFile);
+		File npcSymFile = ResUtils.getGraphicsFile(npcFolder.toString(), "NpcSym");
 		npcSym = loadImage(npcSymFile);
 	}
 
@@ -500,6 +497,10 @@ public class CSData {
 
 	public static BufferedImage getStageImage() {
 		return stageImage;
+	}
+	
+	public static BufferedImage getNpcRegu() {
+		return npcRegu;
 	}
 
 	public static BufferedImage getNpcSym() {

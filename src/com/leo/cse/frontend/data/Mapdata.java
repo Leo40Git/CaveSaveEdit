@@ -8,6 +8,8 @@ public class Mapdata {
 	private String fileName;
 	private int scrollType;
 	private String bgName;
+	private String npcSheet1;
+	private String npcSheet2;
 	private String mapName;
 
 	public Mapdata(int mapNum) {
@@ -56,6 +58,22 @@ public class Mapdata {
 
 	public void setBgName(String bgName) {
 		this.bgName = bgName;
+	}
+
+	public String getNpcSheet1() {
+		return npcSheet1;
+	}
+
+	public void setNpcSheet1(String npcSheet1) {
+		this.npcSheet1 = npcSheet1;
+	}
+
+	public String getNpcSheet2() {
+		return npcSheet2;
+	}
+
+	public void setNpcSheet2(String npcSheet2) {
+		this.npcSheet2 = npcSheet2;
 	}
 
 	public String getMapName() {

@@ -64,6 +64,7 @@ public class Main extends JFrame implements MouseListener {
 		setIconImage(Resources.icon);
 		SaveEditorPanel sep = new SaveEditorPanel();
 		add(sep);
+		addKeyListener(sep);
 		addMouseListener(sep);
 		addMouseListener(this);
 		addMouseMotionListener(sep);

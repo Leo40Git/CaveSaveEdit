@@ -484,22 +484,29 @@ public class Profile {
 	/**
 	 * Writes the profile file.
 	 * 
+	 * @param dest
+	 *            path to file to write
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
-	public static void write() throws IOException {
+	public static void write(File dest) throws IOException {
 		if (!loaded)
 			return;
 		// back up file just in case
-		File backup = new File(file.getAbsolutePath() + ".bkp");
-		if (backup.exists()) {
-			backup.delete();
-		}
-		backup.createNewFile();
-		try (FileOutputStream fos = new FileOutputStream(backup); FileInputStream fis = new FileInputStream(file)) {
-			byte[] data = new byte[FILE_LENGTH];
-			fis.read(data);
-			fos.write(data);
+		File backup = null;
+		if (dest.exists()) {
+			backup = new File(dest.getAbsolutePath() + ".bkp");
+			if (backup.exists()) {
+				backup.delete();
+			}
+			backup.createNewFile();
+			try (FileOutputStream fos = new FileOutputStream(backup); FileInputStream fis = new FileInputStream(dest)) {
+				byte[] data = new byte[FILE_LENGTH];
+				fis.read(data);
+				fos.write(data);
+			}
+		} else {
+			dest.createNewFile();
 		}
 		// start writing
 		pushToData();
@@ -507,15 +514,30 @@ public class Profile {
 			fos.write(data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Error while saving profile! Recovering backup.");
-			try (FileOutputStream fos = new FileOutputStream(file); FileInputStream fis = new FileInputStream(backup)) {
-				byte[] data = new byte[FILE_LENGTH];
-				fis.read(data);
-				fos.write(data);
+			if (backup != null) {
+				System.err.println("Error while saving profile! Recovering backup.");
+				try (FileOutputStream fos = new FileOutputStream(file);
+						FileInputStream fis = new FileInputStream(backup)) {
+					byte[] data = new byte[FILE_LENGTH];
+					fis.read(data);
+					fos.write(data);
+				}
 			}
 		}
+		// set new file
+		file = dest;
 		// unset modified flag
 		modified = false;
+	}
+
+	/**
+	 * Writes the profile file.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	public static void write() throws IOException {
+		write(file);
 	}
 
 	public static boolean isLoaded() {
