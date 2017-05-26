@@ -47,7 +47,7 @@ public class Resources {
 		editorTabIcons = new BufferedImage[5];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
-		toolbarIcons = new BufferedImage[7];
+		toolbarIcons = new BufferedImage[8];
 		for (int i = 0; i < toolbarIcons.length; i++)
 			toolbarIcons[i] = ui.getSubimage(i * 16, 32, 16, 16);
 	}

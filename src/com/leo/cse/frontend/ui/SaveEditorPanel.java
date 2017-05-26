@@ -33,6 +33,7 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.data.CSData;
 import com.leo.cse.frontend.ui.components.BooleanBox;
 import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.DefineBox;
@@ -58,8 +59,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "MCI Settings", "Save:Ctrl+S",
-			"Save As:Ctrl+Shift+S", "Editor Settings", "About" };
+	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shift+O",
+			"MCI Settings", "Save:Ctrl+S", "Save As:Ctrl+Shift+S", "Editor Settings", "About" };
 
 	public enum EditorTab {
 		GENERAL("General"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags"), VARIABLES("Variables");
@@ -568,9 +569,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			Color oc = g2d.getColor();
 			Color faded = new Color(oc.getRed(), oc.getGreen(), oc.getBlue(), 127);
 			g2d.setColor(faded);
+			g2d.setFont(Resources.fontS);
 			FrontUtils.drawString(g2d, tsp[1],
-					xx + winSize.width / TOOLBAR.length + 1 - g2d.getFontMetrics().stringWidth(tsp[1]), 0);
+					xx + winSize.width / TOOLBAR.length + 1 - g2d.getFontMetrics().stringWidth(tsp[1]), 3);
 			g2d.setColor(oc);
+			g2d.setFont(Resources.font);
 			bi++;
 		}
 		// components
@@ -625,6 +628,23 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			Main.loadProfile(getSelectedFile());
 			addComponents();
+		}
+	}
+
+	private void loadExe() {
+		int returnVal = openFileChooser("Open executable", new FileNameExtensionFilter("Applications", "exe"),
+				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			try {
+				CSData.load(getSelectedFile());
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(Main.window,
+						"An error occured while loading the executable:\n" + e.getMessage(),
+						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+				return;
+			} finally {
+				addComponents();
+			}
 		}
 	}
 
@@ -700,19 +720,22 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 					case 0: // load profile
 						loadProfile();
 						break;
-					case 1: // load defines
+					case 1: // load exe
+						loadExe();
+						break;
+					case 2: // load defines
 						dBox = new MCIDialog();
 						break;
-					case 2: // save
+					case 3: // save
 						saveProfile();
 						break;
-					case 3: // save as
+					case 4: // save as
 						saveProfileAs();
 						break;
-					case 4: // editor settings
+					case 5: // editor settings
 						dBox = new SettingsDialog();
 						break;
-					case 5: // about
+					case 6: // about
 						dBox = new AboutDialog();
 						break;
 					default:
@@ -815,8 +838,12 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK;
 		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK;
 		if (code == KeyEvent.VK_O) {
-			if (ctrl)
-				loadProfile();
+			if (ctrl) {
+				if (shift)
+					loadExe();
+				else
+					loadProfile();
+			}
 		}
 		if (code == KeyEvent.VK_S) {
 			if (ctrl) {

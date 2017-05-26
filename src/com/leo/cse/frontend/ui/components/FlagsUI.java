@@ -86,7 +86,7 @@ public class FlagsUI extends Component implements IScrollable {
 		final Dimension winSize = Main.window.getActualSize(true);
 		final int xx = 4;
 		final int shownFlagsNum = Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL);
-		int yy = 15;
+		int yy = 14;
 		for (int i = sSup.get(); i < shownFlagsNum; i++) {
 			final int flagId = shownFlags.get(i);
 			Image chkImage = Resources.checkboxDisabled;
@@ -97,7 +97,7 @@ public class FlagsUI extends Component implements IScrollable {
 			FrontUtils.drawString(g, getFlagDescription(flagId), xx + 42, yy - 14);
 			yy += 18;
 		}
-		final int cy = 16 + 18 * FLAGS_PER_SCROLL - 5;
+		final int cy = 16 + 18 * FLAGS_PER_SCROLL - 6;
 		g.setColor(Main.lineColor);
 		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 6, null);
 		FrontUtils.drawString(g, "Hide Undefined Flags?", xx + 16, cy - 8);
@@ -108,19 +108,19 @@ public class FlagsUI extends Component implements IScrollable {
 		FrontUtils.drawString(g, "Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 552,
 				cy - 8);
 		g.setColor(Main.COLOR_BG);
-		g.fillRect(winSize.width - 20, 1, 20, 19);
+		g.fillRect(winSize.width - 20, 1, 20, 18);
 		g.setColor(Main.lineColor);
-		g.drawLine(winSize.width - 20, 0, winSize.width - 20, winSize.height - 21);
+		g.drawLine(winSize.width - 20, 0, winSize.width - 20, winSize.height - 22);
 		g.drawLine(winSize.width - 20, 20, winSize.width, 20);
-		g.drawImage(Resources.arrowUp, winSize.width - 14, 6, null);
+		g.drawImage(Resources.arrowUp, winSize.width - 13, 6, null);
 		g.setColor(Main.COLOR_BG);
-		g.fillRect(winSize.width - 19, winSize.height - 39, 21, 18);
+		g.fillRect(winSize.width - 19, winSize.height - 38, 21, 18);
 		g.setColor(Main.lineColor);
-		g.drawLine(winSize.width - 20, winSize.height - 41, winSize.width, winSize.height - 41);
-		g.drawLine(0, winSize.height - 21, winSize.width, winSize.height - 21);
-		g.drawImage(Resources.arrowDown, winSize.width - 14, winSize.height - 34, null);
+		g.drawLine(winSize.width - 20, winSize.height - 42, winSize.width, winSize.height - 42);
+		g.drawLine(0, winSize.height - 22, winSize.width, winSize.height - 22);
+		g.drawImage(Resources.arrowDown, winSize.width - 13, winSize.height - 35, null);
 		g.setColor(Main.COLOR_BG);
-		g.fillRect(winSize.width - 19, 21, 18, winSize.height - 62);
+		g.fillRect(winSize.width - 19, 21, 18, winSize.height - 63);
 		g.setColor(Main.lineColor);
 		if (shownFlagsNum > FLAGS_PER_SCROLL)
 			g.drawRect(winSize.width - 18,
@@ -138,13 +138,13 @@ public class FlagsUI extends Component implements IScrollable {
 				amount *= 10;
 			if (ctrlDown)
 				amount *= 100;
-			if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, 0, 20, 19))
+			if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, 0, 20, 18))
 				sUpdate.accept(Math.max(sSup.get() - amount, 0));
-			else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 41, 20, 19))
+			else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 42, 20, 18))
 				sUpdate.accept(Math.max(0, Math.min(sSup.get() + amount, shownFlags.size() - FLAGS_PER_SCROLL)));
 		} else {
 			final int xx = 4;
-			int yy = 15;
+			int yy = 14;
 			for (int i = sSup.get(); i < Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL); i++) {
 				final int flagId = shownFlags.get(i);
 				if (flagIsValid(flagId) && FrontUtils.pointInRectangle(x, y, xx, yy - 16, 16, 16)) {
@@ -153,7 +153,7 @@ public class FlagsUI extends Component implements IScrollable {
 				}
 				yy += 18;
 			}
-			final int cy = 16 + 18 * FLAGS_PER_SCROLL - 4;
+			final int cy = 16 + 18 * FLAGS_PER_SCROLL - 6;
 			if (FrontUtils.pointInRectangle(x, y, xx, cy - 6, 16, 16)) {
 				huUpdate.accept(!huSup.get());
 				calculateShownFlags();

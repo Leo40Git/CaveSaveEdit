@@ -45,10 +45,12 @@ public class CSData {
 	private static BufferedImage npcRegu;
 	private static BufferedImage npcSym;
 
-	public static void load() throws IOException {
+	public static void load(File file) throws IOException {
 		if (!Profile.isLoaded() || Profile.getFile() == null)
 			return;
-		File base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
+		File base = file;
+		if (base == null)
+			base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 		while (!base.exists()) {
 			int returnVal = SaveEditorPanel.openFileChooser("Open mod executable",
 					new FileNameExtensionFilter("Applications", "exe"), base, false);
@@ -61,6 +63,10 @@ public class CSData {
 						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
 		}
 		load0(base, true);
+	}
+	
+	public static void load() throws IOException {
+		load(null);
 	}
 
 	public static void reload() throws IOException {
@@ -498,7 +504,7 @@ public class CSData {
 	public static BufferedImage getStageImage() {
 		return stageImage;
 	}
-	
+
 	public static BufferedImage getNpcRegu() {
 		return npcRegu;
 	}
