@@ -31,10 +31,10 @@ public class DefineBox extends IntegerBox {
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, width, height);
+		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
-		g.drawRect(x, y, width, height);
-		FrontUtils.drawString(g, vSup.get() + " - " + MCI.get(type, vSup.get()), x + 3, y);
+		g.drawRect(x, y, width, height - 1);
+		FrontUtils.drawString(g, vSup.get() + " - " + MCI.get(type, vSup.get()), x + 3, y - 1);
 	}
 
 	@Override

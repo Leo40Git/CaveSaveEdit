@@ -31,7 +31,6 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.Button;
 import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.FlagsUI;
@@ -51,7 +50,6 @@ import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
-import com.leo.cse.frontend.ui.dialogs.TestDialog;
 
 public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener {
 
@@ -279,13 +277,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			@Override
 			public Integer get() {
 				return Profile.getMap();
-			}
-		}));
-		cl.add(new Button("spritesheet test", 500, 4, 120, 16, new Supplier<Boolean>() {
-			@Override
-			public Boolean get() {
-				dBox = new TestDialog(Main.window.getActualSize());
-				return false;
 			}
 		}));
 		// inventory tab
@@ -536,6 +527,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		Config.setBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, hideSystemFlags);
 		Config.setBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, hideUndefinedFlags);
 	}
+	
+	public void setDialogBox(Dialog dBox) {
+		this.dBox = dBox;
+	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -609,8 +604,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 		int returnVal = openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
 				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false);
-		if (returnVal == JFileChooser.APPROVE_OPTION)
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			Main.loadProfile(getSelectedFile());
+			addComponents();
+		}
 	}
 
 	private boolean ignoreReleased = false, ignoreDragged = false;

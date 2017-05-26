@@ -26,6 +26,7 @@ public class MCIDialog extends BaseDialog {
 	public void render(Graphics g) {
 		super.render(g);
 		final int x = getWindowX(), y = getWindowY();
+		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n" + MCI.get("Meta.Author")
 				+ "\nSpecial support:\n" + MCI.getSpecials(), x + 4, y);
 		g.setColor(Main.COLOR_BG);

@@ -268,10 +268,10 @@ public class CSData {
 			int res = MCI.getInteger("Special.Resolution", 1);
 			if (res == 2)
 				return img;
-			int w = img.getWidth(), h = img.getHeight();
 			double scale = 2 / (double) res;
 			if (scale == 1)
 				return img;
+			int w = img.getWidth(), h = img.getHeight();
 			BufferedImage after = new BufferedImage((int) (w * scale), (int) (h * scale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
 			at.scale(scale, scale);

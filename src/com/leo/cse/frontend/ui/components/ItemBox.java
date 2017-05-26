@@ -30,11 +30,11 @@ public class ItemBox extends DefineBox {
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, width, height);
+		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
-		g.drawRect(x, y, width, height);
+		g.drawRect(x, y, width, height - 1);
 		int item = vSup.get();
-		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 32);
+		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 31);
 		if (item == 0)
 			return;
 		if (!CSData.isLoaded())

@@ -38,10 +38,10 @@ public class MapBox extends DefineBox {
 	public void render(Graphics g) {
 		loadMap();
 		g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, width, height);
+		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
-		g.drawRect(x, y, width, height);
-		FrontUtils.drawString(g, map.get(vSup.get()), x + 3, y);
+		g.drawRect(x, y, width, height - 1);
+		FrontUtils.drawString(g, map.get(vSup.get()), x + 3, y - 1);
 	}
 
 	@Override

@@ -14,22 +14,32 @@ public class ShortBox extends Component {
 	private Supplier<Short> vSup;
 	private Function<Short, Short> update;
 	private String description;
+	private int padLength;
 
 	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update,
-			String description) {
+			String description, int padLength) {
 		super(x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
 		this.description = description;
+		this.padLength = padLength;
+	}
+
+	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update,
+			String description) {
+		this(x, y, width, height, vSup, update, description, -1);
 	}
 
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, width, height);
+		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
-		g.drawRect(x, y, width, height);
-		FrontUtils.drawString(g, Short.toString(vSup.get()), x + 3, y);
+		g.drawRect(x, y, width, height - 1);
+		String str = Short.toString(vSup.get());
+		if (padLength > 0)
+			str = FrontUtils.padLeft(str, "0", padLength);
+		FrontUtils.drawString(g, str, x + 3, y - 1);
 	}
 
 	@Override

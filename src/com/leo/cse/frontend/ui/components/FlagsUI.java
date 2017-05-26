@@ -13,6 +13,8 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.ui.SaveEditorPanel;
+import com.leo.cse.frontend.ui.dialogs.FlagDialog;
 
 public class FlagsUI extends Component implements IScrollable {
 
@@ -38,7 +40,7 @@ public class FlagsUI extends Component implements IScrollable {
 		this.hsUpdate = hsUpdate;
 	}
 
-	private boolean flagIsValid(int id) {
+	public static boolean flagIsValid(int id) {
 		if (id <= 10)
 			return false;
 		if (MCI.getSpecial("VarHack")) {
@@ -52,7 +54,7 @@ public class FlagsUI extends Component implements IScrollable {
 		return true;
 	}
 
-	private String getFlagDescription(int id) {
+	public static String getFlagDescription(int id) {
 		if (id <= 10)
 			return MCI.get("Flag.Engine");
 		if (MCI.getSpecial("VarHack")) {
@@ -83,24 +85,28 @@ public class FlagsUI extends Component implements IScrollable {
 		calculateShownFlags();
 		final Dimension winSize = Main.window.getActualSize(true);
 		final int xx = 4;
+		final int shownFlagsNum = Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL);
 		int yy = 15;
-		for (int i = sSup.get(); i < Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL); i++) {
+		for (int i = sSup.get(); i < shownFlagsNum; i++) {
 			final int flagId = shownFlags.get(i);
 			Image chkImage = Resources.checkboxDisabled;
 			if (flagIsValid(flagId))
 				chkImage = (Profile.getFlag(flagId) ? Resources.checkboxOn : Resources.checkboxOff);
 			g.drawImage(chkImage, xx - 2, yy - 12, null);
-			g.drawString(FrontUtils.padLeft(Integer.toString(flagId), "0", 4), xx + 16, yy);
-			g.drawString(getFlagDescription(flagId), xx + 42, yy);
+			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toString(flagId), "0", 4), xx + 16, yy - 14);
+			FrontUtils.drawString(g, getFlagDescription(flagId), xx + 42, yy - 14);
 			yy += 18;
 		}
 		final int cy = 16 + 18 * FLAGS_PER_SCROLL - 4;
 		g.setColor(Main.lineColor);
 		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 7, null);
-		g.drawString("Hide Undefined Flags?", xx + 16, cy + 5);
+		FrontUtils.drawString(g, "Hide Undefined Flags?", xx + 16, cy - 9);
 		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148, cy - 7, null);
-		g.drawString("Hide System Flags?", xx + 166, cy + 5);
-		g.drawString("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 326, cy + 5);
+		FrontUtils.drawString(g, "Hide System Flags?", xx + 166, cy - 9);
+		g.drawRect(xx + 296, cy - 7, 200, 15);
+		FrontUtils.drawStringCentered(g, "Set specific flag...", xx + 396, cy - 9);
+		FrontUtils.drawString(g, "Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 552,
+				cy - 9);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(winSize.width - 20, 1, 20, 19);
 		g.setColor(Main.lineColor);
@@ -116,9 +122,10 @@ public class FlagsUI extends Component implements IScrollable {
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(winSize.width - 19, 21, 19, winSize.height - 61);
 		g.setColor(Main.lineColor);
-		g.drawRect(winSize.width - 18,
-				22 + (int) (((float) sSup.get() / (shownFlags.size() - FLAGS_PER_SCROLL)) * (winSize.height - 80)), 16,
-				16);
+		if (shownFlagsNum > FLAGS_PER_SCROLL)
+			g.drawRect(winSize.width - 18,
+					22 + (int) (((float) sSup.get() / (shownFlags.size() - FLAGS_PER_SCROLL)) * (winSize.height - 80)),
+					16, 16);
 	}
 
 	@Override
@@ -156,6 +163,9 @@ public class FlagsUI extends Component implements IScrollable {
 				hsUpdate.accept(!hsSup.get());
 				calculateShownFlags();
 				sUpdate.accept(Math.max(0, Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL)));
+			}
+			if (FrontUtils.pointInRectangle(x, y, xx + 296, cy - 7, 200, 15)) {
+				SaveEditorPanel.panel.setDialogBox(new FlagDialog());
 			}
 		}
 		return false;

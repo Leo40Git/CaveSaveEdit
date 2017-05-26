@@ -25,10 +25,12 @@ public class PositionPreview extends Component implements IDraggable {
 	private int setWidth;
 	private int camX = 0, camY = 0;
 	private int ignoreClick = 0;
+	private int lastMap;
 
 	public PositionPreview(int x, int y, Supplier<Integer> mSup) {
 		super(x, y, 640, 480);
 		this.mSup = mSup;
+		lastMap = mSup.get();
 	}
 
 	@Override
@@ -58,10 +60,11 @@ public class PositionPreview extends Component implements IDraggable {
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, width, height);
 		drawBackground(sg);
-		if (ignoreClick == 0) {
+		if (mSup.get() != lastMap || ignoreClick == 0) {
 			camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
 			camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
 		}
+		lastMap = mSup.get();
 		sg.translate(-camX, -camY);
 		drawTiles(sg);
 		drawMyChar(sg);
@@ -159,7 +162,7 @@ public class PositionPreview extends Component implements IDraggable {
 	public void onDragEnd(int px, int py) {
 		camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
 		camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
-		ignoreClick = 2;
+		ignoreClick = 1;
 	}
 
 }
