@@ -99,14 +99,14 @@ public class FlagsUI extends Component implements IScrollable {
 		}
 		final int cy = 16 + 18 * FLAGS_PER_SCROLL - 6;
 		g.setColor(Main.lineColor);
-		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 6, null);
-		FrontUtils.drawString(g, "Hide Undefined Flags?", xx + 16, cy - 8);
-		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148, cy - 6, null);
-		FrontUtils.drawString(g, "Hide System Flags?", xx + 166, cy - 8);
-		g.drawRect(xx + 296, cy - 6, 200, 15);
-		FrontUtils.drawStringCentered(g, "Set specific flag...", xx + 396, cy - 8);
+		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 5, null);
+		FrontUtils.drawString(g, "Hide Undefined Flags?", xx + 16, cy - 7);
+		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148, cy - 5, null);
+		FrontUtils.drawString(g, "Hide System Flags?", xx + 166, cy - 7);
+		g.drawRect(xx + 296, cy - 5, 200, 15);
+		FrontUtils.drawStringCentered(g, "Set specific flag...", xx + 396, cy - 7);
 		FrontUtils.drawString(g, "Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 552,
-				cy - 8);
+				cy - 5);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(winSize.width - 20, 1, 20, 18);
 		g.setColor(Main.lineColor);
@@ -154,17 +154,17 @@ public class FlagsUI extends Component implements IScrollable {
 				yy += 18;
 			}
 			final int cy = 16 + 18 * FLAGS_PER_SCROLL - 6;
-			if (FrontUtils.pointInRectangle(x, y, xx, cy - 6, 16, 16)) {
+			if (FrontUtils.pointInRectangle(x, y, xx, cy - 7, 16, 16)) {
 				huUpdate.accept(!huSup.get());
 				calculateShownFlags();
 				sUpdate.accept(Math.max(0, Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL)));
 			}
-			if (FrontUtils.pointInRectangle(x, y, xx + 148, cy - 6, 16, 16)) {
+			if (FrontUtils.pointInRectangle(x, y, xx + 148, cy - 7, 16, 16)) {
 				hsUpdate.accept(!hsSup.get());
 				calculateShownFlags();
 				sUpdate.accept(Math.max(0, Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL)));
 			}
-			if (FrontUtils.pointInRectangle(x, y, xx + 296, cy - 6, 200, 15)) {
+			if (FrontUtils.pointInRectangle(x, y, xx + 296, cy - 7, 200, 15)) {
 				SaveEditorPanel.panel.setDialogBox(new FlagDialog());
 			}
 		}
