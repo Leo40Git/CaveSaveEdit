@@ -18,6 +18,7 @@ public class Resources {
 	public static Font fontB, font, fontS, fontL;
 
 	public static BufferedImage icon;
+	public static BufferedImage shadow;
 	public static BufferedImage ui;
 	public static BufferedImage checkboxOff, checkboxOn, checkboxDisabled;
 	public static BufferedImage radioOff, radioOn;
@@ -29,6 +30,7 @@ public class Resources {
 	public static void load() throws IOException, FontFormatException {
 		loadFonts();
 		icon = ImageIO.read(Resources.class.getResourceAsStream("icon.png"));
+		shadow = ImageIO.read(Resources.class.getResource("shadow.png"));
 		ui = ImageIO.read(Resources.class.getResourceAsStream("ui.png"));
 		loadImages();
 	}

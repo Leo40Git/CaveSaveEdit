@@ -40,6 +40,7 @@ public class BaseDialog extends Dialog {
 	@Override
 	public void render(Graphics g) {
 		final int x = getWindowX(), y = getWindowY(false);
+		FrontUtils.drawNineSlice(g, Resources.shadow, x - 16, y - 16, width + 32, height + 32);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
 		g.setColor(Main.lineColor);

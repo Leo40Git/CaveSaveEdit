@@ -41,10 +41,10 @@ public class MapInfo {
 		CSData.addImage(tileset);
 		bgImage = ResUtils.getGraphicsFile(directory.toString(), d.getBgName());
 		CSData.addImage(bgImage);
-		npcSheet1 = ResUtils.getGraphicsFile(directory + "/Npc", "Npc" + d.getNpcSheet1());
-		CSData.addImage(npcSheet1);
-		npcSheet2 = ResUtils.getGraphicsFile(directory + "/Npc", "Npc" + d.getNpcSheet2());
-		CSData.addImage(npcSheet2);
+		//npcSheet1 = ResUtils.getGraphicsFile(directory + "/Npc", "Npc" + d.getNpcSheet1());
+		//CSData.addImage(npcSheet1);
+		//npcSheet2 = ResUtils.getGraphicsFile(directory + "/Npc", "Npc" + d.getNpcSheet2());
+		//CSData.addImage(npcSheet2);
 	}
 
 	protected void loadMap(Mapdata d) {
