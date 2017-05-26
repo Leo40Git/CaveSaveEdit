@@ -104,7 +104,7 @@ public class FlagsUI extends Component implements IScrollable {
 		g.drawImage((hsSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx + 148, cy - 6, null);
 		FrontUtils.drawString(g, "Hide System Flags?", xx + 166, cy - 8);
 		g.drawRect(xx + 296, cy - 6, 200, 15);
-		FrontUtils.drawStringCentered(g, "Set specific flag...", xx + 396, cy - 6);
+		FrontUtils.drawStringCentered(g, "Set specific flag...", xx + 396, cy - 8);
 		FrontUtils.drawString(g, "Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 552,
 				cy - 8);
 		g.setColor(Main.COLOR_BG);

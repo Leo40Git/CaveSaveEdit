@@ -289,7 +289,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		cl = compListMap.get(EditorTab.INVENTORY);
 		final String l = "Selected";
 		int xx = 4;
-		cl.add(new RadioBoxes(xx + 26, 6, xx + (122 * 7), 7, new String[] { l, l, l, l, l, l, l },
+		cl.add(new RadioBoxes(xx + 32, 8, xx + (122 * 7), 7, new String[] { l, l, l, l, l, l, l },
 				new Supplier<Integer>() {
 					@Override
 					public Integer get() {
