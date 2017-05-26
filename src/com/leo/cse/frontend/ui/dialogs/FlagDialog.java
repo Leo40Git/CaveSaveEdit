@@ -27,6 +27,7 @@ public class FlagDialog extends BaseDialog {
 		}, new Function<Short, Short>() {
 			@Override
 			public Short apply(Short t) {
+				t = (short) Math.max(0, Math.min(7999, t));
 				flag = t;
 				return t;
 			}
