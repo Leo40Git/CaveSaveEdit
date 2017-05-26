@@ -106,7 +106,7 @@ public class FlagsUI extends Component implements IScrollable {
 		g.drawRect(xx + 296, cy - 5, 200, 15);
 		FrontUtils.drawStringCentered(g, "Set specific flag...", xx + 396, cy - 7);
 		FrontUtils.drawString(g, "Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", xx + 552,
-				cy - 5);
+				cy - 7);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(winSize.width - 20, 1, 20, 18);
 		g.setColor(Main.lineColor);
