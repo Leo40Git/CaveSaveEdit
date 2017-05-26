@@ -52,12 +52,7 @@ public class PositionPreview extends Component implements IDraggable {
 		}
 		map = mapInfo.getMap();
 		tileset = CSData.getImg(mapInfo.getTileset());
-		int res = MCI.getInteger("Special.Resolution", 1);
-		int oldRes = res;
-		if (res == 1)
-			res = 2;
-		setWidth = tileset.getWidth() / 16 * res;
-		res = oldRes;
+		setWidth = tileset.getWidth() / 32;
 		BufferedImage surf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
@@ -72,7 +67,8 @@ public class PositionPreview extends Component implements IDraggable {
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos: (" + camX / 32 + "," + camY / 32 + ")",
-				camCoords2 = "ExactCPos: (" + camX / res + "," + camY / res + ")";
+				camCoords2 = "ExactCPos: (" + camX / (2 / (double) MCI.getInteger("Special.Resolution", 1)) + ","
+						+ camY / (2 / (double) MCI.getInteger("Special.Resolution", 1)) + ")";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords, x + width, y);
@@ -94,8 +90,6 @@ public class PositionPreview extends Component implements IDraggable {
 	}
 
 	private void drawTiles(Graphics g) {
-		int res = MCI.getInteger("Special.Resolution", 1);
-		if (res == 1) res = 2;
 		int xx = 0;
 		int yy = 0;
 		for (int i = 0; i < map.length; i++) {
@@ -108,8 +102,8 @@ public class PositionPreview extends Component implements IDraggable {
 					g.drawImage(CSData.getNpcSym(), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96, 544, 128, null);
 				} else {
 					// draw normal tile
-					int sourceX = (tile % setWidth) * 16 * res;
-					int sourceY = (tile / setWidth) * 16 * res;
+					int sourceX = (tile % setWidth) * 32;
+					int sourceY = (tile / setWidth) * 32;
 					g.drawImage(tileset, xPixel, yPixel, xPixel + 32, yPixel + 32, sourceX, sourceY, sourceX + 32,
 							sourceY + 32, null);
 				}

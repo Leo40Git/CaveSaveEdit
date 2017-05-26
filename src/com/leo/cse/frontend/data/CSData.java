@@ -269,15 +269,11 @@ public class CSData {
 			if (res == 2)
 				return img;
 			int w = img.getWidth(), h = img.getHeight();
-			int oldRes = res;
-			if (res == 1)
-				res = 2;
-			BufferedImage after = new BufferedImage(w * res, h * res, BufferedImage.TYPE_INT_ARGB);
-			res = oldRes;
-			AffineTransform at = new AffineTransform();
 			double scale = 2 / (double) res;
 			if (scale == 1)
 				return img;
+			BufferedImage after = new BufferedImage((int) (w * scale), (int) (h * scale), BufferedImage.TYPE_INT_ARGB);
+			AffineTransform at = new AffineTransform();
 			at.scale(scale, scale);
 			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 			after = scaleOp.filter(img, after);

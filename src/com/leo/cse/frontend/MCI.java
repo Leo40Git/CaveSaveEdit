@@ -82,7 +82,6 @@ public class MCI {
 		} catch (NumberFormatException ignore) {
 			return def;
 		}
-		System.out.println(val + "=" + ret);
 		return ret;
 	}
 
