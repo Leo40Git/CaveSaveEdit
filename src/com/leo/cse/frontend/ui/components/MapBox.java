@@ -12,7 +12,7 @@ import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.data.CSData;
+import com.leo.cse.frontend.data.ExeData;
 import com.leo.cse.frontend.data.MapInfo;
 
 public class MapBox extends DefineBox {
@@ -62,9 +62,9 @@ public class MapBox extends DefineBox {
 
 	private void loadMap() {
 		map = new HashMap<Integer, String>();
-		if (CSData.isLoaded()) {
-			for (int i = 0; i < CSData.getMapInfoCount(); i++) {
-				MapInfo mi = CSData.getMapInfo(i);
+		if (ExeData.isLoaded()) {
+			for (int i = 0; i < ExeData.getMapInfoCount(); i++) {
+				MapInfo mi = ExeData.getMapInfo(i);
 				map.put(i, mi.getFileName() + " - " + mi.getMapName());
 			}
 		} else {

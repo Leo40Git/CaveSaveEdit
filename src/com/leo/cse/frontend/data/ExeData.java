@@ -1,10 +1,12 @@
 package com.leo.cse.frontend.data;
 
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -25,25 +27,77 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code from it
-public class CSData {
+public class ExeData {
 
-	private CSData() {
+	private ExeData() {
 	}
 
+	private static final int ARMSITEM_PTR = 0x8C270;
+	private static final int IMG_EXT_PTR = 0x8C280;
+	private static final int NPC_TBL_PTR = 0x8C3AB;
+	private static final int MYCHAR_PTR = 0x8C4F0;
+	private static final int ARMSIMAGE_PTR = 0x8C500;
+	private static final int ITEMIMAGE_PTR = 0x8C514;
+	private static final int DATA_FOLDER_PTR = 0x8C5BC;
+	private static final int STAGEIMAGE_PTR = 0x8C520;
+	private static final int NPCSYM_PTR = 0x8C52C;
+	private static final int NPCREGU_PTR = 0x8C538;
+	private static final int PXM_TAG_PTR = 0x8C67C;
+	private static final int STAGESELECT_PTR = 0x8C770;
+	private static final int STAGE_FOLDER_PTR = 0x8C7D4;
+	private static final int PRT_PREFIX_PTR = 0x8C7DC;
+	private static final int PXA_EXT_PTR = 0x8C7E8;
+	private static final int PXM_EXT_PTR = 0x8C7F4;
+	private static final int PXE_EXT_PTR = 0x8C800;
+	private static final int TSC_EXT_PTR = 0x8C80C;
+	private static final int NPC_FOLDER_PTR = 0x8C81C;
+	private static final int NPC_PREFIX_PTR = 0x8C820;
+
+	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, NPC_TBL_PTR, MYCHAR_PTR,
+			ARMSIMAGE_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR, NPCREGU_PTR, PXM_TAG_PTR,
+			STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR, PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR,
+			NPC_FOLDER_PTR, NPC_PREFIX_PTR };
+
+	public static final int STRING_ARMSITEM = 0;
+	public static final int STRING_IMG_EXT = 1;
+	public static final int STRING_NPC_TBL = 2;
+	public static final int STRING_MYCHAR = 3;
+	public static final int STRING_ARMSIMAGE = 4;
+	public static final int STRING_ITEMIMAGE = 5;
+	public static final int STRING_DATA_FOLDER = 6;
+	public static final int STRING_STAGEIMAGE = 7;
+	public static final int STRING_NPCSYM = 8;
+	public static final int STRING_NPCREGU = 9;
+	public static final int STRING_PXM_TAG = 10;
+	public static final int STRING_STAGESELECT = 11;
+	public static final int STRING_STAGE_FOLDER = 12;
+	public static final int STRING_PRT_PREFIX = 13;
+	public static final int STRING_PXA_EXT = 14;
+	public static final int STRING_PXM_EXT = 15;
+	public static final int STRING_PXE_EXT = 16;
+	public static final int STRING_TSC_EXT = 17;
+	public static final int STRING_NPC_FOLDER = 18;
+	public static final int STRING_NPC_PREFIX = 19;
+
+	private static String[] exeStrings;
 	private static boolean loaded = false;
 	private static File base;
 	private static File dataDir;
+	private static Vector<EntityData> entityList;
 	private static Vector<Mapdata> mapdata;
 	private static Vector<MapInfo> mapInfo;
 	private static Map<File, BufferedImage> imgMap;
 	private static Map<File, byte[]> pxaMap;
-	private static BufferedImage myChar;
-	private static BufferedImage armsImage;
-	private static BufferedImage itemImage;
-	private static BufferedImage stageImage;
-	private static File npcFolder;
-	private static BufferedImage npcRegu;
-	private static BufferedImage npcSym;
+	private static File myChar;
+	private static File armsImage;
+	private static File itemImage;
+	private static File stageImage;
+	private static File npcSym;
+	private static File npcRegu;
+
+	private static final int DONT_LOAD_GRAPHICS = 0;
+	private static final int LOAD_GRAPHICS = 1;
+	private static final int ONLY_LOAD_GRAPHICS = 2;
 
 	public static void load(File file) throws IOException {
 		if (!Profile.isLoaded() || Profile.getFile() == null)
@@ -62,9 +116,9 @@ public class CSData {
 				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + base.getName() + "\" does not exist!",
 						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
 		}
-		load0(base, true);
+		load0(base, LOAD_GRAPHICS);
 	}
-	
+
 	public static void load() throws IOException {
 		load(null);
 	}
@@ -72,27 +126,52 @@ public class CSData {
 	public static void reload() throws IOException {
 		if (!loaded || base == null)
 			return;
-		load0(base, false);
+		load0(base, ONLY_LOAD_GRAPHICS);
 	}
 
-	private static void load0(File base, boolean loadGraphics) throws IOException {
-		CSData.base = base;
-		dataDir = new File(base.getParent() + "/data");
+	private static void load0(File base, int loadGraphics) throws IOException {
+		String encoding = Main.encoding;
+		ExeData.base = base;
+		// read exe strings
+		exeStrings = new String[20];
+		byte[] buffer = new byte[0x10];
+		FileChannel inChan;
+		FileInputStream inStream;
+		inStream = new FileInputStream(ExeData.base);
+		inChan = inStream.getChannel();
+		ByteBuffer uBuf = ByteBuffer.allocate(0x10);
+		uBuf.order(ByteOrder.LITTLE_ENDIAN);
+		for (int i = 0; i < STRING_POINTERS.length; i++) {
+			inChan.position(STRING_POINTERS[i]);
+			inChan.read(uBuf);
+			uBuf.flip();
+			uBuf.get(buffer);
+			exeStrings[i] = StrTools.CString(buffer, encoding);
+			uBuf.clear();
+		}
+		inStream.close();
+		dataDir = new File(base.getParent() + exeStrings[STRING_DATA_FOLDER]);
+		entityList = new Vector<EntityData>();
 		mapdata = new Vector<Mapdata>();
 		mapInfo = new Vector<MapInfo>();
 		imgMap = new HashMap<File, BufferedImage>();
 		pxaMap = new HashMap<File, byte[]>();
-		fillMapdata();
-		loadMapInfo();
-		if (loadGraphics)
+		if (loadGraphics != ONLY_LOAD_GRAPHICS) {
+			loadNpcTbl();
+			fillMapdata();
+			loadMapInfo();
+		}
+		if (loadGraphics > DONT_LOAD_GRAPHICS)
 			loadGraphics();
 		loaded = true;
 	}
 
 	public static void unload() {
+		exeStrings = null;
 		loaded = false;
 		base = null;
 		dataDir = null;
+		entityList = null;
 		mapdata = null;
 		mapInfo = null;
 		imgMap = null;
@@ -101,9 +180,136 @@ public class CSData {
 		armsImage = null;
 		itemImage = null;
 		stageImage = null;
-		npcFolder = null;
+		npcRegu = null;
 		npcSym = null;
 		System.gc();
+	}
+
+	private static void loadNpcTbl() throws IOException {
+		File tblFile = new File(base.getParent() + exeStrings[STRING_DATA_FOLDER] + "/" + exeStrings[STRING_NPC_TBL]);
+		FileChannel inChan;
+		ByteBuffer dBuf;
+		FileInputStream inStream;
+		int calculated_npcs;
+
+		if (tblFile == null || !tblFile.exists())
+			throw new IOException("Could not find \"" + tblFile + "\"!");
+
+		try {
+			inStream = new FileInputStream(tblFile);
+			calculated_npcs = (int) (tblFile.length() / 24);
+			inChan = inStream.getChannel();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		short[] flagDat;
+		short[] healthDat;
+		byte[] tilesetDat;
+		byte[] deathDat;
+		byte[] hurtDat;
+		byte[] sizeDat;
+		int[] expDat;
+		int[] damageDat;
+		byte[] hitboxDat;
+		byte[] displayDat;
+		// read flags section
+		dBuf = ByteBuffer.allocateDirect(2 * calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		flagDat = new short[calculated_npcs];
+		for (int i = 0; i < flagDat.length; i++) {
+			flagDat[i] = dBuf.getShort();
+		}
+
+		// read health section
+		dBuf = ByteBuffer.allocate(2 * calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		healthDat = new short[calculated_npcs];
+		for (int i = 0; i < healthDat.length; i++) {
+			healthDat[i] = dBuf.getShort();
+		}
+
+		// read tileset section
+		dBuf = ByteBuffer.allocate(calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		tilesetDat = dBuf.array();
+
+		// read death sound section
+		dBuf = ByteBuffer.allocate(calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		deathDat = dBuf.array();
+
+		// read hurt sound section
+		dBuf = ByteBuffer.allocate(calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		hurtDat = dBuf.array();
+
+		// read size section
+		dBuf = ByteBuffer.allocate(calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		sizeDat = dBuf.array();
+
+		// read experience section
+		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		expDat = new int[calculated_npcs];
+		for (int i = 0; i < expDat.length; i++) {
+			expDat[i] = dBuf.getInt();
+		}
+
+		// read damage section
+		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		damageDat = new int[calculated_npcs];
+		for (int i = 0; i < damageDat.length; i++) {
+			damageDat[i] = dBuf.getInt();
+		}
+
+		// read hitbox section
+		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		hitboxDat = dBuf.array();
+
+		// read hitbox section
+		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		displayDat = dBuf.array();
+		// finished reading file
+		inChan.close();
+		inStream.close();
+
+		// build the master list
+		for (int i = 0; i < calculated_npcs; i++) {
+			EntityData e = new EntityData(i, damageDat[i], deathDat[i], expDat[i], flagDat[i], healthDat[i], hurtDat[i],
+					sizeDat[i], tilesetDat[i],
+					new Rectangle(displayDat[i * 4], displayDat[i * 4 + 1], displayDat[i * 4 + 2],
+							displayDat[i * 4 + 3]),
+					new Rectangle(hitboxDat[i * 4], hitboxDat[i * 4 + 1], hitboxDat[i * 4 + 2], hitboxDat[i * 4 + 3]));
+			entityList.add(i, e);
+		}
+
+		// TODO Find a way to auto-detect framerects
 	}
 
 	private static void fillMapdata() throws IOException {
@@ -142,7 +348,6 @@ public class CSData {
 		String encoding = Main.encoding;
 		if (mapSec == -1) // virgin executable
 		{
-
 			int numMaps = 95;
 			inChan.position(0x937B0); // seek to start of mapdatas
 			for (int i = 0; i < numMaps; i++) {
@@ -296,31 +501,18 @@ public class CSData {
 	}
 
 	private static void loadGraphics() throws IOException {
-		String myCharName = MCI.getNullable("Game.MyChar");
-		if (myCharName == null)
-			myCharName = "MyChar";
-		File myCharFile = ResUtils.getGraphicsFile(dataDir.toString(), myCharName);
-		myChar = loadImage(myCharFile);
-		String armsImageName = MCI.getNullable("Game.ArmsImage");
-		if (armsImageName == null)
-			armsImageName = "ArmsImage";
-		File armsImageFile = ResUtils.getGraphicsFile(dataDir.toString(), armsImageName);
-		armsImage = loadImage(armsImageFile);
-		String itemImageName = MCI.getNullable("Game.ItemImage");
-		if (itemImageName == null)
-			itemImageName = "ItemImage";
-		File itemImageFile = ResUtils.getGraphicsFile(dataDir.toString(), itemImageName);
-		itemImage = loadImage(itemImageFile);
-		String stageImageName = MCI.getNullable("Game.StageImage");
-		if (stageImageName == null)
-			stageImageName = "StageImage";
-		File stageImageFile = ResUtils.getGraphicsFile(dataDir.toString(), stageImageName);
-		stageImage = loadImage(stageImageFile);
-		npcFolder = new File(dataDir.toString() + "/Npc");
-		File npcReguFile = ResUtils.getGraphicsFile(npcFolder.toString(), "NpcRegu");
-		npcRegu = loadImage(npcReguFile);
-		File npcSymFile = ResUtils.getGraphicsFile(npcFolder.toString(), "NpcSym");
-		npcSym = loadImage(npcSymFile);
+		myChar = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_MYCHAR]);
+		addImage(myChar);
+		armsImage = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_ARMSIMAGE]);
+		addImage(armsImage);
+		itemImage = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_ITEMIMAGE]);
+		addImage(itemImage);
+		stageImage = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_STAGEIMAGE]);
+		addImage(stageImage);
+		npcSym = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_NPCSYM]);
+		addImage(npcSym);
+		npcRegu = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_NPCREGU]);
+		addImage(npcRegu);
 	}
 
 	/**
@@ -464,6 +656,10 @@ public class CSData {
 		return getPxa(new File(src));
 	}
 
+	public static String getExeString(int id) {
+		return exeStrings[id];
+	}
+
 	public static boolean isLoaded() {
 		return loaded;
 	}
@@ -489,27 +685,31 @@ public class CSData {
 		return mapInfo.size();
 	}
 
-	public static BufferedImage getMyChar() {
+	public static EntityData getEntityInfo(short entityType) {
+		return entityList.get(entityType);
+	}
+
+	public static File getMyChar() {
 		return myChar;
 	}
 
-	public static BufferedImage getArmsImage() {
+	public static File getArmsImage() {
 		return armsImage;
 	}
 
-	public static BufferedImage getItemImage() {
+	public static File getItemImage() {
 		return itemImage;
 	}
 
-	public static BufferedImage getStageImage() {
+	public static File getStageImage() {
 		return stageImage;
 	}
 
-	public static BufferedImage getNpcRegu() {
+	public static File getNpcRegu() {
 		return npcRegu;
 	}
 
-	public static BufferedImage getNpcSym() {
+	public static File getNpcSym() {
 		return npcSym;
 	}
 

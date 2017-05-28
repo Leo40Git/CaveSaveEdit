@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.Profile;
@@ -11,8 +12,9 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
-import com.leo.cse.frontend.data.CSData;
+import com.leo.cse.frontend.data.ExeData;
 import com.leo.cse.frontend.data.MapInfo;
+import com.leo.cse.frontend.data.MapInfo.PxeEntry;
 
 public class PositionPreview extends Component implements IDraggable {
 
@@ -35,7 +37,7 @@ public class PositionPreview extends Component implements IDraggable {
 
 	@Override
 	public void render(Graphics g) {
-		if (!CSData.isLoaded()) {
+		if (!ExeData.isLoaded()) {
 			g.setColor(COLOR_NULL);
 			g.fillRect(x, y, width, height);
 			g.setColor(Color.white);
@@ -43,7 +45,7 @@ public class PositionPreview extends Component implements IDraggable {
 			FrontUtils.drawStringCentered(g, "NO MOD LOADED!", x + width / 2, y + height / 2, true);
 			return;
 		}
-		mapInfo = CSData.getMapInfo(mSup.get());
+		mapInfo = ExeData.getMapInfo(mSup.get());
 		if (mapInfo.getTileset() == null) {
 			g.setColor(COLOR_NULL);
 			g.fillRect(x, y, width, height);
@@ -53,7 +55,7 @@ public class PositionPreview extends Component implements IDraggable {
 			return;
 		}
 		map = mapInfo.getMap();
-		tileset = CSData.getImg(mapInfo.getTileset());
+		tileset = ExeData.getImg(mapInfo.getTileset());
 		setWidth = tileset.getWidth() / 32;
 		BufferedImage surf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
@@ -67,11 +69,12 @@ public class PositionPreview extends Component implements IDraggable {
 		lastMap = mSup.get();
 		sg.translate(-camX, -camY);
 		drawTiles(sg);
+		drawEntities(sg);
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
-				+ camX / (int) (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
-				+ camY / (int) (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
+				+ (int) (camX / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
+				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords, x + width, y);
@@ -81,7 +84,7 @@ public class PositionPreview extends Component implements IDraggable {
 	private void drawBackground(Graphics g) {
 		if (mapInfo.getScrollType() == 3 || mapInfo.getScrollType() == 4)
 			return;
-		BufferedImage bg = CSData.getImg(mapInfo.getBgImage());
+		BufferedImage bg = ExeData.getImg(mapInfo.getBgImage());
 		int iw = bg.getWidth(null);
 		int ih = bg.getHeight(null);
 		for (int x = 0; x < width; x += iw) {
@@ -101,7 +104,8 @@ public class PositionPreview extends Component implements IDraggable {
 				int tile = map[i][j];
 				if (mapInfo.calcPxa(tile) == 0x43) {
 					// draw breakable tile
-					g.drawImage(CSData.getNpcSym(), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96, 544, 128, null);
+					g.drawImage(ExeData.getImg(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96,
+							544, 128, null);
 				} else {
 					// draw normal tile
 					int sourceX = (tile % setWidth) * 32;
@@ -116,6 +120,12 @@ public class PositionPreview extends Component implements IDraggable {
 		}
 	}
 
+	private void drawEntities(Graphics2D g) {
+		Iterator<PxeEntry> it = mapInfo.getPxeIterator();
+		while (it.hasNext())
+			it.next().draw(g);
+	}
+
 	private void drawMyChar(Graphics g) {
 		int dir = (Profile.getDirection() == 2 ? 1 : 0);
 		long costume = 0;
@@ -128,12 +138,13 @@ public class PositionPreview extends Component implements IDraggable {
 		int xPixel = Profile.getX() - 16;
 		int yPixel = Profile.getY() - 16;
 		int sourceY = (int) (64 * costume + 32 * dir);
-		g.drawImage(CSData.getMyChar(), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32, sourceY + 32, null);
+		g.drawImage(ExeData.getImg(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
+				sourceY + 32, null);
 	}
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		if (!CSData.isLoaded())
+		if (!ExeData.isLoaded())
 			return false;
 		if (mapInfo == null)
 			return false;

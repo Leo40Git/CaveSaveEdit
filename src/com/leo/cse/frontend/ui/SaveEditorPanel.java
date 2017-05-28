@@ -33,7 +33,7 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
-import com.leo.cse.frontend.data.CSData;
+import com.leo.cse.frontend.data.ExeData;
 import com.leo.cse.frontend.ui.components.BooleanBox;
 import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.DefineBox;
@@ -543,7 +543,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
 		g2d.setColor(Main.lineColor);
@@ -636,7 +636,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			try {
-				CSData.load(getSelectedFile());
+				ExeData.load(getSelectedFile());
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(Main.window,
 						"An error occured while loading the executable:\n" + e.getMessage(),
@@ -700,6 +700,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (e.getButton() != MouseEvent.BUTTON1)
+			return;
 		if (ignoreReleased) {
 			ignoreReleased = false;
 			return;

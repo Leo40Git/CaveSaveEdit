@@ -20,6 +20,8 @@ hs_err_pid*
 /x4test/
 /data/
 *.exe
+*.exe.bak
 *.dat
 *.dat.bkp
 window.rect
+error.log

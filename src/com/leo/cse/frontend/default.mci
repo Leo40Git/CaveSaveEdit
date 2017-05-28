@@ -4,13 +4,8 @@ Meta.Name=Cave Story
 Meta.Author=Leo40Story, zxin (flag list)
 # Game information
 Game.ExeName=Doukutsu
-Game.GraphicsExtension=bmp
-Game.MyChar=MyChar
-Game.ArmsImage=ArmsImage
 Game.ArmsImageYStart=0
 Game.ArmsImageSize=32
-Game.ItemImage=ItemImage
-Game.StageImage=StageImage
 Game.FPS=50
 Game.GraphicsResolution=1
 # Special support

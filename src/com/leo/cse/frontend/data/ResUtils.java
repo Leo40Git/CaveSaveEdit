@@ -3,8 +3,6 @@ package com.leo.cse.frontend.data;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import com.leo.cse.frontend.MCI;
-
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
 public class ResUtils {
 
@@ -26,22 +24,15 @@ public class ResUtils {
 	}
 
 	public static File getGraphicsFile(String directory, String name) {
-		String ext = MCI.get("Game.GraphicsExtension");
-		File ret = new File(directory + "/" + name + "." + ext);
-		if (ret.exists()) {
-			return ret;
-		} else {
-			if ("bmp".equalsIgnoreCase(ext)) {
-				ext = "pbm";
-			} else if ("pbm".equalsIgnoreCase(ext)) {
-				ext = "bmp";
-			} else
-				return null;
-			ret = new File(directory + "/" + name + "." + ext);
-			if (!ret.exists())
-				return null;
-			return ret;
-		}
+		String ext = ExeData.getExeString(ExeData.STRING_IMG_EXT);
+		String file = String.format(ext, directory, name);
+		return new File(file);
+	}
+
+	public static File getGraphicsFile(String name) {
+		String ext = ExeData.getExeString(ExeData.STRING_IMG_EXT);
+		String file = String.format(ext, "", name);
+		return new File(file);
 	}
 
 }
