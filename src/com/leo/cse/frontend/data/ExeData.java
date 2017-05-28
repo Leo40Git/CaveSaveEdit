@@ -95,10 +95,6 @@ public class ExeData {
 	private static File npcSym;
 	private static File npcRegu;
 
-	private static final int DONT_LOAD_GRAPHICS = 0;
-	private static final int LOAD_GRAPHICS = 1;
-	private static final int ONLY_LOAD_GRAPHICS = 2;
-
 	public static void load(File file) throws IOException {
 		if (!Profile.isLoaded() || Profile.getFile() == null)
 			return;
@@ -116,7 +112,7 @@ public class ExeData {
 				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + base.getName() + "\" does not exist!",
 						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
 		}
-		load0(base, LOAD_GRAPHICS);
+		load0(base, true);
 	}
 
 	public static void load() throws IOException {
@@ -126,10 +122,10 @@ public class ExeData {
 	public static void reload() throws IOException {
 		if (!loaded || base == null)
 			return;
-		load0(base, ONLY_LOAD_GRAPHICS);
+		load0(base, false);
 	}
 
-	private static void load0(File base, int loadGraphics) throws IOException {
+	private static void load0(File base, boolean loadGraphics) throws IOException {
 		String encoding = Main.encoding;
 		ExeData.base = base;
 		// read exe strings
@@ -156,12 +152,10 @@ public class ExeData {
 		mapInfo = new Vector<MapInfo>();
 		imgMap = new HashMap<File, BufferedImage>();
 		pxaMap = new HashMap<File, byte[]>();
-		if (loadGraphics != ONLY_LOAD_GRAPHICS) {
-			loadNpcTbl();
-			fillMapdata();
-			loadMapInfo();
-		}
-		if (loadGraphics > DONT_LOAD_GRAPHICS)
+		loadNpcTbl();
+		fillMapdata();
+		loadMapInfo();
+		if (loadGraphics)
 			loadGraphics();
 		loaded = true;
 	}
