@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.data;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -14,7 +15,7 @@ public class ResUtils {
 		for (int y = 0; y < src.getHeight(); y++)
 			for (int x = 0; x < src.getWidth(); x++) {
 				int px = src.getRGB(x, y);
-				if (px == -16777216) // argb black full opaque
+				if (px == Color.black.getRGB()) // argb black full opaque
 					dest.setRGB(x, y, 0);
 				else
 					dest.setRGB(x, y, px);

@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.leo.cse.backend.Profile;
-import com.leo.cse.frontend.MCI;
 
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
 public class MapInfo {
@@ -21,7 +20,7 @@ public class MapInfo {
 	private int mapX;
 	private int mapY;
 	private int mapNumber;
-	protected int[][] map;
+	protected int[][][] map;
 	private File tileset;
 	private File bgImage;
 	private String fileName;
@@ -108,10 +107,15 @@ public class MapInfo {
 			mapY = 16;
 			mapBuf = ByteBuffer.allocate(mapY * mapX);
 		}
-		map = new int[mapY][mapX];
+		map = new int[2][mapY][mapX];
 		for (int y = 0; y < mapY; y++)
-			for (int x = 0; x < mapX; x++)
-				map[y][x] = 0xFF & mapBuf.get();
+			for (int x = 0; x < mapX; x++) {
+				int tile = 0xFF & mapBuf.get();
+				if (calcPxa(tile) > 0x20)
+					map[1][y][x] = tile;
+				else
+					map[0][y][x] = tile;
+			}
 	}
 
 	public int calcPxa(int tileNum) {
@@ -157,7 +161,6 @@ public class MapInfo {
 				int pxeType = eBuf.getShort();
 				int pxeFlags = eBuf.getShort() & 0xFFFF;
 				PxeEntry p = new PxeEntry(pxeX, pxeY, pxeFlagID, pxeEvent, pxeType, pxeFlags, 1);
-				p.filePos = i;
 				pxeList.add(p);
 			}
 			inChan.close();
@@ -206,12 +209,6 @@ public class MapInfo {
 			return flags;
 		}
 
-		private int filePos;
-
-		public int getOrder() {
-			return filePos;
-		}
-
 		private EntityData inf;
 
 		public EntityData getInfo() {
@@ -225,7 +222,6 @@ public class MapInfo {
 			eventNum = (short) pxeEvent;
 			entityType = (short) pxeType;
 			flags = (short) pxeFlags;
-			filePos = -1;
 
 			inf = ExeData.getEntityInfo(entityType);
 			if (inf == null)
@@ -233,25 +229,24 @@ public class MapInfo {
 		}
 
 		public void draw(Graphics2D g2d) {
-			if ((flags & 0x0800) == 0x0800) {
+			if ((flags & 0x0800) != 0) {
 				// Appear once flagID set
 				if (!Profile.getFlag(flagID))
 					return;
 			}
-			if ((flags & 0x4000) == 0x4000) {
+			if ((flags & 0x4000) != 0) {
 				// No Appear if flagID set
 				if (Profile.getFlag(flagID))
 					return;
 			}
 
 			Rectangle frameRect = inf.getFramerect();
-			frameRect = new Rectangle(32, 0, 64, 32);
 			BufferedImage srcImg;
 			int tilesetNum = inf.getTileset();
 			if (tilesetNum == 0x15)
 				srcImg = ExeData.getImg(npcSheet1);
 			else if (tilesetNum == 0x16)
-				srcImg = ExeData.getImg(npcSheet1);
+				srcImg = ExeData.getImg(npcSheet2);
 			else if (tilesetNum == 0x14) // npc sym
 				srcImg = ExeData.getImg(ExeData.getNpcSym());
 			else if (tilesetNum == 0x17) // npc regu
@@ -268,13 +263,13 @@ public class MapInfo {
 				int srcY = frameRect.y;
 				int srcX2 = frameRect.width;
 				int srcY2 = frameRect.height;
-				g2d.drawImage(srcImg, xTile * 32 - 16, yTile * 32 - 16, (xTile + 1) * 32 - 16, (yTile + 1) * 32 - 16,
-						srcX, srcY, srcX2, srcY2, null);
+				Rectangle dest = getDrawArea(frameRect);
+				g2d.drawImage(srcImg, dest.x, dest.y, dest.x + dest.width, dest.y + dest.height, srcX, srcY, srcX2,
+						srcY2, null);
 			}
 		}
 
-		public Rectangle getDrawArea() {
-			int res = MCI.getInteger("Game.GraphicsResolution", 1);
+		public Rectangle getDrawArea(Rectangle frameRect) {
 			Rectangle offset;
 			if (inf != null) {
 				offset = inf.getDisplay();
@@ -286,9 +281,15 @@ public class MapInfo {
 			int offR = offset.width;
 			int offD = offset.height;
 			int destW = offR + offL;
+			destW *= 2;
+			destW = Math.max(destW, frameRect.width - frameRect.x);
 			int destH = offD + offU;
-			int destX = xTile * res - offL;
-			int destY = yTile * res - offU;
+			destH *= 2;
+			destH = Math.max(destH, frameRect.height - frameRect.y);
+			int destX = xTile * 16 - offL;
+			destX *= 2;
+			int destY = yTile * 16 - offU;
+			destY *= 2;
 
 			Rectangle area = new Rectangle(destX, destY, destW, destH);
 			return area;
@@ -307,7 +308,7 @@ public class MapInfo {
 		return mapNumber;
 	}
 
-	public int[][] getMap() {
+	public int[][][] getMap() {
 		return map.clone();
 	}
 

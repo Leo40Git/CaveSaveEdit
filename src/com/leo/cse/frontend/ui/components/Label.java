@@ -22,9 +22,4 @@ public class Label extends Component {
 		FrontUtils.drawString(g, text, x, y);
 	}
 
-	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		return false;
-	}
-
 }

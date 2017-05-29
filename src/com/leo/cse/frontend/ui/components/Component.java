@@ -15,7 +15,12 @@ public abstract class Component {
 
 	public abstract void render(Graphics g);
 
-	public abstract boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown);
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		return false;
+	}
+	
+	public void onKey(int code, boolean shiftDown, boolean ctrlDown) {
+	}
 
 	public int getX() {
 		return x;

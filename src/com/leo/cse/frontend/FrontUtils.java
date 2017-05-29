@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.function.Function;
 
 import javax.swing.JColorChooser;
@@ -260,6 +262,24 @@ public class FrontUtils {
 		dialog.setVisible(true);
 		dialog.dispose();
 		return result[0];
+	}
+
+	public static Rectangle str2Rect(String s) {
+		if (!s.contains(":"))
+			return new Rectangle(0, 0, 0, 0);
+		Scanner sc = new Scanner(s);
+		sc.useDelimiter(":");
+		int l, u, r, d;
+		l = sc.nextInt();
+		u = sc.nextInt();
+		r = sc.nextInt();
+		d = sc.nextInt();
+		sc.close();
+		return new Rectangle(l, u, r, d);
+	}
+
+	public static String rect2Str(Rectangle r) {
+		return r.x + ":" + r.y + ":" + r.width + ":" + r.height;
 	}
 
 }

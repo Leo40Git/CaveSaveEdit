@@ -13,15 +13,16 @@ Each group serves a purpose in the save editor UI:
 - `Warp` - Warp names
 - `WarpLoc` - Warp locations (event IDs)
 - `Flag` - Flag descriptions
+- `EntityRect` - Entity framerects
 
 In most cases, only IDs which have been defined can be used as values in the save editor.  
 All of these groups, excluding the `Map` group, should have ID 0 set to "None" or the equivalent
 thereof.
 
-# Special entries
+# Entry descriptions
 
 Each group has it's entry's prefix shown in it's title.  
-These are formatted as `Type:Entry`, with `Type` being the type of the value (either `String` , `Boolean` ("true" or "false") or `Integer`) and `Entry` being the entry name.
+These are formatted as `Type:Entry`, with `Type` being the type of the value (either `String` , `Boolean` ("true" or "false"), `Integer` or `Rect` (`a:b:c:d`)) and `Entry` being the entry name.
 
 ## `Meta` - Metadata:
 
@@ -45,7 +46,8 @@ This group is used for declaring if support for certain ASM hacks should be enab
 - `Integer:Resolution`: Adds support for an `N`x resolution hack, `N` being any integer divisible by 2. Makes all graphics use the correct framerects. *This is optional, and defaults to 1 if not specified.* 
 
 ## `Map` - Default map descriptions:
-Technically, all entries in this group are special, since they are only used if a mod executable has not been loaded.
+
+Entries in this group are used for map descriptions only if a mod executable has not been loaded.
 
 ## `Flag` - Flag descriptions:
 
@@ -54,3 +56,7 @@ While most entries in this group are used to define a description for a specific
 - `String:MimHack`: Description for flags used by <MIM, which are flags 7968-7993.
 - `String:VarHack`: Description for flags used by <VAR, which are flags 6000-8000.
 - `String:PhysVarHack`: Description for flags used by <PHY, which are flags 5632-5888.
+
+## `EntityRect` - Entity framerects:
+
+Entries in this group are used to get the framerects for entites. Framerects are formatted as `x1:y1:x2:y2`, with `x1` and `y1` being the top-left corner of the framerect, and `x2` and `y2` being the bottom-right corner of the framerect.

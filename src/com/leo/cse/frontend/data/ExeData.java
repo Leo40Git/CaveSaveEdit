@@ -22,6 +22,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.carrotlord.string.StrTools;
 import com.leo.cse.backend.Profile;
+import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
@@ -304,6 +305,8 @@ public class ExeData {
 		}
 
 		// TODO Find a way to auto-detect framerects
+		for (int i = 0; i < entityList.size(); i++)
+			entityList.get(i).setFramerect(FrontUtils.str2Rect(MCI.get("EntityRect", i)));
 	}
 
 	private static void fillMapdata() throws IOException {

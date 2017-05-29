@@ -3,6 +3,7 @@ package com.leo.cse.frontend.ui.components;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.function.Supplier;
@@ -15,6 +16,7 @@ import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.data.ExeData;
 import com.leo.cse.frontend.data.MapInfo;
 import com.leo.cse.frontend.data.MapInfo.PxeEntry;
+import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class PositionPreview extends Component implements IDraggable {
 
@@ -22,7 +24,7 @@ public class PositionPreview extends Component implements IDraggable {
 
 	private Supplier<Integer> mSup;
 	private MapInfo mapInfo;
-	private int[][] map;
+	private int[][][] map;
 	private BufferedImage tileset;
 	private int setWidth;
 	private int camX = 0, camY = 0;
@@ -37,6 +39,10 @@ public class PositionPreview extends Component implements IDraggable {
 
 	@Override
 	public void render(Graphics g) {
+		if (SaveEditorPanel.panel.getLastFocus() == this) {
+			g.setColor(Main.lineColor);
+			g.drawRect(x - 1, y - 1, width + 2, height + 2);
+		}
 		if (!ExeData.isLoaded()) {
 			g.setColor(COLOR_NULL);
 			g.fillRect(x, y, width, height);
@@ -62,14 +68,13 @@ public class PositionPreview extends Component implements IDraggable {
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, width, height);
 		drawBackground(sg);
-		if (mSup.get() != lastMap || ignoreClick == 0) {
-			camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
-			camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
-		}
+		if (mSup.get() != lastMap || ignoreClick == 0)
+			getCamCoords();
 		lastMap = mSup.get();
 		sg.translate(-camX, -camY);
-		drawTiles(sg);
+		drawTiles(sg, 0);
 		drawEntities(sg);
+		drawTiles(sg, 1);
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
@@ -77,7 +82,7 @@ public class PositionPreview extends Component implements IDraggable {
 				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g, camCoords, x + width, y);
+		FrontUtils.drawString(g, camCoords, x + width + 2, y);
 		g.drawImage(surf, x, y, null);
 	}
 
@@ -94,14 +99,14 @@ public class PositionPreview extends Component implements IDraggable {
 		}
 	}
 
-	private void drawTiles(Graphics g) {
+	private void drawTiles(Graphics g, int l) {
 		int xx = 0;
 		int yy = 0;
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[i].length; j++) {
+		for (int i = 0; i < map[l].length; i++) {
+			for (int j = 0; j < map[l][i].length; j++) {
 				int xPixel = xx * 32 - 16;
 				int yPixel = yy * 32 - 16;
-				int tile = map[i][j];
+				int tile = map[l][i][j];
 				if (mapInfo.calcPxa(tile) == 0x43) {
 					// draw breakable tile
 					g.drawImage(ExeData.getImg(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96,
@@ -142,6 +147,11 @@ public class PositionPreview extends Component implements IDraggable {
 				sourceY + 32, null);
 	}
 
+	private void getCamCoords() {
+		camX = Math.max(0, Math.min((map[0][0].length - 21) * 32, Profile.getX() - width / 2));
+		camY = Math.max(0, Math.min((map[0].length - 16) * 32, Profile.getY() - height / 2));
+	}
+
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!ExeData.isLoaded())
@@ -150,8 +160,7 @@ public class PositionPreview extends Component implements IDraggable {
 			return false;
 		if (mapInfo.getTileset() == null)
 			return false;
-		camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
-		camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
+		getCamCoords();
 		if (ignoreClick > 0)
 			ignoreClick--;
 		else {
@@ -159,6 +168,34 @@ public class PositionPreview extends Component implements IDraggable {
 			Profile.setY((short) (y - this.y + camY));
 		}
 		return false;
+	}
+
+	@Override
+	public void onKey(int code, boolean shiftDown, boolean ctrlDown) {
+		int px = Profile.getX(), py = Profile.getY();
+		int amount = 32;
+		if (shiftDown) {
+			if (ctrlDown)
+				amount = 1;
+			else
+				amount = 16;
+		} else if (ctrlDown)
+			amount = 8;
+		if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W)
+			py -= amount;
+		else if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S)
+			py += amount;
+		else if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A)
+			px -= amount;
+		else if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D)
+			px += amount;
+		else
+			return;
+		px = Math.max(0, Math.min(map[0][0].length * 32, px));
+		py = Math.max(0, Math.min(map[0].length * 32, py));
+		Profile.setX((short) px);
+		Profile.setY((short) py);
+		getCamCoords();
 	}
 
 	@Override
@@ -170,8 +207,7 @@ public class PositionPreview extends Component implements IDraggable {
 
 	@Override
 	public void onDragEnd(int px, int py) {
-		camX = Math.max(0, Math.min((map[0].length - 21) * 32, Profile.getX() - width / 2));
-		camY = Math.max(0, Math.min((map.length - 16) * 32, Profile.getY() - height / 2));
+		getCamCoords();
 		ignoreClick = 1;
 	}
 

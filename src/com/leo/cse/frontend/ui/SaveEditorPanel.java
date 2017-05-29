@@ -102,12 +102,18 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	private EditorTab currentTab;
 	private Map<EditorTab, List<Component>> compListMap;
+
+	private Component lastFocus;
 	private Dialog dBox;
 
 	private boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
 	private int flagScroll;
 	private boolean hideSystemFlags = Config.getBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, true);
 	private boolean hideUndefinedFlags = Config.getBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, true);
+
+	public Component getLastFocus() {
+		return lastFocus;
+	}
 
 	public SaveEditorPanel() {
 		panel = this;
@@ -771,14 +777,17 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			repaint();
 		} else if (Profile.isLoaded()) {
 			// components
+			Component newFocus = null;
 			for (Component comp : compListMap.get(currentTab)) {
 				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 					ignoreReleased = comp.onClick(px, py - 17, shift, ctrl);
 					ignoreDragged = ignoreReleased;
+					newFocus = comp;
 					break;
 				}
 			}
+			lastFocus = newFocus;
 			repaint();
 		}
 	}
@@ -816,6 +825,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			lastDragged = new HashMap<IDraggable, Boolean>();
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
+		Component newFocus = null;
 		for (Component comp : compListMap.get(currentTab)) {
 			if (!(comp instanceof IDraggable))
 				continue;
@@ -823,14 +833,17 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 				((IDraggable) comp).onDrag(px, py);
 				lastDragged.put((IDraggable) comp, true);
+				newFocus = comp;
 				repaint();
 			} else {
 				if (lastDragged.get((IDraggable) comp) != null) {
 					((IDraggable) comp).onDragEnd(px, py);
 					lastDragged.remove((IDraggable) comp);
+					repaint();
 				}
 			}
 		}
+		lastFocus = newFocus;
 	}
 
 	@Override
@@ -841,21 +854,30 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK;
 		if (code == KeyEvent.VK_O) {
 			if (ctrl) {
-				if (shift)
+				if (shift) {
 					loadExe();
-				else
+					return;
+				} else {
 					loadProfile();
+					return;
+				}
 			}
 		}
 		if (code == KeyEvent.VK_S) {
 			if (ctrl) {
-				if (shift)
+				if (shift) {
 					saveProfileAs();
-				else {
+					return;
+				} else {
 					saveProfile();
 					Main.setTitle(Main.window);
+					return;
 				}
 			}
+		}
+		if (lastFocus != null) {
+			lastFocus.onKey(code, shift, ctrl);
+			repaint();
 		}
 	}
 
