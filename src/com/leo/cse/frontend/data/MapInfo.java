@@ -263,34 +263,33 @@ public class MapInfo {
 				int srcY = frameRect.y;
 				int srcX2 = frameRect.width;
 				int srcY2 = frameRect.height;
-				Rectangle dest = getDrawArea(frameRect);
+				Rectangle dest = getDrawArea();
 				g2d.drawImage(srcImg, dest.x, dest.y, dest.x + dest.width, dest.y + dest.height, srcX, srcY, srcX2,
 						srcY2, null);
 			}
 		}
 
-		public Rectangle getDrawArea(Rectangle frameRect) {
+		public Rectangle getDrawArea() {
+			//Rectangle frameRect = inf.getFramerect();
 			Rectangle offset;
 			if (inf != null) {
 				offset = inf.getDisplay();
 			} else {
 				offset = new Rectangle(16, 16, 16, 16);
 			}
+			//int width = frameRect.width - frameRect.x, height = frameRect.height - frameRect.y;
 			int offL = offset.x;
 			int offU = offset.y;
 			int offR = offset.width;
 			int offD = offset.height;
 			int destW = offR + offL;
 			destW *= 2;
-			destW = Math.max(destW, frameRect.width - frameRect.x);
+			//destW = Math.max(destW, width);
 			int destH = offD + offU;
 			destH *= 2;
-			destH = Math.max(destH, frameRect.height - frameRect.y);
-			int destX = xTile * 16 - offL;
-			destX *= 2;
-			int destY = yTile * 16 - offU;
-			destY *= 2;
-
+			//destH = Math.max(destH, height);
+			int destX = xTile * 32 - offL * 2;
+			int destY = yTile * 32 - offU * 2;
 			Rectangle area = new Rectangle(destX, destY, destW, destH);
 			return area;
 		}

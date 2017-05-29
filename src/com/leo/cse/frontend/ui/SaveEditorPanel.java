@@ -852,30 +852,26 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		int mods = e.getModifiersEx();
 		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK;
 		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK;
-		if (code == KeyEvent.VK_O) {
-			if (ctrl) {
-				if (shift) {
-					loadExe();
-					return;
-				} else {
-					loadProfile();
-					return;
+		if (lastFocus == null) {
+			if (code == KeyEvent.VK_O) {
+				if (ctrl) {
+					if (shift)
+						loadExe();
+					else
+						loadProfile();
 				}
 			}
-		}
-		if (code == KeyEvent.VK_S) {
-			if (ctrl) {
-				if (shift) {
-					saveProfileAs();
-					return;
-				} else {
-					saveProfile();
-					Main.setTitle(Main.window);
-					return;
+			if (code == KeyEvent.VK_S) {
+				if (ctrl) {
+					if (shift)
+						saveProfileAs();
+					else {
+						saveProfile();
+						Main.setTitle(Main.window);
+					}
 				}
 			}
-		}
-		if (lastFocus != null) {
+		} else {
 			lastFocus.onKey(code, shift, ctrl);
 			repaint();
 		}

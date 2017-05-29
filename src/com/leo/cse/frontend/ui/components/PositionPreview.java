@@ -73,8 +73,8 @@ public class PositionPreview extends Component implements IDraggable {
 		lastMap = mSup.get();
 		sg.translate(-camX, -camY);
 		drawTiles(sg, 0);
-		drawEntities(sg);
 		drawTiles(sg, 1);
+		drawEntities(sg);
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
