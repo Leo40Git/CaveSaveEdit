@@ -36,6 +36,7 @@ This group is used for defining information about the mod this MCI file supports
 - `String:ExeName`: The expected name of the mod executable, *without file extension*.
 - `Integer:ArmsImageYStart`: The starting Y position for weapon icons in the `ArmsImage` graphics file. If the mod is 1x res, multiply the position by 2 before writing it here. *This is optional, and defaults to 0 if not specified.*
 - `Integer:ArmsImageSize`: The size of the weapon icons in the `ArmsImage` graphics file. If the mod is 1x res, multiply the size by 2 before writing it here. *This is optional, and defaults to 32 if not specified.*
+- `Integer:GraphicsResolution`: Adds support for an `N`x resolution hack, `N` being any integer. Makes all graphics use the correct framerects. *This is optional, and defaults to 1 if not specified.* 
 
 ## `Special` - Special support:
 
@@ -43,7 +44,6 @@ This group is used for declaring if support for certain ASM hacks should be enab
 - `Boolean:MimHack`: Adds support for the <MIM hack. Prevents the used flags from being edited in the flag UI and adds a new field for modifying the current costume ID. 
 - `Boolean:VarHack`: Adds support for the <VAR (TSC+) hack. Prevents the used flags from being edited in the flag UI and adds a new tab for modifying the variables.
 - `Boolean:PhysVarHack`: Adds support for the <PHY (TSC+ PHY addon) hack. Prevents the used flags from being edited in the flag UI and adds new fields for modifying the physics variables.
-- `Integer:Resolution`: Adds support for an `N`x resolution hack, `N` being any integer divisible by 2. Makes all graphics use the correct framerects. *This is optional, and defaults to 1 if not specified.* 
 
 ## `Map` - Default map descriptions:
 

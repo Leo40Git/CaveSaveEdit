@@ -38,9 +38,6 @@ public class MCI {
 	}
 
 	private static void validate() throws MCIException {
-		double res = getInteger("Game.GraphicsResolution", 1);
-		if (res != 1 && res % 2 != 0)
-			throw new MCIException("Game.GraphicsResolution must be divisible by 2!");
 		int fps = getInteger("Game.FPS", 50);
 		if (fps == 0)
 			throw new MCIException("Game.FPS cannot be equal to 0!");
