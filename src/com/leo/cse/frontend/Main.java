@@ -23,7 +23,7 @@ import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class Main extends JFrame implements MouseListener {
 	
-	// i have no idea what this is used for
+	// I have no idea what this is used for
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
