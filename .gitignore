@@ -25,3 +25,4 @@ hs_err_pid*
 *.dat.bkp
 window.rect
 error.log
+nolaf

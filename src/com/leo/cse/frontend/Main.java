@@ -22,7 +22,7 @@ import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class Main extends JFrame implements MouseListener {
-	
+
 	// I have no idea what this is used for
 	private static final long serialVersionUID = -5073541927297432013L;
 
@@ -128,11 +128,18 @@ public class Main extends JFrame implements MouseListener {
 			System.out.println("Headless mode is enabled!\nCaveSaveEdit cannot run in headless mode!");
 			System.exit(0);
 		}
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
+		final String nolaf = "nolaf";
+		if (!new File(System.getProperty("user.dir") + "/" + nolaf).exists()) {
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+					| UnsupportedLookAndFeelException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"Could not set Look & Feel!\nPlease add a file named \"" + nolaf + "\" (all lowercase, no extension) to the application folder, and then restart the application.",
+						"Could not set Look & Feel", JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
+			}
 		}
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, "UTF-8");
