@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.data;
+package com.leo.cse.backend;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -21,81 +22,302 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.carrotlord.string.StrTools;
-import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code from it
+/**
+ * Stores information for a mod executable.
+ * 
+ * @author Leo
+ *
+ */
 public class ExeData {
 
+	/**
+	 * Make sure an instance of this class cannot be created.
+	 */
 	private ExeData() {
 	}
 
+	// --------
+	// Pointers
+	// --------
+	// ...well, technically not actual pointers, but file positions
+	/**
+	 * Pointer to file name for "ArmsItem.tsc".
+	 */
 	private static final int ARMSITEM_PTR = 0x8C270;
+	/**
+	 * Pointer to image file extension.
+	 */
 	private static final int IMG_EXT_PTR = 0x8C280;
+	/**
+	 * Pointer to name for the "npc.tbl" file.
+	 */
 	private static final int NPC_TBL_PTR = 0x8C3AB;
+	/**
+	 * Pointer to name for the "MyChar" graphics file.
+	 */
 	private static final int MYCHAR_PTR = 0x8C4F0;
+	/**
+	 * Pointer to name for the "ArmsImage" graphics file.
+	 */
 	private static final int ARMSIMAGE_PTR = 0x8C500;
+	/**
+	 * Pointer to name for the "ItemImage" graphics file.
+	 */
 	private static final int ITEMIMAGE_PTR = 0x8C514;
+	/**
+	 * Pointer to name for the "data" folder.
+	 */
 	private static final int DATA_FOLDER_PTR = 0x8C5BC;
+	/**
+	 * Pointer to name for the "StageImage" graphics file.
+	 */
 	private static final int STAGEIMAGE_PTR = 0x8C520;
+	/**
+	 * Pointer to name for the "NpcSym" graphics file.
+	 */
 	private static final int NPCSYM_PTR = 0x8C52C;
+	/**
+	 * Pointer to name for the "NpcRegu" graphics file.
+	 */
 	private static final int NPCREGU_PTR = 0x8C538;
+	/**
+	 * Pointer to the PXM file tag.
+	 */
 	private static final int PXM_TAG_PTR = 0x8C67C;
+	/**
+	 * Pointer to name for the "StageSelect.tsc" file.
+	 */
 	private static final int STAGESELECT_PTR = 0x8C770;
+	/**
+	 * Pointer to name for the "Stage" folder.
+	 */
 	private static final int STAGE_FOLDER_PTR = 0x8C7D4;
+	/**
+	 * Pointer to prefix for tileset graphics files.
+	 */
 	private static final int PRT_PREFIX_PTR = 0x8C7DC;
+	/**
+	 * Pointer to PXA (tile attributes) file extension.
+	 */
 	private static final int PXA_EXT_PTR = 0x8C7E8;
+	/**
+	 * Pointer to PXM (map) file extension.
+	 */
 	private static final int PXM_EXT_PTR = 0x8C7F4;
+	/**
+	 * Pointer to PXE (entities) file extension.
+	 */
 	private static final int PXE_EXT_PTR = 0x8C800;
+	/**
+	 * Pointer to TSC file extension.
+	 */
 	private static final int TSC_EXT_PTR = 0x8C80C;
+	/**
+	 * Pointer to name for the "Npc" folder.
+	 */
 	private static final int NPC_FOLDER_PTR = 0x8C81C;
+	/**
+	 * Pointer to prefix for NPC sheet graphics files.
+	 */
 	private static final int NPC_PREFIX_PTR = 0x8C820;
 
+	/**
+	 * Array of pointers which point to string values.
+	 */
 	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, NPC_TBL_PTR, MYCHAR_PTR,
 			ARMSIMAGE_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR, NPCREGU_PTR, PXM_TAG_PTR,
 			STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR, PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR,
 			NPC_FOLDER_PTR, NPC_PREFIX_PTR };
 
-	public static final int STRING_ARMSITEM = 0;
-	public static final int STRING_IMG_EXT = 1;
-	public static final int STRING_NPC_TBL = 2;
-	public static final int STRING_MYCHAR = 3;
-	public static final int STRING_ARMSIMAGE = 4;
-	public static final int STRING_ITEMIMAGE = 5;
-	public static final int STRING_DATA_FOLDER = 6;
-	public static final int STRING_STAGEIMAGE = 7;
-	public static final int STRING_NPCSYM = 8;
-	public static final int STRING_NPCREGU = 9;
-	public static final int STRING_PXM_TAG = 10;
-	public static final int STRING_STAGESELECT = 11;
-	public static final int STRING_STAGE_FOLDER = 12;
-	public static final int STRING_PRT_PREFIX = 13;
-	public static final int STRING_PXA_EXT = 14;
-	public static final int STRING_PXM_EXT = 15;
-	public static final int STRING_PXE_EXT = 16;
-	public static final int STRING_TSC_EXT = 17;
-	public static final int STRING_NPC_FOLDER = 18;
-	public static final int STRING_NPC_PREFIX = 19;
+	/**
+	 * Name for "ArmsItem.tsc".
+	 */
+	public static final int STRING_ARMSITEM;
+	/**
+	 * Image file extension.
+	 */
+	public static final int STRING_IMG_EXT;
+	/**
+	 * Name for the "npc.tbl" file.
+	 */
+	public static final int STRING_NPC_TBL;
+	/**
+	 * Name for the "MyChar" graphics file.
+	 */
+	public static final int STRING_MYCHAR;
+	/**
+	 * File name for the "ArmsImage" graphics file.
+	 */
+	public static final int STRING_ARMSIMAGE;
+	/**
+	 * Name for the "ItemImage" graphics file.
+	 */
+	public static final int STRING_ITEMIMAGE;
+	/**
+	 * Name for the "data" folder.
+	 */
+	public static final int STRING_DATA_FOLDER;
+	/**
+	 * Name for the "StageImage" graphics file.
+	 */
+	public static final int STRING_STAGEIMAGE;
+	/**
+	 * Name for the "NpcSym" graphics file.
+	 */
+	public static final int STRING_NPCSYM;
+	/**
+	 * Name for the "NpcRegu" graphics file.
+	 */
+	public static final int STRING_NPCREGU;
+	/**
+	 * The PXM file tag.
+	 */
+	public static final int STRING_PXM_TAG;
+	/**
+	 * Name for the "StageSelect.tsc" file.
+	 */
+	public static final int STRING_STAGESELECT;
+	/**
+	 * Name for the "Stage" folder.
+	 */
+	public static final int STRING_STAGE_FOLDER;
+	/**
+	 * Prefix for tileset graphics files.
+	 */
+	public static final int STRING_PRT_PREFIX;
+	/**
+	 * PXA (tile attributes) file extension.
+	 */
+	public static final int STRING_PXA_EXT;
+	/**
+	 * PXM (map) file extension.
+	 */
+	public static final int STRING_PXM_EXT;
+	/**
+	 * PXE (entities) file extension.
+	 */
+	public static final int STRING_PXE_EXT;
+	/**
+	 * TSC file extension.
+	 */
+	public static final int STRING_TSC_EXT;
+	/**
+	 * Name for the "Npc" folder.
+	 */
+	public static final int STRING_NPC_FOLDER;
+	/**
+	 * Prefix for NPC sheet graphics files.
+	 */
+	public static final int STRING_NPC_PREFIX;
 
+	// Set string indexes
+	static {
+		Arrays.sort(STRING_POINTERS);
+		STRING_ARMSITEM = Arrays.binarySearch(STRING_POINTERS, ARMSITEM_PTR);
+		STRING_IMG_EXT = Arrays.binarySearch(STRING_POINTERS, IMG_EXT_PTR);
+		STRING_NPC_TBL = Arrays.binarySearch(STRING_POINTERS, NPC_TBL_PTR);
+		STRING_MYCHAR = Arrays.binarySearch(STRING_POINTERS, MYCHAR_PTR);
+		STRING_ARMSIMAGE = Arrays.binarySearch(STRING_POINTERS, ARMSIMAGE_PTR);
+		STRING_ITEMIMAGE = Arrays.binarySearch(STRING_POINTERS, ITEMIMAGE_PTR);
+		STRING_DATA_FOLDER = Arrays.binarySearch(STRING_POINTERS, DATA_FOLDER_PTR);
+		STRING_STAGEIMAGE = Arrays.binarySearch(STRING_POINTERS, STAGEIMAGE_PTR);
+		STRING_NPCSYM = Arrays.binarySearch(STRING_POINTERS, NPCSYM_PTR);
+		STRING_NPCREGU = Arrays.binarySearch(STRING_POINTERS, NPCREGU_PTR);
+		STRING_PXM_TAG = Arrays.binarySearch(STRING_POINTERS, PXM_TAG_PTR);
+		STRING_STAGESELECT = Arrays.binarySearch(STRING_POINTERS, STAGESELECT_PTR);
+		STRING_STAGE_FOLDER = Arrays.binarySearch(STRING_POINTERS, STAGE_FOLDER_PTR);
+		STRING_PRT_PREFIX = Arrays.binarySearch(STRING_POINTERS, PRT_PREFIX_PTR);
+		STRING_PXA_EXT = Arrays.binarySearch(STRING_POINTERS, PXA_EXT_PTR);
+		STRING_PXM_EXT = Arrays.binarySearch(STRING_POINTERS, PXM_EXT_PTR);
+		STRING_PXE_EXT = Arrays.binarySearch(STRING_POINTERS, PXE_EXT_PTR);
+		STRING_TSC_EXT = Arrays.binarySearch(STRING_POINTERS, TSC_EXT_PTR);
+		STRING_NPC_FOLDER = Arrays.binarySearch(STRING_POINTERS, NPC_FOLDER_PTR);
+		STRING_NPC_PREFIX = Arrays.binarySearch(STRING_POINTERS, NPC_PREFIX_PTR);
+	}
+
+	/**
+	 * Array of strings loaded from the executable.
+	 * 
+	 * @see #STRING_POINTERS
+	 */
 	private static String[] exeStrings;
+	/**
+	 * Loaded flag. If <code>true</code>, an executable has been loaded.
+	 */
 	private static boolean loaded = false;
+	/**
+	 * The executable file.
+	 */
 	private static File base;
+	/**
+	 * The "data" directory.
+	 */
 	private static File dataDir;
+	/**
+	 * List of npc.tbl entries.
+	 * 
+	 * @see EntityData
+	 */
 	private static Vector<EntityData> entityList;
+	/**
+	 * List of map data.
+	 * 
+	 * @see Mapdata
+	 */
 	private static Vector<Mapdata> mapdata;
+	/**
+	 * List of map information.
+	 * 
+	 * @see MapInfo
+	 */
 	private static Vector<MapInfo> mapInfo;
-	private static Map<File, BufferedImage> imgMap;
+	/**
+	 * Image repository.
+	 */
+	private static Map<File, BufferedImage> imageMap;
+	/**
+	 * PXA file repository.
+	 */
 	private static Map<File, byte[]> pxaMap;
+	/**
+	 * "MyChar" graphics file.
+	 */
 	private static File myChar;
+	/**
+	 * "ArmsImage" graphics file.
+	 */
 	private static File armsImage;
+	/**
+	 * "ItemImage" graphics file.
+	 */
 	private static File itemImage;
+	/**
+	 * "StageImage" graphics file.
+	 */
 	private static File stageImage;
+	/**
+	 * "NpcSym" graphics file.
+	 */
 	private static File npcSym;
+	/**
+	 * "NpcRegu" graphics file.
+	 */
 	private static File npcRegu;
 
+	/**
+	 * Loads an executable.
+	 * 
+	 * @param file
+	 *            executable file
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void load(File file) throws IOException {
 		if (!Profile.isLoaded() || Profile.getFile() == null)
 			return;
@@ -113,20 +335,30 @@ public class ExeData {
 				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + base.getName() + "\" does not exist!",
 						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
 		}
-		load0(base, true);
+		load0(base);
 	}
 
-	public static void load() throws IOException {
-		load(null);
-	}
-
+	/**
+	 * Reloads the current executable.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void reload() throws IOException {
 		if (!loaded || base == null)
 			return;
-		load0(base, false);
+		load0(base);
 	}
 
-	private static void load0(File base, boolean loadGraphics) throws IOException {
+	/**
+	 * Loads the executable.
+	 * 
+	 * @param base
+	 *            executable file
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void load0(File base) throws IOException {
 		String encoding = Main.encoding;
 		ExeData.base = base;
 		// read exe strings
@@ -151,16 +383,18 @@ public class ExeData {
 		entityList = new Vector<EntityData>();
 		mapdata = new Vector<Mapdata>();
 		mapInfo = new Vector<MapInfo>();
-		imgMap = new HashMap<File, BufferedImage>();
+		imageMap = new HashMap<File, BufferedImage>();
 		pxaMap = new HashMap<File, byte[]>();
 		loadNpcTbl();
 		fillMapdata();
 		loadMapInfo();
-		if (loadGraphics)
-			loadGraphics();
+		loadGraphics();
 		loaded = true;
 	}
 
+	/**
+	 * Unloads the executable.
+	 */
 	public static void unload() {
 		exeStrings = null;
 		loaded = false;
@@ -169,7 +403,7 @@ public class ExeData {
 		entityList = null;
 		mapdata = null;
 		mapInfo = null;
-		imgMap = null;
+		imageMap = null;
 		pxaMap = null;
 		myChar = null;
 		armsImage = null;
@@ -180,6 +414,12 @@ public class ExeData {
 		System.gc();
 	}
 
+	/**
+	 * Loads the "npc.tbl" file.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	private static void loadNpcTbl() throws IOException {
 		File tblFile = new File(base.getParent() + exeStrings[STRING_DATA_FOLDER] + "/" + exeStrings[STRING_NPC_TBL]);
 		FileChannel inChan;
@@ -309,6 +549,12 @@ public class ExeData {
 			entityList.get(i).setFramerect(FrontUtils.str2Rect(MCI.get("EntityRect", i)));
 	}
 
+	/**
+	 * Loads map data.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	private static void fillMapdata() throws IOException {
 		FileChannel inChan;
 
@@ -462,11 +708,26 @@ public class ExeData {
 		inStream.close();
 	}
 
+	/**
+	 * Loads map info.
+	 */
 	private static void loadMapInfo() {
 		for (int i = 0; i < mapdata.size(); i++)
 			mapInfo.add(new MapInfo(mapdata.get(i)));
 	}
 
+	/**
+	 * Loads an image.
+	 * 
+	 * @param srcFile
+	 *            source file
+	 * @param trans
+	 *            <code>true</code> if black pixels should be transparent,
+	 *            <code>false</code> otherwise
+	 * @return filtered image
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	private static BufferedImage loadImage(File srcFile, boolean trans) throws IOException {
 		if (srcFile == null)
 			return null;
@@ -493,10 +754,25 @@ public class ExeData {
 		return null;
 	}
 
+	/**
+	 * Loads an image.
+	 * 
+	 * @param srcFile
+	 *            source image
+	 * @return filtered image
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	private static BufferedImage loadImage(File srcFile) throws IOException {
 		return loadImage(srcFile, true);
 	}
 
+	/**
+	 * Loads graphics files.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	private static void loadGraphics() throws IOException {
 		myChar = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_MYCHAR]);
 		addImage(myChar);
@@ -513,101 +789,167 @@ public class ExeData {
 	}
 
 	/**
-	 * This method is a proxy to the file version of this method
+	 * Attempts to add an image to the repository.
 	 * 
 	 * @param srcFile
-	 *            location of the file to load
-	 * @param filterType
-	 *            Specifies a specific operation to perform when loading
+	 *            image to load
 	 */
 	public static void addImage(String srcFile) {
 		addImage(new File(srcFile));
 	}
 
 	/**
-	 * Attempts to add an image to the store. Valid filter type values: 0 - No
-	 * filter 1 - Convert black pixels to transparent
+	 * Attempts to add an image to the repository.
 	 * 
 	 * @param srcFile
 	 *            image to load
-	 * @param filterType
-	 *            filtering method
 	 */
 	public static void addImage(File srcFile) {
 		try {
-			if (imgMap.containsKey(srcFile))
+			if (imageMap.containsKey(srcFile))
 				return;
-			imgMap.put(srcFile, loadImage(srcFile));
+			imageMap.put(srcFile, loadImage(srcFile));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * This method is a proxy to the file version of this method
+	 * If the file exists in the repository, replace. If not, load it anyway.
 	 * 
-	 * @param src
-	 *            location of the file to load
-	 * @param filterType
-	 *            Specifies a specific operation to perform when loading
+	 * @param srcFile
+	 *            image to load
 	 */
 	public static void reloadImage(String src) {
 		reloadImage(new File(src));
 	}
 
 	/**
-	 * If the file exists in the repository, replace. If not, load it anyway
+	 * If the file exists in the repository, replace. If not, load it anyway.
 	 * 
 	 * @param srcFile
 	 *            image to load
-	 * @param filterType
-	 *            filtering method
 	 */
 	public static void reloadImage(File srcFile) {
-		if (imgMap.containsKey(srcFile)) {
-			imgMap.get(srcFile).flush();
-			imgMap.remove(srcFile);
+		if (imageMap.containsKey(srcFile)) {
+			imageMap.get(srcFile).flush();
+			imageMap.remove(srcFile);
 		}
 		addImage(srcFile);
 	}
 
-	public static java.awt.Graphics getImgGraphics(File key) {
-		if (imgMap.containsKey(key))
-			return imgMap.get(key).getGraphics();
-		System.err.println("Key not found for getImgGraphics");
+	/**
+	 * Gets an image's graphics instance.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image graphics
+	 */
+	public static java.awt.Graphics getImageGraphics(File key) {
+		if (imageMap.containsKey(key))
+			return imageMap.get(key).getGraphics();
+		System.err.println("Key not found for getImageGraphics");
 		System.err.println(key);
 		return null;
 	}
 
-	public static BufferedImage getImg(File key) {
-		if (imgMap.containsKey(key))
-			return imgMap.get(key);
-		System.err.println("Key not found for getImg");
+	/**
+	 * Gets an image's graphics instance.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image graphics
+	 */
+	public static java.awt.Graphics getImageGraphics(String key) {
+		return getImageGraphics(new File(key));
+	}
+
+	/**
+	 * Gets an image.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image
+	 */
+	public static BufferedImage getImage(File key) {
+		if (imageMap.containsKey(key))
+			return imageMap.get(key);
+		System.err.println("Key not found for getImage");
 		System.err.println(key);
 		return null;
 	}
 
-	public static BufferedImage getImg(String key) {
-		return getImg(new File(key));
+	/**
+	 * Gets an image.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image
+	 */
+	public static BufferedImage getImage(String key) {
+		return getImage(new File(key));
 	}
 
-	public static int getImgH(File key) {
-		if (imgMap.containsKey(key))
-			return imgMap.get(key).getHeight();
-		System.err.println("Key not found for getImgH");
+	/**
+	 * Gets an image's height.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image height
+	 */
+	public static int getImageHeight(File key) {
+		if (imageMap.containsKey(key))
+			return imageMap.get(key).getHeight();
+		System.err.println("Key not found for getImageHeight");
 		System.err.println(key);
 		return -1;
 	}
 
-	public static int getImgW(File key) {
-		if (imgMap.containsKey(key))
-			return imgMap.get(key).getWidth();
-		System.err.println("Key not found for getImgW");
+	/**
+	 * Gets an image's height.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image height
+	 */
+	public static int getImageHeight(String key) {
+		return getImageHeight(new File(key));
+	}
+
+	/**
+	 * Gets an image's width.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image width
+	 */
+	public static int getImageWidth(File key) {
+		if (imageMap.containsKey(key))
+			return imageMap.get(key).getWidth();
+		System.err.println("Key not found for getImageWidth");
 		System.err.println(key);
 		return -1;
 	}
 
-	public static byte[] addPxa(File srcFile, int size) {
+	/**
+	 * Gets an image's width.
+	 * 
+	 * @param key
+	 *            image file
+	 * @return image width
+	 */
+	public static int getImageWidth(String key) {
+		return getImageWidth(new File(key));
+	}
+
+	/**
+	 * Attempts to add a PXA file to the repository.
+	 * 
+	 * @param srcFile
+	 *            source file
+	 * @return PXA data
+	 */
+	public static byte[] addPxa(File srcFile) {
 		FileChannel inChan = null;
 		if (pxaMap.containsKey(srcFile))
 			return pxaMap.get(srcFile);
@@ -616,7 +958,7 @@ public class ExeData {
 		try {
 			FileInputStream inStream = new FileInputStream(srcFile);
 			inChan = inStream.getChannel();
-			ByteBuffer pxaBuf = ByteBuffer.allocate(size);// this is the max size. Indeed, the only size..
+			ByteBuffer pxaBuf = ByteBuffer.allocate(256);// this is the max size. Indeed, the only size..
 			inChan.read(pxaBuf);
 			inChan.close();
 			inStream.close();
@@ -634,25 +976,53 @@ public class ExeData {
 					e.printStackTrace();
 				}
 			if (!succ && srcFile != null) {
-				byte[] dummyArray = new byte[size];
+				byte[] dummyArray = new byte[256];
 				pxaMap.put(srcFile, dummyArray);
 			}
 		}
 		return pxaArray;
 	}
 
-	public static byte[] addPxa(String src, int size) {
-		return addPxa(new File(src), size);
+	/**
+	 * Attempts to add a PXA file to the repository.
+	 * 
+	 * @param srcFile
+	 *            source file
+	 * @return PXA data
+	 */
+	public static byte[] addPxa(String srcFile) {
+		return addPxa(new File(srcFile));
 	}
 
+	/**
+	 * Gets PXA data from the repository.
+	 * 
+	 * @param srcFile
+	 *            source file
+	 * @return PXA data
+	 */
 	public static byte[] getPxa(File srcFile) {
 		return pxaMap.get(srcFile);
 	}
 
-	public static byte[] getPxa(String src) {
-		return getPxa(new File(src));
+	/**
+	 * Gets PXA data from the repository.
+	 * 
+	 * @param srcFile
+	 *            source file
+	 * @return PXA data
+	 */
+	public static byte[] getPxa(String srcFile) {
+		return getPxa(new File(srcFile));
 	}
 
+	/**
+	 * Gets a string loaded from the executable.
+	 * 
+	 * @param id
+	 *            index
+	 * @return string from executable
+	 */
 	public static String getExeString(int id) {
 		return exeStrings[id];
 	}
@@ -669,6 +1039,13 @@ public class ExeData {
 		return dataDir;
 	}
 
+	/**
+	 * Gets a {@link MapInfo} instance for a map.
+	 * 
+	 * @param num
+	 *            map ID
+	 * @return map information
+	 */
 	public static MapInfo getMapInfo(int num) {
 		if (num < 0)
 			throw new IndexOutOfBoundsException("Requested map number (" + num + ") is negative!");
@@ -678,10 +1055,22 @@ public class ExeData {
 		return mapInfo.get(num);
 	}
 
+	/**
+	 * Gets the amount of loaded maps.
+	 * 
+	 * @return amount of maps
+	 */
 	public static int getMapInfoCount() {
 		return mapInfo.size();
 	}
 
+	/**
+	 * Gets a npc.tbl entry for an entity type.
+	 * 
+	 * @param entityType
+	 *            entity type
+	 * @return npc.tbl entry
+	 */
 	public static EntityData getEntityInfo(short entityType) {
 		return entityList.get(entityType);
 	}

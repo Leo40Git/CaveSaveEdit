@@ -4,11 +4,11 @@ import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.leo.cse.backend.ExeData;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.data.ExeData;
 
 public class ItemBox extends DefineBox {
 
@@ -41,7 +41,7 @@ public class ItemBox extends DefineBox {
 			return;
 		int sourceX = (item % 8) * 64;
 		int sourceY = (item / 8) * 32;
-		g.drawImage(ExeData.getImg(ExeData.getItemImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33,
+		g.drawImage(ExeData.getImage(ExeData.getItemImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33,
 				sourceX, sourceY, sourceX + 64, sourceY + 32, null);
 	}
 

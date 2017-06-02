@@ -1,17 +1,52 @@
-package com.leo.cse.frontend.data;
+package com.leo.cse.backend;
 
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
+/**
+ * Stores abstract information for a map. An instance of {@link MapInfo} should be used
+ * for loading maps.
+ * 
+ * @author Leo
+ *
+ */
 public class Mapdata {
-
+	
+	/**
+	 * The map's ID.
+	 */
 	private int mapNum;
+	/**
+	 * The map's tileset.
+	 */
 	private String tileset;
+	/**
+	 * The map's file name.
+	 */
 	private String fileName;
+	/**
+	 * The map's scroll type.
+	 */
 	private int scrollType;
+	/**
+	 * The map's background image.
+	 */
 	private String bgName;
+	/**
+	 * The map's 1st NPC sheet.
+	 */
 	private String npcSheet1;
+	/**
+	 * The map's 2nd NPC sheet.
+	 */
 	private String npcSheet2;
+	/**
+	 * The map's name.
+	 */
 	private String mapName;
-
+	
+	/**
+	 * Creates a new empty map.
+	 * @param mapNum map ID
+	 */
 	public Mapdata(int mapNum) {
 		this.mapNum = mapNum;
 		tileset = "0";

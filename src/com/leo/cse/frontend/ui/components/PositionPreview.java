@@ -8,14 +8,14 @@ import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
+import com.leo.cse.backend.ExeData;
+import com.leo.cse.backend.MapInfo;
 import com.leo.cse.backend.Profile;
+import com.leo.cse.backend.MapInfo.PxeEntry;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
-import com.leo.cse.frontend.data.ExeData;
-import com.leo.cse.frontend.data.MapInfo;
-import com.leo.cse.frontend.data.MapInfo.PxeEntry;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class PositionPreview extends Component implements IDraggable {
@@ -61,7 +61,7 @@ public class PositionPreview extends Component implements IDraggable {
 			return;
 		}
 		map = mapInfo.getMap();
-		tileset = ExeData.getImg(mapInfo.getTileset());
+		tileset = ExeData.getImage(mapInfo.getTileset());
 		setWidth = tileset.getWidth() / 32;
 		BufferedImage surf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
@@ -89,7 +89,7 @@ public class PositionPreview extends Component implements IDraggable {
 	private void drawBackground(Graphics g) {
 		if (mapInfo.getScrollType() == 3 || mapInfo.getScrollType() == 4)
 			return;
-		BufferedImage bg = ExeData.getImg(mapInfo.getBgImage());
+		BufferedImage bg = ExeData.getImage(mapInfo.getBgImage());
 		int iw = bg.getWidth(null);
 		int ih = bg.getHeight(null);
 		for (int x = 0; x < width; x += iw) {
@@ -109,7 +109,7 @@ public class PositionPreview extends Component implements IDraggable {
 				int tile = map[l][i][j];
 				if (mapInfo.calcPxa(tile) == 0x43) {
 					// draw breakable tile
-					g.drawImage(ExeData.getImg(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96,
+					g.drawImage(ExeData.getImage(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96,
 							544, 128, null);
 				} else {
 					// draw normal tile
@@ -143,7 +143,7 @@ public class PositionPreview extends Component implements IDraggable {
 		int xPixel = Profile.getX() - 16;
 		int yPixel = Profile.getY() - 16;
 		int sourceY = (int) (64 * costume + 32 * dir);
-		g.drawImage(ExeData.getImg(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
+		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
 				sourceY + 32, null);
 	}
 

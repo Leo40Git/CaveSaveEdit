@@ -7,10 +7,10 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
+import com.leo.cse.backend.ExeData;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
-import com.leo.cse.frontend.data.ExeData;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class SettingsDialog extends BaseDialog {

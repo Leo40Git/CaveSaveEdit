@@ -8,12 +8,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.leo.cse.backend.ExeData;
 import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.MCI.MCIException;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.data.ExeData;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class MCIDialog extends BaseDialog {
@@ -76,7 +76,7 @@ public class MCIDialog extends BaseDialog {
 				return false;
 			} finally {
 				try {
-					ExeData.load();
+					ExeData.reload();
 				} catch (IOException ignore) {
 				}
 				Config.set(Config.KEY_LAST_MCI_FILE, file.getAbsolutePath());

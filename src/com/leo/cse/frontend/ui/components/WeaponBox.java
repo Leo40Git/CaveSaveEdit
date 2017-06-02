@@ -4,11 +4,11 @@ import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.leo.cse.backend.ExeData;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.data.ExeData;
 
 public class WeaponBox extends DefineBox {
 
@@ -40,7 +40,7 @@ public class WeaponBox extends DefineBox {
 		if (!ExeData.isLoaded())
 			return;
 		int ystart = MCI.getInteger("Game.ArmsImageYStart", 0), size = MCI.getInteger("Game.ArmsImageSize", 32);
-		g.drawImage(ExeData.getImg(ExeData.getArmsImage()), x + width / 2 - size / 2, y - (size - 32) + 1,
+		g.drawImage(ExeData.getImage(ExeData.getArmsImage()), x + width / 2 - size / 2, y - (size - 32) + 1,
 				x + width / 2 + size / 2, y - (size - 32) + size + 1, wep * size, ystart, (wep + 1) * size,
 				ystart + size, null);
 	}

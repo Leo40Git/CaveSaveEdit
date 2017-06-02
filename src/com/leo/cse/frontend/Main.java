@@ -17,8 +17,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.leo.cse.backend.ExeData;
 import com.leo.cse.backend.Profile;
-import com.leo.cse.frontend.data.ExeData;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class Main extends JFrame implements MouseListener {
@@ -101,7 +101,7 @@ public class Main extends JFrame implements MouseListener {
 			ExeData.unload();
 			// try to load exe
 			try {
-				ExeData.load();
+				ExeData.reload();
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println("EXE loading failed.");

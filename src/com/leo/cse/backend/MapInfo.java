@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.data;
+package com.leo.cse.backend;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -12,29 +12,88 @@ import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.leo.cse.backend.Profile;
-
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
+/**
+ * Stores information for loaded maps.
+ * 
+ * @author Leo
+ *
+ */
 public class MapInfo {
 
+	/**
+	 * Width of the map, in tiles.
+	 */
 	private int mapX;
+	/**
+	 * Height of the map, in tiles.
+	 */
 	private int mapY;
+	/**
+	 * The map's ID.
+	 */
 	private int mapNumber;
+	/**
+	 * The map tiles. <br \> The first index is the layer: 0 for background, 1 for
+	 * foreground. <br \> The second and third indexes are X and Y positions,
+	 * respectively.
+	 */
 	protected int[][][] map;
+	/**
+	 * The map's tileset file.
+	 * 
+	 * @see ExeData#getImage(File)
+	 */
 	private File tileset;
+	/**
+	 * The map's background image file.
+	 * 
+	 * @see ExeData#getImage(File)
+	 */
 	private File bgImage;
+	/**
+	 * The map's file name.
+	 */
 	private String fileName;
+	/**
+	 * The map's scroll type.
+	 */
 	private int scrollType;
+	/**
+	 * The map's 1st NPC sheet file.
+	 * 
+	 * @see ExeData#getImage(File)
+	 */
 	private File npcSheet1;
+	/**
+	 * The map's 2nd NPC sheet file.
+	 * 
+	 * @see ExeData#getImage(File)
+	 */
 	private File npcSheet2;
+	/**
+	 * The map's name.
+	 */
 	private String mapName;
+	/**
+	 * The map's PXA file.
+	 * 
+	 * @see ExeData#getPxa(File)
+	 */
 	private File pxaFile;
+	/**
+	 * List of the map's entities.
+	 * 
+	 * @see PxeEntry
+	 */
 	private LinkedList<PxeEntry> pxeList;
 
-	public Iterator<PxeEntry> getPxeIterator() {
-		return pxeList.iterator();
-	}
-
+	/**
+	 * Loads a map and it's resources.
+	 * 
+	 * @param d
+	 *            source map data
+	 */
 	public MapInfo(Mapdata d) {
 		fileName = d.getFileName();
 		scrollType = d.getScrollType();
@@ -44,11 +103,19 @@ public class MapInfo {
 		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
 		String pxa = ExeData.getExeString(ExeData.STRING_PXA_EXT);
 		pxaFile = new File(String.format(pxa, directory + "/" + stage, d.getTileset()));
-		ExeData.addPxa(pxaFile, 256);
+		ExeData.addPxa(pxaFile);
 		loadMap(d);
 		getEntities(d);
 	}
 
+	/**
+	 * Loads image resources for a map.
+	 * 
+	 * @param d
+	 *            source map data
+	 * @param directory
+	 *            data directory
+	 */
 	private void loadImageResource(Mapdata d, File directory) {
 		// load each image resource
 		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
@@ -65,6 +132,12 @@ public class MapInfo {
 		ExeData.addImage(npcSheet2);
 	}
 
+	/**
+	 * Loads a map.
+	 * 
+	 * @param d
+	 *            source map data
+	 */
 	protected void loadMap(Mapdata d) {
 		// load the map data
 		ByteBuffer mapBuf;
@@ -118,6 +191,13 @@ public class MapInfo {
 			}
 	}
 
+	/**
+	 * Calculates a tile's type.
+	 * 
+	 * @param tileNum
+	 *            tile ID
+	 * @return tile type
+	 */
 	public int calcPxa(int tileNum) {
 		byte[] pxaData = ExeData.getPxa(pxaFile);
 		int rval = 0;
@@ -131,6 +211,12 @@ public class MapInfo {
 		return rval & 0xFF;
 	}
 
+	/**
+	 * Loads the entities of a map.
+	 * 
+	 * @param d
+	 *            source map data
+	 */
 	private void getEntities(Mapdata d) {
 		pxeList = new LinkedList<>();
 		File directory = ExeData.getDataDir();
@@ -160,7 +246,7 @@ public class MapInfo {
 				int pxeEvent = eBuf.getShort();
 				int pxeType = eBuf.getShort();
 				int pxeFlags = eBuf.getShort() & 0xFFFF;
-				PxeEntry p = new PxeEntry(pxeX, pxeY, pxeFlagID, pxeEvent, pxeType, pxeFlags, 1);
+				PxeEntry p = new PxeEntry(pxeX, pxeY, pxeFlagID, pxeEvent, pxeType, pxeFlags);
 				pxeList.add(p);
 			}
 			inChan.close();
@@ -171,51 +257,93 @@ public class MapInfo {
 		}
 	}
 
+	/**
+	 * Stores information about an entity.
+	 * 
+	 * @author Leo
+	 *
+	 */
 	public class PxeEntry {
+		/**
+		 * The entity's X position, in tiles.
+		 */
 		private short xTile;
 
 		public int getX() {
 			return xTile;
 		}
 
+		/**
+		 * The entity's Y position, in tiles.
+		 */
 		private short yTile;
 
 		public int getY() {
 			return yTile;
 		}
 
+		/**
+		 * The entity's flag ID.
+		 */
 		private short flagID;
 
 		public int getFlagID() {
 			return flagID;
 		}
 
+		/**
+		 * The entity's event number.
+		 */
 		private short eventNum;
 
 		public int getEvent() {
 			return eventNum;
 		}
 
+		/**
+		 * The entity's type.
+		 */
 		private short entityType;
 
 		public int getType() {
 			return entityType;
 		}
 
-		// set method below
+		/**
+		 * The entity's flags.
+		 */
 		private short flags;
 
 		public int getFlags() {
 			return flags;
 		}
 
+		/**
+		 * The entity's npc.tbl entry.
+		 */
 		private EntityData inf;
 
 		public EntityData getInfo() {
 			return inf;
 		}
 
-		PxeEntry(int pxeX, int pxeY, int pxeFlagID, int pxeEvent, int pxeType, int pxeFlags, int pxeLayer) {
+		/**
+		 * Creates a new entity.
+		 * 
+		 * @param pxeX
+		 *            x position
+		 * @param pxeY
+		 *            y position
+		 * @param pxeFlagID
+		 *            flag ID
+		 * @param pxeEvent
+		 *            event number
+		 * @param pxeType
+		 *            entity type
+		 * @param pxeFlags
+		 *            entity flags
+		 */
+		PxeEntry(int pxeX, int pxeY, int pxeFlagID, int pxeEvent, int pxeType, int pxeFlags) {
 			xTile = (short) pxeX;
 			yTile = (short) pxeY;
 			flagID = (short) pxeFlagID;
@@ -228,7 +356,13 @@ public class MapInfo {
 				throw new NullPointerException("Entity type " + entityType + " is undefined!");
 		}
 
-		public void draw(Graphics2D g2d) {
+		/**
+		 * Draws the entity to the specified graphics instance.
+		 * 
+		 * @param g
+		 *            graphics to draw to
+		 */
+		public void draw(Graphics2D g) {
 			if ((flags & 0x0800) != 0) {
 				// Appear once flagID set
 				if (!Profile.getFlag(flagID))
@@ -244,17 +378,17 @@ public class MapInfo {
 			BufferedImage srcImg;
 			int tilesetNum = inf.getTileset();
 			if (tilesetNum == 0x15)
-				srcImg = ExeData.getImg(npcSheet1);
+				srcImg = ExeData.getImage(npcSheet1);
 			else if (tilesetNum == 0x16)
-				srcImg = ExeData.getImg(npcSheet2);
+				srcImg = ExeData.getImage(npcSheet2);
 			else if (tilesetNum == 0x14) // npc sym
-				srcImg = ExeData.getImg(ExeData.getNpcSym());
+				srcImg = ExeData.getImage(ExeData.getNpcSym());
 			else if (tilesetNum == 0x17) // npc regu
-				srcImg = ExeData.getImg(ExeData.getNpcRegu());
+				srcImg = ExeData.getImage(ExeData.getNpcRegu());
 			else if (tilesetNum == 0x2) // map tileset
-				srcImg = ExeData.getImg(tileset);
+				srcImg = ExeData.getImage(tileset);
 			else if (tilesetNum == 0x10) // npc myChar
-				srcImg = ExeData.getImg(ExeData.getMyChar());
+				srcImg = ExeData.getImage(ExeData.getMyChar());
 			else
 				srcImg = null;
 
@@ -264,30 +398,36 @@ public class MapInfo {
 				int srcX2 = frameRect.width;
 				int srcY2 = frameRect.height;
 				Rectangle dest = getDrawArea();
-				g2d.drawImage(srcImg, dest.x, dest.y, dest.x + dest.width, dest.y + dest.height, srcX, srcY, srcX2,
-						srcY2, null);
+				g.drawImage(srcImg, dest.x, dest.y, dest.x + dest.width, dest.y + dest.height, srcX, srcY, srcX2, srcY2,
+						null);
 			}
 		}
 
+		/**
+		 * Gets the entity's draw area.
+		 * 
+		 * @return draw area
+		 */
 		public Rectangle getDrawArea() {
-			//Rectangle frameRect = inf.getFramerect();
+			// Rectangle frameRect = inf.getFramerect();
 			Rectangle offset;
 			if (inf != null) {
 				offset = inf.getDisplay();
 			} else {
 				offset = new Rectangle(16, 16, 16, 16);
 			}
-			//int width = frameRect.width - frameRect.x, height = frameRect.height - frameRect.y;
+			// int width = frameRect.width - frameRect.x, height = frameRect.height -
+			// frameRect.y;
 			int offL = offset.x;
 			int offU = offset.y;
 			int offR = offset.width;
 			int offD = offset.height;
 			int destW = offR + offL;
 			destW *= 2;
-			//destW = Math.max(destW, width);
+			// destW = Math.max(destW, width);
 			int destH = offD + offU;
 			destH *= 2;
-			//destH = Math.max(destH, height);
+			// destH = Math.max(destH, height);
 			int destX = xTile * 32 - offL * 2;
 			int destY = yTile * 32 - offU * 2;
 			Rectangle area = new Rectangle(destX, destY, destW, destH);
@@ -307,6 +447,12 @@ public class MapInfo {
 		return mapNumber;
 	}
 
+	/**
+	 * Gets the map tiles. For indexes, see {@link #map}.
+	 * 
+	 * @return map tiles
+	 * @see #map
+	 */
 	public int[][][] getMap() {
 		return map.clone();
 	}
@@ -341,6 +487,16 @@ public class MapInfo {
 
 	public File getPxaFile() {
 		return pxaFile;
+	}
+
+	/**
+	 * Gets an iterator over the map's entities.
+	 * 
+	 * @return iterator over elements of entity list
+	 * @see #pxeList
+	 */
+	public Iterator<PxeEntry> getPxeIterator() {
+		return pxeList.iterator();
 	}
 
 }

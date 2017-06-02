@@ -4,11 +4,11 @@ import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.leo.cse.backend.ExeData;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.data.ExeData;
 
 public class WarpBox extends DefineBox {
 
@@ -39,7 +39,7 @@ public class WarpBox extends DefineBox {
 			return;
 		if (!ExeData.isLoaded())
 			return;
-		g.drawImage(ExeData.getImg(ExeData.getStageImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33, 64 * warp, 0,
+		g.drawImage(ExeData.getImage(ExeData.getStageImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33, 64 * warp, 0,
 				64 * (warp + 1), 32, null);
 	}
 
