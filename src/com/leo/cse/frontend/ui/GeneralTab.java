@@ -13,7 +13,7 @@ import com.leo.cse.frontend.ui.components.IntegerBox;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.LongBox;
 import com.leo.cse.frontend.ui.components.MapBox;
-import com.leo.cse.frontend.ui.components.PositionPreview;
+import com.leo.cse.frontend.ui.components.MapView;
 import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 
@@ -179,7 +179,7 @@ public class GeneralTab extends EditorTab {
 				}
 			}, "<MIM costume"));
 		}
-		compList.add(new PositionPreview(winSize.width / 2 - 320, 164, new Supplier<Integer>() {
+		compList.add(new MapView(winSize.width / 2 - 320, 164, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
 				return Profile.getMap();

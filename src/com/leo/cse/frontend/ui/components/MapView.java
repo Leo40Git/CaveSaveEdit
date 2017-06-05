@@ -18,7 +18,7 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
-public class PositionPreview extends Component implements IDraggable {
+public class MapView extends Component implements IDraggable {
 
 	private static final Color COLOR_NULL = new Color(0, 0, 16);
 
@@ -31,7 +31,7 @@ public class PositionPreview extends Component implements IDraggable {
 	private int ignoreClick = 0;
 	private int lastMap;
 
-	public PositionPreview(int x, int y, Supplier<Integer> mSup) {
+	public MapView(int x, int y, Supplier<Integer> mSup) {
 		super(x, y, 640, 480);
 		this.mSup = mSup;
 		lastMap = mSup.get();
@@ -146,7 +146,11 @@ public class PositionPreview extends Component implements IDraggable {
 		else
 			costume = (Profile.getEquip(6) ? 1 : 0);
 		int xPixel = Profile.getX() - 16;
+		xPixel /= 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1);
+		xPixel *= 2;
 		int yPixel = Profile.getY() - 16;
+		yPixel /= 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1);
+		yPixel *= 2;
 		int sourceY = (int) (64 * costume + 32 * dir);
 		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
 				sourceY + 32, null);
