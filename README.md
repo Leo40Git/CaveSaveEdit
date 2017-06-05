@@ -9,6 +9,6 @@ The MCI system is used for mod support.
 This system allows users to add custom items, weapons, equipment and more to the save editor with ease.  
 See [the MCI readme](MCI.md) for more information about the MCI system.
 # Credits
-- **Noxid ([@taedixon](https://github.com/taedixon)):** CS executable code ([backend](src/com/leo/cse/backend), excluding Profile and ByteUtils)
-- **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites ([ui.png](src/com/leo/cse/frontend/ui.png))
-- **Carrotlord:** StrTools class ([StrTools.java](src/com/carrotlord/string/StrTools.java))
+- **Noxid ([@taedixon](https://github.com/taedixon)):** Executable related code ([classes in the "backend" package](src/com/leo/cse/backend), excluding Profile and ByteUtils), stolen from **[Booster's Lab](https://github.com/taedixon/boosters-lab)**.
+- **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites ([ui.png](src/com/leo/cse/frontend/ui.png) and [shadow.png](src/com/leo/cse/frontend/shadow.png))
+- **Carrotlord:** StrTools class ([com.carrotlord.string.StrTools](src/com/carrotlord/string/StrTools.java))
