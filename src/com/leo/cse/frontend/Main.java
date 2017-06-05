@@ -43,18 +43,27 @@ public class Main extends JFrame implements MouseListener {
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent e) {
-			if (Profile.isLoaded() && Profile.isModified()) {
-				int sel = JOptionPane.showConfirmDialog(window,
-						"Are you sure you want to close the editor?\nUnsaved changes will be lost!",
-						"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-				if (sel == JOptionPane.CANCEL_OPTION)
-					return;
-			}
-			Config.setColor(Config.KEY_LINE_COLOR, lineColor);
-			Config.set(Config.KEY_ENCODING, encoding);
-			SaveEditorPanel.panel.saveSettings();
-			System.exit(0);
+			Main.close(false);
 		}
+	}
+
+	public static void close(boolean alwaysShowDialog) {
+		if (Profile.isLoaded() && Profile.isModified()) {
+			int sel = JOptionPane.showConfirmDialog(window,
+					"Are you sure you want to close the editor?\nUnsaved changes will be lost!",
+					"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (sel == JOptionPane.CANCEL_OPTION)
+				return;
+		} else if (alwaysShowDialog) {
+			int sel = JOptionPane.showConfirmDialog(window, "Are you sure you want to close the editor?",
+					"Quit CaveSaveEditor?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (sel == JOptionPane.CANCEL_OPTION)
+				return;
+		}
+		Config.setColor(Config.KEY_LINE_COLOR, lineColor);
+		Config.set(Config.KEY_ENCODING, encoding);
+		SaveEditorPanel.panel.saveSettings();
+		System.exit(0);
 	}
 
 	public Main() {

@@ -177,7 +177,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
-			FrontUtils.drawString(g2d, tabMap.get(t).getLabel(), xx + 18, winSize2.height - 19);
+			String label = "???";
+			if (tabMap.get(t) != null)
+				label = tabMap.get(t).getLabel();
+			FrontUtils.drawString(g2d, label, xx + 18, winSize2.height - 19);
 			ti++;
 		}
 		// dialog box
@@ -439,6 +442,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) != 0;
 		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) != 0;
 		if (lastFocus == null) {
+			if (code == KeyEvent.VK_ESCAPE) {
+				Main.close(true);
+			}
 			if (code == KeyEvent.VK_O) {
 				if (ctrl) {
 					if (shift)

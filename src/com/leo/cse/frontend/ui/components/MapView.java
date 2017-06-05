@@ -41,7 +41,7 @@ public class MapView extends Component implements IDraggable {
 	public void render(Graphics g) {
 		if (SaveEditorPanel.panel.getLastFocus() == this) {
 			g.setColor(Main.lineColor);
-			g.drawRect(x - 1, y - 1, width + 2, height + 2);
+			g.drawRect(x - 1, y - 1, width + 1, height + 1);
 		}
 		if (!ExeData.isLoaded()) {
 			g.setColor(COLOR_NULL);
