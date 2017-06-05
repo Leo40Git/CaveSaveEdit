@@ -85,7 +85,9 @@ public class PositionPreview extends Component implements IDraggable {
 				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g, camCoords, x + width + 2, y);
+		FrontUtils.drawString(g, camCoords
+				+ "\n\nMove player by\nclicking/dragging\nOR\nwith WASD/arrow keys\nMod. key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel",
+				x + width + 2, y);
 		g.drawImage(surf, x, y, null);
 	}
 

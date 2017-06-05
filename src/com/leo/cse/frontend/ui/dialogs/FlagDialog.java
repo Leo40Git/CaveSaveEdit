@@ -59,8 +59,10 @@ public class FlagDialog extends BaseDialog {
 		if (FrontUtils.pointInRectangle(x, y, wx + box.getX(), wy + box.getY(), box.getWidth(), box.getHeight()))
 			box.onClick(x, y, false, false);
 		if (FrontUtils.pointInRectangle(x, y, wx + 106, wy + 4, 16, 16))
-			if (FlagsUI.flagIsValid(flag))
+			if (FlagsUI.flagIsValid(flag)) {
 				Profile.setFlag(flag, !Profile.getFlag(flag));
+				Main.setTitle(Main.window);
+			}
 		return false;
 	}
 
