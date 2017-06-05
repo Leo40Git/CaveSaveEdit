@@ -366,26 +366,8 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void load0(File base) throws IOException {
-		String encoding = Main.encoding;
 		ExeData.base = base;
-		// read exe strings
-		exeStrings = new String[STRING_POINTERS.length];
-		byte[] buffer = new byte[0x10];
-		FileChannel inChan;
-		FileInputStream inStream;
-		inStream = new FileInputStream(ExeData.base);
-		inChan = inStream.getChannel();
-		ByteBuffer uBuf = ByteBuffer.allocate(0x10);
-		uBuf.order(ByteOrder.LITTLE_ENDIAN);
-		for (int i = 0; i < STRING_POINTERS.length; i++) {
-			inChan.position(STRING_POINTERS[i]);
-			inChan.read(uBuf);
-			uBuf.flip();
-			uBuf.get(buffer);
-			exeStrings[i] = StrTools.CString(buffer, encoding);
-			uBuf.clear();
-		}
-		inStream.close();
+		loadExeStrings();
 		dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
 		entityList = new Vector<EntityData>();
 		mapdata = new Vector<Mapdata>();
@@ -419,6 +401,35 @@ public class ExeData {
 		npcRegu = null;
 		npcSym = null;
 		System.gc();
+	}
+
+	/**
+	 * Loads strings from the executable.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void loadExeStrings() throws IOException {
+		exeStrings = new String[STRING_POINTERS.length];
+		byte[] buffer = new byte[0x10];
+		FileChannel inChan;
+		FileInputStream inStream;
+		inStream = new FileInputStream(ExeData.base);
+		inChan = inStream.getChannel();
+		ByteBuffer uBuf = ByteBuffer.allocate(0x10);
+		uBuf.order(ByteOrder.LITTLE_ENDIAN);
+		for (int i = 0; i < STRING_POINTERS.length; i++) {
+			inChan.position(STRING_POINTERS[i]);
+			inChan.read(uBuf);
+			uBuf.flip();
+			uBuf.get(buffer);
+			String str = StrTools.CString(buffer, Main.encoding);
+			// Backslashes are Windows-only, so replace them with forward slashes
+			str = str.replaceAll("\\", "/");
+			exeStrings[i] = str;
+			uBuf.clear();
+		}
+		inStream.close();
 	}
 
 	/**
