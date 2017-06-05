@@ -23,8 +23,8 @@ import java.util.function.Supplier;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.ExeData;
@@ -77,34 +77,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	public static SaveEditorPanel panel;
-	private static JFileChooser fc;
-
-	public static int openFileChooser(String title, FileFilter filter, File dir, boolean openOrSave) {
-		fc = new JFileChooser();
-		fc.setMultiSelectionEnabled(false);
-		fc.setAcceptAllFileFilterUsed(false);
-		fc.setDialogTitle(title);
-		fc.setFileFilter(filter);
-		fc.setCurrentDirectory(dir);
-		int ret = 0;
-		if (openOrSave)
-			ret = fc.showSaveDialog(Main.window);
-		else
-			ret = fc.showOpenDialog(Main.window);
-		return ret;
-	}
-
-	public static File getSelectedFile() {
-		if (fc == null)
-			return null;
-		return fc.getSelectedFile();
-	}
 
 	private EditorTab currentTab;
 	private Map<EditorTab, List<Component>> compListMap;
 
 	private Component lastFocus;
 	private Dialog dBox;
+	private boolean loading;
 
 	private boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
 	private int flagScroll;
@@ -113,6 +92,14 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	public Component getLastFocus() {
 		return lastFocus;
+	}
+
+	public boolean isLoading() {
+		return loading;
+	}
+
+	public void setLoading(boolean loading) {
+		this.loading = loading;
 	}
 
 	public SaveEditorPanel() {
@@ -584,13 +571,24 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 		// components
 		g2d.translate(0, 17);
-		if (Profile.isLoaded()) {
-			for (Component comp : compListMap.get(currentTab))
-				comp.render(g2d);
-		} else {
-			g2d.setFont(Resources.fontL);
+		if (loading) {
+			g2d.setFont(Resources.font);
 			g2d.setColor(Main.lineColor);
-			FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true);
+			final String s = " Loading...";
+			final int sw = g2d.getFontMetrics().stringWidth(s);
+			final int sh = g2d.getFontMetrics().getHeight();
+			for (int yy = 0; yy < winSize.height; yy += sh)
+				for (int xx = 0; xx < winSize.width; xx += sw)
+					FrontUtils.drawString(g2d, s, xx, yy);
+		} else {
+			if (Profile.isLoaded()) {
+				for (Component comp : compListMap.get(currentTab))
+					comp.render(g2d);
+			} else {
+				g2d.setFont(Resources.fontL);
+				g2d.setColor(Main.lineColor);
+				FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true);
+			}
 		}
 		g2d.translate(0, -17);
 		// editor tabs
@@ -629,20 +627,34 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			if (sel == JOptionPane.CANCEL_OPTION)
 				return;
 		}
-		int returnVal = openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
+		int returnVal = FrontUtils.openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
 				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			Main.loadProfile(getSelectedFile());
+			Main.loadProfile(FrontUtils.getSelectedFile());
 			addComponents();
 		}
 	}
 
 	private void loadExe() {
-		int returnVal = openFileChooser("Open executable", new FileNameExtensionFilter("Applications", "exe"),
-				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		File base = null;
+		while (base == null || !base.exists()) {
+			int returnVal = FrontUtils.openFileChooser("Open executable",
+					new FileNameExtensionFilter("Applications", "exe"),
+					(base == null ? new File(System.getProperty("user.dir")) : base), false);
+			if (returnVal == JFileChooser.APPROVE_OPTION)
+				base = FrontUtils.getSelectedFile();
+			else
+				return;
+			if (!base.exists())
+				JOptionPane.showMessageDialog(Main.window, "Executable \"" + base.getName() + "\" does not exist!",
+						"Executable does not exist", JOptionPane.ERROR_MESSAGE);
+		}
+		loading = true;
+		Main.window.repaint();
+		final File base2 = base;
+		SwingUtilities.invokeLater(() -> {
 			try {
-				ExeData.load(getSelectedFile());
+				ExeData.load(base2);
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(Main.window,
 						"An error occured while loading the executable:\n" + e.getMessage(),
@@ -650,8 +662,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				return;
 			} finally {
 				addComponents();
+				SwingUtilities.invokeLater(() -> {
+					loading = false;
+					Main.window.repaint();
+				});
 			}
-		}
+		});
+
 	}
 
 	private boolean canSave() {
@@ -678,10 +695,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private void saveProfileAs() {
 		if (!canSave())
 			return;
-		int returnVal = openFileChooser("Save profile", new FileNameExtensionFilter("Profile Files", "dat"),
+		int returnVal = FrontUtils.openFileChooser("Save profile", new FileNameExtensionFilter("Profile Files", "dat"),
 				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), true);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = getSelectedFile();
+			File file = FrontUtils.getSelectedFile();
 			if (file.exists()) {
 				int confirmVal = JOptionPane.showConfirmDialog(Main.window,
 						"Are you sure you want to overwrite this file?", "Overwrite confirmation",

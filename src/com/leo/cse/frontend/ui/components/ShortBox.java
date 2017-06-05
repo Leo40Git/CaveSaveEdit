@@ -8,8 +8,9 @@ import javax.swing.JOptionPane;
 
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.Resources;
 
-public class ShortBox extends Component {
+public class ShortBox extends InputBox {
 
 	private Supplier<Short> vSup;
 	private Function<Short, Short> update;
@@ -32,13 +33,11 @@ public class ShortBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, width, height - 1);
-		g.setColor(Main.lineColor);
-		g.drawRect(x, y, width, height - 1);
+		super.render(g);
 		String str = Short.toString(vSup.get());
 		if (padLength > 0)
 			str = FrontUtils.padLeft(str, "0", padLength);
+		g.setFont(Resources.font);
 		FrontUtils.drawString(g, str, x + 3, y - 1);
 	}
 

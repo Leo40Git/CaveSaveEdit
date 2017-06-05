@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.ExeData;
@@ -61,29 +62,42 @@ public class MCIDialog extends BaseDialog {
 		return false;
 	}
 
+	private boolean ret;
+
 	private boolean loadMCI() {
-		int returnVal = SaveEditorPanel.openFileChooser("Open MCI file",
-				new FileNameExtensionFilter("MCI Files", "mci"),
+		int returnVal = FrontUtils.openFileChooser("Open MCI file", new FileNameExtensionFilter("MCI Files", "mci"),
 				new File(Config.get(Config.KEY_LAST_MCI_FILE, System.getProperty("user.dir"))), false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = SaveEditorPanel.getSelectedFile();
-			try {
-				MCI.read(file);
-			} catch (IOException | MCIException e) {
-				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the MCI file:\n" + e.getMessage(), "Could not load MCI file!",
-						JOptionPane.ERROR_MESSAGE);
+			final File file = FrontUtils.getSelectedFile();
+			if (!file.exists())
 				return false;
-			} finally {
+			SaveEditorPanel.panel.setLoading(true);
+			Main.window.repaint();
+			ret = true;
+			SwingUtilities.invokeLater(() -> {
 				try {
-					ExeData.reload();
-				} catch (IOException ignore) {
+					MCI.read(file);
+				} catch (IOException | MCIException e) {
+					JOptionPane.showMessageDialog(Main.window,
+							"An error occured while loading the MCI file:\n" + e.getMessage(),
+							"Could not load MCI file!", JOptionPane.ERROR_MESSAGE);
+					ret = false;
+					return;
+				} finally {
+					try {
+						ExeData.reload();
+					} catch (IOException ignore) {
+					}
+					Config.set(Config.KEY_LAST_MCI_FILE, file.getAbsolutePath());
+					SwingUtilities.invokeLater(() -> {
+						SaveEditorPanel.panel.setLoading(false);
+						Main.window.repaint();
+					});
 				}
-				Config.set(Config.KEY_LAST_MCI_FILE, file.getAbsolutePath());
-			}
+			});
+			return ret;
 		} else
 			return false;
-		return true;
 	}
 
 }

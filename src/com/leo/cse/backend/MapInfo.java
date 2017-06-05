@@ -499,4 +499,39 @@ public class MapInfo {
 		return pxeList.iterator();
 	}
 
+	/**
+	 * Checks if there are missing assets.
+	 * 
+	 * @return <code>true</code> if there are missing assets, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean hasMissingAssets() {
+		return ExeData.getImage(tileset) == null || ExeData.getImage(bgImage) == null
+				|| ExeData.getImage(npcSheet1) == null || ExeData.getImage(npcSheet2) == null;
+	}
+
+	/**
+	 * Returns a readable list of missing assets. Useful for reporting errors.
+	 * 
+	 * @return list of missing assets, or an empty string if there are no missing
+	 *         assets
+	 */
+	public String getMissingAssets() {
+		if (!hasMissingAssets())
+			return "";
+		final String[] assetName = new String[] { "tileset", "background image", "NPC sheet 1", "NPC sheet 2" };
+		final boolean[] assetStat = new boolean[] { ExeData.getImage(tileset) == null,
+				ExeData.getImage(bgImage) == null, ExeData.getImage(npcSheet1) == null,
+				ExeData.getImage(npcSheet2) == null };
+		assert (assetName.length == assetStat.length);
+		String ret = "";
+		for (int i = 0; i < assetStat.length; i++)
+			if (assetStat[i])
+				ret += assetName[i] + ", ";
+		if ("".equals(ret))
+			return ret;
+		ret = ret.substring(0, 1).toUpperCase() + ret.substring(1, ret.length());
+		return ret.substring(0, ret.length() - 2);
+	}
+
 }

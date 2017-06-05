@@ -8,8 +8,9 @@ import javax.swing.JOptionPane;
 
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.Resources;
 
-public class IntegerBox extends Component {
+public class IntegerBox extends InputBox {
 
 	protected Supplier<Integer> vSup;
 	protected Function<Integer, Integer> update;
@@ -25,10 +26,8 @@ public class IntegerBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, width, height - 1);
-		g.setColor(Main.lineColor);
-		g.drawRect(x, y, width, height - 1);
+		super.render(g);
+		g.setFont(Resources.font);
 		FrontUtils.drawString(g, Integer.toUnsignedString(vSup.get()), x + 3, y - 1);
 	}
 

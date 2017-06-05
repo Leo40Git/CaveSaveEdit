@@ -17,15 +17,11 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.carrotlord.string.StrTools;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code from it
 /**
@@ -91,6 +87,14 @@ public class ExeData {
 	 */
 	private static final int PXM_TAG_PTR = 0x8C67C;
 	/**
+	 * Pointer to the profile header.
+	 */
+	private static final int PROFILE_HEADER_PTR = 0x8C70C;
+	/**
+	 * Pointer to the profile flag section header.
+	 */
+	private static final int PROFILE_FLAGH_PTR = 0x8C720;
+	/**
 	 * Pointer to name for the "StageSelect.tsc" file.
 	 */
 	private static final int STAGESELECT_PTR = 0x8C770;
@@ -132,8 +136,8 @@ public class ExeData {
 	 */
 	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, NPC_TBL_PTR, MYCHAR_PTR,
 			ARMSIMAGE_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR, NPCREGU_PTR, PXM_TAG_PTR,
-			STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR, PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR,
-			NPC_FOLDER_PTR, NPC_PREFIX_PTR };
+			PROFILE_HEADER_PTR, PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR,
+			PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR };
 
 	/**
 	 * Name for "ArmsItem.tsc".
@@ -179,6 +183,14 @@ public class ExeData {
 	 * The PXM file tag.
 	 */
 	public static final int STRING_PXM_TAG;
+	/**
+	 * The profile header.
+	 */
+	public static final int STRING_PROFILE_HEADER;
+	/**
+	 * The profile flag section header.
+	 */
+	public static final int STRING_PROFILE_FLAGH;
 	/**
 	 * Name for the "StageSelect.tsc" file.
 	 */
@@ -230,6 +242,8 @@ public class ExeData {
 		STRING_NPCSYM = Arrays.binarySearch(STRING_POINTERS, NPCSYM_PTR);
 		STRING_NPCREGU = Arrays.binarySearch(STRING_POINTERS, NPCREGU_PTR);
 		STRING_PXM_TAG = Arrays.binarySearch(STRING_POINTERS, PXM_TAG_PTR);
+		STRING_PROFILE_HEADER = Arrays.binarySearch(STRING_POINTERS, PROFILE_HEADER_PTR);
+		STRING_PROFILE_FLAGH = Arrays.binarySearch(STRING_POINTERS, PROFILE_FLAGH_PTR);
 		STRING_STAGESELECT = Arrays.binarySearch(STRING_POINTERS, STAGESELECT_PTR);
 		STRING_STAGE_FOLDER = Arrays.binarySearch(STRING_POINTERS, STAGE_FOLDER_PTR);
 		STRING_PRT_PREFIX = Arrays.binarySearch(STRING_POINTERS, PRT_PREFIX_PTR);
@@ -324,18 +338,11 @@ public class ExeData {
 		File base = file;
 		if (base == null)
 			base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
-		while (!base.exists()) {
-			int returnVal = SaveEditorPanel.openFileChooser("Open mod executable",
-					new FileNameExtensionFilter("Applications", "exe"), base, false);
-			if (returnVal == JFileChooser.APPROVE_OPTION)
-				base = SaveEditorPanel.getSelectedFile();
-			else
-				return;
-			if (!base.exists())
-				JOptionPane.showMessageDialog(Main.window, "Mod executable \"" + base.getName() + "\" does not exist!",
-						"EXE does not exist", JOptionPane.ERROR_MESSAGE);
-		}
+		if (!base.exists())
+			return;
 		load0(base);
+		Profile.header = getExeString(STRING_PROFILE_HEADER);
+		Profile.flagH = getExeString(STRING_PROFILE_FLAGH);
 	}
 
 	/**
@@ -362,7 +369,7 @@ public class ExeData {
 		String encoding = Main.encoding;
 		ExeData.base = base;
 		// read exe strings
-		exeStrings = new String[20];
+		exeStrings = new String[STRING_POINTERS.length];
 		byte[] buffer = new byte[0x10];
 		FileChannel inChan;
 		FileInputStream inStream;
@@ -379,7 +386,7 @@ public class ExeData {
 			uBuf.clear();
 		}
 		inStream.close();
-		dataDir = new File(base.getParent() + exeStrings[STRING_DATA_FOLDER]);
+		dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
 		entityList = new Vector<EntityData>();
 		mapdata = new Vector<Mapdata>();
 		mapInfo = new Vector<MapInfo>();
@@ -421,7 +428,7 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadNpcTbl() throws IOException {
-		File tblFile = new File(base.getParent() + exeStrings[STRING_DATA_FOLDER] + "/" + exeStrings[STRING_NPC_TBL]);
+		File tblFile = new File(dataDir + "/" + getExeString(STRING_NPC_TBL));
 		FileChannel inChan;
 		ByteBuffer dBuf;
 		FileInputStream inStream;
@@ -524,7 +531,7 @@ public class ExeData {
 		dBuf.flip();
 		hitboxDat = dBuf.array();
 
-		// read hitbox section
+		// read display box section
 		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
@@ -604,7 +611,18 @@ public class ExeData {
 				uBuf.get(buffer, 0, 0x20);
 				newMap.setTileset(StrTools.CString(buffer, encoding));
 				uBuf.get(buffer, 0, 0x20);
-				newMap.setFileName(StrTools.CString(buffer, encoding));
+				String fileName = StrTools.CString(buffer, encoding);
+				// The original Cave Story has a mistake in the mapdata section:
+				// The "Lounge" map (Rest Area) has it's file name stored as "lounge".
+				// Normally, this isn't a big deal since the original Cave Story can only run on
+				// case-insensitive systems (Windows), but this will cause a map load failure if
+				// the editor is run on a case-sensitive system (Mac/Linux).
+				// Getting to this code is only possible if the EXE itself hasn't been modified,
+				// so it's a good guess that the EXE is vanilla. Therefore, the fix for this
+				// mistake is here.
+				if ("lounge".equals(fileName))
+					fileName = "Lounge";
+				newMap.setFileName(fileName);
 				newMap.setScrollType(uBuf.getInt() & 0xFF);
 				uBuf.get(buffer, 0, 0x20);
 				newMap.setBgName(StrTools.CString(buffer, encoding));

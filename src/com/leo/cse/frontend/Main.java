@@ -89,28 +89,38 @@ public class Main extends JFrame implements MouseListener {
 	}
 
 	public static void loadProfile(File file) {
-		try {
-			Profile.read(file);
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(Main.window,
-					"An error occured while loading the profile file:\n" + e.getMessage(),
-					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
-			return;
-		} finally {
-			// unload existing exe
-			ExeData.unload();
-			// try to load exe
+		if (SaveEditorPanel.panel != null)
+			SaveEditorPanel.panel.setLoading(true);
+		window.repaint();
+		SwingUtilities.invokeLater(() -> {
 			try {
-				ExeData.reload();
+				Profile.read(file);
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.err.println("EXE loading failed.");
+				JOptionPane.showMessageDialog(Main.window,
+						"An error occured while loading the profile file:\n" + e.getMessage(),
+						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
+				return;
+			} finally {
+				// unload existing exe
+				ExeData.unload();
+				// try to load exe
+				try {
+					ExeData.load(new File(
+							Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe"));
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.err.println("EXE loading failed.");
+				}
+				Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
+				setTitle(window);
+				SwingUtilities.invokeLater(() -> {
+					if (SaveEditorPanel.panel != null)
+						SaveEditorPanel.panel.setLoading(false);
+					window.repaint();
+				});
 			}
-			Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
-			setTitle(window);
-			window.repaint();
-		}
+		});
 	}
 
 	public static void setTitle(Main window) {
@@ -135,8 +145,8 @@ public class Main extends JFrame implements MouseListener {
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 					| UnsupportedLookAndFeelException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null,
-						"Could not set Look & Feel!\nPlease add a file named \"" + nolaf + "\" (all lowercase, no extension) to the application folder, and then restart the application.",
+				JOptionPane.showMessageDialog(null, "Could not set Look & Feel!\nPlease add a file named \"" + nolaf
+						+ "\" (all lowercase, no extension) to the application folder, and then restart the application.",
 						"Could not set Look & Feel", JOptionPane.ERROR_MESSAGE);
 				System.exit(1);
 			}
@@ -157,9 +167,11 @@ public class Main extends JFrame implements MouseListener {
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();
 			window.setVisible(true);
-			File p = new File(System.getProperty("user.dir") + "/Profile.dat");
-			if (p.exists())
-				loadProfile(p);
+			SwingUtilities.invokeLater(() -> {
+				File p = new File(System.getProperty("user.dir") + "/Profile.dat");
+				if (p.exists())
+					loadProfile(p);
+			});
 		});
 	}
 

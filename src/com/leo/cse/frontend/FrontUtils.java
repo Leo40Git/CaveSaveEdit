@@ -13,6 +13,7 @@ import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -26,7 +27,9 @@ import java.util.function.Function;
 
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.filechooser.FileFilter;
 
 public class FrontUtils {
 
@@ -41,7 +44,11 @@ public class FrontUtils {
 	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean vert) {
 		if (vert)
 			y -= (g.getFontMetrics().getStringBounds(str, g).getHeight() / 4) * 3;
-		drawString(g, str, (int) (x - g.getFontMetrics().getStringBounds(str, g).getWidth() / 2), y);
+		final int lineSpace = g.getFontMetrics().getHeight();
+		for (String line : str.split("\n")) {
+			y += lineSpace;
+			g.drawString(line, x - g.getFontMetrics().stringWidth(line) / 2, y - 1);
+		}
 	}
 
 	public static void drawStringCentered(Graphics g, String str, int x, int y) {
@@ -208,6 +215,8 @@ public class FrontUtils {
 		return colorImage(loadImg, color.getRed(), color.getGreen(), color.getBlue());
 	}
 
+	private static JColorChooser cc;
+
 	/**
 	 * Hides controls for configuring color transparency on the specified color
 	 * chooser.
@@ -248,20 +257,65 @@ public class FrontUtils {
 	 *            the initial color set when the dialog is shown
 	 * @param showTransparencyControls
 	 *            whether to show controls for configuring the color's transparency
+	 * @param forceNew
+	 *            whether to force a new ColorChooser to be created
+	 * @return the chosen color or null if the user canceled the dialog
+	 */
+	public static Color showColorChooserDialog(Component component, String title, Color initialColor,
+			boolean showTransparencyControls, boolean forceNew) {
+		if (cc == null || forceNew) {
+			cc = new JColorChooser(initialColor != null ? initialColor : Color.white);
+			if (!showTransparencyControls)
+				hideTransparencyControls(cc);
+		}
+		Color[] result = new Color[1];
+		ActionListener okListener = e -> result[0] = cc.getColor();
+		JDialog dialog = JColorChooser.createDialog(component, title, true, cc, okListener, null);
+		dialog.setVisible(true);
+		dialog.dispose();
+		return result[0];
+	}
+
+	/**
+	 * Shows a modal color chooser dialog and blocks until the dialog is closed.
+	 * 
+	 * @param component
+	 *            the parent component for the dialog; may be null
+	 * @param title
+	 *            the dialog's title
+	 * @param initialColor
+	 *            the initial color set when the dialog is shown
+	 * @param showTransparencyControls
+	 *            whether to show controls for configuring the color's transparency
 	 * @return the chosen color or null if the user canceled the dialog
 	 */
 	public static Color showColorChooserDialog(Component component, String title, Color initialColor,
 			boolean showTransparencyControls) {
-		JColorChooser pane = new JColorChooser(initialColor != null ? initialColor : Color.white);
-		if (!showTransparencyControls)
-			hideTransparencyControls(pane);
-		Color[] result = new Color[1];
-		ActionListener okListener = e -> result[0] = pane.getColor();
-		@SuppressWarnings("static-access")
-		JDialog dialog = pane.createDialog(component, title, true, pane, okListener, null);
-		dialog.setVisible(true);
-		dialog.dispose();
-		return result[0];
+		return showColorChooserDialog(component, title, initialColor, showTransparencyControls, false);
+	}
+
+	private static JFileChooser fc;
+
+	public static int openFileChooser(String title, FileFilter filter, File currentDirectory, boolean openOrSave) {
+		if (fc == null)
+			fc = new JFileChooser();
+		fc.setMultiSelectionEnabled(false);
+		fc.setAcceptAllFileFilterUsed(false);
+		fc.setDialogTitle(title);
+		fc.setFileFilter(filter);
+		fc.setCurrentDirectory(currentDirectory);
+		int ret = 0;
+		if (openOrSave)
+			ret = fc.showSaveDialog(Main.window);
+		else
+			ret = fc.showOpenDialog(Main.window);
+		return ret;
+	}
+
+	public static File getSelectedFile() {
+		if (fc == null)
+			return null;
+		return fc.getSelectedFile();
 	}
 
 	public static Rectangle str2Rect(String s) {

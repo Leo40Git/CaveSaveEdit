@@ -8,8 +8,9 @@ import javax.swing.JOptionPane;
 
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.Resources;
 
-public class LongBox extends Component {
+public class LongBox extends InputBox {
 
 	private Supplier<Long> vSup;
 	private Function<Long, Long> update;
@@ -25,10 +26,8 @@ public class LongBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, width, height - 1);
-		g.setColor(Main.lineColor);
-		g.drawRect(x, y, width, height - 1);
+		super.render(g);
+		g.setFont(Resources.font);
 		FrontUtils.drawString(g, Long.toString(vSup.get()), x + 3, y - 1);
 	}
 

@@ -24,13 +24,21 @@ public class Profile {
 	 */
 	public static final int FILE_LENGTH = 0x604;
 	/**
-	 * The header string.
+	 * The default profile header string.
 	 */
-	public static final String HEADER = "Do041220";
+	public static final String DEFAULT_HEADER = "Do041220";
+	/**
+	 * The default flag section header string.
+	 */
+	public static final String DEFAULT_FLAGH = "FLAG";
+	/**
+	 * The profile header string.
+	 */
+	public static String header = DEFAULT_HEADER;
 	/**
 	 * The flag section header string.
 	 */
-	public static final String FLAG = "FLAG";
+	public static String flagH = DEFAULT_FLAGH;
 
 	/**
 	 * Structural class for weapons.
@@ -335,6 +343,11 @@ public class Profile {
 	private static short maxHealth = 0;
 	/**
 	 * Number of Whimsical Stars.
+	 * <p>
+	 * The maximum number of Stars that can be displayed in-game is 3, but values
+	 * above 3 will still work: Only 3 Stars are displayed, but the real value gets
+	 * reduced, so getting hit with "4" Stars, for example, will cause the player to
+	 * remain with 3 Stars.
 	 */
 	private static short starCount = 0;
 	/**
@@ -346,7 +359,7 @@ public class Profile {
 	 */
 	private static int curWeapon = 0;
 	/**
-	 * Equipment (<code>&lt;EQ+</code>/<code>&lt;EQ-</code>).
+	 * Equipment flags (<code>&lt;EQ+</code>/<code>&lt;EQ-</code>).
 	 */
 	private static boolean[] equips = null;
 	/**
@@ -368,7 +381,7 @@ public class Profile {
 	 * 
 	 * @see Warp
 	 */
-	private static Warp[] tele = null;
+	private static Warp[] warps = null;
 	/**
 	 * Flags.
 	 */
@@ -399,9 +412,9 @@ public class Profile {
 		}
 		items = new int[30];
 		ByteUtils.readInts(data, 0x0D8, items);
-		tele = new Warp[7];
-		for (int i = 0; i < tele.length; i++) {
-			tele[i] = new Warp(data, i);
+		warps = new Warp[7];
+		for (int i = 0; i < warps.length; i++) {
+			warps[i] = new Warp(data, i);
 		}
 		flags = new boolean[8000];
 		ByteUtils.readFlags(data, 0x21C, flags);
@@ -414,7 +427,7 @@ public class Profile {
 	public static void pushToData() {
 		if (data == null)
 			data = new byte[FILE_LENGTH];
-		ByteUtils.writeString(data, 0, HEADER);
+		ByteUtils.writeString(data, 0, header);
 		ByteUtils.writeInt(data, 0x008, map);
 		ByteUtils.writeInt(data, 0x00C, song);
 		ByteUtils.writeInt(data, 0x011, x);
@@ -430,10 +443,10 @@ public class Profile {
 			weapons[i].save(data, i);
 		}
 		ByteUtils.writeInts(data, 0x0D8, items);
-		for (int i = 0; i < tele.length; i++) {
-			tele[i].save(data, i);
+		for (int i = 0; i < warps.length; i++) {
+			warps[i].save(data, i);
 		}
-		ByteUtils.writeString(data, 0x218, FLAG);
+		ByteUtils.writeString(data, 0x218, flagH);
 		ByteUtils.writeFlags(data, 0x21C, flags);
 	}
 
@@ -454,12 +467,12 @@ public class Profile {
 				throw new IOException("file is too small");
 		}
 		// check header
-		String header = ByteUtils.readString(data, 0, HEADER.length());
-		if (!HEADER.equals(header))
+		String profHeader = ByteUtils.readString(data, 0, header.length());
+		if (!header.equals(profHeader))
 			throw new IOException("invalid file header");
 		// check flag header
-		String flag = ByteUtils.readString(data, 0x218, FLAG.length());
-		if (!FLAG.equals(flag))
+		String profFlagH = ByteUtils.readString(data, 0x218, flagH.length());
+		if (!flagH.equals(profFlagH))
 			throw new IOException("Flag header is missing!");
 		// pull values from data
 		pullFromData();
@@ -638,7 +651,7 @@ public class Profile {
 	}
 
 	public static boolean[] getEquips() {
-		return equips;
+		return equips.clone();
 	}
 
 	/**
@@ -654,7 +667,29 @@ public class Profile {
 	}
 
 	/**
-	 * Sets the state of a specific equipment.
+	 * Sets the state of multiple equipment flags.
+	 * 
+	 * @param startId
+	 *            starting flag ID
+	 * @param values
+	 *            flag states
+	 */
+	public static void setEquips(int startId, boolean[] values) {
+		int aid = startId;
+		for (int i = 0; i < values.length; i++) {
+			if (aid >= equips.length)
+				return;
+			setEquip(aid, values[i]);
+			aid++;
+		}
+	}
+
+	public static void setEquips(boolean[] values) {
+		setEquips(0, values);
+	}
+
+	/**
+	 * Sets the state of a specific equipment flag.
 	 * 
 	 * @param id
 	 *            equipment id
@@ -676,6 +711,10 @@ public class Profile {
 		Profile.time = time;
 	}
 
+	public static Weapon[] getWeapons() {
+		return weapons.clone();
+	}
+
 	/**
 	 * Gets weapon data from a specific slot.
 	 * 
@@ -688,7 +727,7 @@ public class Profile {
 	}
 
 	public static int[] getItems() {
-		return items;
+		return items.clone();
 	}
 
 	/**
@@ -703,6 +742,28 @@ public class Profile {
 	}
 
 	/**
+	 * Sets the items of multiple slots.
+	 * 
+	 * @param startId
+	 *            starting item slot
+	 * @param values
+	 *            item IDs
+	 */
+	public static void setItems(int startId, int[] values) {
+		int as = startId;
+		for (int i = 0; i < values.length; i++) {
+			if (as >= items.length)
+				return;
+			setItem(as, values[i]);
+			as++;
+		}
+	}
+
+	public static void setItems(int[] values) {
+		setItems(0, values);
+	}
+
+	/**
 	 * Sets the item in a specific slot.
 	 * 
 	 * @param id
@@ -711,6 +772,8 @@ public class Profile {
 	 *            new item ID
 	 */
 	public static void setItem(int id, int value) {
+		if (id >= items.length)
+			return;
 		modified = true;
 		items[id] = value;
 	}
@@ -723,7 +786,9 @@ public class Profile {
 	 * @return warp data in slot
 	 */
 	public static Warp getWarp(int id) {
-		return tele[id];
+		if (id >= warps.length)
+			return null;
+		return warps[id];
 	}
 
 	public static boolean[] getFlags() {
@@ -741,6 +806,28 @@ public class Profile {
 		if (flags == null)
 			return false;
 		return flags[id];
+	}
+
+	/**
+	 * Sets the states of multiple flags.
+	 * 
+	 * @param startId
+	 *            starting flag ID
+	 * @param values
+	 *            flag states
+	 */
+	public static void setFlags(int startId, boolean[] values) {
+		int aid = startId;
+		for (int i = 0; i < values.length; i++) {
+			if (aid >= flags.length)
+				return;
+			setFlag(aid, values[i]);
+			aid++;
+		}
+	}
+
+	public static void setFlags(boolean[] values) {
+		setFlags(0, values);
 	}
 
 	/**
@@ -888,9 +975,9 @@ public class Profile {
 		}
 		ret += "\n]";
 		ret += "\nTeleporter Slots: [";
-		for (int i = 0; i < tele.length; i++) {
-			ret += "\n  " + i + ": {\n" + tele[i].toString(4) + "\n  }";
-			if (i != tele.length - 1) {
+		for (int i = 0; i < warps.length; i++) {
+			ret += "\n  " + i + ": {\n" + warps[i].toString(4) + "\n  }";
+			if (i != warps.length - 1) {
 				ret += ",";
 			}
 		}

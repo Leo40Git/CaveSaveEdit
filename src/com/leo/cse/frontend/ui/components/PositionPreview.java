@@ -52,12 +52,15 @@ public class PositionPreview extends Component implements IDraggable {
 			return;
 		}
 		mapInfo = ExeData.getMapInfo(mSup.get());
-		if (mapInfo.getTileset() == null) {
+		if (mapInfo.hasMissingAssets()) {
 			g.setColor(COLOR_NULL);
 			g.fillRect(x, y, width, height);
 			g.setColor(Color.white);
 			g.setFont(Resources.fontL);
-			FrontUtils.drawStringCentered(g, "NO TILESET!", x + width / 2, y + height / 2, true);
+			FrontUtils.drawStringCentered(g, "MISSING ASSETS!", x + width / 2, y + height / 2, true);
+			g.setFont(Resources.font);
+			FrontUtils.drawStringCentered(g, "The following assets failed to load:\n" + mapInfo.getMissingAssets(),
+					x + width / 2, y + height / 2 + 30, true);
 			return;
 		}
 		map = mapInfo.getMap();
@@ -109,8 +112,8 @@ public class PositionPreview extends Component implements IDraggable {
 				int tile = map[l][i][j];
 				if (mapInfo.calcPxa(tile) == 0x43) {
 					// draw breakable tile
-					g.drawImage(ExeData.getImage(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512, 96,
-							544, 128, null);
+					g.drawImage(ExeData.getImage(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512,
+							96, 544, 128, null);
 				} else {
 					// draw normal tile
 					int sourceX = (tile % setWidth) * 32;
@@ -158,7 +161,7 @@ public class PositionPreview extends Component implements IDraggable {
 			return false;
 		if (mapInfo == null)
 			return false;
-		if (mapInfo.getTileset() == null)
+		if (mapInfo.hasMissingAssets())
 			return false;
 		getCamCoords();
 		if (ignoreClick > 0)
@@ -172,6 +175,12 @@ public class PositionPreview extends Component implements IDraggable {
 
 	@Override
 	public void onKey(int code, boolean shiftDown, boolean ctrlDown) {
+		if (!ExeData.isLoaded())
+			return;
+		if (mapInfo == null)
+			return;
+		if (mapInfo.hasMissingAssets())
+			return;
 		int px = Profile.getX(), py = Profile.getY();
 		int amount = 32;
 		if (shiftDown) {
@@ -200,6 +209,12 @@ public class PositionPreview extends Component implements IDraggable {
 
 	@Override
 	public void onDrag(int x, int y) {
+		if (!ExeData.isLoaded())
+			return;
+		if (mapInfo == null)
+			return;
+		if (mapInfo.hasMissingAssets())
+			return;
 		Profile.setX((short) (x - this.x + camX));
 		Profile.setY((short) (y - this.y + camY));
 		ignoreClick = 2;
@@ -207,6 +222,12 @@ public class PositionPreview extends Component implements IDraggable {
 
 	@Override
 	public void onDragEnd(int px, int py) {
+		if (!ExeData.isLoaded())
+			return;
+		if (mapInfo == null)
+			return;
+		if (mapInfo.hasMissingAssets())
+			return;
 		getCamCoords();
 		ignoreClick = 1;
 	}
