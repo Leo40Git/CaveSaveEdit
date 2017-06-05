@@ -348,6 +348,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 17, winSize2.width / tn + 1, 16)) {
 					currentTab = tv[ti];
+					lastFocus = null;
 					repaint();
 					break;
 				}
@@ -382,8 +383,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
 		final int mod = e.getModifiersEx();
-		final boolean shift = (mod & MouseWheelEvent.SHIFT_DOWN_MASK) == MouseWheelEvent.SHIFT_DOWN_MASK,
-				ctrl = (mod & MouseWheelEvent.CTRL_DOWN_MASK) == MouseWheelEvent.CTRL_DOWN_MASK;
+		final boolean shift = (mod & MouseWheelEvent.SHIFT_DOWN_MASK) != 0,
+				ctrl = (mod & MouseWheelEvent.CTRL_DOWN_MASK) != 0;
 		for (Component comp : tabMap.get(currentTab).getComponents()) {
 			if (!(comp instanceof IScrollable))
 				continue;
@@ -433,8 +434,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
 		int mods = e.getModifiersEx();
-		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK;
-		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK;
+		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) != 0;
+		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) != 0;
 		if (lastFocus == null) {
 			if (code == KeyEvent.VK_O) {
 				if (ctrl) {
