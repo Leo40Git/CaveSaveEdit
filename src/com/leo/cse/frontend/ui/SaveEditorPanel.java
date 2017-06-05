@@ -432,6 +432,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (dBox != null)
+			return;
 		int code = e.getKeyCode();
 		int mods = e.getModifiersEx();
 		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) != 0;
