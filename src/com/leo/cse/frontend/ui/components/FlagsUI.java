@@ -16,7 +16,7 @@ import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.ui.dialogs.FlagDialog;
 
-public class FlagsUI extends Component implements IScrollable {
+public class FlagsUI extends Component implements IScrollable, IDraggable {
 
 	private static final int FLAGS_PER_SCROLL = 35;
 
@@ -141,7 +141,8 @@ public class FlagsUI extends Component implements IScrollable {
 			if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, 0, 20, 18))
 				sUpdate.accept(Math.max(sSup.get() - amount, 0));
 			else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 42, 20, 18))
-				sUpdate.accept(Math.max(0, Math.min(sSup.get() + amount, shownFlags.size() - FLAGS_PER_SCROLL)));
+				sUpdate.accept(Math.max(0,
+						Math.min(sSup.get() + amount, shownFlags.size() - (shownFlags.size() - FLAGS_PER_SCROLL))));
 		} else {
 			final int xx = 4;
 			int yy = 14;
@@ -175,6 +176,16 @@ public class FlagsUI extends Component implements IScrollable {
 	public void onScroll(int rotations, boolean shiftDown, boolean ctrlDown) {
 		sUpdate.accept(Math.max(0, Math.min(sSup.get() + (rotations * (shiftDown ? 10 : 1)) * (ctrlDown ? 100 : 1),
 				shownFlags.size() - FLAGS_PER_SCROLL)));
+	}
+
+	@Override
+	public void onDrag(int x, int y) {
+		// TODO Scrollbar functionality
+	}
+
+	@Override
+	public void onDragEnd(int px, int py) {
+		// TODO Scrollbar functionality
 	}
 
 }

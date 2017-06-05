@@ -3,6 +3,8 @@ package com.leo.cse.backend;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
 /**
@@ -68,6 +70,64 @@ public class ResUtils {
 	 */
 	public static File getGraphicsFile(String name) {
 		return getGraphicsFile("", name);
+	}
+
+	// code from https://stackoverflow.com/a/35325946
+	/**
+	 * Maps lower case strings to their case insensitive File
+	 */
+	private static final Map<String, File> insensitiveFileHandlerCache = new HashMap<String, File>();
+
+	/**
+	 * Case insensitive file handler. Cannot return <code>null</code>
+	 */
+	public static File newFile(String path) {
+		if (path == null)
+			return new File(path);
+		path = path.toLowerCase();
+		// First see if it is cached
+		if (insensitiveFileHandlerCache.containsKey(path)) {
+			return insensitiveFileHandlerCache.get(path);
+		} else {
+			// If it is not cached, cache it (the path is lower case)
+			File file = new File(path);
+			insensitiveFileHandlerCache.put(path, file);
+
+			// If the file does not exist, look for the real path
+			if (!file.exists()) {
+
+				// get the directory
+				String parentPath = file.getParent();
+				if (parentPath == null) {
+					// No parent directory? -> Just return the file since we can't find the real
+					// path
+					return file;
+				}
+
+				// Find the real path of the parent directory recursively
+				File dir = newFile(parentPath);
+
+				File[] files = dir.listFiles();
+				if (files == null) {
+					// If it is not a directory
+					insensitiveFileHandlerCache.put(path, file);
+					return file;
+				}
+
+				// Loop through the directory and put everything you find into the cache
+				for (File otherFile : files) {
+					// the path of our file will be updated at this point
+					insensitiveFileHandlerCache.put(otherFile.getPath().toLowerCase(), otherFile);
+				}
+
+				// if you found what was needed, return it
+				if (insensitiveFileHandlerCache.containsKey(path)) {
+					return insensitiveFileHandlerCache.get(path);
+				}
+			}
+			// Did not find it? Return the file with the original path
+			return file;
+		}
 	}
 
 }

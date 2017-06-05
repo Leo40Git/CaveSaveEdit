@@ -145,7 +145,7 @@ public class MapInfo {
 		String currentFileName = String.format(ExeData.getExeString(ExeData.STRING_PXM_EXT),
 				directory + "/" + ExeData.getExeString(ExeData.STRING_STAGE_FOLDER), d.getFileName());
 		try {
-			File currentFile = new File(currentFileName);
+			File currentFile = ResUtils.newFile(currentFileName);
 
 			if (!currentFile.exists())
 				throw new IOException("File \"" + currentFile + "\" does not exist!");
@@ -223,7 +223,10 @@ public class MapInfo {
 		String currentFileName = String.format(ExeData.getExeString(ExeData.STRING_PXE_EXT),
 				directory + "/" + ExeData.getExeString(ExeData.STRING_STAGE_FOLDER), d.getFileName());
 		try {
-			File currentFile = new File(currentFileName);
+			File currentFile = ResUtils.newFile(currentFileName);
+			if (!currentFile.exists())
+				throw new IOException("File \"" + currentFile + "\" does not exist!");
+			
 			FileInputStream inStream = new FileInputStream(currentFile);
 			FileChannel inChan = inStream.getChannel();
 			ByteBuffer hBuf = ByteBuffer.allocate(6);
@@ -254,6 +257,7 @@ public class MapInfo {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Failed to load PXE:\n" + currentFileName);
+			pxeList = null;
 		}
 	}
 
@@ -507,7 +511,7 @@ public class MapInfo {
 	 */
 	public boolean hasMissingAssets() {
 		return ExeData.getImage(tileset) == null || ExeData.getImage(bgImage) == null
-				|| ExeData.getImage(npcSheet1) == null || ExeData.getImage(npcSheet2) == null;
+				|| ExeData.getImage(npcSheet1) == null || ExeData.getImage(npcSheet2) == null || pxeList == null;
 	}
 
 	/**
@@ -519,10 +523,10 @@ public class MapInfo {
 	public String getMissingAssets() {
 		if (!hasMissingAssets())
 			return "";
-		final String[] assetName = new String[] { "tileset", "background image", "NPC sheet 1", "NPC sheet 2" };
+		final String[] assetName = new String[] { "tileset", "background image", "NPC sheet 1", "NPC sheet 2", "PXE file" };
 		final boolean[] assetStat = new boolean[] { ExeData.getImage(tileset) == null,
 				ExeData.getImage(bgImage) == null, ExeData.getImage(npcSheet1) == null,
-				ExeData.getImage(npcSheet2) == null };
+				ExeData.getImage(npcSheet2) == null, pxeList == null };
 		assert (assetName.length == assetStat.length);
 		String ret = "";
 		for (int i = 0; i < assetStat.length; i++)

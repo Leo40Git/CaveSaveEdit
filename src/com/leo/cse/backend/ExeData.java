@@ -425,7 +425,7 @@ public class ExeData {
 			uBuf.get(buffer);
 			String str = StrTools.CString(buffer, Main.encoding);
 			// Backslashes are Windows-only, so replace them with forward slashes
-			str = str.replaceAll("\\", "/");
+			str = str.replaceAll("\\\\", "/");
 			exeStrings[i] = str;
 			uBuf.clear();
 		}
@@ -439,7 +439,7 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadNpcTbl() throws IOException {
-		File tblFile = new File(dataDir + "/" + getExeString(STRING_NPC_TBL));
+		File tblFile = ResUtils.newFile(dataDir + "/" + getExeString(STRING_NPC_TBL));
 		FileChannel inChan;
 		ByteBuffer dBuf;
 		FileInputStream inStream;
@@ -623,16 +623,6 @@ public class ExeData {
 				newMap.setTileset(StrTools.CString(buffer, encoding));
 				uBuf.get(buffer, 0, 0x20);
 				String fileName = StrTools.CString(buffer, encoding);
-				// The original Cave Story has a mistake in the mapdata section:
-				// The "Lounge" map (Rest Area) has it's file name stored as "lounge".
-				// Normally, this isn't a big deal since the original Cave Story can only run on
-				// case-insensitive systems (Windows), but this will cause a map load failure if
-				// the editor is run on a case-sensitive system (Mac/Linux).
-				// Getting to this code is only possible if the EXE itself hasn't been modified,
-				// so it's a good guess that the EXE is vanilla. Therefore, the fix for this
-				// mistake is here.
-				if ("lounge".equals(fileName))
-					fileName = "Lounge";
 				newMap.setFileName(fileName);
 				newMap.setScrollType(uBuf.getInt() & 0xFF);
 				uBuf.get(buffer, 0, 0x20);
@@ -834,6 +824,7 @@ public class ExeData {
 	 *            image to load
 	 */
 	public static void addImage(File srcFile) {
+		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
 		try {
 			if (imageMap.containsKey(srcFile))
 				return;
@@ -860,6 +851,7 @@ public class ExeData {
 	 *            image to load
 	 */
 	public static void reloadImage(File srcFile) {
+		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
 		if (imageMap.containsKey(srcFile)) {
 			imageMap.get(srcFile).flush();
 			imageMap.remove(srcFile);
@@ -901,6 +893,7 @@ public class ExeData {
 	 * @return image
 	 */
 	public static BufferedImage getImage(File key) {
+		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key);
 		System.err.println("Key not found for getImage");
@@ -927,6 +920,7 @@ public class ExeData {
 	 * @return image height
 	 */
 	public static int getImageHeight(File key) {
+		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getHeight();
 		System.err.println("Key not found for getImageHeight");
@@ -953,6 +947,7 @@ public class ExeData {
 	 * @return image width
 	 */
 	public static int getImageWidth(File key) {
+		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getWidth();
 		System.err.println("Key not found for getImageWidth");
@@ -979,6 +974,7 @@ public class ExeData {
 	 * @return PXA data
 	 */
 	public static byte[] addPxa(File srcFile) {
+		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
 		FileChannel inChan = null;
 		if (pxaMap.containsKey(srcFile))
 			return pxaMap.get(srcFile);
@@ -1031,6 +1027,7 @@ public class ExeData {
 	 * @return PXA data
 	 */
 	public static byte[] getPxa(File srcFile) {
+		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
 		return pxaMap.get(srcFile);
 	}
 
