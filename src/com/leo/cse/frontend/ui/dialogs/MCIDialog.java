@@ -91,6 +91,7 @@ public class MCIDialog extends BaseDialog {
 					Config.set(Config.KEY_LAST_MCI_FILE, file.getAbsolutePath());
 					SwingUtilities.invokeLater(() -> {
 						SaveEditorPanel.panel.setLoading(false);
+						SaveEditorPanel.panel.addComponents();
 						Main.window.repaint();
 					});
 				}
