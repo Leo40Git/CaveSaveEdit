@@ -256,6 +256,20 @@ public class ExeData {
 	}
 
 	/**
+	 * If <code>true</code>, NPC files (spritesheets and PXEs) will be loaded,
+	 * otherwise they will be ignored.
+	 */
+	private static boolean loadNpc = true;
+
+	public static boolean doLoadNpc() {
+		return loadNpc;
+	}
+
+	public static void setLoadNpc(boolean loadNpc) {
+		ExeData.loadNpc = loadNpc;
+	}
+
+	/**
 	 * Array of strings loaded from the executable.
 	 * 
 	 * @see #STRING_POINTERS
@@ -824,6 +838,8 @@ public class ExeData {
 	 *            image to load
 	 */
 	public static void addImage(File srcFile) {
+		if (srcFile == null)
+			return;
 		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
 		try {
 			if (imageMap.containsKey(srcFile))
@@ -851,6 +867,8 @@ public class ExeData {
 	 *            image to load
 	 */
 	public static void reloadImage(File srcFile) {
+		if (srcFile == null)
+			return;
 		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
 		if (imageMap.containsKey(srcFile)) {
 			imageMap.get(srcFile).flush();
@@ -867,6 +885,8 @@ public class ExeData {
 	 * @return image graphics
 	 */
 	public static java.awt.Graphics getImageGraphics(File key) {
+		if (key == null)
+			return null;
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getGraphics();
 		System.err.println("Key not found for getImageGraphics");
@@ -893,6 +913,8 @@ public class ExeData {
 	 * @return image
 	 */
 	public static BufferedImage getImage(File key) {
+		if (key == null)
+			return null;
 		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key);
@@ -920,6 +942,8 @@ public class ExeData {
 	 * @return image height
 	 */
 	public static int getImageHeight(File key) {
+		if (key == null)
+			return -1;
 		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getHeight();
@@ -947,6 +971,8 @@ public class ExeData {
 	 * @return image width
 	 */
 	public static int getImageWidth(File key) {
+		if (key == null)
+			return -1;
 		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getWidth();

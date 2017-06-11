@@ -35,20 +35,39 @@ import com.leo.cse.frontend.ui.components.IDraggable;
 import com.leo.cse.frontend.ui.components.IScrollable;
 import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
-import com.leo.cse.frontend.ui.dialogs.MCIDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
+import com.leo.cse.frontend.ui.panels.FlagsPanel;
+import com.leo.cse.frontend.ui.panels.GeneralPanel;
+import com.leo.cse.frontend.ui.panels.InventoryPanel;
+import com.leo.cse.frontend.ui.panels.Panel;
+import com.leo.cse.frontend.ui.panels.VariablesPanel;
+import com.leo.cse.frontend.ui.panels.WarpsPanel;
 
 public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shift+O",
-			"MCI Settings", "Save:Ctrl+S", "Save As:Ctrl+Shift+S", "Editor Settings", "About" };
+	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
+			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About" };
 
 	public static SaveEditorPanel panel;
 
-	private EditorTab.ID currentTab;
-	private Map<EditorTab.ID, EditorTab> tabMap;
+	public enum EditorTab {
+		GENERAL("General"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags"), VARIABLES("Variables");
+
+		String label;
+
+		EditorTab(String label) {
+			this.label = label;
+		}
+
+		public String label() {
+			return label;
+		}
+	}
+
+	private EditorTab currentTab;
+	private Map<EditorTab, Panel> tabMap;
 
 	private Component lastFocus;
 	private Dialog dBox;
@@ -73,18 +92,18 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	public SaveEditorPanel() {
 		panel = this;
-		currentTab = EditorTab.ID.GENERAL;
+		currentTab = EditorTab.GENERAL;
 		addComponents();
 	}
 
 	public void addComponents() {
-		tabMap = new HashMap<EditorTab.ID, EditorTab>();
-		tabMap.put(EditorTab.ID.GENERAL, new GeneralTab());
-		tabMap.put(EditorTab.ID.INVENTORY, new InventoryTab());
-		tabMap.put(EditorTab.ID.WARPS, new WarpsTab());
-		tabMap.put(EditorTab.ID.FLAGS, new FlagsTab());
+		tabMap = new HashMap<EditorTab, Panel>();
+		tabMap.put(EditorTab.GENERAL, new GeneralPanel());
+		tabMap.put(EditorTab.INVENTORY, new InventoryPanel());
+		tabMap.put(EditorTab.WARPS, new WarpsPanel());
+		tabMap.put(EditorTab.FLAGS, new FlagsPanel());
 		if (MCI.getSpecial("VarHack"))
-			tabMap.put(EditorTab.ID.VARIABLES, new VariablesTab());
+			tabMap.put(EditorTab.VARIABLES, new VariablesPanel());
 	}
 
 	public void saveSettings() {
@@ -163,13 +182,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
 		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
-		final EditorTab.ID[] tv = EditorTab.ID.values();
+		final EditorTab[] tv = EditorTab.values();
 		int tn = tv.length;
 		if (!MCI.getSpecial("VarHack"))
 			tn--;
 		int ti = 0;
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
-			final EditorTab.ID t = tv[ti];
+			final EditorTab t = tv[ti];
 			if (Profile.isLoaded() && t == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
 				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 17);
@@ -177,9 +196,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
-			String label = "???";
+			String label = "";
 			if (tabMap.get(t) != null)
-				label = tabMap.get(t).getLabel();
+				label = t.label();
 			FrontUtils.drawString(g2d, label, xx + 18, winSize2.height - 19);
 			ti++;
 		}
@@ -317,19 +336,16 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 					case 1: // load exe
 						loadExe();
 						break;
-					case 2: // load defines
-						dBox = new MCIDialog();
-						break;
-					case 3: // save
+					case 2: // save
 						saveProfile();
 						break;
-					case 4: // save as
+					case 3: // save as
 						saveProfileAs();
 						break;
-					case 5: // editor settings
+					case 4: // settings
 						dBox = new SettingsDialog();
 						break;
-					case 6: // about
+					case 5: // about
 						dBox = new AboutDialog();
 						break;
 					default:
@@ -343,7 +359,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 		} else if (py >= winSize2.height - 17 && Profile.isLoaded()) {
 			// editor tabs
-			final EditorTab.ID[] tv = EditorTab.ID.values();
+			final EditorTab[] tv = EditorTab.values();
 			int tn = tv.length;
 			if (!MCI.getSpecial("VarHack"))
 				tn--;

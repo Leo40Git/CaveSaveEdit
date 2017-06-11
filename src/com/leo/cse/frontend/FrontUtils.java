@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
@@ -93,33 +94,17 @@ public class FrontUtils {
 		return (px >= rx && px <= rx + rw) && (py >= ry && py <= ry + rh);
 	}
 
+	// code from https://stackoverflow.com/a/2581754
 	public static <K extends Comparable<? super K>, V> Map<K, V> sortMapByKey(Map<K, V> map) {
-		List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
-		Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
-			public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-				return (o1.getKey()).compareTo(o2.getKey());
-			}
-		});
-		Map<K, V> result = new LinkedHashMap<K, V>();
-		for (Map.Entry<K, V> entry : list) {
-			result.put(entry.getKey(), entry.getValue());
-		}
-		return result;
+		return map.entrySet().stream().sorted(Map.Entry.comparingByKey())
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
 
 	public static <K, V extends Comparable<? super V>> Map<K, V> sortMapByValue(Map<K, V> map) {
-		List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
-		Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
-			public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-				return (o1.getValue()).compareTo(o2.getValue());
-			}
-		});
-		Map<K, V> result = new LinkedHashMap<K, V>();
-		for (Map.Entry<K, V> entry : list) {
-			result.put(entry.getKey(), entry.getValue());
-		}
-		return result;
+		return map.entrySet().stream().sorted(Map.Entry.comparingByValue())
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
+	// end code from stack overflow
 
 	public static <K> Map<K, String> sortStringMapByValue(Map<K, String> map, Function<String, String> processor) {
 		List<Map.Entry<K, String>> list = new LinkedList<Map.Entry<K, String>>(map.entrySet());
@@ -153,6 +138,7 @@ public class FrontUtils {
 		return null;
 	}
 
+	// code from https://stackoverflow.com/a/14225857
 	public static GraphicsConfiguration getGraphicsConfiguration() {
 		return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	}
@@ -192,6 +178,10 @@ public class FrontUtils {
 		return imgMask;
 	}
 
+	public static BufferedImage generateMask(BufferedImage imgSource, Color color, int alpha) {
+		return generateMask(imgSource, color, alpha / 255f);
+	}
+
 	public static BufferedImage tint(BufferedImage master, BufferedImage tint) {
 		int imgWidth = master.getWidth();
 		int imgHeight = master.getHeight();
@@ -207,14 +197,16 @@ public class FrontUtils {
 		return tinted;
 	}
 
-	public static BufferedImage colorImage(BufferedImage loadImg, int red, int green, int blue) {
-		return generateMask(loadImg, new Color(red, green, blue), 1.0f);
+	public static BufferedImage colorImage(BufferedImage image, int red, int green, int blue, int alpha) {
+		return tint(image, generateMask(image, new Color(red, green, blue), alpha));
 	}
 
-	public static BufferedImage colorImage(BufferedImage loadImg, Color color) {
-		return colorImage(loadImg, color.getRed(), color.getGreen(), color.getBlue());
+	public static BufferedImage colorImage(BufferedImage image, Color color) {
+		return colorImage(image, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
-
+	// end code from stack overflow
+	
+	// code from https://stackoverflow.com/a/24875569
 	private static JColorChooser cc;
 
 	/**
@@ -293,6 +285,7 @@ public class FrontUtils {
 			boolean showTransparencyControls) {
 		return showColorChooserDialog(component, title, initialColor, showTransparencyControls, false);
 	}
+	// end code from stack overflow
 
 	private static JFileChooser fc;
 

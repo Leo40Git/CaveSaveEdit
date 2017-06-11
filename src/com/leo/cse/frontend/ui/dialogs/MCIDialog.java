@@ -14,8 +14,8 @@ import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.MCI.MCIException;
-import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
+import com.leo.cse.frontend.Main;
 
 public class MCIDialog extends BaseDialog {
 

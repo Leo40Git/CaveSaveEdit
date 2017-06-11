@@ -1,13 +1,14 @@
-package com.leo.cse.frontend.ui;
+package com.leo.cse.frontend.ui.panels;
 
 import java.util.function.Supplier;
 
+import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.ui.components.FlagsUI;
 
-public class FlagsTab extends EditorTab {
+public class FlagsPanel extends Panel {
 
-	public FlagsTab() {
-		super("Flags");
+	public FlagsPanel() {
+		super();
 		compList.add(new FlagsUI(new Supplier<Integer>() {
 			@Override
 			public Integer get() {

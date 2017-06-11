@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui;
+package com.leo.cse.frontend.ui.panels;
 
 import java.awt.Dimension;
 import java.util.function.Function;
@@ -14,10 +14,10 @@ import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 import com.leo.cse.frontend.ui.components.WeaponBox;
 
-public class InventoryTab extends EditorTab {
+public class InventoryPanel extends Panel {
 
-	public InventoryTab() {
-		super("Inventory");
+	public InventoryPanel() {
+		super();
 		final Dimension winSize = Main.WINDOW_SIZE;
 		final String l = "Selected";
 		int xx = 4;

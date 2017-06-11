@@ -86,7 +86,7 @@ public class MapView extends Component implements IDraggable {
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords
-				+ "\n\nMove player by\nclicking/dragging\nOR\nwith WASD/arrow keys\nMod. key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel",
+				+ "\n\nMove player by\nclicking/dragging\nOR\nwith WASD/arrow keys\nMod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel",
 				x + width + 2, y);
 		g.drawImage(surf, x, y, null);
 	}
@@ -132,11 +132,14 @@ public class MapView extends Component implements IDraggable {
 
 	private void drawEntities(Graphics2D g) {
 		Iterator<PxeEntry> it = mapInfo.getPxeIterator();
+		if (it == null)
+			return;
 		while (it.hasNext())
 			it.next().draw(g);
 	}
 
 	private void drawMyChar(Graphics g) {
+		double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
 		int dir = (Profile.getDirection() == 2 ? 1 : 0);
 		long costume = 0;
 		if (MCI.getSpecial("VarHack"))
@@ -146,10 +149,10 @@ public class MapView extends Component implements IDraggable {
 		else
 			costume = (Profile.getEquip(6) ? 1 : 0);
 		int xPixel = Profile.getX() - 16;
-		xPixel /= 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1);
+		xPixel /= snap;
 		xPixel *= 2;
 		int yPixel = Profile.getY() - 16;
-		yPixel /= 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1);
+		yPixel /= snap;
 		yPixel *= 2;
 		int sourceY = (int) (64 * costume + 32 * dir);
 		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
@@ -173,8 +176,9 @@ public class MapView extends Component implements IDraggable {
 		if (ignoreClick > 0)
 			ignoreClick--;
 		else {
-			Profile.setX((short) (x - this.x + camX));
-			Profile.setY((short) (y - this.y + camY));
+			double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
+			Profile.setX((short) ((x - this.x + camX) / snap));
+			Profile.setY((short) ((y - this.y + camY) / snap));
 		}
 		return false;
 	}
@@ -191,7 +195,7 @@ public class MapView extends Component implements IDraggable {
 		int amount = 32;
 		if (shiftDown) {
 			if (ctrlDown)
-				amount = 1;
+				amount = Math.max(1, (int) (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)));
 			else
 				amount = 16;
 		} else if (ctrlDown)

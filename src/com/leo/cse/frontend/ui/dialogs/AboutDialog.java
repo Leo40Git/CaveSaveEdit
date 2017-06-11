@@ -9,7 +9,7 @@ import com.leo.cse.frontend.Resources;
 public class AboutDialog extends BaseDialog {
 
 	public AboutDialog() {
-		super("About CaveSaveEdit v" + Main.VERSION, 200, 52);
+		super("About CaveSaveEdit v" + Main.VERSION, 202, 64);
 	}
 	
 	@Override
@@ -18,7 +18,7 @@ public class AboutDialog extends BaseDialog {
 		final int x = getWindowX(), y = getWindowY();
 		g.drawImage(Resources.icon, x + 4, y + 4, null);
 		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g, "CaveSaveEdit version " + Main.VERSION + "\nWritten by Leo40Story\nUI sprites & early testing by zxin", x + 36, y);
+		FrontUtils.drawString(g, "CaveSaveEdit version " + Main.VERSION + "\nWritten by Leo40Story\nUI sprites by zxin\nEarly testers: zxin and 20kdc", x + 38, y);
 	}
 
 }

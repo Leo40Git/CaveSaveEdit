@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui;
+package com.leo.cse.frontend.ui.panels;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -8,10 +8,10 @@ import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.WarpBox;
 
-public class WarpsTab extends EditorTab {
+public class WarpsPanel extends Panel {
 
-	public WarpsTab() {
-		super("Warps");
+	public WarpsPanel() {
+		super();
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i, yy = 4 + i * 50;
 			compList.add(new Label("Warp Slot " + (i + 1) + ":", 4, yy + 17));

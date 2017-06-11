@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui;
+package com.leo.cse.frontend.ui.panels;
 
 import java.awt.Dimension;
 import java.util.function.Function;
@@ -12,10 +12,10 @@ import com.leo.cse.frontend.ui.components.BooleanBox;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.ShortBox;
 
-public class VariablesTab extends EditorTab {
+public class VariablesPanel extends Panel {
 
-	public VariablesTab() {
-		super("Variables");
+	public VariablesPanel() {
+		super();
 		final Dimension winSize = Main.WINDOW_SIZE;
 		compList.add(new Label("Variables:", 4, 4));
 		final int width = winSize.width / 8;

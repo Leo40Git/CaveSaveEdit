@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui;
+package com.leo.cse.frontend.ui.panels;
 
 import java.awt.Dimension;
 import java.util.function.Function;
@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.ui.components.BooleanBox;
 import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.IntegerBox;
@@ -17,10 +18,10 @@ import com.leo.cse.frontend.ui.components.MapView;
 import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 
-public class GeneralTab extends EditorTab {
+public class GeneralPanel extends Panel {
 
-	public GeneralTab() {
-		super("General");
+	public GeneralPanel() {
+		super();
 		final Dimension winSize = Main.WINDOW_SIZE;
 		compList.add(new Label("Map:", 4, 4));
 		compList.add(new MapBox(36, 4, 240, 16, new Supplier<Boolean>() {

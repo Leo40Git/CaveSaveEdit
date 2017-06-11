@@ -23,11 +23,10 @@ import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class Main extends JFrame implements MouseListener {
 
-	// I have no idea what this is used for
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
-	public static final String VERSION = "3.0";
+	public static final String VERSION = "3.1";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
 
 	public static final Supplier<Boolean> FALSE_SUPPLIER = new Supplier<Boolean>() {
@@ -162,6 +161,7 @@ public class Main extends JFrame implements MouseListener {
 		}
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, "UTF-8");
+		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
 		try {
 			Resources.load();
 			Resources.colorImages(lineColor);
