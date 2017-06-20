@@ -32,7 +32,7 @@ public class MapView extends Component implements IDraggable {
 	private int lastMap;
 
 	public MapView(int x, int y, Supplier<Integer> mSup) {
-		super(x, y, 640, 480);
+		super(x, y, 660, 480);
 		this.mSup = mSup;
 		lastMap = mSup.get();
 	}
@@ -41,7 +41,7 @@ public class MapView extends Component implements IDraggable {
 	public void render(Graphics g) {
 		if (SaveEditorPanel.panel.getLastFocus() == this) {
 			g.setColor(Main.lineColor);
-			g.drawRect(x - 1, y - 1, width + 1, height + 1);
+			g.drawRect(x - 1, y - 1, 641, height + 1);
 		}
 		if (!ExeData.isLoaded()) {
 			g.setColor(COLOR_NULL);
@@ -66,10 +66,10 @@ public class MapView extends Component implements IDraggable {
 		map = mapInfo.getMap();
 		tileset = ExeData.getImage(mapInfo.getTileset());
 		setWidth = tileset.getWidth() / 32;
-		BufferedImage surf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage surf = new BufferedImage(640, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
-		sg.fillRect(0, 0, width, height);
+		sg.fillRect(0, 0, 640, height);
 		drawBackground(sg);
 		if (mSup.get() != lastMap || ignoreClick == 0)
 			getCamCoords();
@@ -87,7 +87,10 @@ public class MapView extends Component implements IDraggable {
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords
 				+ "\n\nMove player by\nclicking/dragging\nOR\nwith WASD/arrow keys\nMod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel",
-				x + width + 2, y);
+				x + 642, y);
+		Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 63);
+		g.setColor(lc2);
+		g.fillRect(x + 640, y, 20, height);
 		g.drawImage(surf, x, y, null);
 	}
 
@@ -97,7 +100,7 @@ public class MapView extends Component implements IDraggable {
 		BufferedImage bg = ExeData.getImage(mapInfo.getBgImage());
 		int iw = bg.getWidth(null);
 		int ih = bg.getHeight(null);
-		for (int x = 0; x < width; x += iw) {
+		for (int x = 0; x < 640; x += iw) {
 			for (int y = 0; y < height; y += ih) {
 				g.drawImage(bg, x, y, iw, ih, null);
 			}
@@ -172,13 +175,14 @@ public class MapView extends Component implements IDraggable {
 			return false;
 		if (mapInfo.hasMissingAssets())
 			return false;
+		if (x > this.x + 640)
+			return false;
 		getCamCoords();
 		if (ignoreClick > 0)
 			ignoreClick--;
 		else {
-			double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
-			Profile.setX((short) ((x - this.x + camX) / snap));
-			Profile.setY((short) ((y - this.y + camY) / snap));
+			Profile.setX((short) (x - this.x + camX));
+			Profile.setY((short) (y - this.y + camY));
 		}
 		return false;
 	}
