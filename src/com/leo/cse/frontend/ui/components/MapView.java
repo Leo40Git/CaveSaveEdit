@@ -30,7 +30,7 @@ public class MapView extends Component implements IDraggable {
 	private int lastMap;
 
 	public MapView(int x, int y) {
-		super(x, y, 660, 480);
+		super(x, y, 640, 480);
 		lastMap = Profile.getMap();
 	}
 
@@ -38,7 +38,7 @@ public class MapView extends Component implements IDraggable {
 	public void render(Graphics g) {
 		if (SaveEditorPanel.panel.getLastFocus() == this) {
 			g.setColor(Main.lineColor);
-			g.drawRect(x - 1, y - 1, 641, height + 1);
+			g.drawRect(x - 1, y - 1, width + 1, height + 1);
 		}
 		if (!ExeData.isLoaded()) {
 			g.setColor(COLOR_NULL);
@@ -67,10 +67,10 @@ public class MapView extends Component implements IDraggable {
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, 640, height);
-		drawBackground(sg);
 		if (Profile.getMap() != lastMap || ignoreClick == 0)
 			getCamCoords();
 		lastMap = Profile.getMap();
+		drawBackground(sg);
 		sg.translate(-camX, -camY);
 		drawTiles(sg, 1);
 		drawTiles(sg, 2);
@@ -82,24 +82,21 @@ public class MapView extends Component implements IDraggable {
 				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
 		final String instruct = "Move player by\nclicking/dragging\nOR\nwith WASD/arrow keys";
 		final String mod = "Mod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel";
-		final String click = "Click on the\nhighlighted bit\nto focus on the\nmap view without\nchanging your\nposition!";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g, camCoords + "\n\n" + instruct + "\n" + mod + "\n\n" + click, x + 642, y);
-		Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 63);
-		g.setColor(lc2);
-		g.fillRect(x + 640, y, 20, height);
+		FrontUtils.drawString(g, camCoords + "\n\n" + instruct + "\n" + mod, x + 642, y);
 		g.drawImage(surf, x, y, null);
 	}
 
 	private void drawBackground(Graphics g) {
-		if (mapInfo.getScrollType() == 3 || mapInfo.getScrollType() == 4)
+		int scrollType = mapInfo.getScrollType();
+		if (scrollType == 3 || scrollType == 4)
 			return;
 		BufferedImage bg = ExeData.getImage(mapInfo.getBgImage());
 		int iw = bg.getWidth(null);
 		int ih = bg.getHeight(null);
-		for (int x = 0; x < 640; x += iw) {
-			for (int y = 0; y < height; y += ih) {
+		for (int x = 0; x < map[0][0].length * 32; x += iw) {
+			for (int y = 0; y < map[0].length * 32; y += ih) {
 				g.drawImage(bg, x, y, iw, ih, null);
 			}
 		}
@@ -167,13 +164,15 @@ public class MapView extends Component implements IDraggable {
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (SaveEditorPanel.panel.getLastFocus() != this) {
+			getCamCoords();
+			return false;
+		}
 		if (!ExeData.isLoaded())
 			return false;
 		if (mapInfo == null)
 			return false;
 		if (mapInfo.hasMissingAssets())
-			return false;
-		if (x > this.x + 640)
 			return false;
 		getCamCoords();
 		if (ignoreClick > 0)

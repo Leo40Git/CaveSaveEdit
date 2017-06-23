@@ -158,13 +158,21 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.translate(0, 17);
 		if (loading) {
 			g2d.setFont(Resources.font);
-			g2d.setColor(Main.lineColor);
+			boolean c = false;
+			final Color c1 = Main.lineColor;
+			final Color c2 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 191);
 			final String s = " Loading...";
 			final int sw = g2d.getFontMetrics().stringWidth(s);
 			final int sh = g2d.getFontMetrics().getHeight();
-			for (int yy = 0; yy < winSize.height; yy += sh)
-				for (int xx = 0; xx < winSize.width; xx += sw)
+			for (int yy = 0; yy < winSize.height; yy += sh) {
+				for (int xx = 0; xx < winSize.width; xx += sw * 2) {
+					g2d.setColor((c ? c2 : c1));
 					FrontUtils.drawString(g2d, s, xx, yy);
+					g2d.setColor((c ? c1 : c2));
+					FrontUtils.drawString(g2d, s, xx + sw, yy);
+				}
+				c = !c;
+			}
 		} else {
 			if (Profile.isLoaded()) {
 				for (Component comp : tabMap.get(currentTab).getComponents())
@@ -205,10 +213,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		// dialog box
 		if (dBox != null)
 			dBox.render(g);
-		g2d.setFont(Resources.font);
-		g2d.setColor(Color.red);
-		FrontUtils.drawString(g2d, "ignoreReleased=" + ignoreReleased, 0, 0);
-		FrontUtils.drawString(g2d, "ignoreDragged=" + ignoreDragged, 0, 16);
 	}
 
 	private void loadProfile() {

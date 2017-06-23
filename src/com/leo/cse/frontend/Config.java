@@ -7,6 +7,8 @@ public class Config {
 
 	private Config() {
 	}
+	
+	public static final long BUILD = 1;
 
 	public static final String KEY_CONFIG_BUILD = "config_build";
 	public static final String KEY_LAST_PROFIE = "last_profile";
@@ -31,7 +33,7 @@ public class Config {
 			CONFIG.remove(KEY_LINE_COLOR_OLD);
 			set(KEY_LINE_COLOR, color);
 		}
-		CONFIG.putLong(KEY_CONFIG_BUILD, Main.BUILD);
+		CONFIG.putLong(KEY_CONFIG_BUILD, BUILD);
 	}
 
 	public static String get(String key, String def) {

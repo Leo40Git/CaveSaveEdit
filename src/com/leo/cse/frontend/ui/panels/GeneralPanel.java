@@ -168,7 +168,7 @@ public class GeneralPanel extends Panel {
 		compList.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 212, 124));
 		mp = new MapView(winSize.width / 2 - 320, 164);
 		compList.add(mp);
-		compList.add(new Button("Snap to Grid", 776, 426, 80, 20, new Supplier<Boolean>() {
+		compList.add(new Button("Snap to Grid", 756, 426, 100, 20, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
 				Profile.setX((short) ((Profile.getX() / 32) * 32));
