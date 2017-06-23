@@ -9,16 +9,18 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.ui.components.BooleanBox;
+import com.leo.cse.frontend.ui.components.Button;
 import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.IntegerBox;
 import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.LongBox;
 import com.leo.cse.frontend.ui.components.MapBox;
 import com.leo.cse.frontend.ui.components.MapView;
 import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 
 public class GeneralPanel extends Panel {
+
+	private MapView mp;
 
 	public GeneralPanel() {
 		super();
@@ -163,27 +165,16 @@ public class GeneralPanel extends Panel {
 				return t;
 			}
 		}, "time played"));
-		// getInteger("Game.FPS", 50)
 		compList.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 212, 124));
-		if (!MCI.getSpecial("VarHack") && MCI.getSpecial("MimHack")) {
-			compList.add(new Label("<MIM Costume:", 4, 144));
-			compList.add(new LongBox(78, 144, 120, 16, new Supplier<Long>() {
-				@Override
-				public Long get() {
-					return Profile.getMimCostume();
-				}
-			}, new Function<Long, Long>() {
-				@Override
-				public Long apply(Long t) {
-					Profile.setMimCostume(t);
-					return t;
-				}
-			}, "<MIM costume"));
-		}
-		compList.add(new MapView(winSize.width / 2 - 320, 164, new Supplier<Integer>() {
+		mp = new MapView(winSize.width / 2 - 320, 164);
+		compList.add(mp);
+		compList.add(new Button("Snap to Grid", 776, 426, 80, 20, new Supplier<Boolean>() {
 			@Override
-			public Integer get() {
-				return Profile.getMap();
+			public Boolean get() {
+				Profile.setX((short) ((Profile.getX() / 32) * 32));
+				Profile.setY((short) ((Profile.getY() / 32) * 32));
+				mp.getCamCoords();
+				return false;
 			}
 		}));
 	}

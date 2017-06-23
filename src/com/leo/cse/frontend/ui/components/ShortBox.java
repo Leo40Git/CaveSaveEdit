@@ -45,14 +45,14 @@ public class ShortBox extends InputBox {
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":", vSup.get());
 		if (nVal == null)
-			return true;
+			return false;
 		try {
 			update.apply(Short.parseShort(nVal));
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(Main.window, "Input was not a valid number!", "Error while parsing input!",
 					JOptionPane.ERROR_MESSAGE);
 		}
-		return true;
+		return false;
 	}
 
 }

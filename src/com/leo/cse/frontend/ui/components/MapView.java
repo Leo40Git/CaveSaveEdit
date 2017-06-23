@@ -6,12 +6,11 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
-import java.util.function.Supplier;
 
 import com.leo.cse.backend.ExeData;
 import com.leo.cse.backend.MapInfo;
-import com.leo.cse.backend.Profile;
 import com.leo.cse.backend.MapInfo.PxeEntry;
+import com.leo.cse.backend.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
@@ -22,7 +21,6 @@ public class MapView extends Component implements IDraggable {
 
 	private static final Color COLOR_NULL = new Color(0, 0, 16);
 
-	private Supplier<Integer> mSup;
 	private MapInfo mapInfo;
 	private int[][][] map;
 	private BufferedImage tileset;
@@ -31,10 +29,9 @@ public class MapView extends Component implements IDraggable {
 	private int ignoreClick = 0;
 	private int lastMap;
 
-	public MapView(int x, int y, Supplier<Integer> mSup) {
+	public MapView(int x, int y) {
 		super(x, y, 660, 480);
-		this.mSup = mSup;
-		lastMap = mSup.get();
+		lastMap = Profile.getMap();
 	}
 
 	@Override
@@ -51,7 +48,7 @@ public class MapView extends Component implements IDraggable {
 			FrontUtils.drawStringCentered(g, "NO MOD LOADED!", x + width / 2, y + height / 2, true);
 			return;
 		}
-		mapInfo = ExeData.getMapInfo(mSup.get());
+		mapInfo = ExeData.getMapInfo(Profile.getMap());
 		if (mapInfo.hasMissingAssets()) {
 			g.setColor(COLOR_NULL);
 			g.fillRect(x, y, width, height);
@@ -71,23 +68,24 @@ public class MapView extends Component implements IDraggable {
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, 640, height);
 		drawBackground(sg);
-		if (mSup.get() != lastMap || ignoreClick == 0)
+		if (Profile.getMap() != lastMap || ignoreClick == 0)
 			getCamCoords();
-		lastMap = mSup.get();
+		lastMap = Profile.getMap();
 		sg.translate(-camX, -camY);
-		drawTiles(sg, 0);
 		drawTiles(sg, 1);
+		drawTiles(sg, 2);
 		drawEntities(sg);
 		drawMyChar(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
 				+ (int) (camX / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
 				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
+		final String instruct = "Move player by\nclicking/dragging\nOR\nwith WASD/arrow keys";
+		final String mod = "Mod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel";
+		final String click = "Click on the\nhighlighted bit\nto focus on the\nmap view without\nchanging your\nposition!";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g, camCoords
-				+ "\n\nMove player by\nclicking/dragging\nOR\nwith WASD/arrow keys\nMod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel",
-				x + 642, y);
+		FrontUtils.drawString(g, camCoords + "\n\n" + instruct + "\n" + mod + "\n\n" + click, x + 642, y);
 		Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 63);
 		g.setColor(lc2);
 		g.fillRect(x + 640, y, 20, height);
@@ -162,7 +160,7 @@ public class MapView extends Component implements IDraggable {
 				sourceY + 32, null);
 	}
 
-	private void getCamCoords() {
+	public void getCamCoords() {
 		camX = Math.max(0, Math.min((map[0][0].length - 21) * 32, Profile.getX() - width / 2));
 		camY = Math.max(0, Math.min((map[0].length - 16) * 32, Profile.getY() - height / 2));
 	}
@@ -230,7 +228,7 @@ public class MapView extends Component implements IDraggable {
 		if (mapInfo.hasMissingAssets())
 			return;
 		Profile.setX((short) (x - this.x + camX));
-		Profile.setY((short) (y - this.y + camY));
+		Profile.setY((short) (y - 16 - this.y + camY));
 		ignoreClick = 2;
 	}
 

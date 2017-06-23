@@ -5,11 +5,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.Profile;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.components.BooleanBox;
 import com.leo.cse.frontend.ui.components.IntegerBox;
 import com.leo.cse.frontend.ui.components.ItemBox;
 import com.leo.cse.frontend.ui.components.Label;
+import com.leo.cse.frontend.ui.components.LongBox;
 import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 import com.leo.cse.frontend.ui.components.WeaponBox;
@@ -131,6 +133,21 @@ public class InventoryPanel extends Panel {
 				return t;
 			}
 		}, "Whimsical Star count"));
+		if (!MCI.getSpecial("VarHack") && MCI.getSpecial("MimHack")) {
+			compList.add(new Label("<MIM Costume:", 4 + (winSize.width / 3) * 2, 539));
+			compList.add(new LongBox(4 + (winSize.width / 3) * 2, 555, 120, 16, new Supplier<Long>() {
+				@Override
+				public Long get() {
+					return Profile.getMimCostume();
+				}
+			}, new Function<Long, Long>() {
+				@Override
+				public Long apply(Long t) {
+					Profile.setMimCostume(t);
+					return t;
+				}
+			}, "<MIM costume"));
+		}
 	}
 
 }

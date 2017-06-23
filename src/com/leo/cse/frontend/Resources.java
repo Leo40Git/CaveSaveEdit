@@ -16,15 +16,21 @@ public class Resources {
 	}
 
 	public static Font fontB, font, fontS, fontL;
-
+	
+	// base images
 	public static BufferedImage icon;
 	public static BufferedImage shadow;
 	public static BufferedImage ui;
+	
+	// colored images
 	public static BufferedImage checkboxOff, checkboxOn, checkboxDisabled;
 	public static BufferedImage radioOff, radioOn;
 	public static BufferedImage radioOffS, radioOnS;
 	public static BufferedImage dialogClose;
 	public static BufferedImage arrowDown, arrowUp;
+	
+	// uncolored images
+	public static BufferedImage warning;
 	public static BufferedImage[] editorTabIcons, toolbarIcons;
 
 	public static void load() throws IOException, FontFormatException {
@@ -44,6 +50,7 @@ public class Resources {
 
 	private static void loadImages() {
 		reloadColorImages();
+		warning = ui.getSubimage(104, 16, 16, 16);
 		editorTabIcons = new BufferedImage[5];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);

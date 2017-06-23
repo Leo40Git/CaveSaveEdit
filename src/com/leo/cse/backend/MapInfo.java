@@ -183,14 +183,14 @@ public class MapInfo {
 			mapY = 16;
 			mapBuf = ByteBuffer.allocate(mapY * mapX);
 		}
-		map = new int[2][mapY][mapX];
+		map = new int[4][mapY][mapX];
 		for (int y = 0; y < mapY; y++)
 			for (int x = 0; x < mapX; x++) {
 				int tile = 0xFF & mapBuf.get();
 				if (calcPxa(tile) > 0x20)
-					map[1][y][x] = tile;
+					map[2][y][x] = tile;
 				else
-					map[0][y][x] = tile;
+					map[1][y][x] = tile;
 			}
 	}
 

@@ -205,6 +205,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		// dialog box
 		if (dBox != null)
 			dBox.render(g);
+		g2d.setFont(Resources.font);
+		g2d.setColor(Color.red);
+		FrontUtils.drawString(g2d, "ignoreReleased=" + ignoreReleased, 0, 0);
+		FrontUtils.drawString(g2d, "ignoreDragged=" + ignoreDragged, 0, 16);
 	}
 
 	private void loadProfile() {

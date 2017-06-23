@@ -45,7 +45,7 @@ public class BooleanBox extends Component {
 		if (disabled)
 			return false;
 		update.apply(!vSup.get());
-		return true;
+		return false;
 	}
 
 }

@@ -54,7 +54,7 @@ public class MapBox extends DefineBox {
 		if (i == null) {
 			JOptionPane.showMessageDialog(Main.window, "Value \"" + nVal + "\" is unknown!", "Unknown value",
 					JOptionPane.ERROR_MESSAGE);
-			return true;
+			return false;
 		}
 		update.apply(i);
 		return true;

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The interface class between a Java application and a Cave Story profile.
@@ -124,7 +126,7 @@ public class Profile {
 		}
 
 		public void setId(int id) {
-			modified = true;
+			notifyListeners();
 			this.id = id;
 		}
 
@@ -133,7 +135,7 @@ public class Profile {
 		}
 
 		public void setLevel(int level) {
-			modified = true;
+			notifyListeners();
 			this.level = level;
 		}
 
@@ -142,7 +144,7 @@ public class Profile {
 		}
 
 		public void setExp(int exp) {
-			modified = true;
+			notifyListeners();
 			this.exp = exp;
 		}
 
@@ -151,7 +153,7 @@ public class Profile {
 		}
 
 		public void setMaxAmmo(int maxAmmo) {
-			modified = true;
+			notifyListeners();
 			this.maxAmmo = maxAmmo;
 		}
 
@@ -160,7 +162,7 @@ public class Profile {
 		}
 
 		public void setCurrentAmmo(int curAmmo) {
-			modified = true;
+			notifyListeners();
 			this.curAmmo = curAmmo;
 		}
 
@@ -257,7 +259,7 @@ public class Profile {
 		}
 
 		public void setId(int id) {
-			modified = true;
+			notifyListeners();
 			this.id = id;
 		}
 
@@ -266,7 +268,7 @@ public class Profile {
 		}
 
 		public void setLocation(int location) {
-			modified = true;
+			notifyListeners();
 			this.location = location;
 		}
 
@@ -307,7 +309,8 @@ public class Profile {
 	 * The byte array the file is loaded into. Contains raw data.
 	 * <p>
 	 * <i>This is NOT updated when standard field commands are used and this does
-	 * NOT update other fields when modified.</i>
+	 * NOT update other fields when modified. Invoke {@link #pushToData()} and
+	 * {@link #pullFromData()}, respectively, to do those.</i>
 	 */
 	private static byte[] data = null;
 	/**
@@ -388,6 +391,44 @@ public class Profile {
 	private static boolean[] flags = null;
 
 	/**
+	 * A list of {@link ProfileChangeListener}s.
+	 */
+	private static List<ProfileChangeListener> listeners;
+
+	/**
+	 * Attaches a change listener to this profile.
+	 * 
+	 * @param l
+	 *            listener
+	 */
+	public static void addListener(ProfileChangeListener l) {
+		if (listeners == null)
+			listeners = new LinkedList<>();
+		listeners.add(l);
+	}
+
+	/**
+	 * Notifies all changes attached to this profile.
+	 * 
+	 * @param modified
+	 *            modified flag state
+	 */
+	private static void notifyListeners(boolean modified) {
+		Profile.modified = modified;
+		if (listeners == null)
+			return;
+		for (ProfileChangeListener l : listeners)
+			l.onChanged();
+	}
+
+	/**
+	 * Sets the modified flag and notifies all changes attached to this profile.
+	 */
+	private static void notifyListeners() {
+		notifyListeners(true);
+	}
+
+	/**
 	 * Pulls changes from the byte array. This should be called after modifying the
 	 * array's contents.
 	 */
@@ -418,6 +459,7 @@ public class Profile {
 		}
 		flags = new boolean[8000];
 		ByteUtils.readFlags(data, 0x21C, flags);
+		notifyListeners();
 	}
 
 	/**
@@ -478,8 +520,8 @@ public class Profile {
 		pullFromData();
 		// set loaded flag
 		loaded = true;
-		// unset modified flag
-		modified = false;
+		// notify listeners
+		notifyListeners(false);
 	}
 
 	/**
@@ -539,8 +581,8 @@ public class Profile {
 		}
 		// set new file
 		file = dest;
-		// unset modified flag
-		modified = false;
+		// notify listeners
+		notifyListeners(false);
 	}
 
 	/**
@@ -574,7 +616,7 @@ public class Profile {
 	}
 
 	public static void setMap(int map) {
-		modified = true;
+		notifyListeners();
 		Profile.map = map;
 	}
 
@@ -583,7 +625,7 @@ public class Profile {
 	}
 
 	public static void setSong(int song) {
-		modified = true;
+		notifyListeners();
 		Profile.song = song;
 	}
 
@@ -592,7 +634,7 @@ public class Profile {
 	}
 
 	public static void setX(short x) {
-		modified = true;
+		notifyListeners();
 		Profile.x = x;
 	}
 
@@ -601,7 +643,7 @@ public class Profile {
 	}
 
 	public static void setY(short y) {
-		modified = true;
+		notifyListeners();
 		Profile.y = y;
 	}
 
@@ -610,7 +652,7 @@ public class Profile {
 	}
 
 	public static void setDirection(int direction) {
-		modified = true;
+		notifyListeners();
 		Profile.direction = direction;
 	}
 
@@ -619,7 +661,7 @@ public class Profile {
 	}
 
 	public static void setMaxHealth(short maxHealth) {
-		modified = true;
+		notifyListeners();
 		Profile.maxHealth = maxHealth;
 	}
 
@@ -628,7 +670,7 @@ public class Profile {
 	}
 
 	public static void setStarCount(short starCount) {
-		modified = true;
+		notifyListeners();
 		Profile.starCount = starCount;
 	}
 
@@ -637,7 +679,7 @@ public class Profile {
 	}
 
 	public static void setCurHealth(short curHealth) {
-		modified = true;
+		notifyListeners();
 		Profile.curHealth = curHealth;
 	}
 
@@ -646,7 +688,7 @@ public class Profile {
 	}
 
 	public static void setCurWeapon(int curWeapon) {
-		modified = true;
+		notifyListeners();
 		Profile.curWeapon = curWeapon;
 	}
 
@@ -698,7 +740,7 @@ public class Profile {
 	 *            otherwise
 	 */
 	public static void setEquip(int id, boolean equipped) {
-		modified = true;
+		notifyListeners();
 		equips[id] = equipped;
 	}
 
@@ -707,7 +749,7 @@ public class Profile {
 	}
 
 	public static void setTime(int time) {
-		modified = true;
+		notifyListeners();
 		Profile.time = time;
 	}
 
@@ -774,7 +816,7 @@ public class Profile {
 	public static void setItem(int id, int value) {
 		if (id >= items.length)
 			return;
-		modified = true;
+		notifyListeners();
 		items[id] = value;
 	}
 
@@ -841,7 +883,7 @@ public class Profile {
 	public static void setFlag(int id, boolean set) {
 		if (flags == null)
 			return;
-		modified = true;
+		notifyListeners();
 		flags[id] = set;
 	}
 
@@ -869,7 +911,7 @@ public class Profile {
 	 *            new costume
 	 */
 	public static void setMimCostume(long costume) {
-		modified = true;
+		notifyListeners();
 		for (int i = 7968; i < 7995; i++)
 			setFlag(i, (costume & (long) Math.pow(2, i - 7968)) != 0);
 	}
@@ -895,7 +937,7 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setVariable(int id, short value) {
-		modified = true;
+		notifyListeners();
 		pushToData();
 		ByteUtils.writeShort(data, 0x50A + id * Short.BYTES, value);
 		pullFromData();
@@ -922,7 +964,7 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setPhysVariable(int id, short value) {
-		modified = true;
+		notifyListeners();
 		pushToData();
 		ByteUtils.writeShort(data, 0x4DC + id * Short.BYTES, value);
 		pullFromData();

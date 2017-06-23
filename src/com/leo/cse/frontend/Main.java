@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -19,14 +17,16 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import com.leo.cse.backend.ExeData;
 import com.leo.cse.backend.Profile;
+import com.leo.cse.backend.ProfileChangeListener;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
-public class Main extends JFrame implements MouseListener {
+public class Main extends JFrame implements ProfileChangeListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
-	public static final String VERSION = "3.1";
+	public static final String VERSION = "1.0.0";
+	public static final long BUILD = 1;
 	public static final Color COLOR_BG = new Color(0, 0, 25);
 
 	public static final Supplier<Boolean> FALSE_SUPPLIER = new Supplier<Boolean>() {
@@ -66,6 +66,7 @@ public class Main extends JFrame implements MouseListener {
 	}
 
 	public Main() {
+		Profile.addListener(this);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
@@ -75,7 +76,6 @@ public class Main extends JFrame implements MouseListener {
 		add(sep);
 		addKeyListener(sep);
 		addMouseListener(sep);
-		addMouseListener(this);
 		addMouseMotionListener(sep);
 		addMouseWheelListener(sep);
 		setMaximumSize(WINDOW_SIZE);
@@ -121,7 +121,6 @@ public class Main extends JFrame implements MouseListener {
 					System.err.println("EXE loading failed.");
 				}
 				Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
-				setTitle(window);
 				SwingUtilities.invokeLater(() -> {
 					if (SaveEditorPanel.panel != null)
 						SaveEditorPanel.panel.setLoading(false);
@@ -159,6 +158,7 @@ public class Main extends JFrame implements MouseListener {
 				System.exit(1);
 			}
 		}
+		Config.init();
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, "UTF-8");
 		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
@@ -185,24 +185,8 @@ public class Main extends JFrame implements MouseListener {
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		setTitle(window);
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
+	public void onChanged() {
+		setTitle(this);
 	}
 
 }
