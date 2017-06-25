@@ -16,6 +16,154 @@ import java.util.List;
 public class Profile {
 
 	/**
+	 * Used to notify {@link ProfileChangeListener}s of the current profile being
+	 * saved.
+	 */
+	public static final String EVENT_SAVE = "save";
+	/**
+	 * Used to notify {@link ProfileChangeListener}s of a new profile being loaded.
+	 */
+	public static final String EVENT_LOAD = "load";
+	/**
+	 * Map field.
+	 * 
+	 * @see #map
+	 */
+	public static final String FIELD_MAP = "map";
+	/**
+	 * Song field.
+	 * 
+	 * @see #song
+	 */
+	public static final String FIELD_SONG = "song";
+	/**
+	 * X position field.
+	 * 
+	 * @see #x
+	 */
+	public static final String FIELD_X_POSITION = "x";
+	/**
+	 * Y position field.
+	 * 
+	 * @see #y
+	 */
+	public static final String FIELD_Y_POSITION = "y";
+	/**
+	 * Direction field.
+	 * 
+	 * @see #direction
+	 */
+	public static final String FIELD_DIRECTION = "direction";
+	/**
+	 * Maximum health field.
+	 * 
+	 * @see #maxHealth
+	 */
+	public static final String FIELD_MAXIMUM_HEALTH = "maxHealth";
+	/**
+	 * Whimsical Star count field.
+	 * 
+	 * @see #starCount
+	 */
+	public static final String FIELD_STAR_COUNT = "starCount";
+	/**
+	 * Current health field.
+	 * 
+	 * @see #curHealth
+	 */
+	public static final String FIELD_CURRENT_HEALTH = "curHealth";
+	/**
+	 * Current weapon slot field.
+	 * 
+	 * @see #curWeapon
+	 */
+	public static final String FIELD_CURRENT_WEAPON = "curWeapon";
+	/**
+	 * Equipment flags field.
+	 * 
+	 * @see #equips
+	 */
+	public static final String FIELD_EQUIPS = "equips[%d]";
+	/**
+	 * Time played field.
+	 * 
+	 * @see #time
+	 */
+	public static final String FIELD_TIME_PLAYED = "time";
+	/**
+	 * Weapon ID field.
+	 * 
+	 * @see Weapon#id
+	 */
+	public static final String FIELD_WEAPON_ID = "weapons[%d].id";
+	/**
+	 * Weapon level field.
+	 * 
+	 * @see Weapon#level
+	 */
+	public static final String FIELD_WEAPON_LEVEL = "weapons[%d].level";
+	/**
+	 * Weapon EXP field.
+	 * 
+	 * @see Weapon#exp
+	 */
+	public static final String FIELD_WEAPON_EXP = "weapons[%d].exp";
+	/**
+	 * Weapon maximum ammo field.
+	 * 
+	 * @see Weapon#maxAmmo
+	 */
+	public static final String FIELD_WEAPON_MAXIMUM_AMMO = "weapons[%d].maxAmmo";
+	/**
+	 * Weapon current ammo field.
+	 * 
+	 * @see Weapon#curAmmo
+	 */
+	public static final String FIELD_WEAPON_CURRENT_AMMO = "weapons[%d].curAmmo";
+	/**
+	 * Items field.
+	 * 
+	 * @see #items
+	 */
+	public static final String FIELD_ITEMS = "items[%d]";
+	/**
+	 * Warp ID field.
+	 * 
+	 * @see Warp#id
+	 */
+	public static final String FIELD_WARP_ID = "warps[%d].id";
+	/**
+	 * Warp location field.
+	 * 
+	 * @see Warp#location
+	 */
+	public static final String FIELD_WARP_LOCATION = "warps[%d].location";
+	/**
+	 * Flags field.
+	 * 
+	 * @see #flags
+	 */
+	public static final String FIELD_FLAGS = "flags[%d]";
+	/**
+	 * <MIM costume "field". A field for this doesn't actually exist.
+	 * 
+	 * @see #getMimCostume()
+	 */
+	public static final String FIELD_MIM_COSTUME = "mimCostume";
+	/**
+	 * Variables "field". A field for this doesn't actually exist.
+	 * 
+	 * @see #getVariable(int)
+	 */
+	public static final String FIELD_VARIABLES = "variables[%d]";
+	/**
+	 * Physics variables "field". A field for this doesn't actually exist.
+	 * 
+	 * @see #getPhysVariable(int)
+	 */
+	public static final String FIELD_PHYSICS_VARIABLES = "physVars[%d]";
+
+	/**
 	 * Make sure an instance of this class cannot be created.
 	 */
 	private Profile() {
@@ -55,6 +203,10 @@ public class Profile {
 		 */
 		public static final int BASE_POINTER = 0x038;
 
+		/**
+		 * The weapon's slot.
+		 */
+		private int slot;
 		/**
 		 * The weapon's type.
 		 */
@@ -96,23 +248,24 @@ public class Profile {
 		 *            weapon slot
 		 */
 		public Weapon(byte[] data, int slot) {
+			this.slot = slot;
 			final int ptr = getPointer(slot);
-			id = ByteUtils.readInt(data, ptr);
-			level = ByteUtils.readInt(data, ptr + Integer.BYTES);
-			exp = ByteUtils.readInt(data, ptr + Integer.BYTES * 2);
-			maxAmmo = ByteUtils.readInt(data, ptr + Integer.BYTES * 3);
-			curAmmo = ByteUtils.readInt(data, ptr + Integer.BYTES * 4);
+			setId(ByteUtils.readInt(data, ptr));
+			setLevel(ByteUtils.readInt(data, ptr + Integer.BYTES));
+			setExp(ByteUtils.readInt(data, ptr + Integer.BYTES * 2));
+			setMaxAmmo(ByteUtils.readInt(data, ptr + Integer.BYTES * 3));
+			setCurAmmo(ByteUtils.readInt(data, ptr + Integer.BYTES * 4));
 		}
 
 		/**
-		 * Saves the weapon data to a byte array.
+		 * Writes the weapon data to a byte array.
 		 * 
 		 * @param data
 		 *            byte array
 		 * @param slot
 		 *            weapon slot
 		 */
-		public void save(byte[] data, int slot) {
+		public void write(byte[] data) {
 			final int ptr = getPointer(slot);
 			ByteUtils.writeInt(data, ptr, id);
 			ByteUtils.writeInt(data, ptr + Integer.BYTES, level);
@@ -126,7 +279,8 @@ public class Profile {
 		}
 
 		public void setId(int id) {
-			notifyListeners();
+			if (this.id != id)
+				notifyListeners(FIELD_WEAPON_ID, slot);
 			this.id = id;
 		}
 
@@ -135,7 +289,8 @@ public class Profile {
 		}
 
 		public void setLevel(int level) {
-			notifyListeners();
+			if (this.level != level)
+				notifyListeners(FIELD_WEAPON_LEVEL, slot);
 			this.level = level;
 		}
 
@@ -144,7 +299,8 @@ public class Profile {
 		}
 
 		public void setExp(int exp) {
-			notifyListeners();
+			if (this.exp != exp)
+				notifyListeners(FIELD_WEAPON_EXP, slot);
 			this.exp = exp;
 		}
 
@@ -153,16 +309,18 @@ public class Profile {
 		}
 
 		public void setMaxAmmo(int maxAmmo) {
-			notifyListeners();
+			if (this.maxAmmo != maxAmmo)
+				notifyListeners(FIELD_WEAPON_MAXIMUM_AMMO, slot);
 			this.maxAmmo = maxAmmo;
 		}
 
-		public int getCurrentAmmo() {
+		public int getCurAmmo() {
 			return curAmmo;
 		}
 
-		public void setCurrentAmmo(int curAmmo) {
-			notifyListeners();
+		public void setCurAmmo(int curAmmo) {
+			if (this.curAmmo != curAmmo)
+				notifyListeners(FIELD_WEAPON_CURRENT_AMMO, slot);
 			this.curAmmo = curAmmo;
 		}
 
@@ -207,6 +365,10 @@ public class Profile {
 		public static final int BASE_POINTER = 0x158;
 
 		/**
+		 * The warp's slot.
+		 */
+		private int slot;
+		/**
 		 * The warp's slot graphic.
 		 */
 		private int id;
@@ -235,9 +397,10 @@ public class Profile {
 		 *            warp slot
 		 */
 		public Warp(byte[] data, int slot) {
+			this.slot = slot;
 			final int ptr = getPointer(slot);
-			id = ByteUtils.readInt(data, ptr);
-			location = ByteUtils.readInt(data, ptr + Integer.BYTES);
+			setId(ByteUtils.readInt(data, ptr));
+			setLocation(ByteUtils.readInt(data, ptr + Integer.BYTES));
 		}
 
 		/**
@@ -248,7 +411,7 @@ public class Profile {
 		 * @param slot
 		 *            warp slot
 		 */
-		public void save(byte[] data, int slot) {
+		public void write(byte[] data) {
 			final int ptr = getPointer(slot);
 			ByteUtils.writeInt(data, ptr, id);
 			ByteUtils.writeInt(data, ptr + Integer.BYTES, location);
@@ -259,7 +422,8 @@ public class Profile {
 		}
 
 		public void setId(int id) {
-			notifyListeners();
+			if (this.id != id)
+				notifyListeners(FIELD_WARP_ID, slot);
 			this.id = id;
 		}
 
@@ -268,7 +432,8 @@ public class Profile {
 		}
 
 		public void setLocation(int location) {
-			notifyListeners();
+			if (this.location != location)
+				notifyListeners(FIELD_WARP_LOCATION, slot);
 			this.location = location;
 		}
 
@@ -413,19 +578,19 @@ public class Profile {
 	 * @param modified
 	 *            modified flag state
 	 */
-	private static void notifyListeners(boolean modified) {
+	private static void notifyListeners(String field, int id, boolean modified) {
 		Profile.modified = modified;
 		if (listeners == null)
 			return;
 		for (ProfileChangeListener l : listeners)
-			l.onChanged();
+			l.onChange(field, id);
 	}
 
 	/**
 	 * Sets the modified flag and notifies all changes attached to this profile.
 	 */
-	private static void notifyListeners() {
-		notifyListeners(true);
+	private static void notifyListeners(String field, int id) {
+		notifyListeners(field, id, true);
 	}
 
 	/**
@@ -435,31 +600,39 @@ public class Profile {
 	public static void pullFromData() {
 		if (data == null)
 			return;
-		map = ByteUtils.readInt(data, 0x008);
-		song = ByteUtils.readInt(data, 0x00C);
-		x = ByteUtils.readShort(data, 0x011);
-		y = ByteUtils.readShort(data, 0x015);
-		direction = ByteUtils.readInt(data, 0x018);
-		maxHealth = ByteUtils.readShort(data, 0x01C);
-		starCount = ByteUtils.readShort(data, 0x01E);
-		curHealth = ByteUtils.readShort(data, 0x020);
-		curWeapon = ByteUtils.readInt(data, 0x024);
-		equips = new boolean[Short.SIZE];
+		setMap(ByteUtils.readInt(data, 0x008));
+		setSong(ByteUtils.readInt(data, 0x00C));
+		setX(ByteUtils.readShort(data, 0x011));
+		setY(ByteUtils.readShort(data, 0x015));
+		setDirection(ByteUtils.readInt(data, 0x018));
+		setMaxHealth(ByteUtils.readShort(data, 0x01C));
+		setStarCount(ByteUtils.readShort(data, 0x01E));
+		setCurHealth(ByteUtils.readShort(data, 0x020));
+		setCurWeapon(ByteUtils.readInt(data, 0x024));
+		if (equips == null)
+			equips = new boolean[16];
+		boolean[] equips = new boolean[16];
 		ByteUtils.readFlags(data, 0x02C, equips);
-		time = ByteUtils.readInt(data, 0x034);
+		setEquips(equips);
+		setTime(ByteUtils.readInt(data, 0x034));
 		weapons = new Weapon[7];
 		for (int i = 0; i < weapons.length; i++) {
 			weapons[i] = new Weapon(data, i);
 		}
-		items = new int[30];
+		if (items == null)
+			items = new int[30];
+		int[] items = new int[30];
 		ByteUtils.readInts(data, 0x0D8, items);
+		setItems(items);
 		warps = new Warp[7];
 		for (int i = 0; i < warps.length; i++) {
 			warps[i] = new Warp(data, i);
 		}
-		flags = new boolean[8000];
+		if (flags == null)
+			flags = new boolean[8000];
+		boolean[] flags = new boolean[8000];
 		ByteUtils.readFlags(data, 0x21C, flags);
-		notifyListeners();
+		setFlags(flags);
 	}
 
 	/**
@@ -481,12 +654,12 @@ public class Profile {
 		ByteUtils.writeInt(data, 0x024, curWeapon);
 		ByteUtils.writeFlags(data, 0x02C, equips);
 		ByteUtils.writeInt(data, 0x034, time);
-		for (int i = 0; i < weapons.length; i++) {
-			weapons[i].save(data, i);
+		for (Weapon w : weapons) {
+			w.write(data);
 		}
 		ByteUtils.writeInts(data, 0x0D8, items);
-		for (int i = 0; i < warps.length; i++) {
-			warps[i].save(data, i);
+		for (Warp w : warps) {
+			w.write(data);
 		}
 		ByteUtils.writeString(data, 0x218, flagH);
 		ByteUtils.writeFlags(data, 0x21C, flags);
@@ -520,8 +693,8 @@ public class Profile {
 		pullFromData();
 		// set loaded flag
 		loaded = true;
-		// notify listeners
-		notifyListeners(false);
+		// notify listeners with "field" EVENT_LOAD
+		notifyListeners(EVENT_LOAD, -1, false);
 	}
 
 	/**
@@ -581,8 +754,8 @@ public class Profile {
 		}
 		// set new file
 		file = dest;
-		// notify listeners
-		notifyListeners(false);
+		// notify listeners with "field" EVENT_SAVE
+		notifyListeners(EVENT_SAVE, -1, false);
 	}
 
 	/**
@@ -616,7 +789,8 @@ public class Profile {
 	}
 
 	public static void setMap(int map) {
-		notifyListeners();
+		if (Profile.map != map)
+			notifyListeners(FIELD_MAP, -1);
 		Profile.map = map;
 	}
 
@@ -625,7 +799,8 @@ public class Profile {
 	}
 
 	public static void setSong(int song) {
-		notifyListeners();
+		if (Profile.song != song)
+			notifyListeners(FIELD_SONG, -1);
 		Profile.song = song;
 	}
 
@@ -634,7 +809,8 @@ public class Profile {
 	}
 
 	public static void setX(short x) {
-		notifyListeners();
+		if (Profile.x != x)
+			notifyListeners(FIELD_X_POSITION, -1);
 		Profile.x = x;
 	}
 
@@ -643,7 +819,8 @@ public class Profile {
 	}
 
 	public static void setY(short y) {
-		notifyListeners();
+		if (Profile.y != y)
+			notifyListeners(FIELD_Y_POSITION, -1);
 		Profile.y = y;
 	}
 
@@ -652,7 +829,8 @@ public class Profile {
 	}
 
 	public static void setDirection(int direction) {
-		notifyListeners();
+		if (Profile.direction != direction)
+			notifyListeners(FIELD_DIRECTION, -1);
 		Profile.direction = direction;
 	}
 
@@ -661,7 +839,8 @@ public class Profile {
 	}
 
 	public static void setMaxHealth(short maxHealth) {
-		notifyListeners();
+		if (Profile.maxHealth != maxHealth)
+			notifyListeners(FIELD_MAXIMUM_HEALTH, -1);
 		Profile.maxHealth = maxHealth;
 	}
 
@@ -670,7 +849,8 @@ public class Profile {
 	}
 
 	public static void setStarCount(short starCount) {
-		notifyListeners();
+		if (Profile.starCount != starCount)
+			notifyListeners(FIELD_STAR_COUNT, -1);
 		Profile.starCount = starCount;
 	}
 
@@ -679,7 +859,8 @@ public class Profile {
 	}
 
 	public static void setCurHealth(short curHealth) {
-		notifyListeners();
+		if (Profile.curHealth != curHealth)
+			notifyListeners(FIELD_CURRENT_HEALTH, -1);
 		Profile.curHealth = curHealth;
 	}
 
@@ -688,7 +869,8 @@ public class Profile {
 	}
 
 	public static void setCurWeapon(int curWeapon) {
-		notifyListeners();
+		if (Profile.curWeapon != curWeapon)
+			notifyListeners(FIELD_CURRENT_WEAPON, -1);
 		Profile.curWeapon = curWeapon;
 	}
 
@@ -740,7 +922,10 @@ public class Profile {
 	 *            otherwise
 	 */
 	public static void setEquip(int id, boolean equipped) {
-		notifyListeners();
+		if (id >= equips.length)
+			return;
+		if (equips[id] != equipped)
+			notifyListeners(FIELD_EQUIPS, id);
 		equips[id] = equipped;
 	}
 
@@ -749,7 +934,8 @@ public class Profile {
 	}
 
 	public static void setTime(int time) {
-		notifyListeners();
+		if (Profile.time != time)
+			notifyListeners(FIELD_TIME_PLAYED, -1);
 		Profile.time = time;
 	}
 
@@ -816,7 +1002,8 @@ public class Profile {
 	public static void setItem(int id, int value) {
 		if (id >= items.length)
 			return;
-		notifyListeners();
+		if (items[id] != value)
+			notifyListeners(FIELD_ITEMS, id);
 		items[id] = value;
 	}
 
@@ -881,9 +1068,10 @@ public class Profile {
 	 *            <code>true</code> if flag is set, <code>false</code> otherwise
 	 */
 	public static void setFlag(int id, boolean set) {
-		if (flags == null)
+		if (id >= flags.length)
 			return;
-		notifyListeners();
+		if (flags[id] != set)
+			notifyListeners(FIELD_FLAGS, id);
 		flags[id] = set;
 	}
 
@@ -911,7 +1099,8 @@ public class Profile {
 	 *            new costume
 	 */
 	public static void setMimCostume(long costume) {
-		notifyListeners();
+		if (getMimCostume() != costume)
+			notifyListeners(FIELD_MIM_COSTUME, 0);
 		for (int i = 7968; i < 7995; i++)
 			setFlag(i, (costume & (long) Math.pow(2, i - 7968)) != 0);
 	}
@@ -937,7 +1126,8 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setVariable(int id, short value) {
-		notifyListeners();
+		if (getVariable(id) != value)
+			notifyListeners(FIELD_VARIABLES, id);
 		pushToData();
 		ByteUtils.writeShort(data, 0x50A + id * Short.BYTES, value);
 		pullFromData();
@@ -964,7 +1154,8 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setPhysVariable(int id, short value) {
-		notifyListeners();
+		if (getPhysVariable(id) != value)
+			notifyListeners(FIELD_PHYSICS_VARIABLES, id);
 		pushToData();
 		ByteUtils.writeShort(data, 0x4DC + id * Short.BYTES, value);
 		pullFromData();

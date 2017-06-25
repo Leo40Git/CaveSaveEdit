@@ -184,8 +184,19 @@ public class Main extends JFrame implements ProfileChangeListener {
 	}
 
 	@Override
-	public void onChanged() {
+	public void onChange(String field, int id) {
 		setTitle(this);
+		String msg = "";
+		if (field == Profile.EVENT_SAVE)
+			msg = "profile saved";
+		else if (field == Profile.EVENT_LOAD)
+			msg = "profile loaded";
+		else {
+			if (id > -1)
+				field = String.format(field, id);
+			msg = "field \"" + field + "\" modified";
+		}
+		System.out.println(msg);
 	}
 
 }

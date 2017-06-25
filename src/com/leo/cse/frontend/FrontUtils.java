@@ -205,7 +205,7 @@ public class FrontUtils {
 		return colorImage(image, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 	// end code from stack overflow
-	
+
 	// code from https://stackoverflow.com/a/24875569
 	private static JColorChooser cc;
 

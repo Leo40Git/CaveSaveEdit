@@ -69,12 +69,12 @@ public class InventoryPanel extends Panel {
 			compList.add(new IntegerBox(xx + 10, 162, 110, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
-					return Profile.getWeapon(i2).getCurrentAmmo();
+					return Profile.getWeapon(i2).getCurAmmo();
 				}
 			}, new Function<Integer, Integer>() {
 				@Override
 				public Integer apply(Integer t) {
-					Profile.getWeapon(i2).setCurrentAmmo(t);
+					Profile.getWeapon(i2).setCurAmmo(t);
 					return t;
 				}
 			}, "weapon " + (i + 1) + " current ammo"));
