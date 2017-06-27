@@ -25,7 +25,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
-	public static final String VERSION = "1.0.1";
+	public static final String VERSION = "1.0.2";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
 
 	public static final Supplier<Boolean> FALSE_SUPPLIER = new Supplier<Boolean>() {
