@@ -6,6 +6,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.leo.cse.backend.exe.ExeData;
+
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
 /**
  * Utility methods for loading resources.
@@ -33,7 +35,7 @@ public class ResUtils {
 		for (int y = 0; y < src.getHeight(); y++)
 			for (int x = 0; x < src.getWidth(); x++) {
 				int px = src.getRGB(x, y);
-				if (px == Color.black.getRGB()) // argb black full opaque
+				if (px == Color.black.getRGB())
 					dest.setRGB(x, y, 0);
 				else
 					dest.setRGB(x, y, px);
@@ -71,7 +73,7 @@ public class ResUtils {
 	public static File getGraphicsFile(String name) {
 		return getGraphicsFile("", name);
 	}
-
+	
 	// code from https://stackoverflow.com/a/35325946
 	/**
 	 * Maps lower case strings to their case insensitive File

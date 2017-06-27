@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.backend.Profile;
+import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;

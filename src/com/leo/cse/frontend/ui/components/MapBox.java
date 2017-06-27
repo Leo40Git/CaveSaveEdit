@@ -8,9 +8,9 @@ import java.util.function.Supplier;
 
 import javax.swing.JOptionPane;
 
-import com.leo.cse.backend.ExeData;
-import com.leo.cse.backend.MapInfo;
-import com.leo.cse.backend.Profile;
+import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.exe.MapInfo;
+import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;

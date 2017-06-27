@@ -1,4 +1,4 @@
-package com.leo.cse.backend;
+package com.leo.cse.backend.profile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.leo.cse.backend.ByteUtils;
 
 /**
  * The interface class between a Java application and a Cave Story profile.

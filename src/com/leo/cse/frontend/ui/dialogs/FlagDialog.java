@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.backend.Profile;
+import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;

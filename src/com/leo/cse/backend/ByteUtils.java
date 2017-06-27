@@ -16,6 +16,7 @@ public class ByteUtils {
 	 */
 	private static final ByteBuffer BB;
 
+	// Initialize ByteBuffer
 	static {
 		BB = ByteBuffer.allocate(Long.BYTES);
 		BB.order(ByteOrder.LITTLE_ENDIAN);
@@ -89,6 +90,8 @@ public class ByteUtils {
 	 */
 	public static String readString(byte[] data, int ptr, int length) {
 		if (length < 1) {
+			// length was either not specified or specified but invalid
+			// we're gonna have to guess the string's length
 			StringBuilder sb = new StringBuilder();
 			while (ptr < data.length) {
 				// string is (probably) terminated by 0

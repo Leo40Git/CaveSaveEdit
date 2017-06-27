@@ -1,4 +1,4 @@
-package com.leo.cse.backend;
+package com.leo.cse.backend.exe;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -11,6 +11,9 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import com.leo.cse.backend.ResUtils;
+import com.leo.cse.backend.profile.Profile;
 
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
 /**

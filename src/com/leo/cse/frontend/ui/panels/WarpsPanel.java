@@ -3,7 +3,7 @@ package com.leo.cse.frontend.ui.panels;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.backend.Profile;
+import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.WarpBox;

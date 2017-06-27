@@ -15,9 +15,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.leo.cse.backend.ExeData;
-import com.leo.cse.backend.Profile;
-import com.leo.cse.backend.ProfileChangeListener;
+import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.ProfileChangeListener;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class Main extends JFrame implements ProfileChangeListener {

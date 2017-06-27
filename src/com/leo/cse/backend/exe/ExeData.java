@@ -1,4 +1,4 @@
-package com.leo.cse.backend;
+package com.leo.cse.backend.exe;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
@@ -19,6 +19,8 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import com.carrotlord.string.StrTools;
+import com.leo.cse.backend.ResUtils;
+import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;

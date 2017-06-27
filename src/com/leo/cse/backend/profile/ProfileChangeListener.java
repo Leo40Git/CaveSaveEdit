@@ -1,4 +1,4 @@
-package com.leo.cse.backend;
+package com.leo.cse.backend.profile;
 
 /**
  * Listens to changes to the currently loaded {@link Profile}.
