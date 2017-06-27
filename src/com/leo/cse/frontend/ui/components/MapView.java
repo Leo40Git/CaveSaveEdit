@@ -1,6 +1,8 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -73,9 +75,10 @@ public class MapView extends Component implements IDraggable {
 		drawBackground(sg);
 		sg.translate(-camX, -camY);
 		drawTiles(sg, 1);
-		drawTiles(sg, 2);
 		drawEntities(sg);
-		drawMyChar(sg);
+		drawMyChar(sg, false);
+		drawTiles(sg, 2);
+		drawMyChar(sg, true);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
 				+ (int) (camX / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
@@ -136,7 +139,7 @@ public class MapView extends Component implements IDraggable {
 			it.next().draw(g);
 	}
 
-	private void drawMyChar(Graphics g) {
+	private void drawMyChar(Graphics2D g, boolean trans) {
 		double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
 		int dir = (Profile.getDirection() == 2 ? 1 : 0);
 		long costume = 0;
@@ -153,8 +156,12 @@ public class MapView extends Component implements IDraggable {
 		yPixel /= snap;
 		yPixel *= 2;
 		int sourceY = (int) (64 * costume + 32 * dir);
+		Composite oc = g.getComposite();
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (trans ? 0.5f : 1));
+		g.setComposite(ac);
 		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
 				sourceY + 32, null);
+		g.setComposite(oc);
 	}
 
 	public void getCamCoords() {
