@@ -12,6 +12,7 @@ Game.GraphicsResolution=1
 Special.MimHack=false
 Special.VarHack=false
 Special.PhysVarHack=false
+Special.BuyHack=false
 # Map names
 Map.0=Credits
 Map.1=Arthur's House (Normal)
@@ -234,6 +235,7 @@ Flag.Engine=(engine flag)
 Flag.MimHack=(<MIM data)
 Flag.VarHack=(<VAR data)
 Flag.PhysVarHack=(<PHY data)
+Flag.BuyHack=(amount of cash)
 Flag.100=Egg Corridor Sue & Igor cutscene has been seen.
 Flag.101=1st Egg Corridor Life Capsule obtained. (Near teleporter)
 Flag.102=2nd Egg Corridor Life Capsule obtained. (Cthulhu's Abode)

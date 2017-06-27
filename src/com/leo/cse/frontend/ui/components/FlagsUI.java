@@ -49,7 +49,9 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 				ret &= (id < 5632 || id > 5888);
 			return ret;
 		} else if (MCI.getSpecial("MimHack")) {
-			return (id < 7968 || id > 7995);
+			return (id < 7968 || id > 7993);
+		} else if (MCI.getSpecial("BuyHack")) {
+			return (id < 7968 || id > 7999);
 		}
 		return true;
 	}
@@ -66,6 +68,9 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 		} else if (MCI.getSpecial("MimHack")) {
 			if (id >= 7968 && id <= 7993)
 				return MCI.get("Flag.MimHack");
+		} else if (MCI.getSpecial("BuyHack")) {
+			if (id >= 7968 && id <= 7993)
+				return MCI.get("Flag.BuyHack");
 		}
 		return MCI.get("Flag", id);
 	}

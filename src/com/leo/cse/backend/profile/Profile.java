@@ -164,6 +164,12 @@ public class Profile {
 	 * @see #getPhysVariable(int)
 	 */
 	public static final String FIELD_PHYSICS_VARIABLES = "physVars[%d]";
+	/**
+	 * Amount of cash "field". A field for this doesn't actually exist.
+	 * 
+	 * @see #getCash()
+	 */
+	public static final String FIELD_CASH = "cash";
 
 	/**
 	 * Make sure an instance of this class cannot be created.
@@ -1161,6 +1167,32 @@ public class Profile {
 		pushToData();
 		ByteUtils.writeShort(data, 0x4DC + id * Short.BYTES, value);
 		pullFromData();
+	}
+
+	/**
+	 * Gets the amount of cash.
+	 * 
+	 * @return amount of cash
+	 */
+	public static long getCash() {
+		long ret = 0;
+		for (int i = 7968; i < 7999; i++)
+			if (getFlag(i))
+				ret |= (long) Math.pow(2, i - 7968);
+		return ret;
+	}
+
+	/**
+	 * Sets the amount of cash.
+	 * 
+	 * @param cash
+	 *            new amount of cash
+	 */
+	public static void setCash(long cash) {
+		if (getCash() != cash)
+			notifyListeners(FIELD_CASH, 0);
+		for (int i = 7968; i < 7999; i++)
+			setFlag(i, (cash & (long) Math.pow(2, i - 7968)) != 0);
 	}
 
 	/**

@@ -44,6 +44,7 @@ This group is used for declaring if support for certain ASM hacks should be enab
 - `Boolean:MimHack`: Adds support for the <MIM hack. Prevents the used flags from being edited in the flag UI and adds a new field for modifying the current costume ID. 
 - `Boolean:VarHack`: Adds support for the <VAR (TSC+) hack. Prevents the used flags from being edited in the flag UI and adds a new tab for modifying the variables.
 - `Boolean:PhysVarHack`: Adds support for the <PHY (TSC+ PHY addon) hack. Prevents the used flags from being edited in the flag UI and adds new fields for modifying the physics variables.
+- `Boolean:BuyHack`: Adds support for BLink's <BUY hack. Prevents the used flags from being edited in the flag UI and adds a new field for modifying the amount of cash.
 
 ## `Map` - Default map descriptions:
 

@@ -147,6 +147,20 @@ public class InventoryPanel extends Panel {
 					return t;
 				}
 			}, "<MIM costume"));
+		} else if (MCI.getSpecial("BuyHack")) {
+			compList.add(new Label("Amount of Cash:", 4 + (winSize.width / 3) * 2, 539));
+			compList.add(new LongBox(4 + (winSize.width / 3) * 2, 555, 120, 16, new Supplier<Long>() {
+				@Override
+				public Long get() {
+					return Profile.getMimCostume();
+				}
+			}, new Function<Long, Long>() {
+				@Override
+				public Long apply(Long t) {
+					Profile.setMimCostume(t);
+					return t;
+				}
+			}, "amount of cash"));
 		}
 	}
 

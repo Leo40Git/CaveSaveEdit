@@ -140,7 +140,7 @@ public class ByteUtils {
 	}
 
 	/**
-	 * Reads an integer from a byte array.
+	 * Reads an <code>int</code> from a byte array.
 	 * 
 	 * @param data
 	 *            byte array
@@ -167,6 +167,37 @@ public class ByteUtils {
 		for (int i = 0; i < dest.length; i++) {
 			dest[i] = readInt(data, ptr);
 			ptr += Integer.BYTES;
+		}
+	}
+
+	/**
+	 * Reads a <code>long</code> from a byte array.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @param ptr
+	 *            starting position
+	 * @return integer
+	 */
+	public static long readLong(byte[] data, int ptr) {
+		readBytesToBuffer(data, ptr, Long.BYTES);
+		return BB.getLong(0);
+	}
+
+	/**
+	 * Reads an array of <code>long</code>s from a byte array.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @param ptr
+	 *            starting position
+	 * @param dest
+	 *            destination array
+	 */
+	public static void readLongs(byte[] data, int ptr, long[] dest) {
+		for (int i = 0; i < dest.length; i++) {
+			dest[i] = readLong(data, ptr);
+			ptr += Long.BYTES;
 		}
 	}
 
@@ -286,6 +317,39 @@ public class ByteUtils {
 		for (int i = 0; i < value.length; i++) {
 			writeInt(data, ptr, value[i]);
 			ptr += Integer.BYTES;
+		}
+	}
+
+	/**
+	 * Writes a <code>long</code> to a byte array.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @param ptr
+	 *            starting position
+	 * @param value
+	 *            integer to write
+	 */
+	public static void writeLong(byte[] data, int ptr, long value) {
+		BB.clear();
+		BB.putLong(value);
+		writeBytesFromBuffer(data, ptr, Long.BYTES);
+	}
+
+	/**
+	 * Writes an array of <code>long</code>s to a byte array.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @param ptr
+	 *            starting position
+	 * @param value
+	 *            integers to write
+	 */
+	public static void writeLongs(byte[] data, int ptr, long[] value) {
+		for (int i = 0; i < value.length; i++) {
+			writeLong(data, ptr, value[i]);
+			ptr += Long.BYTES;
 		}
 	}
 
