@@ -1,5 +1,10 @@
 # CaveSaveEdit
 A Java-based Cave Story profile editor, complete with mod support.
+# How to Compile
+First off, CaveSaveEdit will only compile on Java 8 without modifications to the map sorting functions in FrontUtils and a few other places where lambdas are used.
+Since there are no external libraries or resources, compiling CSE is super easy!
+There is only one `main` method, located in `com.leo.cse.frontend.Main`.
+This is an Eclipse project, although I believe IntelliJ can import Eclipse projects natively.
 # How to Use
 Click on "Load profile" in the toolbar to load a profile. If a Profile.dat file is found in the same directory as the application, it will be loaded automatically on startup.  
 Modify the values to your liking, and then click on "Save" in the toolbar to save the new profile.  
