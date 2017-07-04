@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+//import javax.swing.SwingUtilities;
 
 import com.leo.cse.backend.exe.ExeData;
-import com.leo.cse.frontend.Config;
+//import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
@@ -35,9 +35,13 @@ public class SettingsDialog extends BaseDialog {
 		g.drawRect(x + 4, y + 23, 292, 17);
 		FrontUtils.drawStringCentered(g, "Change Line Color", x + 150, y + 23);
 		g.drawImage(Resources.toolbarIcons[Resources.toolbarIcons.length - 1], x + 5, y + 24, null);
-		Image chkImage = (ExeData.doLoadNpc() ? Resources.checkboxOn : Resources.checkboxOff);
+		/// TODO: Fix NPCs
+		//Image chkImage = (ExeData.doLoadNpc() ? Resources.checkboxOn : Resources.checkboxOff);
+		Image chkImage = Resources.checkboxDisabled;
 		g.drawImage(chkImage, x + 4, y + 43, null);
-		FrontUtils.drawString(g, "Load NPCs?", x + 22, y + 41);
+		/// TODO: Fix NPCs
+		//FrontUtils.drawString(g, "Load NPCs?", x + 22, y + 41);
+		FrontUtils.drawString(g, "Load NPCs? (not yet available, sorry!)", x + 22, y + 41);
 		FrontUtils.drawString(g, "Encoding:", x + 4, y + 58);
 		g.drawRect(x + 52, y + 59, 244, 17);
 		FrontUtils.drawString(g, Main.encoding, x + 54, y + 58);
@@ -53,6 +57,8 @@ public class SettingsDialog extends BaseDialog {
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 23, 292, 17)) {
 			setLineColor();
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 43, 16, 16)) {
+			/// TODO: Fix NPCs
+			/*
 			ExeData.setLoadNpc(!ExeData.doLoadNpc());
 			SaveEditorPanel.panel.setLoading(true);
 			Main.window.repaint();
@@ -69,6 +75,7 @@ public class SettingsDialog extends BaseDialog {
 					});
 				}
 			});
+			*/
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 52, wy + 59, 244, 17)) {
 			String e = null;
 			while (e == null) {
