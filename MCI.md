@@ -57,6 +57,9 @@ While most entries in this group are used to define a description for a specific
 - `String:MimHack`: Description for flags used by <MIM, which are flags 7968-7993.
 - `String:VarHack`: Description for flags used by <VAR, which are flags 6000-8000.
 - `String:PhysVarHack`: Description for flags used by <PHY, which are flags 5632-5888.
+- `String:BuyHack`: Description for flags used by <BUY, which are flags 7968-7999.
+- `Integer:SaveID`: ID of the flag used for detecting if a game is saved.
+- `String:Save`: Description for the flag used for detecting if a game is saved, which is the flag defined in `SaveID`.
 
 ## `EntityRect` - Entity framerects:
 

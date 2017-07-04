@@ -236,6 +236,8 @@ Flag.MimHack=(<MIM data)
 Flag.VarHack=(<VAR data)
 Flag.PhysVarHack=(<PHY data)
 Flag.BuyHack=(<BUY data)
+Flag.SaveID=431
+Flag.Save=Set once you save your game. Makes the game try to load the save instead of quitting to the title screen when "Yes" is selected on a death prompt.
 Flag.100=Egg Corridor Sue & Igor cutscene has been seen.
 Flag.101=1st Egg Corridor Life Capsule obtained. (Near teleporter)
 Flag.102=2nd Egg Corridor Life Capsule obtained. (Cthulhu's Abode)
@@ -260,7 +262,6 @@ Flag.202=Set once the Super Missile Launcher (SML) is obtained.
 Flag.210=Set once Santa's Key is obtained.
 Flag.211=Advances Santa's dialogue outside his house.
 Flag.212=Set once you give Santa his key. Lets you into his house and stops him appearing outside.
-Flag.431=Set once you save your game. Makes the game try to load the save instead of quitting to the title screen when "Yes" is selected on a death prompt.
 # Entity framerects
 EntityRect.0=0:0:0:0
 EntityRect.1=0:32:32:64

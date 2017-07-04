@@ -279,6 +279,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private void saveProfile() {
 		if (!canSave())
 			return;
+		// force save flag to be on
+		Profile.setFlag(MCI.getInteger("Flag.SaveID", 431), true);
 		try {
 			Profile.write();
 		} catch (IOException e1) {
@@ -302,6 +304,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				if (confirmVal != JOptionPane.YES_OPTION)
 					return;
 			}
+			// force save flag to be on
+			Profile.setFlag(MCI.getInteger("Flag.SaveID", 431), true);
 			try {
 				Profile.write(file);
 			} catch (IOException e1) {
