@@ -21,7 +21,7 @@ public class SettingsDialog extends BaseDialog {
 	private static final byte[] TEST_STRING = new byte[] { (byte) 'T', (byte) 'e', (byte) 's', (byte) 't' };
 
 	public SettingsDialog() {
-		super("Settings", 300, 80);
+		super("Settings", 300, 84);
 	}
 
 	@Override
@@ -42,9 +42,9 @@ public class SettingsDialog extends BaseDialog {
 		/// TODO: Fix NPCs
 		//FrontUtils.drawString(g, "Load NPCs?", x + 22, y + 41);
 		FrontUtils.drawString(g, "Load NPCs? (not yet available, sorry!)", x + 22, y + 41);
-		FrontUtils.drawString(g, "Encoding:", x + 4, y + 58);
-		g.drawRect(x + 52, y + 59, 244, 17);
-		FrontUtils.drawString(g, Main.encoding, x + 54, y + 58);
+		FrontUtils.drawString(g, "Encoding:", x + 4, y + 62);
+		g.drawRect(x + 54, y + 63, 242, 17);
+		FrontUtils.drawString(g, Main.encoding, x + 56, y + 62);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class SettingsDialog extends BaseDialog {
 				}
 			});
 			*/
-		} else if (FrontUtils.pointInRectangle(x, y, wx + 52, wy + 59, 244, 17)) {
+		} else if (FrontUtils.pointInRectangle(x, y, wx + 54, wy + 63, 242, 17)) {
 			String e = null;
 			while (e == null) {
 				e = JOptionPane.showInputDialog(SaveEditorPanel.panel, "Enter new encoding:", Main.encoding);
