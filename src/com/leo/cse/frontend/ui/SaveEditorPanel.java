@@ -319,16 +319,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 	}
 
-	private boolean ignoreReleased = false, ignoreDragged = false;
-
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON1)
 			return;
-		if (ignoreReleased) {
-			ignoreReleased = false;
-			return;
-		}
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
 		final Dimension winSize = Main.window.getActualSize();
@@ -396,8 +390,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			for (Component comp : tabMap.get(currentTab).getComponents()) {
 				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
-					ignoreReleased = comp.onClick(px, py - 17, shift, ctrl);
-					ignoreDragged = ignoreReleased;
+					comp.onClick(px, py - 17, shift, ctrl);
 					newFocus = comp;
 					break;
 				}
@@ -432,10 +425,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	public void mouseDragged(MouseEvent e) {
 		if (dBox != null)
 			return;
-		if (ignoreDragged) {
-			ignoreDragged = false;
-			return;
-		}
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
 		final Insets i = Main.window.getInsets();

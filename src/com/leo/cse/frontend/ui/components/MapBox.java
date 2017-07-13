@@ -46,8 +46,8 @@ public class MapBox extends DefineBox {
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		String nVal = (String) JOptionPane.showInputDialog(Main.window, "", "Select " + description,
-				JOptionPane.PLAIN_MESSAGE, null, map.values().toArray(new String[] {}), map.get(vSup.get()));
+		String nVal = FrontUtils.showSelectionDialog(Main.window, "Select " + description, map.values(),
+				map.get(vSup.get()));
 		if (nVal == null)
 			return true;
 		Integer i = FrontUtils.getKey(map, nVal);

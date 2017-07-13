@@ -113,7 +113,11 @@ public class MapView extends Component implements IDraggable {
 				int xPixel = xx * 32 - 16;
 				int yPixel = yy * 32 - 16;
 				int tile = map[l][i][j];
-				if (mapInfo.calcPxa(tile) == 0x43) {
+				int pxa = mapInfo.calcPxa(tile);
+				if (pxa >= 0x20 && pxa <= 0x3F) {
+					// no draw
+					continue;
+				} else if (pxa == 0x43) {
 					// draw breakable tile
 					g.drawImage(ExeData.getImage(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512,
 							96, 544, 128, null);

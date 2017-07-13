@@ -44,8 +44,7 @@ public class DefineBox extends IntegerBox {
 			map = FrontUtils.sortMapByValue(map);
 		for (Map.Entry<Integer, String> entry : map.entrySet())
 			entry.setValue(entry.getKey() + " - " + entry.getValue());
-		String nVal = (String) JOptionPane.showInputDialog(Main.window, "", "Select " + description,
-				JOptionPane.PLAIN_MESSAGE, null, map.values().toArray(new String[] {}),
+		String nVal = FrontUtils.showSelectionDialog(Main.window, "Select " + description, map.values(),
 				vSup.get() + " - " + MCI.get(type, vSup.get()));
 		if (nVal == null)
 			return true;

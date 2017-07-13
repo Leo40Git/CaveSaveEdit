@@ -12,10 +12,13 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -29,11 +32,16 @@ import java.util.stream.Collectors;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.Position;
 
 public class FrontUtils {
 
@@ -55,6 +63,34 @@ public class FrontUtils {
 				System.exit(1);
 			}
 		}
+	}
+
+	private static String ret;
+
+	public static String showSelectionDialog(Component parent, String title, Collection<String> collection,
+			String selected) {
+		JList<String> list = new JList<String>(collection.toArray(new String[] {}));
+		JScrollPane scrollpane = new JScrollPane();
+		JPanel panel = new JPanel();
+		panel.add(scrollpane);
+		scrollpane.getViewport().add(list);
+		int index = list.getNextMatch(selected, 0, Position.Bias.Forward);
+		if (index == -1)
+			throw new Error("selected not in list");
+		else {
+			list.setSelectedValue(selected, true);
+			list.ensureIndexIsVisible(index);
+		}
+		ret = null;
+		list.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() > 1)
+					SwingUtilities.windowForComponent(list).dispose();
+			}
+		});
+		JOptionPane.showMessageDialog(parent, scrollpane, title, JOptionPane.PLAIN_MESSAGE);
+		ret = list.getSelectedValue();
+		return ret;
 	}
 
 	public static void drawString(Graphics g, String str, int x, int y) {
