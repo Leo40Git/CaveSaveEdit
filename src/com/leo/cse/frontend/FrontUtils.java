@@ -41,7 +41,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.text.Position;
 
 public class FrontUtils {
 
@@ -66,6 +65,7 @@ public class FrontUtils {
 	}
 
 	private static String ret;
+	private static boolean dc;
 
 	public static String showSelectionDialog(Component parent, String title, Collection<String> collection,
 			String selected) {
@@ -74,22 +74,22 @@ public class FrontUtils {
 		JPanel panel = new JPanel();
 		panel.add(scrollpane);
 		scrollpane.getViewport().add(list);
-		int index = list.getNextMatch(selected, 0, Position.Bias.Forward);
-		if (index == -1)
-			throw new Error("selected not in list");
-		else {
-			list.setSelectedValue(selected, true);
-			list.ensureIndexIsVisible(index);
-		}
+		list.setSelectedValue(selected, true);
 		ret = null;
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() > 1)
+				if (e.getClickCount() > 1) {
+					dc = true;
 					SwingUtilities.windowForComponent(list).dispose();
+				}
 			}
 		});
-		JOptionPane.showMessageDialog(parent, scrollpane, title, JOptionPane.PLAIN_MESSAGE);
-		ret = list.getSelectedValue();
+		int msg = JOptionPane.showConfirmDialog(parent, scrollpane, title, JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+		if (dc || msg == JOptionPane.OK_OPTION)
+			ret = list.getSelectedValue();
+		else
+			ret = null;
 		return ret;
 	}
 
