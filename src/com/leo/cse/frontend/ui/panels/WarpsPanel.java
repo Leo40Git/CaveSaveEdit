@@ -31,7 +31,8 @@ public class WarpsPanel extends Panel {
 			}, "WarpLoc", "warp " + (i + 1) + " location", new Supplier<Boolean>() {
 				@Override
 				public Boolean get() {
-					return Profile.getWarp(i2).getId() != 0;
+					// return Profile.getWarp(i2).getId() != 0;
+					return true;
 				}
 			}));
 		}

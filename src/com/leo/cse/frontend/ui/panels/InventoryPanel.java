@@ -36,18 +36,23 @@ public class InventoryPanel extends Panel {
 						return t;
 					}
 				}, true, (int index) -> {
+					/*
 					if (Profile.getWeapon(index).getId() == 0)
 						return false;
+					*/
 					return true;
 				}));
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
 			compList.add(new WeaponBox(xx, 22, i));
+			/*
 			Supplier<Boolean> enabled = new Supplier<Boolean>() {
 				public Boolean get() {
 					return Profile.getWeapon(i2).getId() != 0;
 				};
 			};
+			*/
+			Supplier<Boolean> enabled = Main.TRUE_SUPPLIER;
 			compList.add(new Label("Level:", xx, 72));
 			compList.add(new IntegerBox(xx, 90, 120, 16, new Supplier<Integer>() {
 				@Override
