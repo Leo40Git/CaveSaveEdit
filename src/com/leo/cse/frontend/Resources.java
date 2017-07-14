@@ -1,6 +1,6 @@
 package com.leo.cse.frontend;
 
-import static com.leo.cse.frontend.FrontUtils.colorImage;
+import static com.leo.cse.frontend.FrontUtils.generateMask;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -74,16 +74,16 @@ public class Resources {
 
 	public static void colorImages(Color tint) {
 		reloadColorImages();
-		checkboxOff = colorImage(checkboxOff, tint);
-		checkboxOn = colorImage(checkboxOn, tint);
-		checkboxDisabled = colorImage(checkboxDisabled, tint);
-		radioOff = colorImage(radioOff, tint);
-		radioOffS = colorImage(radioOffS, tint);
-		radioOn = colorImage(radioOn, tint);
-		radioOnS = colorImage(radioOnS, tint);
-		dialogClose = colorImage(dialogClose, tint);
-		arrowDown = colorImage(arrowDown, tint);
-		arrowUp = colorImage(arrowUp, tint);
+		checkboxOff = generateMask(checkboxOff, tint, 1f);
+		checkboxOn = generateMask(checkboxOn, tint, 1f);
+		checkboxDisabled = generateMask(checkboxDisabled, tint, 1f);
+		radioOff = generateMask(radioOff, tint, 1f);
+		radioOffS = generateMask(radioOffS, tint, 1f);
+		radioOn = generateMask(radioOn, tint, 1f);
+		radioOnS = generateMask(radioOnS, tint, 1f);
+		dialogClose = generateMask(dialogClose, tint, 1f);
+		arrowDown = generateMask(arrowDown, tint, 1f);
+		arrowUp = generateMask(arrowUp, tint, 1f);
 	}
 
 }
