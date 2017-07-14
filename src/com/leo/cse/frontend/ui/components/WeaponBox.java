@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -11,6 +12,8 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
 public class WeaponBox extends DefineBox {
+
+	private int id;
 
 	public WeaponBox(int x, int y, int weaponId) {
 		super(x, y, 120, 48, new Supplier<Integer>() {
@@ -25,6 +28,7 @@ public class WeaponBox extends DefineBox {
 				return t;
 			}
 		}, "Weapon", "weapon " + (weaponId + 1));
+		id = weaponId;
 	}
 
 	@Override
@@ -33,6 +37,12 @@ public class WeaponBox extends DefineBox {
 		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);
+		if (id != 0 && Profile.getWeapon(id - 1).getId() == 0) {
+			Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31);
+			g.setColor(lc2);
+			g.fillRect(x, y, width, height - 1);
+			return;
+		}
 		int wep = vSup.get();
 		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 31);
 		if (wep == 0)
@@ -43,6 +53,13 @@ public class WeaponBox extends DefineBox {
 		g.drawImage(ExeData.getImage(ExeData.getArmsImage()), x + width / 2 - size / 2, y - (size - 32) + 1,
 				x + width / 2 + size / 2, y - (size - 32) + size + 1, wep * size, ystart, (wep + 1) * size,
 				ystart + size, null);
+	}
+
+	@Override
+	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (id != 0 && Profile.getWeapon(id - 1).getId() == 0)
+			return false;
+		return super.onClick(x, y, shiftDown, ctrlDown);
 	}
 
 }

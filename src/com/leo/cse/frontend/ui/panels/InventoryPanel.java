@@ -35,10 +35,19 @@ public class InventoryPanel extends Panel {
 						Profile.setCurWeapon(t);
 						return t;
 					}
-				}, true));
+				}, true, (int index) -> {
+					if (Profile.getWeapon(index).getId() == 0)
+						return false;
+					return true;
+				}));
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
 			compList.add(new WeaponBox(xx, 22, i));
+			Supplier<Boolean> enabled = new Supplier<Boolean>() {
+				public Boolean get() {
+					return Profile.getWeapon(i2).getId() != 0;
+				};
+			};
 			compList.add(new Label("Level:", xx, 72));
 			compList.add(new IntegerBox(xx, 90, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -51,7 +60,7 @@ public class InventoryPanel extends Panel {
 					Profile.getWeapon(i2).setLevel(t);
 					return t;
 				}
-			}, "weapon " + (i + 1) + " level"));
+			}, "weapon " + (i + 1) + " level", enabled));
 			compList.add(new Label("Extra EXP:", xx, 108));
 			compList.add(new IntegerBox(xx, 126, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -64,7 +73,7 @@ public class InventoryPanel extends Panel {
 					Profile.getWeapon(i2).setExp(t);
 					return t;
 				}
-			}, "weapon " + (i + 1) + " extra EXP"));
+			}, "weapon " + (i + 1) + " extra EXP", enabled));
 			compList.add(new Label("Ammo:", xx + 10, 144));
 			compList.add(new IntegerBox(xx + 10, 162, 110, 16, new Supplier<Integer>() {
 				@Override
@@ -77,7 +86,7 @@ public class InventoryPanel extends Panel {
 					Profile.getWeapon(i2).setCurAmmo(t);
 					return t;
 				}
-			}, "weapon " + (i + 1) + " current ammo"));
+			}, "weapon " + (i + 1) + " current ammo", enabled));
 			compList.add(new Label("/", xx + 2, 180));
 			compList.add(new IntegerBox(xx + 10, 180, 110, 16, new Supplier<Integer>() {
 				@Override
@@ -90,7 +99,7 @@ public class InventoryPanel extends Panel {
 					Profile.getWeapon(i2).setMaxAmmo(t);
 					return t;
 				}
-			}, "weapon " + (i + 1) + " maximum ammo"));
+			}, "weapon " + (i + 1) + " maximum ammo", enabled));
 			xx += 122;
 		}
 		int itemId = 0;

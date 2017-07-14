@@ -26,6 +26,8 @@ public class LongBox extends InputBox {
 
 	@Override
 	public void render(Graphics g) {
+		if (!enabled.get())
+			return;
 		super.render(g);
 		g.setFont(Resources.font);
 		FrontUtils.drawString(g, Long.toString(vSup.get()), x + 3, y - 1);
@@ -33,6 +35,8 @@ public class LongBox extends InputBox {
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (!enabled.get())
+			return false;
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":",
 				Long.toUnsignedString(vSup.get()));
 		if (nVal == null)

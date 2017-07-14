@@ -125,7 +125,9 @@ public class GeneralPanel extends Panel {
 				Profile.setDirection((t == 1 ? 2 : 0));
 				return t;
 			}
-		}, false));
+		}, false, (int index) -> {
+			return true;
+		}));
 		compList.add(new Label("Health:", 4, 104));
 		compList.add(new ShortBox(44, 104, 60, 16, new Supplier<Short>() {
 			@Override

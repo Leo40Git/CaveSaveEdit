@@ -17,22 +17,32 @@ public class IntegerBox extends InputBox {
 	protected String description;
 
 	public IntegerBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
-			String description) {
+			String description, Supplier<Boolean> enabled) {
 		super(x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
 		this.description = description;
+		this.enabled = enabled;
+	}
+
+	public IntegerBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
+			String description) {
+		this(x, y, width, height, vSup, update, description, Main.TRUE_SUPPLIER);
 	}
 
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
+		if (!enabled.get())
+			return;
 		g.setFont(Resources.font);
 		FrontUtils.drawString(g, Integer.toUnsignedString(vSup.get()), x + 3, y - 1);
 	}
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (!enabled.get())
+			return false;
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":",
 				Integer.toUnsignedString(vSup.get()));
 		if (nVal == null)

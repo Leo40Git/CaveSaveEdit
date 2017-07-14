@@ -1,16 +1,25 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.util.function.Supplier;
+
+import com.leo.cse.frontend.Main;
 
 public abstract class Component {
 
 	protected int x, y, width, height;
+	protected Supplier<Boolean> enabled;
 
-	public Component(int x, int y, int width, int height) {
+	public Component(int x, int y, int width, int height, Supplier<Boolean> enabled) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.enabled = enabled;
+	}
+	
+	public Component(int x, int y, int width, int height) {
+		this(x, y, width, height, Main.TRUE_SUPPLIER);
 	}
 
 	public abstract void render(Graphics g);
@@ -18,7 +27,7 @@ public abstract class Component {
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		return false;
 	}
-	
+
 	public void onKey(int code, boolean shiftDown, boolean ctrlDown) {
 	}
 
@@ -52,6 +61,11 @@ public abstract class Component {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+	
+	public Component setEnabled(Supplier<Boolean> enabled) {
+		this.enabled = enabled;
+		return this;
 	}
 
 }

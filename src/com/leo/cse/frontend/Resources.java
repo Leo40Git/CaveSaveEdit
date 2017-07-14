@@ -24,8 +24,8 @@ public class Resources {
 	
 	// colored images
 	public static BufferedImage checkboxOff, checkboxOn, checkboxDisabled;
-	public static BufferedImage radioOff, radioOn;
-	public static BufferedImage radioOffS, radioOnS;
+	public static BufferedImage radioOff, radioOn, radioDisabled;
+	public static BufferedImage radioOffS, radioOnS, radioDisabledS;
 	public static BufferedImage dialogClose;
 	public static BufferedImage arrowDown, arrowUp;
 	
@@ -67,6 +67,8 @@ public class Resources {
 		radioOffS = ui.getSubimage(32, 0, 8, 8);
 		radioOn = ui.getSubimage(88, 16, 16, 16);
 		radioOnS = ui.getSubimage(40, 0, 8, 8);
+		radioDisabled = ui.getSubimage(104, 16, 16, 16);
+		radioDisabledS = ui.getSubimage(32, 8, 8, 8);
 		dialogClose = ui.getSubimage(48, 0, 14, 14);
 		arrowDown = ui.getSubimage(80, 0, 8, 8);
 		arrowUp = ui.getSubimage(80, 8, 8, 8);
@@ -81,6 +83,8 @@ public class Resources {
 		radioOffS = generateMask(radioOffS, tint, 1f);
 		radioOn = generateMask(radioOn, tint, 1f);
 		radioOnS = generateMask(radioOnS, tint, 1f);
+		radioDisabled = generateMask(radioDisabled, tint, 1f);
+		radioDisabledS = generateMask(radioDisabledS, tint, 1f);
 		dialogClose = generateMask(dialogClose, tint, 1f);
 		arrowDown = generateMask(arrowDown, tint, 1f);
 		arrowUp = generateMask(arrowUp, tint, 1f);

@@ -22,9 +22,14 @@ public class Main extends JFrame implements ProfileChangeListener {
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
-	public static final String VERSION = "1.0.2";
+	public static final String VERSION = "1.0.3";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
 
+	public static final Supplier<Boolean> TRUE_SUPPLIER = new Supplier<Boolean>() {
+		public Boolean get() {
+			return true;
+		}
+	};
 	public static final Supplier<Boolean> FALSE_SUPPLIER = new Supplier<Boolean>() {
 		public Boolean get() {
 			return false;
@@ -68,6 +73,9 @@ public class Main extends JFrame implements ProfileChangeListener {
 		setTitle(this);
 		setBackground(COLOR_BG);
 		setIconImage(Resources.icon);
+	}
+
+	private void initPanel() {
 		SaveEditorPanel sep = new SaveEditorPanel();
 		add(sep);
 		addKeyListener(sep);
@@ -142,7 +150,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, "UTF-8");
 		/// TODO: Fix NPCs
-		//ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
+		// ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
 		ExeData.setLoadNpc(false);
 		try {
 			Resources.load();
@@ -157,6 +165,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		}
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();
+			window.initPanel();
 			window.setVisible(true);
 			SwingUtilities.invokeLater(() -> {
 				File p = new File(System.getProperty("user.dir") + "/Profile.dat");

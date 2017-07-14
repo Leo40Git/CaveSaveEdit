@@ -34,6 +34,8 @@ public class ShortBox extends InputBox {
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
+		if (!enabled.get())
+			return;
 		String str = Short.toString(vSup.get());
 		if (padLength > 0)
 			str = FrontUtils.padLeft(str, "0", padLength);
@@ -43,6 +45,8 @@ public class ShortBox extends InputBox {
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (!enabled.get())
+			return false;
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":", vSup.get());
 		if (nVal == null)
 			return false;

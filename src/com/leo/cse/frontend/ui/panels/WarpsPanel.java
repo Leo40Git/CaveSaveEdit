@@ -28,7 +28,12 @@ public class WarpsPanel extends Panel {
 					Profile.getWarp(i2).setLocation(t);
 					return t;
 				}
-			}, "WarpLoc", "warp " + (i + 1) + "'s location"));
+			}, "WarpLoc", "warp " + (i + 1) + " location", new Supplier<Boolean>() {
+				@Override
+				public Boolean get() {
+					return Profile.getWarp(i2).getId() != 0;
+				}
+			}));
 		}
 	}
 

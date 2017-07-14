@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,10 +18,21 @@ public class DefineBox extends IntegerBox {
 	protected String type;
 
 	public DefineBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
-			Supplier<Boolean> sSup, String type, String description) {
+			Supplier<Boolean> sSup, String type, String description, Supplier<Boolean> enabled) {
 		super(x, y, width, height, vSup, update, description);
 		this.sSup = sSup;
 		this.type = type;
+		this.enabled = enabled;
+	}
+
+	public DefineBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
+			Supplier<Boolean> sSup, String type, String description) {
+		this(x, y, width, height, vSup, update, sSup, type, description, Main.TRUE_SUPPLIER);
+	}
+
+	public DefineBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
+			String type, String description, Supplier<Boolean> enabled) {
+		this(x, y, width, height, vSup, update, Main.FALSE_SUPPLIER, type, description, enabled);
 	}
 
 	public DefineBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
@@ -34,11 +46,19 @@ public class DefineBox extends IntegerBox {
 		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);
+		if (!enabled.get()) {
+			Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31);
+			g.setColor(lc2);
+			g.fillRect(x, y, width, height - 1);
+			return;
+		}
 		FrontUtils.drawString(g, vSup.get() + " - " + MCI.get(type, vSup.get()), x + 3, y - 1);
 	}
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (!enabled.get())
+			return false;
 		Map<Integer, String> map = MCI.getAll(type);
 		if (sSup.get())
 			map = FrontUtils.sortMapByValue(map);
