@@ -155,7 +155,7 @@ public class GeneralPanel extends Panel {
 			}
 		}, "maximum health"));
 		compList.add(new Label("Seconds Played:", 4, 124));
-		compList.add(new IntegerBox(88, 124, 120, 16, new Supplier<Integer>() {
+		compList.add(new IntegerBox(92, 124, 120, 16, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
 				return Profile.getTime() / MCI.getInteger("Game.FPS", 50);
@@ -167,7 +167,7 @@ public class GeneralPanel extends Panel {
 				return t;
 			}
 		}, "time played"));
-		compList.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 212, 124));
+		compList.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 216, 124));
 		mp = new MapView(winSize.width / 2 - 320, 164);
 		compList.add(mp);
 		compList.add(new Button("Snap to Grid", 756, 426, 100, 20, new Supplier<Boolean>() {
