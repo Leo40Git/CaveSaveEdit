@@ -692,7 +692,7 @@ public class Profile {
 		// check header
 		String profHeader = ByteUtils.readString(data, 0, header.length());
 		if (!header.equals(profHeader))
-			throw new IOException("invalid file header");
+			throw new IOException("Invalid file header!");
 		// check flag header
 		String profFlagH = ByteUtils.readString(data, 0x218, flagH.length());
 		if (!flagH.equals(profFlagH))

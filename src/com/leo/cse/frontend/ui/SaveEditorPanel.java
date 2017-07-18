@@ -223,8 +223,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			if (sel == JOptionPane.CANCEL_OPTION)
 				return;
 		}
+		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir")));
+		if (!dir.exists()) dir = new File(System.getProperty("user.dir"));
 		int returnVal = FrontUtils.openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
-				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false);
+				dir, false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			Main.loadProfile(FrontUtils.getSelectedFile());
 			addComponents();
@@ -232,6 +234,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	private void loadExe() {
+		if (!Profile.isLoaded()) {
+			JOptionPane.showMessageDialog(Main.window, "Please load a profile before loading an executable.",
+					"Can't load executable", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		File base = null;
 		while (base == null || !base.exists()) {
 			int returnVal = FrontUtils.openFileChooser("Open executable",

@@ -349,8 +349,6 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	public static void load(File file) throws IOException {
-		if (!Profile.isLoaded() || Profile.getFile() == null)
-			return;
 		File base = file;
 		if (base == null)
 			base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
@@ -416,6 +414,8 @@ public class ExeData {
 		stageImage = null;
 		npcRegu = null;
 		npcSym = null;
+		Profile.header = Profile.DEFAULT_HEADER;
+		Profile.flagH = Profile.DEFAULT_FLAGH;
 		System.gc();
 	}
 

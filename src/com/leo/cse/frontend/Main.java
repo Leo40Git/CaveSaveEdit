@@ -105,6 +105,15 @@ public class Main extends JFrame implements ProfileChangeListener {
 			SaveEditorPanel.panel.setLoading(true);
 		window.repaint();
 		SwingUtilities.invokeLater(() -> {
+			// unload existing exe
+			ExeData.unload();
+			// try to load exe
+			try {
+				ExeData.load(new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe"));
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("EXE loading failed.");
+			}
 			try {
 				Profile.read(file);
 			} catch (Exception e) {
@@ -114,16 +123,6 @@ public class Main extends JFrame implements ProfileChangeListener {
 						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
-				// unload existing exe
-				ExeData.unload();
-				// try to load exe
-				try {
-					ExeData.load(new File(
-							Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe"));
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.err.println("EXE loading failed.");
-				}
 				Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
 				SwingUtilities.invokeLater(() -> {
 					if (SaveEditorPanel.panel != null)
