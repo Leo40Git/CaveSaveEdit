@@ -13,6 +13,8 @@ Yes, it's that simple!
 The MCI system is used for mod support.  
 This system allows users to add custom items, weapons, equipment and more to the save editor with ease.  
 See [the MCI readme](MCI.md) for more information about the MCI system.
+# To-do list
+The to-do list can be found in issue #3.
 # Credits
 - **Noxid ([@taedixon](https://github.com/taedixon)):** Executable related code ([classes in the "backend.exe" package](src/com/leo/cse/backend/exe)), stolen from **[Booster's Lab](https://github.com/taedixon/boosters-lab)**.
 - **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites ([ui.png](src/com/leo/cse/frontend/ui.png) and [shadow.png](src/com/leo/cse/frontend/shadow.png))
