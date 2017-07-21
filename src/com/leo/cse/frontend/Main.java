@@ -6,6 +6,9 @@ import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.function.Supplier;
 
 import javax.swing.JFrame;
@@ -144,6 +147,23 @@ public class Main extends JFrame implements ProfileChangeListener {
 	}
 
 	public static void main(String[] args) {
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
+		File log = new File("cse.log");
+		if (log.exists())
+			log.delete();
+		try {
+			log.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PrintStream ps = null;
+		try {
+			ps = new PrintStream(log);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.setOut(ps);
+		System.setErr(ps);
 		FrontUtils.initSwing();
 		Config.init();
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
