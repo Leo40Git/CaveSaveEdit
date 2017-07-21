@@ -3,6 +3,7 @@ The MCI system, or the **M**od **C**ompatibility **I**nformation system (origina
 
 # How does MCI work?
 The MCI system uses configuration files to define and declare values. An MCI file is simply a Java properties file with a different file extension ("\*.mci" instead of "\*.properties").  
+An example for an MCI configuration file can be found [here](src/com/leo/cse/frontend/default.mci).  
 There are several groups of strings which are divided by their entry's prefix.  
 Each group serves a purpose in the save editor UI:
 - `Map` - Default map names
