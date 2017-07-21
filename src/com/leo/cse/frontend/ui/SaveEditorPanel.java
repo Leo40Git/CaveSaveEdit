@@ -13,7 +13,9 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFileChooser;
@@ -70,7 +72,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private Map<EditorTab, Panel> tabMap;
 
 	private Component lastFocus;
-	private Dialog dBox;
+	private List<Dialog> dBoxes;
 	private boolean loading;
 
 	public static boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
@@ -93,6 +95,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	public SaveEditorPanel() {
 		panel = this;
 		currentTab = EditorTab.GENERAL;
+		dBoxes = new ArrayList<>();
 		addComponents();
 	}
 
@@ -112,8 +115,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		Config.setBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, hideUndefinedFlags);
 	}
 
+	public void addDialogBox(Dialog dBox) {
+		dBoxes.add(0, dBox);
+	}
+
+	@Deprecated
 	public void setDialogBox(Dialog dBox) {
-		this.dBox = dBox;
+		addDialogBox(dBox);
 	}
 
 	@Override
@@ -210,9 +218,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			FrontUtils.drawString(g2d, label, xx + 18, winSize2.height - 19);
 			ti++;
 		}
-		// dialog box
-		if (dBox != null)
-			dBox.render(g);
+		// dialog boxes
+		for (int i = dBoxes.size() - 1; i >= 0; i--)
+			dBoxes.get(i).render(g);
 	}
 
 	private void loadProfile() {
@@ -224,7 +232,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				return;
 		}
 		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir")));
-		if (!dir.exists()) dir = new File(System.getProperty("user.dir"));
+		if (!dir.exists())
+			dir = new File(System.getProperty("user.dir"));
 		int returnVal = FrontUtils.openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
 				dir, false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -356,10 +365,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 						saveProfileAs();
 						break;
 					case 4: // settings
-						dBox = new SettingsDialog();
+						addDialogBox(new SettingsDialog());
 						break;
 					case 5: // about
-						dBox = new AboutDialog();
+						addDialogBox(new AboutDialog());
 						break;
 					default:
 						System.out.println("no defined behavior for toolbar item " + bi);
@@ -386,10 +395,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				ti++;
 			}
-		} else if (dBox != null) {
+		} else if (!dBoxes.isEmpty()) {
 			// dialog box
+			Dialog dBox = dBoxes.get(0);
 			if (dBox.onClick(px, py))
-				dBox = null;
+				dBoxes.remove(0);
 			repaint();
 		} else if (Profile.isLoaded()) {
 			// components
@@ -409,7 +419,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (dBox != null)
+		if (!dBoxes.isEmpty())
 			return;
 		final Insets i = Main.window.getInsets();
 		final int px = e.getX() - i.left, py = e.getY() - i.top;
@@ -430,7 +440,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (dBox != null)
+		if (!dBoxes.isEmpty())
 			return;
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
@@ -459,7 +469,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (dBox != null)
+		if (!dBoxes.isEmpty())
 			return;
 		int code = e.getKeyCode();
 		int mods = e.getModifiersEx();

@@ -175,7 +175,7 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 				sUpdate.accept(Math.max(0, Math.min(sSup.get(), shownFlags.size() - FLAGS_PER_SCROLL)));
 			}
 			if (FrontUtils.pointInRectangle(x, y, xx + 296, cy - 7, 200, 15)) {
-				SaveEditorPanel.panel.setDialogBox(new FlagDialog());
+				SaveEditorPanel.panel.addDialogBox(new FlagDialog());
 			}
 		}
 		return false;

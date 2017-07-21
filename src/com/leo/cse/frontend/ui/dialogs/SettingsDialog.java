@@ -53,7 +53,7 @@ public class SettingsDialog extends BaseDialog {
 			return true;
 		final int wx = getWindowX(), wy = getWindowY();
 		if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 4, 292, 17)) {
-			SaveEditorPanel.panel.setDialogBox(new MCIDialog());
+			SaveEditorPanel.panel.addDialogBox(new MCIDialog());
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 23, 292, 17)) {
 			setLineColor();
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 43, 16, 16)) {

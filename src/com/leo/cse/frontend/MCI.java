@@ -131,10 +131,12 @@ public class MCI {
 				ret += " + <PHY Addon";
 		} else if (getSpecial("MimHack"))
 			ret = "<MIM Hack";
+		else if (getSpecial("BuyHack"))
+			ret = "<BUY Hack";
 		int res = getInteger("Game.GraphicsResolution", 1);
 		if (res != 1) {
 			if (ret.equals("None"))
-				ret = res + "x Res";
+				ret = res + "x Resolution";
 			else
 				ret += ", " + res + "x Res";
 		}
