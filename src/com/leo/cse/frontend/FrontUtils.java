@@ -64,9 +64,6 @@ public class FrontUtils {
 		}
 	}
 
-	private static String ret;
-	private static boolean dc;
-
 	public static String showSelectionDialog(Component parent, String title, Collection<String> collection,
 			String selected) {
 		JList<String> list = new JList<String>(collection.toArray(new String[] {}));
@@ -75,21 +72,20 @@ public class FrontUtils {
 		panel.add(scrollpane);
 		scrollpane.getViewport().add(list);
 		list.setSelectedValue(selected, true);
-		ret = null;
+		String ret = null;
+		final boolean[] dc = new boolean[1];
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() > 1) {
-					dc = true;
+					dc[0] = true;
 					SwingUtilities.windowForComponent(list).dispose();
 				}
 			}
 		});
 		int msg = JOptionPane.showConfirmDialog(parent, scrollpane, title, JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
-		if (dc || msg == JOptionPane.OK_OPTION)
+		if (dc[0] || msg == JOptionPane.OK_OPTION)
 			ret = list.getSelectedValue();
-		else
-			ret = null;
 		return ret;
 	}
 
