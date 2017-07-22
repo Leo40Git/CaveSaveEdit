@@ -89,11 +89,22 @@ public class FrontUtils {
 		return ret;
 	}
 
+	private static void drawString0(Graphics g, String str, int x, int y) {
+		Color oc = g.getColor();
+		Color sc = oc.darker().darker().darker().darker();
+		g.setColor(sc);
+		g.drawString(str, x + 1, y);
+		g.drawString(str, x, y + 1);
+		g.drawString(str, x + 1, y + 1);
+		g.setColor(oc);
+		g.drawString(str, x, y);
+	}
+
 	public static void drawString(Graphics g, String str, int x, int y) {
 		final int lineSpace = g.getFontMetrics().getHeight();
 		for (String line : str.split("\n")) {
 			y += lineSpace;
-			g.drawString(line, x, y - 1);
+			drawString0(g, line, x, y - 1);
 		}
 	}
 
@@ -103,7 +114,7 @@ public class FrontUtils {
 		final int lineSpace = g.getFontMetrics().getHeight();
 		for (String line : str.split("\n")) {
 			y += lineSpace;
-			g.drawString(line, x - g.getFontMetrics().stringWidth(line) / 2, y - 1);
+			drawString0(g, line, x - g.getFontMetrics().stringWidth(line) / 2, y - 1);
 		}
 	}
 

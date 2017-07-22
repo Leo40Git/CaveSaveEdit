@@ -299,7 +299,7 @@ Flag.320=Set in the Mimiga Village opening cutscene. Also set when you talk to K
 Flag.321=Makes King appear in a different place.
 Flag.322=Set once you get the Map System.
 Flag.323=Set once you interact with King before getting the Silver Locket. Advances his dialogue.
-Flag.324=Set once you use Arthur's Key for the first time. Skipped the "Used =Arthur's Key=" text in future.
+Flag.324=Set once you use Arthur's Key for the first time. Skips the "Used Arthur's Key" text in future.
 Flag.325=Set once teleportation to Grasstown is permitted.
 Flag.326=Makes Toroko appear in the Shack with her stick.
 Flag.327=Makes Jack appear in Assembly Hall instead of Cemetery entrance. Advances King dialogue.
@@ -312,7 +312,7 @@ Flag.362=Set when getting Silver Locket. Prevents Shack door openeding pre-Torok
 Flag.370=Set when getting Silver Locket. Stops Silver Locket from appearing.
 Flag.371=Set when getting Silver Locket. Shows Toroko and King cutscene when exiting Resovoir.
 Flag.372=Set when you get Curly's Air Tank. Unknown use.
-Flag.390=If set, Arthur's key does not appear.
+Flag.390=If set, Arthur's Key does not appear.
 Flag.410=If set, Beast Fang does not appear.
 Flag.411=Set in post-core drowning dialogue. Unknown use.
 Flag.430=Set in opening cut-scene dialogue. Makes OOB null entity in Start Point disappear.

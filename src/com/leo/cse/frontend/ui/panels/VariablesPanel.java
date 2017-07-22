@@ -60,7 +60,7 @@ public class VariablesPanel extends Panel {
 				if (varId > 15)
 					break;
 				final int vi2 = varId;
-				compList.add(new Label(pvl[label] + (labelWater ? " (W)" : "") + ":", j * width + 2, 300 + i * 16));
+				compList.add(new Label(pvl[label] + (labelWater ? " (W):" : ":"), j * width + 2, 300 + i * 16));
 				compList.add(new ShortBox(j * width + 2, 316 + i * 16, width - 6, 16, new Supplier<Short>() {
 
 					@Override
