@@ -1,882 +1,559 @@
-# Default MCI for vanilla Cave Story profile
-# Metadata
-Meta.Name=Cave Story
-Meta.Author=Leo40Story, zxin (flag list)
-# Game information
-Game.ExeName=Doukutsu
-Game.ArmsImageYStart=0
-Game.ArmsImageSize=32
-Game.FPS=50
-Game.GraphicsResolution=1
-# Special support
-Special.MimHack=false
-Special.VarHack=false
-Special.PhysVarHack=false
-Special.BuyHack=false
-# Map names
-Map.0=Credits
-Map.1=Arthur's House (Normal)
-Map.2=Egg Corridor
-Map.3=Egg No. 00 (Normal)
-Map.4=Egg No. 06
-Map.5=Egg Observation Room
-Map.6=Grasstown
-Map.7=Santa's House
-Map.8=Chaco's House
-Map.9=Labyrinth I
-Map.10=Sand Zone (Normal)
-Map.11=Mimiga Village
-Map.12=First Cave
-Map.13=Start Point
-Map.14=Shack
-Map.15=Reservoir 
-Map.16=Graveyard 
-Map.17=Yamashita Farm 
-Map.18=Shelter
-Map.19=Assembly Hall
-Map.20=Save Point (Mimiga Village)
-Map.21=Side Room (Egg Corridor)
-Map.22=Cthulhu's Abode (Egg Corridor)
-Map.23=Egg No. 01
-Map.24=Arthur's House (cutscene)
-Map.25=Power Room
-Map.26=Save Point (Grasstown)
-Map.27=Execution Chamber
-Map.28=Gum
-Map.29=Sand Zone Residence
-Map.30=Grasstown Hut
-Map.31=Main Artery
-Map.32=Small Room
-Map.33=Jenka's House (before Balrog attack)
-Map.34=Deserted House
-Map.35=Sand Zone Storehouse
-Map.36=Jenka's House (after Balrog attack)
-Map.37=Sand Zone (After boss fight)
-Map.38=Labyrinth H
-Map.39=Labyrinth W
-Map.40=Camp
-Map.41=Clinic Ruins
-Map.42=Labyrinth Shop
-Map.43=Labyrinth B
-Map.44=Boulder Chamber
-Map.45=Labyrinth M
-Map.46=Dark Place
-Map.47=Core
-Map.48=Waterway
-Map.49=Egg Corridor?
-Map.50=Cthulhu's Abode?
-Map.51=Egg Observation Room?
-Map.52=Egg No. 00 (hatched)
-Map.53=Outer Wall
-Map.54=Side Room (Egg Corridor?)
-Map.55=Storehouse
-Map.56=Plantation
-Map.57=Jail No. 1
-Map.58=Hideout
-Map.59=Rest Area
-Map.60=Teleporter
-Map.61=Jail No. 2
-Map.62=Balcony (normal)
-Map.63=Final Cave
-Map.64=Throne Room
-Map.65=The King's Table
-Map.66=Prefab House (normal)
-Map.67=Last Cave (Hidden)
-Map.68=Black Space
-Map.69=Little House
-Map.70=Balcony (escaping)
-Map.71=Ending
-Map.72=Intro
-Map.73=Waterway Cabin
-Map.74=Credits - Labyrinth
-Map.75=Credits - Jenka's House
-Map.76=Credits - Power Room
-Map.77=Credits - Graveyard
-Map.78=Credits - Sky
-Map.79=Prefab House (entrance to Hell)
-Map.80=Sacred Grounds B1
-Map.81=Sacred Grounds B2
-Map.82=Sacred Grounds B3
-Map.83=Storage
-Map.84=Passage? (normal)
-Map.85=Passage? (from Sacred Grounds B3)
-Map.86=Statue Chamber
-Map.87=Seal Chamber (normal)
-Map.88=Corridor
-Map.89=Credits - Laboratory
-Map.90=Hermit Gunsmith
-Map.91=Island Cutscene
-Map.92=Seal Chamber (after fight)
-Map.93=Credits - Balcony
-Map.94=Clock Room
-# Song names
-Song.0=None
-Song.1=Mischievous Robot
-Song.2=Safety
-Song.3=Game Over
-Song.4=Gravity
-Song.5=On To Grasstown
-Song.6=Meltdown 2
-Song.7=Eyes of Flame
-Song.8=Gestation
-Song.9=Mimiga Town
-Song.10=Get Item!
-Song.11=Balrog's Theme
-Song.12=Cemetary
-Song.13=Plant
-Song.14=Pulse
-Song.15=Victory!
-Song.16=Get Life Capsule!
-Song.17=Tyrant
-Song.18=Run!
-Song.19=Jenka 1
-Song.20=Labyrinth Fight
-Song.21=Access
-Song.22=Oppression
-Song.23=Geothermal
-Song.24=Cave Story
-Song.25=Moonsong
-Song.26=Hero's End
-Song.27=Scorching Back
-Song.28=Quiet
-Song.29=Final Cave
-Song.30=Balcony
-Song.31=Charge
-Song.32=Last Battle
-Song.33=The Way Back Home
-Song.34=Zombie
-Song.35=Break Down
-Song.36=Running Hell
-Song.37=Jenka 2
-Song.38=Living Waterway
-Song.39=Seal Chamber
-Song.40=Toroko's Theme
-Song.41=White Stone Wall
-# Equipment names
-Equip.0=Booster v0.8
-Equip.1=Map System
-Equip.2=Arms Barrier
-Equip.3=Turbocharge
-Equip.4=Curly's Air Tank
-Equip.5=Booster v2.0
-Equip.6=Mimiga Mask
-Equip.7=Whimsical Star
-Equip.8=Nikumaru Counter
-# Weapon names
-Weapon.0=None
-Weapon.1=Snake
-Weapon.2=Polar Star
-Weapon.3=Fireball
-Weapon.4=Machine Gun
-Weapon.5=Missile Launcher
-Weapon.7=Bubbler
-Weapon.9=Blade
-Weapon.10=Super Missile
-Weapon.12=Nemesis
-Weapon.13=Spur
-# Item names
-Item.0=None
-Item.1=Arthur's Key
-Item.2=Map System
-Item.3=Santa's Key
-Item.4=Silver Locket
-Item.5=Beast Fang
-Item.6=Life Capsule
-Item.7=ID Card
-Item.8=Jellyfish Juice
-Item.9=Rusty Key
-Item.10=Gum Key
-Item.11=Gum Base
-Item.12=Charcoal
-Item.13=Explosive
-Item.14=Puppy
-Item.15=Life Pot
-Item.16=Cure-All
-Item.17=Clinic Key
-Item.18=Booster v0.8
-Item.19=Arms Barrier
-Item.20=Turbocharge
-Item.21=Curly's Air Tank
-Item.22=Nikumaru Counter
-Item.23=Booster v2.0
-Item.24=Mimiga Mask
-Item.25=Teleporter Room Key
-Item.26=Sue's Letter
-Item.27=Controller
-Item.28=Broken Sprinkler
-Item.29=Sprinkler
-Item.30=Tow Rope
-Item.31=Clay Figure Medal
-Item.32=Little Man
-Item.33=Mushroom Badge
-Item.34=Ma Pignon
-Item.35=Curly's Underwear
-Item.36=Alien Medal
-Item.37=Chaco's Lipstick
-Item.38=Whimsical Star
-Item.39=Iron Bond
-# Teleporter menu names
-Warp.0=None
-Warp.1=Egg Corridor
-Warp.2=Grasstown
-Warp.3=Sand Zone
-Warp.4=Labyrinth
-Warp.5=Plantation
-# Teleporter location names
-WarpLoc.0=None
-WarpLoc.6001=Egg Corridor
-WarpLoc.6002=Grasstown
-WarpLoc.6003=Sand Zone
-WarpLoc.6004=Labyrinth
-WarpLoc.6005=Plantation
-# Flag descriptions
-Flag.None=(no description)
-Flag.Engine=(engine flag)
-Flag.MimHack=(<MIM data)
-Flag.VarHack=(<VAR data)
-Flag.PhysVarHack=(<PHY data)
-Flag.BuyHack=(<BUY data)
-Flag.SaveID=431
-Flag.Save=Set the first time you save. Makes the game load your save profile when you retry after dying.
-Flag.100=Egg Corridor Sue & Igor cutscene has been seen.
-Flag.101=1st Egg Corridor Life Capsule obtained. (Near teleporter)
-Flag.102=2nd Egg Corridor Life Capsule obtained. (Cthulhu's Abode)
-Flag.103=Igor beaten.
-Flag.105=Opens Side Room door. Set by Sue in Egg No. 00.
-Flag.106=Shows you the Sue and Kazuma cutscene when leaving Egg Corridor. Set by Sue in Egg No. 00.
-Flag.120=Sue left Egg No. 00. Changes Mahin dialogue.
-Flag.140=ID Card obtained.
-Flag.153=Set once Egg Corridor teleportation is permitted.
-Flag.154=Computer displays "Connecting to Grasstown". Set by Sue in Egg No. 00.
-Flag.155=Shows Sue trapped in cage cutscene when leaving Arthur's House. Set by Sue in Egg No. 00.
-Flag.156=Changes Mahin dialogue. Set when Kazuma and Booster return from Grasstown.
-Flag.157=Changes computer text. Set in the cutscene when returning to Arthur's house, post-Grasstown.
-Flag.158=Set once Sand Zone teleportation is permitted. Changes Arthur's House dialogues.
-Flag.159=Takes you to the "Egg Corridor?". Changes computer text.
-Flag.160=Makes Booster teleport into Arthur's house and give you the Booster v2.0.
-Flag.161=Booster is in Arthur's house. Hides "Provided only I live" text in Prefab Building.
-Flag.162=Professor Booster is still alive for a credits cutscene. Used to tell which booster you had.
-Flag.200=Egg Observation Room ML chest opened.
-Flag.201=Set once the Missile Launcher (ML) is obtained.
-Flag.202=Set once the Super Missile Launcher (SML) is obtained.
-Flag.210=Set once Santa's Key is obtained.
-Flag.211=Advances Santa's dialogue outside his house.
-Flag.212=Set once you give Santa his key. Lets you into his house and stops him appearing outside.
-Flag.213=Remove the grate on Chaco's fireplace. For when you go trough the fireplace.
-Flag.214=Allows the player to get into the Power Room in Grasstown. Set after the Rusty Key has been used.
-Flag.215=Set when Kazuma asks you to open the Shelter's door with the Rusty Key.
-Flag.216=Set when you discover that there's no keyhole in the door.
-Flag.217=Turns off Grasstown teleporter lights. Never set in-game.
-Flag.218=Grasstown ML chest opened.
-Flag.219=Kazuma and Booster have ridden the scooter. Shows King releasing Sue when teleporting back.
-Flag.221=Set when you get the Gum Key.
-Flag.222=Set after using Gum Key to get to Gum.
-Flag.223=Set when Kazuma discovers that the Rusty Key doesn't open the door. Advances door text.
-Flag.224=Set every time you teleport into Grasstown. Advances King's dialogue, and Sue's jail dialogue.
-Flag.225=Stops the scooter from appearing next to Shelter.
-Flag.226=Makes the scooter appear broken next to the teleporter.
-Flag.227=Makes smoke generator appear next to scooter. Unset if you teleport out of Grasstown or look at Santa's locked door.
-Flag.228=Makes Grasstown's near-teleporter Cthulhu skip the 'soldier from the surface' dialogue.
-Flag.240=Set just before you get the Fireball. Would make Santa run a nonexistent event if 241 weren't set at the same time.
-Flag.241=Set once Fireball is obtained. Advances Santa and Chaco dialogue.
-Flag.242=Set once Charcoal is obtained. Advances Santa dialogue.
-Flag.243=Set once you get teleported to Labyrinth I. Unused?
-Flag.261=Set once you interact with Chaco's fireplace.
-Flag.262=Set once you get teleported to Labyrinth I. Unused?
-Flag.263=Set when you interact with Chaco's fireplace. Used to jump to the lipstick event. Unset every time you re-enter her house.
-Flag.272=Set when you start the Omega fight. Lifts the curse on the sunstones.
-Flag.273=Gets rid of the sunstones.
-Flag.274=Set whenever you have one of Jenka's puppies. Makes them appear on your back.
-Flag.275=Set once you get the puppy that's next to the Sand Zone Storehouse.
-Flag.276=Set once you get the puppy in the middle of the Sand Zone
-Flag.278=Set after Jenka gets creamed by Balrog.
-Flag.279=Set once you get the puppy that's in the treasure chest.
-Flag.280=Makes you go to the alternate version of Jenka's house whenever you go to her house.
-Flag.301=Set when you kill the eye door in the First Cave.
-Flag.302=Set when you exit the First Cave for the first time.
-Flag.303=Set after the Spur is obtained.
-Flag.320=Set in the Mimiga Village opening cutscene. Also set when you talk to King. Makes King disappear.
-Flag.321=Makes King appear in a different place.
-Flag.322=Set once you get the Map System.
-Flag.323=Set once you interact with King before getting the Silver Locket. Advances his dialogue.
-Flag.324=Set once you use Arthur's Key for the first time. Skips the "Used Arthur's Key" text in future.
-Flag.325=Set once teleportation to Grasstown is permitted.
-Flag.326=Makes Toroko appear in the Shack with her stick.
-Flag.327=Makes Jack appear in Assembly Hall instead of Cemetery entrance. Advances King dialogue.
-Flag.329=Set by Sue in Egg No. 00. Unset when teleport to Arthur's House from Grasstown. Unknown use.
-Flag.340=Set in post-Core drowning dialogue. Unknown use.
-Flag.341=Set in Core defeated dialogue. Changes Mimiga Village/Chako's House/Sand Zone Residence music to Quiet. Changes Arthur's House music to Pulse.
-Flag.360=Set Toroko's Shack dialogue. Makes the door to the Shack broken.
-Flag.361=Set in Balrog's Shack dialogue. Makes the door tell you that you can't escape.
-Flag.362=Set when getting Silver Locket. Prevents Shack door openeding pre-Toroko/Balrog dialogue.
-Flag.370=Set when getting Silver Locket. Stops Silver Locket from appearing.
-Flag.371=Set when getting Silver Locket. Shows Toroko and King cutscene when exiting Resovoir.
-Flag.372=Set when you get Curly's Air Tank. Unknown use.
-Flag.390=If set, Arthur's Key does not appear.
-Flag.410=If set, Beast Fang does not appear.
-Flag.411=Set in post-core drowning dialogue. Unknown use.
-Flag.430=Set in opening cut-scene dialogue. Makes OOB null entity in Start Point disappear.
-Flag.440=Set in Toroko Shack dialogue. Unset in Kazuma/Sue pre-Grasstown cutscene. Unknown use.
-Flag.441=Set when first entering Arthur's House. Unknown use.
-Flag.442=Set when getting the Bubbler. Stops you from getting the weapon again.
-Flag.443=If set, Arthur is in the Assembly Hall. Unset in Kazuma/Sue pre-Grasstown cutscene.
-Flag.444=Set in post-Grasstown Kazuma/Booster cutscene. Unset in pre-Labyrinth cutscene. Unknown use.
-Flag.470=Set when lowering Egg Corridor sheild. Changes computer terminal text.
-Flag.480=Prevents Power Room door from being opened. Set for Balrog boss fight.
-Flag.481=Set in Grasstown Balrog boss dialogue. Turns on Grasstown fans.
-Flag.482=Set in Grasstown Balrog boss dialogue. Changes Malco interaction text for boss fight.
-Flag.483=Set in Grasstown Balrog post-boss dialogue. Changes Malco interaction to allow pulling out post-boss fight.
-Flag.484=No description yet.
-Flag.485=No description yet.
-Flag.486=No description yet.
-Flag.500=No description yet.
-Flag.501=No description yet.
-Flag.520=No description yet.
-Flag.521=No description yet.
-Flag.522=No description yet.
-Flag.523=No description yet.
-Flag.524=No description yet.
-Flag.525=No description yet.
-Flag.550=No description yet.
-Flag.561=No description yet.
-Flag.562=No description yet.
-Flag.563=No description yet.
-Flag.564=No description yet.
-Flag.565=No description yet.
-Flag.580=No description yet.
-Flag.590=No description yet.
-Flag.591=No description yet.
-Flag.592=No description yet.
-Flag.593=No description yet.
-Flag.594=No description yet.
-Flag.595=No description yet.
-Flag.596=No description yet.
-Flag.610=No description yet.
-Flag.620=No description yet.
-Flag.621=No description yet.
-Flag.622=No description yet.
-Flag.623=No description yet.
-Flag.624=No description yet.
-Flag.641=No description yet.
-Flag.680=No description yet.
-Flag.681=No description yet.
-Flag.700=No description yet.
-Flag.701=No description yet.
-Flag.702=No description yet.
-Flag.703=No description yet.
-Flag.704=No description yet.
-Flag.705=No description yet.
-Flag.710=No description yet.
-Flag.711=No description yet.
-Flag.720=No description yet.
-Flag.721=No description yet.
-Flag.722=No description yet.
-Flag.740=No description yet.
-Flag.741=No description yet.
-Flag.742=No description yet.
-Flag.743=No description yet.
-Flag.744=No description yet.
-Flag.760=No description yet.
-Flag.761=No description yet.
-Flag.762=No description yet.
-Flag.763=No description yet.
-Flag.764=No description yet.
-Flag.765=No description yet.
-Flag.766=No description yet.
-Flag.780=No description yet.
-Flag.781=No description yet.
-Flag.782=No description yet.
-Flag.783=No description yet.
-Flag.800=No description yet.
-Flag.801=No description yet.
-Flag.820=No description yet.
-Flag.821=No description yet.
-Flag.822=No description yet.
-Flag.823=No description yet.
-Flag.824=No description yet.
-Flag.825=No description yet.
-Flag.826=No description yet.
-Flag.827=No description yet.
-Flag.828=No description yet.
-Flag.829=No description yet.
-Flag.830=No description yet.
-Flag.832=No description yet.
-Flag.834=No description yet.
-Flag.835=No description yet.
-Flag.836=No description yet.
-Flag.837=No description yet.
-Flag.838=No description yet.
-Flag.839=No description yet.
-Flag.851=No description yet.
-Flag.880=No description yet.
-Flag.920=No description yet.
-Flag.921=No description yet.
-Flag.940=No description yet.
-Flag.941=No description yet.
-Flag.960=No description yet.
-Flag.961=No description yet.
-Flag.1000=No description yet.
-Flag.1001=No description yet.
-Flag.1002=No description yet.
-Flag.1003=No description yet.
-Flag.1004=No description yet.
-Flag.1020=No description yet.
-Flag.1021=No description yet.
-Flag.1022=No description yet.
-Flag.1023=No description yet.
-Flag.1024=No description yet.
-Flag.1025=No description yet.
-Flag.1026=No description yet.
-Flag.1027=No description yet.
-Flag.1028=No description yet.
-Flag.1029=No description yet.
-Flag.1030=No description yet.
-Flag.1031=No description yet.
-Flag.1032=No description yet.
-Flag.1033=No description yet.
-Flag.1034=No description yet.
-Flag.1035=No description yet.
-Flag.1036=No description yet.
-Flag.1037=No description yet.
-Flag.1038=No description yet.
-Flag.1039=No description yet.
-Flag.1040=No description yet.
-Flag.1041=No description yet.
-Flag.1042=No description yet.
-Flag.1044=No description yet.
-Flag.1045=No description yet.
-Flag.1046=No description yet.
-Flag.1080=No description yet.
-Flag.1080=No description yet.
-Flag.1081=No description yet.
-Flag.1082=No description yet.
-Flag.1100=No description yet.
-Flag.1101=No description yet.
-Flag.1102=No description yet.
-Flag.1103=No description yet.
-Flag.1105=No description yet.
-Flag.1106=No description yet.
-Flag.1107=No description yet.
-Flag.1120=No description yet.
-Flag.1121=No description yet.
-Flag.1140=No description yet.
-Flag.1141=No description yet.
-Flag.1190=No description yet.
-Flag.1191=No description yet.
-Flag.1192=No description yet.
-Flag.1250=No description yet.
-Flag.1270=No description yet.
-Flag.1271=No description yet.
-Flag.1272=No description yet.
-Flag.1273=No description yet.
-Flag.1274=No description yet.
-Flag.1290=No description yet.
-Flag.1320=No description yet.
-Flag.1340=No description yet.
-Flag.1341=No description yet.
-Flag.1370=No description yet.
-Flag.1371=No description yet.
-Flag.1372=No description yet.
-Flag.1373=No description yet.
-Flag.1390=No description yet.
-Flag.1391=No description yet.
-Flag.1392=No description yet.
-Flag.1393=No description yet.
-Flag.1440=No description yet.
-Flag.1441=No description yet.
-Flag.1442=No description yet.
-Flag.1443=No description yet.
-Flag.1444=No description yet.
-Flag.1445=No description yet.
-Flag.1460=No description yet.
-Flag.1531=No description yet.
-Flag.1532=No description yet.
-Flag.1533=No description yet.
-Flag.1534=No description yet.
-Flag.1550=No description yet.
-Flag.1551=No description yet.
-Flag.1561=No description yet.
-Flag.1562=No description yet.
-Flag.1563=No description yet.
-Flag.1564=No description yet.
-Flag.1590=No description yet.
-Flag.1591=No description yet.
-Flag.1592=No description yet.
-Flag.1593=No description yet.
-Flag.1600=No description yet.
-Flag.1620=No description yet.
-Flag.1640=No description yet.
-Flag.1641=No description yet.
-Flag.1642=No description yet.
-Flag.1643=No description yet.
-Flag.1644=No description yet.
-Flag.1700=No description yet.
-Flag.2000=No description yet.
-Flag.3000=No description yet.
-Flag.3001=No description yet.
-Flag.3002=No description yet.
-Flag.3003=No description yet.
-Flag.3004=No description yet.
-Flag.4000=Set after defeating the Core. Makes drowning run an alternate event.
-# Entity framerects
-EntityRect.0=0:0:0:0
-EntityRect.1=0:32:32:64
-EntityRect.2=64:0:128:48
-EntityRect.3=0:0:0:0
-EntityRect.4=128:0:160:32
-EntityRect.5=0:94:32:124
-EntityRect.6=0:160:32:192
-EntityRect.7=512:128:576:160
-EntityRect.8=160:160:192:192
-EntityRect.9=0:0:80:48
-EntityRect.10=0:0:80:48
-EntityRect.11=480:160:512:192
-EntityRect.12=0:0:80:48
-EntityRect.13=256:0:288:32
-EntityRect.14=450:0:480:32
-EntityRect.15=480:0:512:32
-EntityRect.16=192:32:224:64
-EntityRect.17=576:0:608:32
-EntityRect.18=448:32:480:80
-EntityRect.19=0:0:80:48
-EntityRect.20=576:32:640:80
-EntityRect.21=448:80:480:96
-EntityRect.22=480:32:528:96
-EntityRect.23=528:64:576:72
-EntityRect.24=0:0:48:48
-EntityRect.25=512:128:580:160
-EntityRect.26=64:160:96:192
-EntityRect.27=192:128:256:176
-EntityRect.28=96:96:128:128
-EntityRect.29=0:384:32:432
-EntityRect.30=0:64:32:96
-EntityRect.31=0:158:32:190
-EntityRect.32=64:192:96:224
-EntityRect.33=480:160:512:192
-EntityRect.34=384:96:448:128
-EntityRect.35=192:128:240:192
-EntityRect.36=0:0:80:48
-EntityRect.37=384:128:416:160
-EntityRect.38=256:128:288:160
-EntityRect.39=448:126:480:160
-EntityRect.40=0:64:32:96
-EntityRect.41=0:0:0:0
-EntityRect.42=0:0:32:32
-EntityRect.43=256:160:336:224
-EntityRect.44=0:0:64:64
-EntityRect.45=32:64:64:96
-EntityRect.46=0:0:0:0
-EntityRect.47=306:94:376:160
-EntityRect.48=574:174:606:206
-EntityRect.49=64:160:128:204
-EntityRect.50=96:64:128:96
-EntityRect.51=128:160:252:204
-EntityRect.52=512:400:544:432
-EntityRect.53=0:0:0:0
-EntityRect.54=64:160:128:204
-EntityRect.55=384:384:416:432
-EntityRect.56=0:284:32:316
-EntityRect.57=192:160:256:224
-EntityRect.58=384:0:432:48
-EntityRect.59=416:160:448:208
-EntityRect.60=0:128:32:160
-EntityRect.61=448:64:480:96
-EntityRect.62=544:384:576:432
-EntityRect.63=128:128:160:160
-EntityRect.64=0:0:32:32
-EntityRect.65=64:64:96:96
-EntityRect.66=64:432:110:480
-EntityRect.67=160:0:192:32
-EntityRect.68=0:0:80:48
-EntityRect.69=96:0:128:32
-EntityRect.70=192:96:224:128
-EntityRect.71=128:64:160:96
-EntityRect.72=448:96:480:128
-EntityRect.73=0:0:0:0
-EntityRect.74=128:0:160:32
-EntityRect.75=554:64:602:112
-EntityRect.76=64:0:96:32
-EntityRect.77=0:32:96:96
-EntityRect.78=320:96:352:128
-EntityRect.79=0:0:32:32
-EntityRect.80=0:128:48:176
-EntityRect.81=288:128:336:176
-EntityRect.82=224:0:256:32
-EntityRect.83=0:0:80:80
-EntityRect.84=128:96:160:128
-EntityRect.85=544:192:574:240
-EntityRect.86=0:160:32:192
-EntityRect.87=64:160:96:192
-EntityRect.88=0:0:80:80
-EntityRect.89=574:176:616:208
-EntityRect.90=0:0:0:0
-EntityRect.91=192:176:256:224
-EntityRect.92=544:432:576:480
-EntityRect.93=256:0:288:32
-EntityRect.94=544:0:640:48
-EntityRect.95=384:130:416:162
-EntityRect.96=576:240:608:272
-EntityRect.97=576:272:608:304
-EntityRect.98=576:304:608:336
-EntityRect.99=576:336:608:368
-EntityRect.100=544:96:576:128
-EntityRect.101=480:272:512:304
-EntityRect.102=416:240:448:272
-EntityRect.103=386:198:418:230
-EntityRect.104=0:224:64:288
-EntityRect.105=256:64:288:96
-EntityRect.106=256:64:288:96
-EntityRect.107=416:0:448:48
-EntityRect.108=192:96:220:126
-EntityRect.109=480:0:512:48
-EntityRect.110=192:256:224:288
-EntityRect.111=0:0:32:32
-EntityRect.112=0:0:32:32
-EntityRect.113=448:0:480:32
-EntityRect.114=352:224:384:272
-EntityRect.115=0:240:48:288
-EntityRect.116=544:368:640:400
-EntityRect.117=0:192:32:224
-EntityRect.118=0:64:64:112
-EntityRect.119=496:368:544:400
-EntityRect.120=0:0:32:32
-EntityRect.121=128:32:160:64
-EntityRect.122=160:0:192:32
-EntityRect.123=384:0:416:32
-EntityRect.124=384:0:446:64
-EntityRect.125=288:400:320:432
-EntityRect.126=48:144:64:160
-EntityRect.127=128:172:224:180
-EntityRect.128=0:0:0:0
-EntityRect.129=0:0:0:0
-EntityRect.130=96:288:128:320
-EntityRect.131=288:288:320:320
-EntityRect.132=256:288:288:320
-EntityRect.133=352:64:384:96
-EntityRect.134=448:0:512:32
-EntityRect.135=576:64:640:128
-EntityRect.136=96:288:128:320
-EntityRect.137=192:272:256:336
-EntityRect.138=192:224:256:272
-EntityRect.139=0:256:48:320
-EntityRect.140=0:0:64:64
-EntityRect.141=576:64:608:96
-EntityRect.142=0:256:32:288
-EntityRect.143=416:64:448:96
-EntityRect.144=64:128:96:160
-EntityRect.145=0:0:0:0
-EntityRect.146=608:416:640:480
-EntityRect.147=0:192:32:224
-EntityRect.148=192:192:208:208
-EntityRect.149=32:0:96:64
-EntityRect.150=0:0:32:32
-EntityRect.151=384:0:416:32
-EntityRect.152=192:128:224:192
-EntityRect.153=0:0:48:48
-EntityRect.154=384:0:432:48
-EntityRect.155=0:96:48:144
-EntityRect.156=192:224:224:256
-EntityRect.157=32:0:96:64
-EntityRect.158=0:448:32:480
-EntityRect.159=288:262:384:398
-EntityRect.160=0:0:80:48
-EntityRect.161=0:96:32:128
-EntityRect.162=80:0:160:48
-EntityRect.163=384:0:416:32
-EntityRect.164=448:0:480:32
-EntityRect.165=448:192:480:224
-EntityRect.166=292:212:362:255
-EntityRect.167=608:0:640:32
-EntityRect.168=527:115:640:192
-EntityRect.169=0:0:80:48
-EntityRect.170=224:192:256:208
-EntityRect.171=244:96:308:160
-EntityRect.172=496:96:528:160
-EntityRect.173=0:256:48:304
-EntityRect.174=240:160:272:192
-EntityRect.175=336:160:384:208
-EntityRect.176=192:256:256:288
-EntityRect.177=384:288:416:320
-EntityRect.178=0:448:32:480
-EntityRect.179=96:448:144:480
-EntityRect.180=0:192:32:224
-EntityRect.181=0:0:0:0
-EntityRect.182=0:0:0:0
-EntityRect.183=64:432:110:480
-EntityRect.184=0:128:64:192
-EntityRect.185=192:128:224:192
-EntityRect.186=96:96:128:128
-EntityRect.187=448:208:512:272
-EntityRect.188=576:208:608:240
-EntityRect.189=96:448:128:480
-EntityRect.190=384:64:416:96
-EntityRect.191=0:416:32:448
-EntityRect.192=450:128:508:160
-EntityRect.193=510:190:638:224
-EntityRect.194=384:224:450:255
-EntityRect.195=224:128:255:160
-EntityRect.196=256:64:288:96
-EntityRect.197=0:0:32:32
-EntityRect.198=480:92:410:142
-EntityRect.199=448:100:480:128
-EntityRect.200=0:0:80:80
-EntityRect.201=400:40:484:72
-EntityRect.202=364:432:400:478
-EntityRect.203=0:160:32:192
-EntityRect.204=480:288:512:320
-EntityRect.205=256:160:288:224
-EntityRect.206=160:160:240:248
-EntityRect.207=0:288:32:314
-EntityRect.208=496:160:544:204
-EntityRect.209=400:224:432:256
-EntityRect.210=0:224:32:256
-EntityRect.211=512:400:544:432
-EntityRect.212=320:320:394:384
-EntityRect.213=0:0:96:96
-EntityRect.214=288:96:352:128
-EntityRect.215=0:240:96:256
-EntityRect.216=512:400:544:432
-EntityRect.217=288:128:160:320
-EntityRect.218=0:0:0:0
-EntityRect.219=32:0:64:32
-EntityRect.220=0:128:32:160
-EntityRect.221=0:128:32:160
-EntityRect.222=192:336:224:400
-EntityRect.223=160:388:192:432
-EntityRect.224=224:64:256:96
-EntityRect.225=128:128:160:160
-EntityRect.226=544:64:592:112
-EntityRect.227=416:64:448:96
-EntityRect.228=0:0:64:84
-EntityRect.229=0:200:32:224
-EntityRect.230=200:200:256:256
-EntityRect.231=352:64:416:96
-EntityRect.232=256:0:320:64
-EntityRect.233=0:0:0:0
-EntityRect.234=292:192:384:224
-EntityRect.235=384:192:416:224
-EntityRect.236=256:128:304:176
-EntityRect.237=624:64:638:80
-EntityRect.238=368:400:416:432
-EntityRect.239=192:222:288:288
-EntityRect.240=0:128:32:160
-EntityRect.241=0:0:32:32
-EntityRect.242=0:64:32:96
-EntityRect.243=0:64:32:96
-EntityRect.244=192:0:204:32
-EntityRect.245=192:0:204:32
-EntityRect.246=288:224:320:272
-EntityRect.247=0:0:32:32
-EntityRect.248=0:0:32:32
-EntityRect.249=64:64:96:96
-EntityRect.250=0:64:32:96
-EntityRect.251=160:64:192:128
-EntityRect.252=0:0:0:0
-EntityRect.253=0:128:32:160
-EntityRect.254=0:0:256:128
-EntityRect.255=0:0:0:0
-EntityRect.256=96:320:144:384
-EntityRect.257=352:64:366:96
-EntityRect.258=96:64:128:96
-EntityRect.259=320:192:352:224
-EntityRect.260=0:128:32:160
-EntityRect.261=224:64:256:96
-EntityRect.262=256:0:288:32
-EntityRect.263=364:320:416:384
-EntityRect.264=572:0:604:32
-EntityRect.265=572:0:604:32
-EntityRect.266=572:0:604:32
-EntityRect.267=0:128:80:224
-EntityRect.268=0:0:80:80
-EntityRect.269=464:0:496:32
-EntityRect.270=336:64:348:80
-EntityRect.271=256:32:288:64
-EntityRect.272=256:32:288:64
-EntityRect.273=496:80:544:128
-EntityRect.274=0:0:64:84
-EntityRect.275=96:288:128:320
-EntityRect.276=0:128:64:204
-EntityRect.277=256:0:300:48
-EntityRect.278=0:240:12:256
-EntityRect.279=0:32:64:96
-EntityRect.280=224:64:254:96
-EntityRect.281=366:320:416:384
-EntityRect.282=512:240:640:320
-EntityRect.283=0:128:64:192
-EntityRect.284=0:256:64:320
-EntityRect.285=0:448:32:480
-EntityRect.286=464:210:494:238
-EntityRect.287=96:448:128:438
-EntityRect.288=464:142:496:176
-EntityRect.289=320:64:352:96
-EntityRect.290=224:64:256:96
-EntityRect.291=512:0:640:80
-EntityRect.292=0:0:0:0
-EntityRect.293=560:400:640:480
-EntityRect.294=0:32:64:96
-EntityRect.295=288:224:384:284
-EntityRect.296=0:0:0:0
-EntityRect.297=0:0:0:0
-EntityRect.298=200:320:240:384
-EntityRect.299=0:0:96:96
-EntityRect.300=384:160:416:192
-EntityRect.301=286:0:318:32
-EntityRect.302=0:0:0:0
-EntityRect.303=0:0:0:0
-EntityRect.304=0:352:48:384
-EntityRect.305=320:300:352:320
-EntityRect.306=480:200:560:256
-EntityRect.307=0:64:32:96
-EntityRect.308=256:228:288:260
-EntityRect.309=0:0:32:32
-EntityRect.310=64:0:108:32
-EntityRect.311=0:64:48:112
-EntityRect.312=0:320:32:352
-EntityRect.313=256:0:288:32
-EntityRect.314=0:0:0:0
-EntityRect.315=0:0:0:0
-EntityRect.316=542:82:586:110
-EntityRect.317=0:160:64:236
-EntityRect.318=448:160:512:240
-EntityRect.319=0:0:0:0
-EntityRect.320=0:192:32:224
-EntityRect.321=0:0:0:0
-EntityRect.322=320:432:364:478
-EntityRect.323=432:64:464:108
-EntityRect.324=432:64:464:108
-EntityRect.325=476:0:510:192
-EntityRect.326=194:256:320:308
-EntityRect.327=0:0:0:0
-EntityRect.328=192:0:256:96
-EntityRect.329=96:0:128:32
-EntityRect.330=288:272:320:304
-EntityRect.331=576:160:608:192
-EntityRect.332=0:0:0:0
-EntityRect.333=520:0:542:480
-EntityRect.334=0:0:0:0
-EntityRect.335=0:32:32:64
-EntityRect.336=0:32:32:64
-EntityRect.337=512:224:576:300
-EntityRect.338=566:0:604:32
-EntityRect.339=0:0:0:0
-EntityRect.340=0:0:88:80
-EntityRect.341=0:0:0:0
-EntityRect.342=0:0:0:0
-EntityRect.343=0:0:0:0
-EntityRect.344=0:0:0:0
-EntityRect.345=256:352:288:384
-EntityRect.346=0:0:0:0
-EntityRect.347=512:96:544:128
-EntityRect.348=252:302:288:352
-EntityRect.349=64:200:128:288
-EntityRect.350=98:324:140:364
-EntityRect.351=0:0:0:0
-EntityRect.352=448:64:476:96
-EntityRect.353=396:316:432:352
-EntityRect.354=0:0:0:0
-EntityRect.355=0:0:0:0
-EntityRect.356=0:0:80:48
-EntityRect.357=448:274:480:306
-EntityRect.358=416:20:444:64
-EntityRect.359=144:32:148:36
-EntityRect.360=0:352:96:366
+// Metadata
+function getName() {
+	return "Cave Story";
+}
+function getAuthor() {
+	return "Leo40Story, zxin (flag list)";
+}
+// Game information
+function getExeName() {
+	return "Doukutsu";
+}
+function getArmsImageYStart() {
+	return 0;
+}
+function getArmsImageSize() {
+	return 32;
+}
+function getFPS() {
+	return 50;
+}
+function getGraphicsResolution() {
+	return 1;
+}
+// Array of map names
+function getMapNames() {
+	return [
+		"Credits",
+		"Arthur's House (Normal)",
+		"Egg Corridor",
+		"Egg No. 00 (Normal)",
+		"Egg No. 06",
+		"Egg Observation Room",
+		"Grasstown",
+		"Santa's House",
+		"Chaco's House",
+		"Labyrinth I",
+		"Sand Zone (Normal)",
+		"Mimiga Village",
+		"First Cave",
+		"Start Point",
+		"Shack",
+		"Reservoir ",
+		"Graveyard ",
+		"Yamashita Farm ",
+		"Shelter",
+		"Assembly Hall",
+		"Save Point (Mimiga Village)",
+		"Side Room (Egg Corridor)",
+		"Cthulhu's Abode (Egg Corridor)",
+		"Egg No. 01",
+		"Arthur's House (cutscene)",
+		"Power Room",
+		"Save Point (Grasstown)",
+		"Execution Chamber",
+		"Gum",
+		"Sand Zone Residence",
+		"Grasstown Hut",
+		"Main Artery",
+		"Small Room",
+		"Jenka's House (before Balrog attack)",
+		"Deserted House",
+		"Sand Zone Storehouse",
+		"Jenka's House (after Balrog attack)",
+		"Sand Zone (After boss fight)",
+		"Labyrinth H",
+		"Labyrinth W",
+		"Camp",
+		"Clinic Ruins",
+		"Labyrinth Shop",
+		"Labyrinth B",
+		"Boulder Chamber",
+		"Labyrinth M",
+		"Dark Place",
+		"Core",
+		"Waterway",
+		"Egg Corridor?",
+		"Cthulhu's Abode?",
+		"Egg Observation Room?",
+		"Egg No. 00 (hatched)",
+		"Outer Wall",
+		"Side Room (Egg Corridor?)",
+		"Storehouse",
+		"Plantation",
+		"Jail No. 1",
+		"Hideout",
+		"Rest Area",
+		"Teleporter",
+		"Jail No. 2",
+		"Balcony (normal)",
+		"Final Cave",
+		"Throne Room",
+		"The King's Table",
+		"Prefab House (normal)",
+		"Last Cave (Hidden)",
+		"Black Space",
+		"Little House",
+		"Balcony (escaping)",
+		"Ending",
+		"Intro",
+		"Waterway Cabin",
+		"Credits - Labyrinth",
+		"Credits - Jenka's House",
+		"Credits - Power Room",
+		"Credits - Graveyard",
+		"Credits - Sky",
+		"Prefab House (entrance to Hell)",
+		"Sacred Grounds B1",
+		"Sacred Grounds B2",
+		"Sacred Grounds B3",
+		"Storage",
+		"Passage? (normal)",
+		"Passage? (from Sacred Grounds B3)",
+		"Statue Chamber",
+		"Seal Chamber (normal)",
+		"Corridor",
+		"Credits - Laboratory",
+		"Hermit Gunsmith",
+		"Island Cutscene",
+		"Seal Chamber (after fight)",
+		"Credits - Balcony",
+		"Clock Room"
+	];
+}
+// Array of song names
+function getSongNames() {
+	return [
+		"None",
+		"Mischiveous Robot",
+		"Safety",
+		"Game Over",
+		"Gravity",
+		"On To Grasstown",
+		"Meltdown 2",
+		"Eyes of Flame",
+		"Gestation",
+		"Mimiga Town",
+		"Get Item!",
+		"Balrog's Theme",
+		"Cemetary",
+		"Plant",
+		"Pulse",
+		"Victory!",
+		"Get Life Capsule!",
+		"Tyrant",
+		"Run!",
+		"Jenka 1",
+		"Labyrinth Fight",
+		"Access",
+		"Oppresion",
+		"Geothermal",
+		"Cave Story",
+		"Moonsong",
+		"Hero's End",
+		"Scorching Back",
+		"Quiet",
+		"Final Cave",
+		"Balcony",
+		"Charge",
+		"Last Battle",
+		"The Way Back Home",
+		"Zombie",
+		"Break Down",
+		"Running Hell",
+		"Jenka 2",
+		"Living Waterway",
+		"Seal Chamber",
+		"Toroko's Theme",
+		"White Stone Wall"
+	];
+}
+// Array of equip names
+function getEquipNames() {
+	return [
+		"Booster v0.8",
+		"Map System",
+		"Arms Barrier",
+		"Turbocharge",
+		"Curly's Air Tank",
+		"Booster v2.0",
+		"Mimiga Mask",
+		"Whimsical Star",
+		"Nikumaru Counter"
+	];
+}
+// Array of weapon names
+function getWeaponNames() {
+	return [
+		"None",
+		"Snake",
+		"Polar Star",
+		"Fireball",
+		"Machine Gun",
+		"Missile Launcher",
+		null,
+		"Bubbler",
+		null,
+		"Blade",
+		"Super Missile",
+		null,
+		"Nemesis",
+		"Spur"
+	];
+}
+// Array of item names
+function getItemNames() {
+	return [
+		"None",
+		"Arthur's Key",
+		"Map System",
+		"Santa's Key",
+		"Silver Locket",
+		"Beast Fang",
+		"Life Capsule",
+		"ID Card",
+		"Jellyfish Juice",
+		"Rusty Key",
+		"Gum Key",
+		"Gum Base",
+		"Charcoal",
+		"Explosive",
+		"Puppy",
+		"Life Pot",
+		"Cure-All",
+		"Clinic Key",
+		"Booster v0.8",
+		"Arms Barrier",
+		"Turbocharge",
+		"Curly's Air Tank",
+		"Nikumaru Counter",
+		"Booster v2.0",
+		"Mimiga Mask",
+		"Teleporter Room Key",
+		"Sue's Letter",
+		"Controller",
+		"Broken Sprinkler",
+		"Sprinkler",
+		"Tow Rope",
+		"Clay Figure Medal",
+		"Little Man",
+		"Mushroom Badge",
+		"Ma Pignon",
+		"Curly's Underwear",
+		"Alien Medal",
+		"Chaco's Lipstick",
+		"Whimsical Star",
+		"Iron Bond"
+	];
+}
+// Array of warp menu names
+function getWarpNames() {
+	return [
+		"None",
+		"Egg Corridor",
+		"Sand Zone",
+		"Labyrinth",
+		"Plantation"
+	];
+}
+// Array of warp location names
+function getWarpLocNames() {
+	var warpLoc = ["None"];
+	warpLoc[6001] = "Egg Corridor";
+	warpLoc[6002] = "Grasstown";
+	warpLoc[6003] = "Sand Zone";
+	warpLoc[6004] = "Labyrinth";
+	warpLoc[6005] = "Plantation";
+	return warpLoc;
+}
+// Save flag ID, this flag will be unmodifiable!
+function getSaveFlagID() {
+	return 431;
+}
+// Array of flag desscriptions
+function getFlagDescriptions() {
+	var flagDesc = [];
+	flagDesc[100] = "Egg Corridor Sue & Igor cutscene has been seen.";
+	flagDesc[101] = "1st Egg Corridor Life Capsule obtained. (Near teleporter)";
+	flagDesc[102] = "2nd Egg Corridor Life Capsule obtained. (Cthulhu's Abode)";
+	flagDesc[103] = "Igor beaten.";
+	flagDesc[105] = "Opens Side Room door. Set by Sue in Egg No. 00.";
+	flagDesc[106] = "Shows you the Sue and Kazuma cutscene when leaving Egg Corridor. Set by Sue in Egg No. 00.";
+	flagDesc[120] = "Sue left Egg No. 00. Changes Mahin dialogue.";
+	flagDesc[140] = "ID Card obtained.";
+	flagDesc[153] = "Set once Egg Corridor teleportation is permitted.";
+	flagDesc[154] = "Computer displays \"Connecting to Grasstown\". Set by Sue in Egg No. 00.";
+	flagDesc[155] = "Shows Sue trapped in cage cutscene when leaving Arthur's House. Set by Sue in Egg No. 00.";
+	flagDesc[156] = "Changes Mahin dialogue. Set when Kazuma and Booster return from Grasstown.";
+	flagDesc[157] = "Changes computer text. Set in the cutscene when returning to Arthur's house, post-Grasstown.";
+	flagDesc[158] = "Set once Sand Zone teleportation is permitted. Changes Arthur's House dialogues.";
+	flagDesc[159] = "Takes you to the \"Egg Corridor?\". Changes computer text.";
+	flagDesc[160] = "Makes Booster teleport into Arthur's house and give you the Booster v2.0.";
+	flagDesc[161] = "Booster is in Arthur's house. Hides \"Provided only I live\" text in Prefab Building.";
+	flagDesc[162] = "Professor Booster is still alive for a credits cutscene. Used to tell which booster you had.";
+	flagDesc[200] = "Egg Observation Room ML chest opened.";
+	flagDesc[201] = "Set once the Missile Launcher (ML) is obtained.";
+	flagDesc[202] = "Set once the Super Missile Launcher (SML) is obtained.";
+	flagDesc[210] = "Set once Santa's Key is obtained.";
+	flagDesc[211] = "Advances Santa's dialogue outside his house.";
+	flagDesc[212] = "Set once you give Santa his key. Lets you into his house and stops him appearing outside.";
+	flagDesc[213] = "Remove the grate on Chaco's fireplace. For when you go trough the fireplace.";
+	flagDesc[214] = "Allows the player to get into the Power Room in Grasstown. Set after the Rusty Key has been used.";
+	flagDesc[215] = "Set when Kazuma asks you to open the Shelter's door with the Rusty Key.";
+	flagDesc[216] = "Set when you discover that there's no keyhole in the door.";
+	flagDesc[217] = "Turns off Grasstown teleporter lights. Never set in-game.";
+	flagDesc[218] = "Grasstown ML chest opened.";
+	flagDesc[219] = "Kazuma and Booster have ridden the scooter. Shows King releasing Sue when teleporting back.";
+	flagDesc[221] = "Set when you get the Gum Key.";
+	flagDesc[222] = "Set after using Gum Key to get to Gum.";
+	flagDesc[223] = "Set when Kazuma discovers that the Rusty Key doesn't open the door. Advances door text.";
+	flagDesc[224] = "Set every time you teleport into Grasstown. Advances King's dialogue, and Sue's jail dialogue.";
+	flagDesc[225] = "Stops the scooter from appearing next to Shelter.";
+	flagDesc[226] = "Makes the scooter appear broken next to the teleporter.";
+	flagDesc[227] = "Makes smoke generator appear next to scooter. Unset if you teleport out of Grasstown or look at Santa's locked door.";
+	flagDesc[228] = "Makes Grasstown's near-teleporter Cthulhu skip the 'soldier from the surface' dialogue.";
+	flagDesc[240] = "Set just before you get the Fireball. Would make Santa run a nonexistent event if 241 weren't set at the same time.";
+	flagDesc[241] = "Set once Fireball is obtained. Advances Santa and Chaco dialogue.";
+	flagDesc[242] = "Set once Charcoal is obtained. Advances Santa dialogue.";
+	flagDesc[243] = "Set once you get teleported to Labyrinth I. Unused?";
+	flagDesc[261] = "Set once you interact with Chaco's fireplace.";
+	flagDesc[262] = "Set once you get teleported to Labyrinth I. Unused?";
+	flagDesc[263] = "Set when you interact with Chaco's fireplace. Used to jump to the lipstick event. Unset every time you re-enter her house.";
+	flagDesc[272] = "Set when you start the Omega fight. Lifts the curse on the sunstones.";
+	flagDesc[273] = "Gets rid of the sunstones.";
+	flagDesc[274] = "Set whenever you have one of Jenka's puppies. Makes them appear on your back.";
+	flagDesc[275] = "Set once you get the puppy that's next to the Sand Zone Storehouse.";
+	flagDesc[276] = "Set once you get the puppy in the middle of the Sand Zone";
+	flagDesc[278] = "Set after Jenka gets creamed by Balrog.";
+	flagDesc[279] = "Set once you get the puppy that's in the treasure chest.";
+	flagDesc[280] = "Makes you go to the alternate version of Jenka's house whenever you go to her house.";
+	flagDesc[301] = "Set when you kill the eye door in the First Cave.";
+	flagDesc[302] = "Set when you exit the First Cave for the first time.";
+	flagDesc[303] = "Set after the Spur is obtained.";
+	flagDesc[320] = "Set in the Mimiga Village opening cutscene. Also set when you talk to King. Makes King disappear.";
+	flagDesc[321] = "Makes King appear in a different place.";
+	flagDesc[322] = "Set once you get the Map System.";
+	flagDesc[323] = "Set once you interact with King before getting the Silver Locket. Advances his dialogue.";
+	flagDesc[324] = "Set once you use Arthur's Key for the first time. Skips the \"Used Arthur's Key\" text in future.";
+	flagDesc[325] = "Set once teleportation to Grasstown is permitted.";
+	flagDesc[326] = "Makes Toroko appear in the Shack with her stick.";
+	flagDesc[327] = "Makes Jack appear in Assembly Hall instead of Cemetery entrance. Advances King dialogue.";
+	flagDesc[329] = "Set by Sue in Egg No. 00. Unset when teleport to Arthur's House from Grasstown. Unknown use.";
+	flagDesc[340] = "Set in post-Core drowning dialogue. Unknown use.";
+	flagDesc[341] = "Set in Core defeated dialogue. Changes Mimiga Village/Chako's House/Sand Zone Residence music to Quiet. Changes Arthur's House music to Pulse.";
+	flagDesc[360] = "Set Toroko's Shack dialogue. Makes the door to the Shack broken.";
+	flagDesc[361] = "Set in Balrog's Shack dialogue. Makes the door tell you that you can't escape.";
+	flagDesc[362] = "Set when getting Silver Locket. Prevents Shack door openeding pre-Toroko/Balrog dialogue.";
+	flagDesc[370] = "Set when getting Silver Locket. Stops Silver Locket from appearing.";
+	flagDesc[371] = "Set when getting Silver Locket. Shows Toroko and King cutscene when exiting Resovoir.";
+	flagDesc[372] = "Set when you get Curly's Air Tank. Unknown use.";
+	flagDesc[390] = "If set, Arthur's Key does not appear.";
+	flagDesc[410] = "If set, Beast Fang does not appear.";
+	flagDesc[411] = "Set in post-core drowning dialogue. Unknown use.";
+	flagDesc[430] = "Set in opening cut-scene dialogue. Makes OOB null entity in Start Point disappear.";
+	flagDesc[431] = "Set the first time you save. Makes the game load your save profile when you retry after dying.";
+	flagDesc[440] = "Set in Toroko Shack dialogue. Unset in Kazuma/Sue pre-Grasstown cutscene. Unknown use.";
+	flagDesc[441] = "Set when first entering Arthur's House. Unknown use.";
+	flagDesc[442] = "Set when getting the Bubbler. Stops you from getting the weapon again.";
+	flagDesc[443] = "If set, Arthur is in the Assembly Hall. Unset in Kazuma/Sue pre-Grasstown cutscene.";
+	flagDesc[444] = "Set in post-Grasstown Kazuma/Booster cutscene. Unset in pre-Labyrinth cutscene. Unknown use.";
+	flagDesc[470] = "Set when lowering Egg Corridor sheild. Changes computer terminal text.";
+	flagDesc[480] = "Prevents Power Room door from being opened. Set for Balrog boss fight.";
+	flagDesc[481] = "Set in Grasstown Balrog boss dialogue. Turns on Grasstown fans.";
+	flagDesc[482] = "Set in Grasstown Balrog boss dialogue. Changes Malco interaction text for boss fight.";
+	flagDesc[483] = "Set in Grasstown Balrog post-boss dialogue. Changes Malco interaction to allow pulling out post-boss fight.";
+	flagDesc[484] = "No description yet.";
+	flagDesc[485] = "No description yet.";
+	flagDesc[486] = "No description yet.";
+	flagDesc[500] = "No description yet.";
+	flagDesc[501] = "No description yet.";
+	flagDesc[520] = "No description yet.";
+	flagDesc[521] = "No description yet.";
+	flagDesc[522] = "No description yet.";
+	flagDesc[523] = "No description yet.";
+	flagDesc[524] = "No description yet.";
+	flagDesc[525] = "No description yet.";
+	flagDesc[550] = "No description yet.";
+	flagDesc[561] = "No description yet.";
+	flagDesc[562] = "No description yet.";
+	flagDesc[563] = "No description yet.";
+	flagDesc[564] = "No description yet.";
+	flagDesc[565] = "No description yet.";
+	flagDesc[580] = "No description yet.";
+	flagDesc[590] = "No description yet.";
+	flagDesc[591] = "No description yet.";
+	flagDesc[592] = "No description yet.";
+	flagDesc[593] = "No description yet.";
+	flagDesc[594] = "No description yet.";
+	flagDesc[595] = "No description yet.";
+	flagDesc[596] = "No description yet.";
+	flagDesc[610] = "No description yet.";
+	flagDesc[620] = "No description yet.";
+	flagDesc[621] = "No description yet.";
+	flagDesc[622] = "No description yet.";
+	flagDesc[623] = "No description yet.";
+	flagDesc[624] = "No description yet.";
+	flagDesc[641] = "No description yet.";
+	flagDesc[680] = "No description yet.";
+	flagDesc[681] = "No description yet.";
+	flagDesc[700] = "No description yet.";
+	flagDesc[701] = "No description yet.";
+	flagDesc[702] = "No description yet.";
+	flagDesc[703] = "No description yet.";
+	flagDesc[704] = "No description yet.";
+	flagDesc[705] = "No description yet.";
+	flagDesc[710] = "No description yet.";
+	flagDesc[711] = "No description yet.";
+	flagDesc[720] = "No description yet.";
+	flagDesc[721] = "No description yet.";
+	flagDesc[722] = "No description yet.";
+	flagDesc[740] = "No description yet.";
+	flagDesc[741] = "No description yet.";
+	flagDesc[742] = "No description yet.";
+	flagDesc[743] = "No description yet.";
+	flagDesc[744] = "No description yet.";
+	flagDesc[760] = "No description yet.";
+	flagDesc[761] = "No description yet.";
+	flagDesc[762] = "No description yet.";
+	flagDesc[763] = "No description yet.";
+	flagDesc[764] = "No description yet.";
+	flagDesc[765] = "No description yet.";
+	flagDesc[766] = "No description yet.";
+	flagDesc[780] = "No description yet.";
+	flagDesc[781] = "No description yet.";
+	flagDesc[782] = "No description yet.";
+	flagDesc[783] = "No description yet.";
+	flagDesc[800] = "No description yet.";
+	flagDesc[801] = "No description yet.";
+	flagDesc[820] = "No description yet.";
+	flagDesc[821] = "No description yet.";
+	flagDesc[822] = "No description yet.";
+	flagDesc[823] = "No description yet.";
+	flagDesc[824] = "No description yet.";
+	flagDesc[825] = "No description yet.";
+	flagDesc[826] = "No description yet.";
+	flagDesc[827] = "No description yet.";
+	flagDesc[828] = "No description yet.";
+	flagDesc[829] = "No description yet.";
+	flagDesc[830] = "No description yet.";
+	flagDesc[832] = "No description yet.";
+	flagDesc[834] = "No description yet.";
+	flagDesc[835] = "No description yet.";
+	flagDesc[836] = "No description yet.";
+	flagDesc[837] = "No description yet.";
+	flagDesc[838] = "No description yet.";
+	flagDesc[839] = "No description yet.";
+	flagDesc[851] = "No description yet.";
+	flagDesc[880] = "No description yet.";
+	flagDesc[920] = "No description yet.";
+	flagDesc[921] = "No description yet.";
+	flagDesc[940] = "No description yet.";
+	flagDesc[941] = "No description yet.";
+	flagDesc[960] = "No description yet.";
+	flagDesc[961] = "No description yet.";
+	flagDesc[1000] = "No description yet.";
+	flagDesc[1001] = "No description yet.";
+	flagDesc[1002] = "No description yet.";
+	flagDesc[1003] = "No description yet.";
+	flagDesc[1004] = "No description yet.";
+	flagDesc[1020] = "No description yet.";
+	flagDesc[1021] = "No description yet.";
+	flagDesc[1022] = "No description yet.";
+	flagDesc[1023] = "No description yet.";
+	flagDesc[1024] = "No description yet.";
+	flagDesc[1025] = "No description yet.";
+	flagDesc[1026] = "No description yet.";
+	flagDesc[1027] = "No description yet.";
+	flagDesc[1028] = "No description yet.";
+	flagDesc[1029] = "No description yet.";
+	flagDesc[1030] = "No description yet.";
+	flagDesc[1031] = "No description yet.";
+	flagDesc[1032] = "No description yet.";
+	flagDesc[1033] = "No description yet.";
+	flagDesc[1034] = "No description yet.";
+	flagDesc[1035] = "No description yet.";
+	flagDesc[1036] = "No description yet.";
+	flagDesc[1037] = "No description yet.";
+	flagDesc[1038] = "No description yet.";
+	flagDesc[1039] = "No description yet.";
+	flagDesc[1040] = "No description yet.";
+	flagDesc[1041] = "No description yet.";
+	flagDesc[1042] = "No description yet.";
+	flagDesc[1044] = "No description yet.";
+	flagDesc[1045] = "No description yet.";
+	flagDesc[1046] = "No description yet.";
+	flagDesc[1080] = "No description yet.";
+	flagDesc[1080] = "No description yet.";
+	flagDesc[1081] = "No description yet.";
+	flagDesc[1082] = "No description yet.";
+	flagDesc[1100] = "No description yet.";
+	flagDesc[1101] = "No description yet.";
+	flagDesc[1102] = "No description yet.";
+	flagDesc[1103] = "No description yet.";
+	flagDesc[1105] = "No description yet.";
+	flagDesc[1106] = "No description yet.";
+	flagDesc[1107] = "No description yet.";
+	flagDesc[1120] = "No description yet.";
+	flagDesc[1121] = "No description yet.";
+	flagDesc[1140] = "No description yet.";
+	flagDesc[1141] = "No description yet.";
+	flagDesc[1190] = "No description yet.";
+	flagDesc[1191] = "No description yet.";
+	flagDesc[1192] = "No description yet.";
+	flagDesc[1250] = "No description yet.";
+	flagDesc[1270] = "No description yet.";
+	flagDesc[1271] = "No description yet.";
+	flagDesc[1272] = "No description yet.";
+	flagDesc[1273] = "No description yet.";
+	flagDesc[1274] = "No description yet.";
+	flagDesc[1290] = "No description yet.";
+	flagDesc[1320] = "No description yet.";
+	flagDesc[1340] = "No description yet.";
+	flagDesc[1341] = "No description yet.";
+	flagDesc[1370] = "No description yet.";
+	flagDesc[1371] = "No description yet.";
+	flagDesc[1372] = "No description yet.";
+	flagDesc[1373] = "No description yet.";
+	flagDesc[1390] = "No description yet.";
+	flagDesc[1391] = "No description yet.";
+	flagDesc[1392] = "No description yet.";
+	flagDesc[1393] = "No description yet.";
+	flagDesc[1440] = "No description yet.";
+	flagDesc[1441] = "No description yet.";
+	flagDesc[1442] = "No description yet.";
+	flagDesc[1443] = "No description yet.";
+	flagDesc[1444] = "No description yet.";
+	flagDesc[1445] = "No description yet.";
+	flagDesc[1460] = "No description yet.";
+	flagDesc[1531] = "No description yet.";
+	flagDesc[1532] = "No description yet.";
+	flagDesc[1533] = "No description yet.";
+	flagDesc[1534] = "No description yet.";
+	flagDesc[1550] = "No description yet.";
+	flagDesc[1551] = "No description yet.";
+	flagDesc[1561] = "No description yet.";
+	flagDesc[1562] = "No description yet.";
+	flagDesc[1563] = "No description yet.";
+	flagDesc[1564] = "No description yet.";
+	flagDesc[1590] = "No description yet.";
+	flagDesc[1591] = "No description yet.";
+	flagDesc[1592] = "No description yet.";
+	flagDesc[1593] = "No description yet.";
+	flagDesc[1600] = "No description yet.";
+	flagDesc[1620] = "No description yet.";
+	flagDesc[1640] = "No description yet.";
+	flagDesc[1641] = "No description yet.";
+	flagDesc[1642] = "No description yet.";
+	flagDesc[1643] = "No description yet.";
+	flagDesc[1644] = "No description yet.";
+	flagDesc[1700] = "No description yet.";
+	flagDesc[2000] = "No description yet.";
+	flagDesc[3000] = "No description yet.";
+	flagDesc[3001] = "No description yet.";
+	flagDesc[3002] = "No description yet.";
+	flagDesc[3003] = "No description yet.";
+	flagDesc[3004] = "No description yet.";
+	flagDesc[4000] = "Set after defeating the Core. Makes drowning run an alternate event.";
+	return flagDesc;
+}
+

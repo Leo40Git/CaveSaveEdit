@@ -4,9 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.Scriptable;
 
 public class MCI {
 
@@ -23,17 +29,114 @@ public class MCI {
 
 	private static Properties mci = new Properties();
 
-	public static void readDefault() throws IOException, MCIException {
-		try (InputStream is = MCI.class.getResourceAsStream("default.mci")) {
-			mci.load(is);
+	private static void readList(Properties p, String group, Object obj) {
+		if (obj instanceof NativeArray) {
+			NativeArray na = (NativeArray) obj;
+			for (int d = 0; d < na.size(); d++) {
+				if (na.get(d) == Scriptable.NOT_FOUND || na.get(d) == null)
+					continue;
+				p.put(group + "." + d, na.get(d));
+			}
+		} else if (obj instanceof String[]) {
+			String[] list = (String[]) obj;
+			for (int d = 0; d < list.length; d++) {
+				if (list[d] == null)
+					continue;
+				p.put(group + "." + d, list[d]);
+			}
+		} else
+			throw new RuntimeException("Unsupported list type: " + obj.getClass().getName());
+	}
+
+	private static Object invokeFunction(Context cx, Scriptable scope, String name, Object... args) {
+		Object fObj = scope.get(name, scope);
+		if (!(fObj instanceof Function)) {
+			System.out.println(name + " is not a function or is undefined.");
+			return null;
+		} else {
+			Function f = (Function) fObj;
+			return f.call(cx, scope, scope, args);
 		}
+	}
+
+	private static Context cx;
+	private static Scriptable scope;
+
+	private static Object invokeFunction(String name, Object... args) {
+		return invokeFunction(cx, scope, name, args);
+	}
+
+	private static void read0(InputStream is, File src) throws IOException {
+		/*
+		Invocable i = null;
+		ScriptEngineManager manager = new ScriptEngineManager();
+		ScriptEngine engine = manager.getEngineByName("JavaScript");
+		try (InputStreamReader isr = new InputStreamReader(is);) {
+			engine.eval(isr);
+		} catch (ScriptException e) {
+			// TODO Report error to user
+			System.err.println("MCI: Failed to evaluate script!");
+			e.printStackTrace();
+			return;
+		}
+		if (engine instanceof Invocable)
+			i = (Invocable) engine;
+		else {
+			// TODO Report error to user
+			System.err.println("MCI: Engine is not invocable??? That's probably not right");
+			return;
+		}
+		*/
+		cx = Context.enter();
+		scope = cx.initStandardObjects();
+		try (InputStreamReader isr = new InputStreamReader(is);) {
+			cx.evaluateReader(scope, isr, src.getName(), 0, null);
+		}
+		Properties tmp = new Properties();
+		try {
+			// Metadata
+			tmp.put("Meta.Name", invokeFunction("getName"));
+			tmp.put("Meta.Author", invokeFunction("getAuthor"));
+			// Game information
+			tmp.put("Game.ExeName", invokeFunction("getExeName"));
+			tmp.put("Game.ArmsImageYStart", invokeFunction("getArmsImageYStart"));
+			tmp.put("Game.ArmsImageSize", invokeFunction("getArmsImageSize"));
+			tmp.put("Game.FPS", invokeFunction("getFPS"));
+			tmp.put("Game.GraphicsResolution", invokeFunction("getGraphicsResolution"));
+			// Map names
+			readList(tmp, "Map", invokeFunction("getMapNames"));
+			// Song names
+			readList(tmp, "Song", invokeFunction("getSongNames"));
+			// Equip names
+			readList(tmp, "Equip", invokeFunction("getEquipNames"));
+			// Weapon names
+			readList(tmp, "Weapon", invokeFunction("getWeaponNames"));
+			// Item names
+			readList(tmp, "Item", invokeFunction("getItemNames"));
+			// Warp menu names
+			readList(tmp, "Warp", invokeFunction("getWarpNames"));
+			// Warp location names
+			readList(tmp, "WarpLoc", invokeFunction("getWarpLocNames"));
+			// Flag descriptions
+			tmp.put("Flag.SaveID", invokeFunction("getSaveFlagID"));
+			readList(tmp, "Flag", invokeFunction("getFlagDescriptions"));
+		} catch (Exception e) {
+			// TODO Report error to user
+			System.err.println("MCI: Exception while assigning script results to properties object!");
+			e.printStackTrace();
+			return;
+		}
+		mci.clear();
+		mci.putAll(tmp);
+	}
+
+	public static void readDefault() throws IOException, MCIException {
+		read0(MCI.class.getResourceAsStream("default.mci"), new File("default.mci"));
 		validate();
 	}
 
 	public static void read(File file) throws IOException, MCIException {
-		try (FileInputStream fis = new FileInputStream(file)) {
-			mci.load(fis);
-		}
+		read0(new FileInputStream(file), file);
 		validate();
 	}
 

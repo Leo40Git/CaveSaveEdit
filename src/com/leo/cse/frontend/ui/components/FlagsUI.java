@@ -19,6 +19,7 @@ import com.leo.cse.frontend.ui.dialogs.FlagDialog;
 public class FlagsUI extends Component implements IScrollable, IDraggable {
 
 	private static final int FLAGS_PER_SCROLL = 35;
+	private static final String NO_DESCRIPTION = "(no description)";
 
 	private Supplier<Integer> sSup;
 	private Consumer<Integer> sUpdate;
@@ -60,23 +61,22 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 
 	public static String getFlagDescription(int id) {
 		if (id <= 10)
-			return MCI.get("Flag.Engine");
+			return "(engine flag)";
 		if (MCI.getSpecial("VarHack")) {
 			if (id >= 6000 && id <= 8000)
-				return MCI.get("Flag.VarHack");
+				return "(<VAR data)";
 			if (MCI.getSpecial("PhysVarHack"))
 				if (id >= 5632 && id <= 5888)
-					return MCI.get("Flag.PhysVarHack");
+					return "(<PHY data)";
 		} else if (MCI.getSpecial("MimHack")) {
 			if (id >= 7968 && id <= 7993)
-				return MCI.get("Flag.MimHack");
+				return "(<MIM data)";
 		} else if (MCI.getSpecial("BuyHack")) {
 			if (id >= 7968 && id <= 7993)
-				return MCI.get("Flag.BuyHack");
+				return "(<BUY data)";
 		}
-		if (id == MCI.getInteger("Flag.SaveID", 431))
-			return MCI.get("Flag.Save");
-		return MCI.get("Flag", id);
+		String ret = MCI.getNullable("Flag", id);
+		return (ret == null ? NO_DESCRIPTION : ret);
 	}
 
 	private void calculateShownFlags() {
@@ -84,8 +84,7 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 			shownFlags = new ArrayList<Integer>();
 		shownFlags.clear();
 		for (int i = 0; i < Profile.getFlags().length; i++)
-			if ((!huSup.get() || !MCI.get("Flag.None").equals(getFlagDescription(i)))
-					&& (!hsSup.get() || flagIsValid(i)))
+			if ((!huSup.get() || !NO_DESCRIPTION.equals(getFlagDescription(i))) && (!hsSup.get() || flagIsValid(i)))
 				shownFlags.add(i);
 	}
 
