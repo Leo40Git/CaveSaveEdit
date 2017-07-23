@@ -21,6 +21,10 @@ function getFPS() {
 function getGraphicsResolution() {
 	return 1;
 }
+// Special support
+function getSpecials() {
+	return [];
+}
 // Array of map names
 function getMapNames() {
 	return [

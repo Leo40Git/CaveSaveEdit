@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeArray;
@@ -67,26 +69,6 @@ public class MCI {
 	}
 
 	private static void read0(InputStream is, File src) throws IOException {
-		/*
-		Invocable i = null;
-		ScriptEngineManager manager = new ScriptEngineManager();
-		ScriptEngine engine = manager.getEngineByName("JavaScript");
-		try (InputStreamReader isr = new InputStreamReader(is);) {
-			engine.eval(isr);
-		} catch (ScriptException e) {
-			// TODO Report error to user
-			System.err.println("MCI: Failed to evaluate script!");
-			e.printStackTrace();
-			return;
-		}
-		if (engine instanceof Invocable)
-			i = (Invocable) engine;
-		else {
-			// TODO Report error to user
-			System.err.println("MCI: Engine is not invocable??? That's probably not right");
-			return;
-		}
-		*/
 		cx = Context.enter();
 		scope = cx.initStandardObjects();
 		try (InputStreamReader isr = new InputStreamReader(is);) {
@@ -103,6 +85,19 @@ public class MCI {
 			tmp.put("Game.ArmsImageSize", invokeFunction("getArmsImageSize"));
 			tmp.put("Game.FPS", invokeFunction("getFPS"));
 			tmp.put("Game.GraphicsResolution", invokeFunction("getGraphicsResolution"));
+			// Special support
+			Object oss = invokeFunction("getSpecials");
+			if (oss instanceof NativeArray) {
+				NativeArray specials = (NativeArray) oss;
+				if (specials.contains("MimHack"))
+					tmp.put("Special.MimHack", true);
+				if (specials.contains("VarHack"))
+					tmp.put("Special.VarHack", true);
+				if (specials.contains("PhysVarHack"))
+					tmp.put("Special.PhysVarHack", true);
+				if (specials.contains("BuyHack"))
+					tmp.put("Special.BuyHack", true);
+			}
 			// Map names
 			readList(tmp, "Map", invokeFunction("getMapNames"));
 			// Song names
@@ -121,13 +116,17 @@ public class MCI {
 			tmp.put("Flag.SaveID", invokeFunction("getSaveFlagID"));
 			readList(tmp, "Flag", invokeFunction("getFlagDescriptions"));
 		} catch (Exception e) {
-			// TODO Report error to user
 			System.err.println("MCI: Exception while assigning script results to properties object!");
 			e.printStackTrace();
-			return;
+			JOptionPane.showMessageDialog(null,
+					"An exception has occured!\nPlease send the error log (\"cse.log\") to the developer,\nalong with a description of what you did leading up to the exception.",
+					"Something went wrong", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		} finally {
+			Context.exit();
+			mci.clear();
+			mci.putAll(tmp);
 		}
-		mci.clear();
-		mci.putAll(tmp);
 	}
 
 	public static void readDefault() throws IOException, MCIException {
