@@ -274,7 +274,7 @@ function getWarpLocNames() {
 function getSaveFlagID() {
 	return 431;
 }
-// Array of flag desscriptions
+// Array of flag descriptions
 function getFlagDescriptions() {
 	var flagDesc = [];
 	flagDesc[100] = "Egg Corridor Sue & Igor cutscene has been seen.";
@@ -560,4 +560,10 @@ function getFlagDescriptions() {
 	flagDesc[4000] = "Set after defeating the Core. Makes drowning run an alternate event.";
 	return flagDesc;
 }
-
+// Entity extras
+function getEntityFrame(entity) {
+	return new java.awt.Rectangle(0, 0, 32, 32);
+}
+function getEntityOffset(entity) {
+	return new java.awt.Point(0, 0);
+}

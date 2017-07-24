@@ -1,5 +1,7 @@
 package com.leo.cse.frontend;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,9 +14,12 @@ import java.util.Properties;
 import javax.swing.JOptionPane;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
+
+import com.leo.cse.backend.exe.MapInfo.PxeEntry;
 
 public class MCI {
 
@@ -50,43 +55,50 @@ public class MCI {
 			throw new RuntimeException("Unsupported list type: " + obj.getClass().getName());
 	}
 
-	private static Object invokeFunction(Context cx, Scriptable scope, String name, Object... args) {
+	private static Object invokeFunction(Context cx, Scriptable scope, String name, Object... args)
+			throws NoSuchMethodException {
 		Object fObj = scope.get(name, scope);
-		if (!(fObj instanceof Function)) {
-			System.out.println(name + " is not a function or is undefined.");
-			return null;
-		} else {
-			Function f = (Function) fObj;
-			return f.call(cx, scope, scope, args);
-		}
+		if (!(fObj instanceof Function))
+			throw new NoSuchMethodException(name);
+		Function f = (Function) fObj;
+		ContextFactory.getGlobal().enterContext(cx);
+		Object result = f.call(cx, scope, scope, args);
+		Context.exit();
+		return result;
 	}
 
 	private static Context cx;
 	private static Scriptable scope;
 
-	private static Object invokeFunction(String name, Object... args) {
+	private static Object invokeFunction(String name, Object... args) throws NoSuchMethodException {
 		return invokeFunction(cx, scope, name, args);
 	}
 
-	private static void read0(InputStream is, File src) throws IOException {
-		cx = Context.enter();
-		scope = cx.initStandardObjects();
+	private static void read0(InputStream is, File src) throws Exception {
+		Context tcx = Context.enter();
+		Scriptable tscope = tcx.initStandardObjects();
 		try (InputStreamReader isr = new InputStreamReader(is);) {
-			cx.evaluateReader(scope, isr, src.getName(), 0, null);
+			tcx.evaluateReader(tscope, isr, src.getName(), 0, null);
+		} catch (IOException e) {
+			System.err.println("MCI: Error while parsing script!");
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(Main.window, "An exception occured while parsing the MCI file:\n" + e,
+					"Error while parsing MCI file", JOptionPane.ERROR_MESSAGE);
+			throw e;
 		}
 		Properties tmp = new Properties();
 		try {
 			// Metadata
-			tmp.put("Meta.Name", invokeFunction("getName"));
-			tmp.put("Meta.Author", invokeFunction("getAuthor"));
+			tmp.put("Meta.Name", invokeFunction(tcx, tscope, "getName"));
+			tmp.put("Meta.Author", invokeFunction(tcx, tscope, "getAuthor"));
 			// Game information
-			tmp.put("Game.ExeName", invokeFunction("getExeName"));
-			tmp.put("Game.ArmsImageYStart", invokeFunction("getArmsImageYStart"));
-			tmp.put("Game.ArmsImageSize", invokeFunction("getArmsImageSize"));
-			tmp.put("Game.FPS", invokeFunction("getFPS"));
-			tmp.put("Game.GraphicsResolution", invokeFunction("getGraphicsResolution"));
+			tmp.put("Game.ExeName", invokeFunction(tcx, tscope, "getExeName"));
+			tmp.put("Game.ArmsImageYStart", invokeFunction(tcx, tscope, "getArmsImageYStart"));
+			tmp.put("Game.ArmsImageSize", invokeFunction(tcx, tscope, "getArmsImageSize"));
+			tmp.put("Game.FPS", invokeFunction(tcx, tscope, "getFPS"));
+			tmp.put("Game.GraphicsResolution", invokeFunction(tcx, tscope, "getGraphicsResolution"));
 			// Special support
-			Object oss = invokeFunction("getSpecials");
+			Object oss = invokeFunction(tcx, tscope, "getSpecials");
 			if (oss instanceof NativeArray) {
 				NativeArray specials = (NativeArray) oss;
 				if (specials.contains("MimHack"))
@@ -99,42 +111,48 @@ public class MCI {
 					tmp.put("Special.BuyHack", true);
 			}
 			// Map names
-			readList(tmp, "Map", invokeFunction("getMapNames"));
+			readList(tmp, "Map", invokeFunction(tcx, tscope, "getMapNames"));
 			// Song names
-			readList(tmp, "Song", invokeFunction("getSongNames"));
+			readList(tmp, "Song", invokeFunction(tcx, tscope, "getSongNames"));
 			// Equip names
-			readList(tmp, "Equip", invokeFunction("getEquipNames"));
+			readList(tmp, "Equip", invokeFunction(tcx, tscope, "getEquipNames"));
 			// Weapon names
-			readList(tmp, "Weapon", invokeFunction("getWeaponNames"));
+			readList(tmp, "Weapon", invokeFunction(tcx, tscope, "getWeaponNames"));
 			// Item names
-			readList(tmp, "Item", invokeFunction("getItemNames"));
+			readList(tmp, "Item", invokeFunction(tcx, tscope, "getItemNames"));
 			// Warp menu names
-			readList(tmp, "Warp", invokeFunction("getWarpNames"));
+			readList(tmp, "Warp", invokeFunction(tcx, tscope, "getWarpNames"));
 			// Warp location names
-			readList(tmp, "WarpLoc", invokeFunction("getWarpLocNames"));
+			readList(tmp, "WarpLoc", invokeFunction(tcx, tscope, "getWarpLocNames"));
 			// Flag descriptions
-			tmp.put("Flag.SaveID", invokeFunction("getSaveFlagID"));
-			readList(tmp, "Flag", invokeFunction("getFlagDescriptions"));
+			tmp.put("Flag.SaveID", invokeFunction(tcx, tscope, "getSaveFlagID"));
+			readList(tmp, "Flag", invokeFunction(tcx, tscope, "getFlagDescriptions"));
+		} catch (NoSuchMethodException e) {
+			JOptionPane.showMessageDialog(Main.window,
+					"Could not find definition for \"" + e.getMessage() + "\" in MCI file!", "Missing definition",
+					JOptionPane.ERROR_MESSAGE);
+			throw e;
 		} catch (Exception e) {
 			System.err.println("MCI: Exception while assigning script results to properties object!");
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,
-					"An exception has occured!\nPlease send the error log (\"cse.log\") to the developer,\nalong with a description of what you did leading up to the exception.",
+			JOptionPane.showMessageDialog(Main.window, "Something went wrong with the MCI file:\n" + e,
 					"Something went wrong", JOptionPane.ERROR_MESSAGE);
-			System.exit(1);
+			throw e;
 		} finally {
 			Context.exit();
+			cx = tcx;
+			scope = tscope;
 			mci.clear();
 			mci.putAll(tmp);
 		}
 	}
 
-	public static void readDefault() throws IOException, MCIException {
+	public static void readDefault() throws Exception {
 		read0(MCI.class.getResourceAsStream("default.mci"), new File("default.mci"));
 		validate();
 	}
 
-	public static void read(File file) throws IOException, MCIException {
+	public static void read(File file) throws Exception {
 		read0(new FileInputStream(file), file);
 		validate();
 	}
@@ -243,6 +261,62 @@ public class MCI {
 				ret += ", " + res + "x Res";
 		}
 		return ret;
+	}
+
+	public static class EntityExtras {
+		private Rectangle frameRect;
+		private Point offset;
+
+		public EntityExtras(Rectangle frameRect, Point offset) {
+			this.frameRect = frameRect;
+			this.offset = offset;
+		}
+		
+		public Rectangle getFrameRect() {
+			return frameRect;
+		}
+		
+		public Point getOffset() {
+			return offset;
+		}
+	}
+	
+	public static class WrappedPxeEntry {
+		public short x;
+		public short y;
+		public short flagID;
+		public short eventNum;
+		public short type;
+		public boolean[] flags;
+		public WrappedPxeEntry(PxeEntry e) {
+			x = e.getX();
+			y = e.getY();
+			flagID = e.getFlagID();
+			eventNum = e.getEvent();
+			type = e.getType();
+			short fi = e.getFlags();
+			fi |= e.getInfo().getFlags();
+			flags = new boolean[16];
+			for (int i = 0; i < flags.length; i++)
+				flags[i] = (fi & (1 << i)) != 0;
+		}
+	}
+
+	public static EntityExtras getEntityExtras(PxeEntry e) throws NoSuchMethodException {
+		WrappedPxeEntry we = new WrappedPxeEntry(e);
+		Object oe1 = Context.jsToJava(invokeFunction("getEntityFrame", we), Rectangle.class);
+		if (!(oe1 instanceof Rectangle)) {
+			System.err.println("oe1 is not Rectangle: " + oe1.getClass().getName());
+			return null;
+		}
+		Rectangle frameRect = (Rectangle) oe1;
+		Object oe2 = Context.jsToJava(invokeFunction("getEntityOffset", we), Point.class);
+		if (!(oe2 instanceof Point)) {
+			System.err.println("oe2 is not Point: " + oe1.getClass().getName());
+			return null;
+		}
+		Point offset = (Point) oe2;
+		return new EntityExtras(frameRect, offset);
 	}
 
 }

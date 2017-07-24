@@ -21,7 +21,6 @@ import javax.imageio.ImageIO;
 import com.carrotlord.string.StrTools;
 import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.profile.Profile;
-import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
@@ -577,10 +576,6 @@ public class ExeData {
 					new Rectangle(hitboxDat[i * 4], hitboxDat[i * 4 + 1], hitboxDat[i * 4 + 2], hitboxDat[i * 4 + 3]));
 			entityList.add(i, e);
 		}
-
-		// TODO Find a way to auto-detect framerects
-		for (int i = 0; i < entityList.size(); i++)
-			entityList.get(i).setFramerect(FrontUtils.str2Rect(MCI.get("EntityRect", i)));
 	}
 
 	/**

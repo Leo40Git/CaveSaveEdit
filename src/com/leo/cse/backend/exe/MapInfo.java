@@ -1,8 +1,6 @@
 package com.leo.cse.backend.exe;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.leo.cse.backend.ResUtils;
-import com.leo.cse.backend.profile.Profile;
 
 //credit to Noxid for making Booster's Lab open source so I could steal code from it
 /**
@@ -279,7 +276,7 @@ public class MapInfo {
 		 */
 		private short xTile;
 
-		public int getX() {
+		public short getX() {
 			return xTile;
 		}
 
@@ -288,7 +285,7 @@ public class MapInfo {
 		 */
 		private short yTile;
 
-		public int getY() {
+		public short getY() {
 			return yTile;
 		}
 
@@ -297,7 +294,7 @@ public class MapInfo {
 		 */
 		private short flagID;
 
-		public int getFlagID() {
+		public short getFlagID() {
 			return flagID;
 		}
 
@@ -306,7 +303,7 @@ public class MapInfo {
 		 */
 		private short eventNum;
 
-		public int getEvent() {
+		public short getEvent() {
 			return eventNum;
 		}
 
@@ -315,7 +312,7 @@ public class MapInfo {
 		 */
 		private short entityType;
 
-		public int getType() {
+		public short getType() {
 			return entityType;
 		}
 
@@ -324,7 +321,7 @@ public class MapInfo {
 		 */
 		private short flags;
 
-		public int getFlags() {
+		public short getFlags() {
 			return flags;
 		}
 
@@ -364,53 +361,6 @@ public class MapInfo {
 			inf = ExeData.getEntityInfo(entityType);
 			if (inf == null)
 				throw new NullPointerException("Entity type " + entityType + " is undefined!");
-		}
-
-		/**
-		 * Draws the entity to the specified graphics instance.
-		 * 
-		 * @param g
-		 *            graphics to draw to
-		 */
-		public void draw(Graphics2D g) {
-			if ((flags & 0x0800) != 0) {
-				// Appear once flagID set
-				if (!Profile.getFlag(flagID))
-					return;
-			}
-			if ((flags & 0x4000) != 0) {
-				// No Appear if flagID set
-				if (Profile.getFlag(flagID))
-					return;
-			}
-
-			Rectangle frameRect = inf.getFramerect();
-			BufferedImage srcImg;
-			int tilesetNum = inf.getTileset();
-			if (tilesetNum == 0x15)
-				srcImg = ExeData.getImage(npcSheet1);
-			else if (tilesetNum == 0x16)
-				srcImg = ExeData.getImage(npcSheet2);
-			else if (tilesetNum == 0x14) // npc sym
-				srcImg = ExeData.getImage(ExeData.getNpcSym());
-			else if (tilesetNum == 0x17) // npc regu
-				srcImg = ExeData.getImage(ExeData.getNpcRegu());
-			else if (tilesetNum == 0x2) // map tileset
-				srcImg = ExeData.getImage(tileset);
-			else if (tilesetNum == 0x10) // npc myChar
-				srcImg = ExeData.getImage(ExeData.getMyChar());
-			else
-				srcImg = null;
-
-			if (srcImg != null) {
-				int srcX = frameRect.x;
-				int srcY = frameRect.y;
-				int srcX2 = frameRect.width;
-				int srcY2 = frameRect.height;
-				Rectangle dest = getDrawArea();
-				g.drawImage(srcImg, dest.x, dest.y, dest.x + dest.width, dest.y + dest.height, srcX, srcY, srcX2, srcY2,
-						null);
-			}
 		}
 
 		/**

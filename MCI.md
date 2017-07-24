@@ -4,7 +4,7 @@ The MCI system, or the **M**od **C**ompatibility **I**nformation system (origina
 # How does MCI work?
 The MCI system uses JavaScript to define and declare values.
 An example for an MCI configuration file can be found [here](src/com/leo/cse/frontend/default.mci).  
-Every MCI file should contain the following functions. *Note: CSE always uses double resolution images, take this in consideration when writing methods that return locations on spritesheets!*
+Every MCI file should contain the following functions. *Note: CSE always uses double resolution images, take this in consideration when dealing with positions and sizes!*
 ## Metadata
 - `getName:String` - Gets the MCI file's name.
 - `getAuthor:String` - Gets the MCI file's author(s).
@@ -32,3 +32,17 @@ If no special support is required, `null` can also be returned.
 - `getWarpLocNames:Array<String>` - Gets a list of warp location names.
 - `getSaveFlagID:Number` - Gets the ID of the "game was saved" flag. This flag ID will not be modifiable.
 - `getFlagDescriptions:Array<String>` - Gets a list of flag descriptions.
+
+## Entity extras
+Now this is where it gets interesting...
+Both of the following functions receive one parameter: a `WrappedPxeEntry` object.
+Every `WrappedPxeEntry` object has the following fields (they're public, so just doing `object.field` is okay):
+- `x:Number` - The X position of the entity in tiles.
+- `y:Number` - The Y position of the entity in tiles.
+- `flagID:Number` - The entity's assigned flag ID.
+- `eventNum:Number` - The entity's assigned event number.
+- `flags:Array<Boolean>` - The entity's flags.
+
+Here are the functions themselves:
+- `getEntityFrame:Rectangle` - Gets the entity's frame rectangle.
+- `getEntityOffset:Point` - Gets the entity's position offset in pixels.

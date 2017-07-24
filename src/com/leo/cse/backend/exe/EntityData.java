@@ -11,19 +11,6 @@ import java.awt.Rectangle;
 public class EntityData {
 
 	/**
-	 * The entity's framerect.
-	 */
-	private Rectangle frameRect;
-
-	public Rectangle getFramerect() {
-		return frameRect;
-	}
-
-	void setFramerect(Rectangle frameRect) {
-		this.frameRect = frameRect;
-	}
-
-	/**
 	 * The entity's ID.
 	 */
 	private int entityNum;
@@ -129,7 +116,6 @@ public class EntityData {
 	 *            entity ID
 	 */
 	EntityData(int num) {
-		frameRect = new Rectangle(0, 0, 0, 0);
 		this.tbl_hitbox = new Rectangle(4, 4, 4, 4);
 		this.tbl_display = new Rectangle(8, 8, 8, 8);
 		entityNum = num;
@@ -163,7 +149,6 @@ public class EntityData {
 	 */
 	public EntityData(int num, int dam, int deathSound, int exp, int flags, int hp, int hurt, int size, int tileset,
 			Rectangle display, Rectangle hitbox) {
-		frameRect = new Rectangle(0, 0, 0, 0);
 		entityNum = num;
 		tbl_damage = dam;
 		tbl_deathSound = deathSound;
@@ -184,7 +169,6 @@ public class EntityData {
 	 *            source entry
 	 */
 	EntityData(EntityData other) {
-		frameRect = new Rectangle(other.frameRect);
 		entityNum = other.entityNum;
 		tbl_damage = other.tbl_damage;
 		tbl_deathSound = other.tbl_deathSound;

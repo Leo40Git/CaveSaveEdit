@@ -13,9 +13,8 @@ import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
-import com.leo.cse.frontend.MCI.MCIException;
-import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class MCIDialog extends BaseDialog {
 
@@ -53,7 +52,7 @@ public class MCIDialog extends BaseDialog {
 		} else if (FrontUtils.pointInRectangle(x, y, wx + width - 150, wy + height - 18, 150, 16)) {
 			try {
 				MCI.readDefault();
-			} catch (IOException | MCIException e) {
+			} catch (Exception e) {
 				JOptionPane.showMessageDialog(Main.window,
 						"An error occured while loading the default MCI file:\n" + e.getMessage(),
 						"Could not load default MCI file!", JOptionPane.ERROR_MESSAGE);
@@ -77,7 +76,7 @@ public class MCIDialog extends BaseDialog {
 			SwingUtilities.invokeLater(() -> {
 				try {
 					MCI.read(file);
-				} catch (IOException | MCIException e) {
+				} catch (Exception e) {
 					JOptionPane.showMessageDialog(Main.window,
 							"An error occured while loading the MCI file:\n" + e.getMessage(),
 							"Could not load MCI file!", JOptionPane.ERROR_MESSAGE);

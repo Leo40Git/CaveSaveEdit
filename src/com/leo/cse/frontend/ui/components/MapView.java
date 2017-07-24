@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
@@ -15,6 +17,7 @@ import com.leo.cse.backend.exe.MapInfo.PxeEntry;
 import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
+import com.leo.cse.frontend.MCI.EntityExtras;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
@@ -139,8 +142,59 @@ public class MapView extends Component implements IDraggable {
 		Iterator<PxeEntry> it = mapInfo.getPxeIterator();
 		if (it == null)
 			return;
-		while (it.hasNext())
-			it.next().draw(g);
+		while (it.hasNext()) {
+			PxeEntry e = it.next();
+			short flags = e.getFlags();
+			short flagID = e.getFlagID();
+			if ((flags & 0x0800) != 0) {
+				// Appear once flagID set
+				if (!Profile.getFlag(flagID))
+					return;
+			}
+			if ((flags & 0x4000) != 0) {
+				// No Appear if flagID set
+				if (Profile.getFlag(flagID))
+					return;
+			}
+			BufferedImage srcImg;
+			int tilesetNum = e.getInfo().getTileset();
+			if (tilesetNum == 0x15)
+				srcImg = ExeData.getImage(mapInfo.getNpcSheet1());
+			else if (tilesetNum == 0x16)
+				srcImg = ExeData.getImage(mapInfo.getNpcSheet2());
+			else if (tilesetNum == 0x14) // npc sym
+				srcImg = ExeData.getImage(ExeData.getNpcSym());
+			else if (tilesetNum == 0x17) // npc regu
+				srcImg = ExeData.getImage(ExeData.getNpcRegu());
+			else if (tilesetNum == 0x2) // map tileset
+				srcImg = ExeData.getImage(mapInfo.getTileset());
+			else if (tilesetNum == 0x10) // npc myChar
+				srcImg = ExeData.getImage(ExeData.getMyChar());
+			else
+				srcImg = null;
+			EntityExtras ee;
+			try {
+				ee = MCI.getEntityExtras(e);
+			} catch (NoSuchMethodException e1) {
+				e1.printStackTrace();
+				return;
+			}
+			if (ee == null)
+				continue;
+			Rectangle frameRect = ee.getFrameRect();
+			Point offset = ee.getOffset();
+			if (srcImg != null) {
+				int srcX = frameRect.x;
+				int srcY = frameRect.y;
+				int srcX2 = srcX + frameRect.width;
+				int srcY2 = srcY + frameRect.height;
+				Rectangle dest = e.getDrawArea();
+				int dstX = (int) (dest.x + offset.x);
+				int dstY = (int) (dest.y + offset.y);
+				g.drawImage(srcImg, dstX, dstY, dstX + dest.width, dstY + dest.height, (int) srcX, (int) srcY,
+						(int) srcX2, (int) srcY2, null);
+			}
+		}
 	}
 
 	private void drawMyChar(Graphics2D g, boolean trans) {
