@@ -6,7 +6,9 @@ import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.function.Supplier;
@@ -146,6 +148,36 @@ public class Main extends JFrame implements ProfileChangeListener {
 			window.setTitle("CaveSaveEdit");
 	}
 
+	private static class MyPrintStream extends PrintStream {
+
+		private PrintStream consoleOut;
+
+		public MyPrintStream(File file, boolean err) throws FileNotFoundException {
+			super(file);
+			if (err)
+				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.err));
+			else
+				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.out));
+		}
+
+		@Override
+		public void write(int b) {
+			synchronized (this) {
+				super.write(b);
+				consoleOut.write(b);
+			}
+		}
+
+		@Override
+		public void write(byte[] buf, int off, int len) {
+			synchronized (this) {
+				super.write(buf, off, len);
+				consoleOut.write(buf, off, len);
+			}
+		}
+
+	}
+
 	public static void main(String[] args) {
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 		File log = new File("cse.log");
@@ -156,14 +188,12 @@ public class Main extends JFrame implements ProfileChangeListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		PrintStream ps = null;
 		try {
-			ps = new PrintStream(log);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.setOut(new MyPrintStream(log, false));
+			System.setErr(new MyPrintStream(log, true));
+		} catch (FileNotFoundException e1) {
+			System.exit(1);
 		}
-		System.setOut(ps);
-		System.setErr(ps);
 		FrontUtils.initSwing();
 		Config.init();
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
