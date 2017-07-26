@@ -1,20 +1,30 @@
 package com.leo.cse.frontend;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.function.Supplier;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.leo.cse.backend.exe.ExeData;
@@ -28,6 +38,8 @@ public class Main extends JFrame implements ProfileChangeListener {
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
 	public static final Version VERSION = new Version("1.0.5");
+	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
+	public static final String DOWNLOAD_SITE = "http://www.purple.com/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
 
 	public static final Supplier<Boolean> TRUE_SUPPLIER = new Supplier<Boolean>() {
@@ -175,7 +187,41 @@ public class Main extends JFrame implements ProfileChangeListener {
 				consoleOut.write(buf, off, len);
 			}
 		}
+	}
 
+	private static class Loading extends JFrame {
+		private static final long serialVersionUID = 1L;
+
+		private String loadString = "Checking for updates...";
+
+		public void setLoadString(String loadString) {
+			this.loadString = loadString;
+		}
+
+		public Loading() {
+			final Dimension win = new Dimension(200, 80);
+			setPreferredSize(win);
+			setMaximumSize(win);
+			setMinimumSize(win);
+			setUndecorated(true);
+			add(new JPanel() {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void paintComponent(Graphics g) {
+					Graphics2D g2d = (Graphics2D) g;
+					g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+					g2d.setColor(COLOR_BG);
+					g2d.fillRect(0, 0, win.width, win.height);
+					g2d.setColor(Color.white);
+					g2d.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+					FrontUtils.drawStringCentered(g2d, loadString, win.width / 2, win.height / 2, true);
+				}
+			});
+			pack();
+			setLocationRelativeTo(null);
+			setVisible(true);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -195,6 +241,57 @@ public class Main extends JFrame implements ProfileChangeListener {
 			System.exit(1);
 		}
 		FrontUtils.initSwing();
+		Loading loadFrame = new Loading();
+		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
+		boolean downloadFailed = false;
+		try {
+			FrontUtils.downloadFile(UPDATE_CHECK_SITE, verFile);
+		} catch (IOException e1) {
+			System.err.println("Update check failed: attempt to download caused exception");
+			e1.printStackTrace();
+			downloadFailed = true;
+		}
+		if (!downloadFailed) {
+			if (verFile.exists()) {
+				try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
+					Version check = new Version(reader.readLine());
+					if (VERSION.compareTo(check) < 0) {
+						System.out.println("Update check successful: have update");
+						int result = JOptionPane.showConfirmDialog(null, "A new update is available: " + check
+								+ "\nClick \"Yes\" to go to the download site, click \"No\" to continue to the save editor.",
+								"New update!", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+						if (result == JOptionPane.YES_OPTION) {
+							URI dlSite = new URI(DOWNLOAD_SITE);
+							if (Desktop.isDesktopSupported())
+								Desktop.getDesktop().browse(dlSite);
+							else
+								JOptionPane.showMessageDialog(null,
+										"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
+												+ dlSite + "\nto get the newest update!",
+										"Operation not supported...", JOptionPane.ERROR_MESSAGE);
+							System.exit(0);
+						}
+					} else {
+						System.out.println("Update check successful: up to date");
+					}
+				} catch (IOException e) {
+					System.err.println("Update check failed: attempt to read downloaded file caused exception");
+					e.printStackTrace();
+				} catch (URISyntaxException e1) {
+					System.out.println("Browse to download site failed: bad URI syntax");
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
+							"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
+				} finally {
+					verFile.delete();
+				}
+			} else
+				System.err.println("Update check failed: downloaded file doesn't exist");
+		}
+		SwingUtilities.invokeLater(() -> {
+			loadFrame.setLoadString("Loading...");
+			loadFrame.repaint();
+		});
 		Config.init();
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, "Cp943C");
@@ -215,6 +312,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();
 			window.initPanel();
+			loadFrame.dispose();
 			window.setVisible(true);
 			SwingUtilities.invokeLater(() -> {
 				File p = new File(System.getProperty("user.dir") + "/Profile.dat");

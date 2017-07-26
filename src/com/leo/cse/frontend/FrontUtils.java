@@ -16,8 +16,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -87,6 +93,15 @@ public class FrontUtils {
 		if (dc[0] || msg == JOptionPane.OK_OPTION)
 			ret = list.getSelectedValue();
 		return ret;
+	}
+
+	public static void downloadFile(String url, File dest) throws IOException {
+		URL site = new URL(url);
+		try (InputStream siteIn = site.openStream();
+				ReadableByteChannel rbc = Channels.newChannel(siteIn);
+				FileOutputStream out = new FileOutputStream(dest)) {
+			out.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		}
 	}
 
 	private static void drawString0(Graphics g, String str, int x, int y) {
