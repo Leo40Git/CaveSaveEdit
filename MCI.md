@@ -17,6 +17,7 @@ Every MCI file should contain the following functions. *Note: CSE always uses do
 - `getGraphicsResolution:Number` - Gets the game's resolution.
 
 ## Information arrays
+To add an empty space to any of these arrays, add a `null`.
 - `getSpecials:Array<String>` - Gets a list of special support features to enable. Valid values are:  
 `MimHack` for the <MIM hack,  
 `VarHack` for the <VAR hack (cannot be enabled with <MIM or <BUY),  
