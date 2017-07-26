@@ -158,18 +158,42 @@ public class MapView extends Component implements IDraggable {
 			}
 			BufferedImage srcImg;
 			int tilesetNum = e.getInfo().getTileset();
-			if (tilesetNum == 0x15)
-				srcImg = ExeData.getImage(mapInfo.getNpcSheet1());
-			else if (tilesetNum == 0x16)
-				srcImg = ExeData.getImage(mapInfo.getNpcSheet2());
-			else if (tilesetNum == 0x14) // npc sym
-				srcImg = ExeData.getImage(ExeData.getNpcSym());
-			else if (tilesetNum == 0x17) // npc regu
-				srcImg = ExeData.getImage(ExeData.getNpcRegu());
-			else if (tilesetNum == 0x2) // map tileset
+			if (tilesetNum == 0) // title
+				srcImg = ExeData.getImage(ExeData.getTitle());
+			else if (tilesetNum == 6) // fade
+				srcImg = ExeData.getImage(ExeData.getFade());
+			else if (tilesetNum == 2) // map tileset
 				srcImg = ExeData.getImage(mapInfo.getTileset());
-			else if (tilesetNum == 0x10) // npc myChar
+			else if (tilesetNum == 8) // itemimage
+				srcImg = ExeData.getImage(ExeData.getItemImage());
+			else if (tilesetNum == 11) // arms
+				srcImg = ExeData.getImage(ExeData.getArms());
+			else if (tilesetNum == 12) // armsimage
+				srcImg = ExeData.getImage(ExeData.getArmsImage());
+			else if (tilesetNum == 14) // stageimage
+				srcImg = ExeData.getImage(ExeData.getStageImage());
+			else if (tilesetNum == 15) // loading
+				srcImg = ExeData.getImage(ExeData.getLoading());
+			else if (tilesetNum == 16) // npc myChar
 				srcImg = ExeData.getImage(ExeData.getMyChar());
+			else if (tilesetNum == 17) // bullet
+				srcImg = ExeData.getImage(ExeData.getBullet());
+			else if (tilesetNum == 19) // caret
+				srcImg = ExeData.getImage(ExeData.getCaret());
+			else if (tilesetNum == 20) // npc sym
+				srcImg = ExeData.getImage(ExeData.getNpcSym());
+			else if (tilesetNum == 21)
+				srcImg = ExeData.getImage(mapInfo.getNpcSheet1());
+			else if (tilesetNum == 22)
+				srcImg = ExeData.getImage(mapInfo.getNpcSheet2());
+			else if (tilesetNum == 23) // npc regu
+				srcImg = ExeData.getImage(ExeData.getNpcRegu());
+			else if (tilesetNum == 26) // textbox
+				srcImg = ExeData.getImage(ExeData.getTextBox());
+			else if (tilesetNum == 27) // face
+				srcImg = ExeData.getImage(ExeData.getFace());
+			else if (tilesetNum == 28)
+				srcImg = ExeData.getImage(mapInfo.getBgImage());
 			else
 				srcImg = null;
 			EntityExtras ee;

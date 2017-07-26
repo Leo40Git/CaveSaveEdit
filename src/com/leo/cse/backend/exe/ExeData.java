@@ -60,9 +60,17 @@ public class ExeData {
 	 */
 	private static final int MYCHAR_PTR = 0x8C4F0;
 	/**
+	 * Pointer to name for the "Title" graphics file.
+	 */
+	private static final int TITLE_PTR = 0x8C4F8;
+	/**
 	 * Pointer to name for the "ArmsImage" graphics file.
 	 */
 	private static final int ARMSIMAGE_PTR = 0x8C500;
+	/**
+	 * Pointer to name for the "Arms" graphics file.
+	 */
+	private static final int ARMS_PTR = 0x8C50C;
 	/**
 	 * Pointer to name for the "ItemImage" graphics file.
 	 */
@@ -83,6 +91,30 @@ public class ExeData {
 	 * Pointer to name for the "NpcRegu" graphics file.
 	 */
 	private static final int NPCREGU_PTR = 0x8C538;
+	/**
+	 * Pointer to name for the "TextBox" graphics file.
+	 */
+	private static final int TEXTBOX_PTR = 0x8C544;
+	/**
+	 * Pointer to name for the "Caret" graphics file.
+	 */
+	private static final int CARET_PTR = 0x8C54C;
+	/**
+	 * Pointer to name for the "Bullet" graphics file.
+	 */
+	private static final int BULLET_PTR = 0x8C554;
+	/**
+	 * Pointer to name for the "Face" graphics file.
+	 */
+	private static final int FACE_PTR = 0x8C55C;
+	/**
+	 * Pointer to name for the "Fade" graphics file.
+	 */
+	private static final int FADE_PTR = 0x8C564;
+	/**
+	 * Pointer to name for the "Loading" graphics file.
+	 */
+	private static final int LOADING_PTR = 0x8C5FC;
 	/**
 	 * Pointer to the PXM file tag.
 	 */
@@ -136,9 +168,10 @@ public class ExeData {
 	 * Array of pointers which point to string values.
 	 */
 	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, NPC_TBL_PTR, MYCHAR_PTR,
-			ARMSIMAGE_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR, NPCREGU_PTR, PXM_TAG_PTR,
-			PROFILE_HEADER_PTR, PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR,
-			PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR };
+			TITLE_PTR, ARMSIMAGE_PTR, ARMS_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR, NPCREGU_PTR,
+			TEXTBOX_PTR, CARET_PTR, BULLET_PTR, FACE_PTR, FADE_PTR, LOADING_PTR, PXM_TAG_PTR, PROFILE_HEADER_PTR,
+			PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR, PXM_EXT_PTR, PXE_EXT_PTR,
+			TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR };
 
 	/**
 	 * Name for "ArmsItem.tsc".
@@ -157,9 +190,17 @@ public class ExeData {
 	 */
 	public static final int STRING_MYCHAR;
 	/**
+	 * Name for the "Title" graphics file.
+	 */
+	public static final int STRING_TITLE;
+	/**
 	 * File name for the "ArmsImage" graphics file.
 	 */
 	public static final int STRING_ARMSIMAGE;
+	/**
+	 * File name for the "Arms" graphics file.
+	 */
+	public static final int STRING_ARMS;
 	/**
 	 * Name for the "ItemImage" graphics file.
 	 */
@@ -180,6 +221,30 @@ public class ExeData {
 	 * Name for the "NpcRegu" graphics file.
 	 */
 	public static final int STRING_NPCREGU;
+	/**
+	 * Name for the "TextBox" graphics file.
+	 */
+	public static final int STRING_TEXTBOX;
+	/**
+	 * Name for the "Caret" graphics file.
+	 */
+	public static final int STRING_CARET;
+	/**
+	 * Name for the "Bullet" graphics file.
+	 */
+	public static final int STRING_BULLET;
+	/**
+	 * Name for the "Face" graphics file.
+	 */
+	public static final int STRING_FACE;
+	/**
+	 * Name for the "Fade" graphics file.
+	 */
+	public static final int STRING_FADE;
+	/**
+	 * Name for the "Loading" graphics file.
+	 */
+	public static final int STRING_LOADING;
 	/**
 	 * The PXM file tag.
 	 */
@@ -236,12 +301,20 @@ public class ExeData {
 		STRING_IMG_EXT = Arrays.binarySearch(STRING_POINTERS, IMG_EXT_PTR);
 		STRING_NPC_TBL = Arrays.binarySearch(STRING_POINTERS, NPC_TBL_PTR);
 		STRING_MYCHAR = Arrays.binarySearch(STRING_POINTERS, MYCHAR_PTR);
+		STRING_TITLE = Arrays.binarySearch(STRING_POINTERS, TITLE_PTR);
 		STRING_ARMSIMAGE = Arrays.binarySearch(STRING_POINTERS, ARMSIMAGE_PTR);
+		STRING_ARMS = Arrays.binarySearch(STRING_POINTERS, ARMS_PTR);
 		STRING_ITEMIMAGE = Arrays.binarySearch(STRING_POINTERS, ITEMIMAGE_PTR);
 		STRING_DATA_FOLDER = Arrays.binarySearch(STRING_POINTERS, DATA_FOLDER_PTR);
 		STRING_STAGEIMAGE = Arrays.binarySearch(STRING_POINTERS, STAGEIMAGE_PTR);
 		STRING_NPCSYM = Arrays.binarySearch(STRING_POINTERS, NPCSYM_PTR);
 		STRING_NPCREGU = Arrays.binarySearch(STRING_POINTERS, NPCREGU_PTR);
+		STRING_TEXTBOX = Arrays.binarySearch(STRING_POINTERS, TEXTBOX_PTR);
+		STRING_CARET = Arrays.binarySearch(STRING_POINTERS, CARET_PTR);
+		STRING_BULLET = Arrays.binarySearch(STRING_POINTERS, BULLET_PTR);
+		STRING_FACE = Arrays.binarySearch(STRING_POINTERS, FACE_PTR);
+		STRING_FADE = Arrays.binarySearch(STRING_POINTERS, FADE_PTR);
+		STRING_LOADING = Arrays.binarySearch(STRING_POINTERS, LOADING_PTR);
 		STRING_PXM_TAG = Arrays.binarySearch(STRING_POINTERS, PXM_TAG_PTR);
 		STRING_PROFILE_HEADER = Arrays.binarySearch(STRING_POINTERS, PROFILE_HEADER_PTR);
 		STRING_PROFILE_FLAGH = Arrays.binarySearch(STRING_POINTERS, PROFILE_FLAGH_PTR);
@@ -315,6 +388,10 @@ public class ExeData {
 	 */
 	private static Map<File, byte[]> pxaMap;
 	/**
+	 * "Title" graphics file.
+	 */
+	private static File title;
+	/**
 	 * "MyChar" graphics file.
 	 */
 	private static File myChar;
@@ -322,6 +399,10 @@ public class ExeData {
 	 * "ArmsImage" graphics file.
 	 */
 	private static File armsImage;
+	/**
+	 * "Arms" graphics file.
+	 */
+	private static File arms;
 	/**
 	 * "ItemImage" graphics file.
 	 */
@@ -338,6 +419,30 @@ public class ExeData {
 	 * "NpcRegu" graphics file.
 	 */
 	private static File npcRegu;
+	/**
+	 * "TextBox" graphics file.
+	 */
+	private static File textBox;
+	/**
+	 * "Caret" graphics file.
+	 */
+	private static File caret;
+	/**
+	 * "Bullet" graphics file.
+	 */
+	private static File bullet;
+	/**
+	 * "Face" graphics file.
+	 */
+	private static File face;
+	/**
+	 * "Fade" graphics file.
+	 */
+	private static File fade;
+	/**
+	 * "Loading" graphics file.
+	 */
+	private static File loading;
 
 	/**
 	 * Loads an executable.
@@ -798,24 +903,39 @@ public class ExeData {
 	}
 
 	/**
+	 * Loads a graphics file.
+	 * 
+	 * @param strid
+	 *            executable string id to get file name from
+	 * @return file that was loaded
+	 */
+	private static File loadGraphic(int strid) {
+		File ret = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[strid]);
+		addImage(ret);
+		return ret;
+	}
+
+	/**
 	 * Loads graphics files.
 	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
 	private static void loadGraphics() throws IOException {
-		myChar = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_MYCHAR]);
-		addImage(myChar);
-		armsImage = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_ARMSIMAGE]);
-		addImage(armsImage);
-		itemImage = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_ITEMIMAGE]);
-		addImage(itemImage);
-		stageImage = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_STAGEIMAGE]);
-		addImage(stageImage);
-		npcSym = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_NPCSYM]);
-		addImage(npcSym);
-		npcRegu = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[STRING_NPCREGU]);
-		addImage(npcRegu);
+		title = loadGraphic(STRING_TITLE);
+		myChar = loadGraphic(STRING_MYCHAR);
+		armsImage = loadGraphic(STRING_ARMSIMAGE);
+		arms = loadGraphic(STRING_ARMS);
+		itemImage = loadGraphic(STRING_ITEMIMAGE);
+		stageImage = loadGraphic(STRING_STAGEIMAGE);
+		npcSym = loadGraphic(STRING_NPCSYM);
+		npcRegu = loadGraphic(STRING_NPCREGU);
+		textBox = loadGraphic(STRING_TEXTBOX);
+		caret = loadGraphic(STRING_CARET);
+		bullet = loadGraphic(STRING_BULLET);
+		face = loadGraphic(STRING_FACE);
+		fade = loadGraphic(STRING_FADE);
+		loading = loadGraphic(STRING_LOADING);
 	}
 
 	/**
@@ -1124,12 +1244,20 @@ public class ExeData {
 		return entityList.get(entityType);
 	}
 
+	public static File getTitle() {
+		return title;
+	}
+
 	public static File getMyChar() {
 		return myChar;
 	}
 
 	public static File getArmsImage() {
 		return armsImage;
+	}
+
+	public static File getArms() {
+		return arms;
 	}
 
 	public static File getItemImage() {
@@ -1140,12 +1268,36 @@ public class ExeData {
 		return stageImage;
 	}
 
+	public static File getNpcSym() {
+		return npcSym;
+	}
+
 	public static File getNpcRegu() {
 		return npcRegu;
 	}
 
-	public static File getNpcSym() {
-		return npcSym;
+	public static File getTextBox() {
+		return textBox;
+	}
+
+	public static File getCaret() {
+		return caret;
+	}
+
+	public static File getBullet() {
+		return bullet;
+	}
+
+	public static File getFace() {
+		return face;
+	}
+
+	public static File getFade() {
+		return fade;
+	}
+
+	public static File getLoading() {
+		return loading;
 	}
 
 }
