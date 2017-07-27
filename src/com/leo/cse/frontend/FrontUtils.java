@@ -374,7 +374,7 @@ public class FrontUtils {
 		if (fc == null)
 			fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(false);
-		fc.setAcceptAllFileFilterUsed(false);
+		// fc.setAcceptAllFileFilterUsed(false);
 		fc.setDialogTitle(title);
 		fc.setFileFilter(filter);
 		fc.setCurrentDirectory(currentDirectory);
