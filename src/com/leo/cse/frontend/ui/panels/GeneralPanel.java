@@ -21,6 +21,7 @@ import com.leo.cse.frontend.ui.components.ShortBox;
 public class GeneralPanel extends Panel {
 
 	private MapView mp;
+	private boolean mpShowGrid;
 
 	public GeneralPanel() {
 		super();
@@ -168,8 +169,24 @@ public class GeneralPanel extends Panel {
 			}
 		}, "time played"));
 		compList.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 216, 124));
-		mp = new MapView(winSize.width / 2 - 320, 164);
-		compList.add(mp);
+		compList.add(mp = new MapView(winSize.width / 2 - 320, 164, new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return mpShowGrid;
+			}
+		}));
+		compList.add(new BooleanBox("Show Grid?", 756, 406, new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return mpShowGrid;
+			}
+		}, new Function<Boolean, Boolean>() {
+			@Override
+			public Boolean apply(Boolean t) {
+				mpShowGrid = t;
+				return t;
+			}
+		}));
 		compList.add(new Button("Snap to Grid", 756, 426, 100, 20, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {

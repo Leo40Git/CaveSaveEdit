@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.WindowAdapter;
@@ -26,6 +27,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.Profile;
@@ -225,6 +228,10 @@ public class Main extends JFrame implements ProfileChangeListener {
 	}
 
 	public static void main(String[] args) {
+		if (GraphicsEnvironment.isHeadless()) {
+			System.out.println("Headless mode is enabled!\nCaveSaveEdit cannot run in headless mode!");
+			System.exit(0);
+		}
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 		File log = new File("cse.log");
 		if (log.exists())
@@ -240,19 +247,41 @@ public class Main extends JFrame implements ProfileChangeListener {
 		} catch (FileNotFoundException e1) {
 			System.exit(1);
 		}
-		FrontUtils.initSwing();
+		final String nolaf = "nolaf";
+		if (new File(System.getProperty("user.dir") + "/" + nolaf).exists())
+			System.out.println("No L&F file detected, skipping setting Look & Feel");
+		else
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+					| UnsupportedLookAndFeelException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Could not set Look & Feel!\nPlease add a file named \"" + nolaf
+						+ "\" (all lowercase, no extension) to the application folder, and then restart the application.",
+						"Could not set Look & Feel", JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
+			}
 		Loading loadFrame = new Loading();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
 		boolean downloadFailed = false;
-		try {
-			FrontUtils.downloadFile(UPDATE_CHECK_SITE, verFile);
-		} catch (IOException e1) {
-			System.err.println("Update check failed: attempt to download caused exception");
-			e1.printStackTrace();
+		final String skipuc = "skipuc";
+		if (new File(System.getProperty("user.dir") + "/" + skipuc).exists()) {
+			System.out.println("Update check: skip file detected, skipping. Ignore warning about download failing");
 			downloadFailed = true;
+		} else {
+			System.out.println("Update check: starting");
+			try {
+				FrontUtils.downloadFile(UPDATE_CHECK_SITE, verFile);
+			} catch (IOException e1) {
+				System.err.println("Update check failed: attempt to download caused exception");
+				e1.printStackTrace();
+				downloadFailed = true;
+			}
 		}
-		if (!downloadFailed) {
-			if (verFile.exists()) {
+		if (downloadFailed) {
+			System.err.println("Update check failed: download failed");
+		} else if (verFile.exists()) {
+				System.out.println("Update check: reading version");
 				try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
 					Version check = new Version(reader.readLine());
 					if (VERSION.compareTo(check) < 0) {
@@ -287,7 +316,6 @@ public class Main extends JFrame implements ProfileChangeListener {
 				}
 			} else
 				System.err.println("Update check failed: downloaded file doesn't exist");
-		}
 		SwingUtilities.invokeLater(() -> {
 			loadFrame.setLoadString("Loading...");
 			loadFrame.repaint();

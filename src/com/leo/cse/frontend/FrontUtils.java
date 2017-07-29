@@ -43,32 +43,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.filechooser.FileFilter;
 
 public class FrontUtils {
-
-	public static void initSwing() {
-		if (GraphicsEnvironment.isHeadless()) {
-			System.out.println("Headless mode is enabled!\nCaveSaveEdit cannot run in headless mode!");
-			System.exit(0);
-		}
-		final String nolaf = "nolaf";
-		if (!new File(System.getProperty("user.dir") + "/" + nolaf).exists()) {
-			try {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-					| UnsupportedLookAndFeelException e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Could not set Look & Feel!\nPlease add a file named \"" + nolaf
-						+ "\" (all lowercase, no extension) to the application folder, and then restart the application.",
-						"Could not set Look & Feel", JOptionPane.ERROR_MESSAGE);
-				System.exit(1);
-			}
-		}
-	}
 
 	public static String showSelectionDialog(Component parent, String title, Collection<String> collection,
 			String selected) {

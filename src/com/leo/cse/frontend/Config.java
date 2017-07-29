@@ -7,7 +7,7 @@ public class Config {
 
 	private Config() {
 	}
-	
+
 	public static final long BUILD = 1;
 
 	public static final String KEY_CONFIG_BUILD = "config_build";
@@ -19,20 +19,10 @@ public class Config {
 	public static final String KEY_LINE_COLOR = "line_color";
 	public static final String KEY_LOAD_NPCS = "load_npcs";
 	public static final String KEY_ENCODING = "encoding";
-	
-	@Deprecated
-	private static final String KEY_LINE_COLOR_OLD = "custom_color";
 
 	private static final Preferences CONFIG = Preferences.userNodeForPackage(Main.class);
 
 	public static void init() {
-		long confBuild = CONFIG.getLong(KEY_CONFIG_BUILD, 0);
-		if (confBuild == 0) {
-			// pre version system change
-			String color = get(KEY_LINE_COLOR_OLD, "-1");
-			CONFIG.remove(KEY_LINE_COLOR_OLD);
-			set(KEY_LINE_COLOR, color);
-		}
 		CONFIG.putLong(KEY_CONFIG_BUILD, BUILD);
 	}
 

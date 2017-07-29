@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
+import java.util.function.Supplier;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo;
@@ -33,10 +34,12 @@ public class MapView extends Component implements IDraggable {
 	private int camX = 0, camY = 0;
 	private int ignoreClick = 0;
 	private int lastMap;
+	private Supplier<Boolean> gSup;
 
-	public MapView(int x, int y) {
+	public MapView(int x, int y, Supplier<Boolean> gSup) {
 		super(x, y, 640, 480);
 		lastMap = Profile.getMap();
+		this.gSup = gSup;
 	}
 
 	@Override
@@ -82,6 +85,8 @@ public class MapView extends Component implements IDraggable {
 		drawMyChar(sg, false);
 		drawTiles(sg, 2);
 		drawMyChar(sg, true);
+		if (gSup.get())
+			drawGrid(sg);
 		sg.translate(camX, camY);
 		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
 				+ (int) (camX / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
@@ -243,6 +248,20 @@ public class MapView extends Component implements IDraggable {
 		g.setComposite(ac);
 		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
 				sourceY + 32, null);
+		g.setComposite(oc);
+	}
+	
+	private void drawGrid(Graphics2D g) {
+		g.setColor(Main.lineColor);
+		Composite oc = g.getComposite();
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+		g.setComposite(ac);
+		int w = map[0][0].length * 32, h = map[0].length * 32;
+		int k;
+		for (k = 0; k < map[0].length; k++)
+			g.drawLine(0, k * 32 + 16, w, k * 32 + 16);
+		for (k = 0; k < map[0][0].length; k++)
+			g.drawLine(k * 32 + 16, 0, k * 32 + 16, h);
 		g.setComposite(oc);
 	}
 
