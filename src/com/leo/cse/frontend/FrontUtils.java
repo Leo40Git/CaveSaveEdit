@@ -103,7 +103,7 @@ public class FrontUtils {
 
 	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean vert) {
 		if (vert)
-			y -= (g.getFontMetrics().getStringBounds(str, g).getHeight() / 4) * 3;
+			y -= (g.getFontMetrics().getHeight() / 4) * 3;
 		final int lineSpace = g.getFontMetrics().getHeight();
 		for (String line : str.split("\n")) {
 			y += lineSpace;

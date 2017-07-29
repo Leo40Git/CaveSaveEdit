@@ -255,6 +255,7 @@ function getWarpNames() {
 	return [
 		"None",
 		"Egg Corridor",
+		"Grasstown",
 		"Sand Zone",
 		"Labyrinth",
 		"Plantation"
