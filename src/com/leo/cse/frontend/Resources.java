@@ -31,7 +31,7 @@ public class Resources {
 	
 	// uncolored images
 	public static BufferedImage warning;
-	public static BufferedImage[] editorTabIcons, toolbarIcons;
+	public static BufferedImage[] editorTabIcons, toolbarIcons, miscIcons;
 
 	public static void load() throws IOException, FontFormatException {
 		loadFonts();
@@ -54,9 +54,12 @@ public class Resources {
 		editorTabIcons = new BufferedImage[5];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
-		toolbarIcons = new BufferedImage[8];
+		toolbarIcons = new BufferedImage[7];
 		for (int i = 0; i < toolbarIcons.length; i++)
 			toolbarIcons[i] = ui.getSubimage(i * 16, 32, 16, 16);
+		miscIcons = new BufferedImage[2];
+		for (int i = 0; i < miscIcons.length; i++)
+			miscIcons[i] = ui.getSubimage(i * 16, 48, 16, 16);
 	}
 
 	private static void reloadColorImages() {

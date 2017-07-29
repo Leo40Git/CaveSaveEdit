@@ -31,10 +31,10 @@ public class SettingsDialog extends BaseDialog {
 		g.setColor(Main.lineColor);
 		g.drawRect(x + 4, y + 4, 292, 17);
 		FrontUtils.drawStringCentered(g, "MCI Settings", x + 150, y + 4);
-		g.drawImage(Resources.toolbarIcons[Resources.toolbarIcons.length - 2], x + 5, y + 5, null);
+		g.drawImage(Resources.miscIcons[0], x + 5, y + 5, null);
 		g.drawRect(x + 4, y + 23, 292, 17);
 		FrontUtils.drawStringCentered(g, "Change Line Color", x + 150, y + 23);
-		g.drawImage(Resources.toolbarIcons[Resources.toolbarIcons.length - 1], x + 5, y + 24, null);
+		g.drawImage(Resources.miscIcons[1], x + 5, y + 24, null);
 		/// TODO: Fix NPCs
 		//Image chkImage = (ExeData.doLoadNpc() ? Resources.checkboxOn : Resources.checkboxOff);
 		Image chkImage = Resources.checkboxDisabled;

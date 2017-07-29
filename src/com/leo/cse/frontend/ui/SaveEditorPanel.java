@@ -50,7 +50,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private static final long serialVersionUID = 3503710885336468231L;
 
 	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
-			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About" };
+			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };
 
 	public static SaveEditorPanel panel;
 
@@ -369,6 +369,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 						break;
 					case 5: // about
 						addDialogBox(new AboutDialog());
+						break;
+					case 6: // quit
+						Main.close(true);
 						break;
 					default:
 						System.out.println("no defined behavior for toolbar item " + bi);

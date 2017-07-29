@@ -70,14 +70,20 @@ public class Main extends JFrame implements ProfileChangeListener {
 	public static void close(boolean alwaysShowDialog) {
 		if (Profile.isLoaded() && Profile.isModified()) {
 			int sel = JOptionPane.showConfirmDialog(window,
-					"Are you sure you want to close the editor?\nUnsaved changes will be lost!",
-					"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+					"Save profile?",
+					"Unsaved changes detected", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (sel == JOptionPane.YES_OPTION)
+				try {
+					Profile.write();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			if (sel == JOptionPane.CANCEL_OPTION)
 				return;
 		} else if (alwaysShowDialog) {
 			int sel = JOptionPane.showConfirmDialog(window, "Are you sure you want to close the editor?",
-					"Quit CaveSaveEditor?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-			if (sel == JOptionPane.CANCEL_OPTION)
+					"Quit CaveSaveEditor?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (sel == JOptionPane.NO_OPTION)
 				return;
 		}
 		Config.setColor(Config.KEY_LINE_COLOR, lineColor);
