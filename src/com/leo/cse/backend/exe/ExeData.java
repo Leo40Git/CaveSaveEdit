@@ -535,12 +535,12 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadExeStrings() throws IOException {
-		exeStrings = new String[STRING_POINTERS.length];
-		byte[] buffer = new byte[0x10];
 		String name = ExeData.base.getName();
 		String ext = name.substring(name.length() - 3, name.length());
 		if (!"exe".equals(ext))
 			throw new IOException("Base file is not an executable!");
+		exeStrings = new String[STRING_POINTERS.length];
+		byte[] buffer = new byte[0x10];
 		FileChannel inChan;
 		FileInputStream inStream;
 		inStream = new FileInputStream(ExeData.base);
