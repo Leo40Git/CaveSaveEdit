@@ -44,17 +44,28 @@ public class MapView extends Component implements IDraggable {
 
 	@Override
 	public void render(Graphics g) {
-		if (SaveEditorPanel.panel.getLastFocus() == this) {
-			g.setColor(Main.lineColor);
-			g.drawRect(x - 1, y - 1, width + 1, height + 1);
-		}
+		boolean notLoaded = false;
 		if (!ExeData.isLoaded()) {
 			g.setColor(COLOR_NULL);
 			g.fillRect(x, y, width, height);
 			g.setColor(Color.white);
 			g.setFont(Resources.fontL);
 			FrontUtils.drawStringCentered(g, "NO MOD LOADED!", x + width / 2, y + height / 2, true);
+			notLoaded = true;
+		}
+		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
+				+ (int) (camX / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
+				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
+		final String instruct = "Move player by\nclicking/dragging\nOR\nwith WASD/arrow keys";
+		final String mod = "Mod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel";
+		g.setFont(Resources.fontS);
+		g.setColor(Main.lineColor);
+		FrontUtils.drawString(g, camCoords + "\n\n" + instruct + "\n" + mod, x + 642, y);
+		if (notLoaded)
 			return;
+		if (SaveEditorPanel.panel.getLastFocus() == this) {
+			g.setColor(Main.lineColor);
+			g.drawRect(x - 1, y - 1, width + 1, height + 1);
 		}
 		mapInfo = ExeData.getMapInfo(Profile.getMap());
 		if (mapInfo.hasMissingAssets()) {
@@ -88,14 +99,6 @@ public class MapView extends Component implements IDraggable {
 		if (gSup.get())
 			drawGrid(sg);
 		sg.translate(camX, camY);
-		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
-				+ (int) (camX / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
-				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
-		final String instruct = "Move player by\nclicking/dragging\nOR\nwith WASD/arrow keys";
-		final String mod = "Mod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel";
-		g.setFont(Resources.fontS);
-		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g, camCoords + "\n\n" + instruct + "\n" + mod, x + 642, y);
 		g.drawImage(surf, x, y, null);
 	}
 
@@ -250,7 +253,7 @@ public class MapView extends Component implements IDraggable {
 				sourceY + 32, null);
 		g.setComposite(oc);
 	}
-	
+
 	private void drawGrid(Graphics2D g) {
 		g.setColor(Main.lineColor);
 		Composite oc = g.getComposite();
@@ -272,12 +275,12 @@ public class MapView extends Component implements IDraggable {
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (!ExeData.isLoaded())
+			return false;
 		if (SaveEditorPanel.panel.getLastFocus() != this) {
 			getCamCoords();
 			return false;
 		}
-		if (!ExeData.isLoaded())
-			return false;
 		if (mapInfo == null)
 			return false;
 		if (mapInfo.hasMissingAssets())

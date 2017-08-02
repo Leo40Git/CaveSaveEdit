@@ -65,7 +65,7 @@ public class MCIDialog extends BaseDialog {
 
 	private boolean loadMCI() {
 		int returnVal = FrontUtils.openFileChooser("Open MCI file", new FileNameExtensionFilter("MCI Files", "mci"),
-				new File(Config.get(Config.KEY_LAST_MCI_FILE, System.getProperty("user.dir"))), false);
+				new File(Config.get(Config.KEY_LAST_MCI_FILE, System.getProperty("user.dir"))), false, false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			final File file = FrontUtils.getSelectedFile();
 			if (!file.exists())

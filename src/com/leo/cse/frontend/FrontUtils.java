@@ -35,6 +35,7 @@ import java.util.Scanner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.swing.BoxLayout;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -48,14 +49,14 @@ import javax.swing.filechooser.FileFilter;
 
 public class FrontUtils {
 
-	public static String showSelectionDialog(Component parent, String title, Collection<String> collection,
-			String selected) {
-		JList<String> list = new JList<String>(collection.toArray(new String[] {}));
+	public static String showSelectionDialog(Component parent, String title, String[] selections, String initialSelection) {
+		JList<String> list = new JList<String>(selections);
 		JScrollPane scrollpane = new JScrollPane();
 		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.add(scrollpane);
 		scrollpane.getViewport().add(list);
-		list.setSelectedValue(selected, true);
+		list.setSelectedValue(initialSelection, true);
 		String ret = null;
 		final boolean[] dc = new boolean[1];
 		list.addMouseListener(new MouseAdapter() {
@@ -66,11 +67,15 @@ public class FrontUtils {
 				}
 			}
 		});
-		int msg = JOptionPane.showConfirmDialog(parent, scrollpane, title, JOptionPane.OK_CANCEL_OPTION,
+		int msg = JOptionPane.showConfirmDialog(parent, panel, title, JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 		if (dc[0] || msg == JOptionPane.OK_OPTION)
 			ret = list.getSelectedValue();
 		return ret;
+	}
+	
+	public static String showSelectionDialog(Component parent, String title, Collection<String> selections, String initialSelection) {
+		return showSelectionDialog(parent, title, selections.toArray(new String[] {}), initialSelection);
 	}
 
 	public static void downloadFile(String url, File dest) throws IOException {
@@ -348,11 +353,11 @@ public class FrontUtils {
 
 	private static JFileChooser fc;
 
-	public static int openFileChooser(String title, FileFilter filter, File currentDirectory, boolean openOrSave) {
+	public static int openFileChooser(String title, FileFilter filter, File currentDirectory, boolean allowAllFilesFilter, boolean openOrSave) {
 		if (fc == null)
 			fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(false);
-		// fc.setAcceptAllFileFilterUsed(false);
+		fc.setAcceptAllFileFilterUsed(allowAllFilesFilter);
 		fc.setDialogTitle(title);
 		fc.setFileFilter(filter);
 		fc.setCurrentDirectory(currentDirectory);

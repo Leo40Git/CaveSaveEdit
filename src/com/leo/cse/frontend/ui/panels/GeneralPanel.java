@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
@@ -186,6 +187,11 @@ public class GeneralPanel extends Panel {
 				mpShowGrid = t;
 				return t;
 			}
+		}).setEnabled(new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return ExeData.isLoaded();
+			}
 		}));
 		compList.add(new Button("Snap to Grid", 756, 426, 100, 20, new Supplier<Boolean>() {
 			@Override
@@ -194,6 +200,11 @@ public class GeneralPanel extends Panel {
 				Profile.setY((short) (Math.round(Profile.getY() / 32.0) * 32));
 				mp.getCamCoords();
 				return false;
+			}
+		}).setEnabled(new Supplier<Boolean>() {
+			@Override
+			public Boolean get() {
+				return ExeData.isLoaded();
 			}
 		}));
 	}

@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -11,7 +12,7 @@ import com.leo.cse.frontend.Resources;
 
 public class BooleanBox extends Component {
 
-	private boolean disabled;
+	private boolean missingMCI;
 	private String label;
 	private Supplier<Boolean> vSup;
 	private Function<Boolean, Boolean> update;
@@ -29,20 +30,23 @@ public class BooleanBox extends Component {
 		if (t.contains(".")) {
 			t = MCI.get(t);
 			if (label.equals(t)) {
-				disabled = true;
+				missingMCI = true;
 				return;
 			} else
-				disabled = false;
+				missingMCI = false;
 		}
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
-		g.drawImage((vSup.get() ? Resources.checkboxOn : Resources.checkboxOff), x, y, null);
+		BufferedImage chkImage = (vSup.get() ? Resources.checkboxOn : Resources.checkboxOff);
+		if (!enabled.get() || missingMCI)
+			chkImage = Resources.checkboxDisabled;
+		g.drawImage(chkImage, x, y, null);
 		FrontUtils.drawString(g, t, x + 18, y - 2);
 	}
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		if (disabled)
+		if (!enabled.get() || missingMCI)
 			return false;
 		update.apply(!vSup.get());
 		return false;

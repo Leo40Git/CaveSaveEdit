@@ -235,7 +235,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!dir.exists())
 			dir = new File(System.getProperty("user.dir"));
 		int returnVal = FrontUtils.openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
-				dir, false);
+				dir, true, false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			Main.loadProfile(FrontUtils.getSelectedFile());
 			addComponents();
@@ -252,7 +252,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		while (base == null || !base.exists()) {
 			int returnVal = FrontUtils.openFileChooser("Open executable",
 					new FileNameExtensionFilter("Applications", "exe"),
-					(base == null ? new File(System.getProperty("user.dir")) : base), false);
+					(base == null ? new File(System.getProperty("user.dir")) : base), false, false);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 				base = FrontUtils.getSelectedFile();
 			else
@@ -310,7 +310,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!canSave())
 			return;
 		int returnVal = FrontUtils.openFileChooser("Save profile", new FileNameExtensionFilter("Profile Files", "dat"),
-				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), true);
+				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false, true);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = FrontUtils.getSelectedFile();
 			if (file.exists()) {

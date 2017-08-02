@@ -13,11 +13,12 @@ public class WarpsPanel extends Panel {
 	public WarpsPanel() {
 		super();
 		for (int i = 0; i < 7; i++) {
-			final int i2 = i, yy = 4 + i * 50;
-			compList.add(new Label("Warp Slot " + (i + 1) + ":", 4, yy + 17));
-			compList.add(new WarpBox(68, yy, 120, 48, i2));
-			compList.add(new Label("Location:", 192, yy + 17));
-			compList.add(new DefineBox(242, yy + 17, 120, 16, new Supplier<Integer>() {
+			final int i2 = i, yy = 148 + i * 50;
+			final int xx = 246;
+			compList.add(new Label("Warp Slot " + (i + 1) + ":", xx, yy + 17));
+			compList.add(new WarpBox(xx + 64, yy, 120, 48, i2));
+			compList.add(new Label("Location:", xx + 188, yy + 17));
+			compList.add(new DefineBox(xx + 238, yy + 17, 120, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
 					return Profile.getWarp(i2).getLocation();

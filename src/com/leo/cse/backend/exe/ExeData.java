@@ -485,17 +485,22 @@ public class ExeData {
 	 */
 	private static void load0(File base) throws IOException {
 		ExeData.base = base;
-		loadExeStrings();
-		dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
-		entityList = new Vector<EntityData>();
-		mapdata = new Vector<Mapdata>();
-		mapInfo = new Vector<MapInfo>();
-		imageMap = new HashMap<File, BufferedImage>();
-		pxaMap = new HashMap<File, byte[]>();
-		loadNpcTbl();
-		fillMapdata();
-		loadMapInfo();
-		loadGraphics();
+		try {
+			loadExeStrings();
+			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
+			entityList = new Vector<EntityData>();
+			mapdata = new Vector<Mapdata>();
+			mapInfo = new Vector<MapInfo>();
+			imageMap = new HashMap<File, BufferedImage>();
+			pxaMap = new HashMap<File, byte[]>();
+			loadNpcTbl();
+			fillMapdata();
+			loadMapInfo();
+			loadGraphics();
+		} catch (IOException e) {
+			loaded = false;
+			throw e;
+		}
 		loaded = true;
 	}
 
@@ -532,6 +537,10 @@ public class ExeData {
 	private static void loadExeStrings() throws IOException {
 		exeStrings = new String[STRING_POINTERS.length];
 		byte[] buffer = new byte[0x10];
+		String name = ExeData.base.getName();
+		String ext = name.substring(name.length() - 3, name.length());
+		if (!"exe".equals(ext))
+			throw new IOException("Base file is not an executable!");
 		FileChannel inChan;
 		FileInputStream inStream;
 		inStream = new FileInputStream(ExeData.base);
