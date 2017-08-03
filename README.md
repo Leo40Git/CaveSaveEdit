@@ -1,4 +1,4 @@
-# CaveSaveEdit
+# CaveSaveEdit [![Build Status](https://travis-ci.org/Leo40Git/CaveSaveEdit.svg?branch=master)](https://travis-ci.org/Leo40Git/CaveSaveEdit)
 A Java-based Cave Story profile editor, complete with mod support.
 # How to Compile
 First off, CaveSaveEdit will only compile on Java 8 without modifications to the map sorting functions in `com.leo.cse.frontend.FrontUtils` and a few other places where lambdas are used.  
