@@ -77,9 +77,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private Component lastFocus;
 	private List<Dialog> dBoxes;
 	private boolean loading;
-
+	
 	public static boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
-	public static int flagScroll;
+	public static boolean showMapGrid = Config.getBoolean(Config.KEY_SHOW_MAP_GRID, false);
 	public static boolean hideSystemFlags = Config.getBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, true);
 	public static boolean hideUndefinedFlags = Config.getBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, true);
 
@@ -114,6 +114,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	public void saveSettings() {
 		Config.setBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, sortMapsAlphabetically);
+		Config.setBoolean(Config.KEY_SHOW_MAP_GRID, showMapGrid);
 		Config.setBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, hideSystemFlags);
 		Config.setBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, hideUndefinedFlags);
 	}
@@ -127,6 +128,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setBackground(new Color(0, 0, 0, 0));
 		g2d.clearRect(0, 0, getWidth(), getHeight());
 		FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
@@ -134,6 +136,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			g.drawImage(Resources.drag, xx, 16, null);
 			g.drawImage(Resources.drag, xx, 24, null);
 		}
+		g.setColor(Color.white);
+		g.setFont(Resources.font);
+		FrontUtils.drawString(g, Main.window.getTitle(), 18, 16);
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		if (surf == null)
@@ -351,13 +356,17 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 		}
 	}
-
+	
+	private boolean dragLeftMouse;
 	private int dragInitialX, dragInitialY;
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1)
+		if (e.getButton() != MouseEvent.BUTTON1) {
+			dragLeftMouse = false;
 			return;
+		}
+		dragLeftMouse = true;
 		int px = e.getX(), py = e.getY();
 		dragInitialX = px;
 		dragInitialY = py;
@@ -367,6 +376,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON1)
 			return;
+		dragLeftMouse = false;
 		draggingWindow = false;
 		int px = e.getX(), py = e.getY();
 		final Insets i = Main.window.getInsets();
@@ -475,6 +485,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (!dragLeftMouse)
+			return;
 		if (!dBoxes.isEmpty())
 			return;
 		if (lastDragged == null)

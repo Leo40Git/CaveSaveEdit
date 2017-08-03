@@ -22,7 +22,6 @@ import com.leo.cse.frontend.ui.components.ShortBox;
 public class GeneralPanel extends Panel {
 
 	private MapView mp;
-	private boolean mpShowGrid;
 
 	public GeneralPanel() {
 		super();
@@ -173,18 +172,18 @@ public class GeneralPanel extends Panel {
 		compList.add(mp = new MapView(winSize.width / 2 - 320, 164, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
-				return mpShowGrid;
+				return SaveEditorPanel.showMapGrid;
 			}
 		}));
 		compList.add(new BooleanBox("Show Grid?", 756, 406, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
-				return mpShowGrid;
+				return SaveEditorPanel.showMapGrid;
 			}
 		}, new Function<Boolean, Boolean>() {
 			@Override
 			public Boolean apply(Boolean t) {
-				mpShowGrid = t;
+				SaveEditorPanel.showMapGrid = t;
 				return t;
 			}
 		}).setEnabled(new Supplier<Boolean>() {
