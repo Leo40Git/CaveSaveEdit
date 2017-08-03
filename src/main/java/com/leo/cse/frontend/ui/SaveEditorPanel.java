@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ import com.leo.cse.frontend.ui.panels.WarpsPanel;
 public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
+
+	public static final int OFFSET_X = 16, OFFSET_Y = 32;
 
 	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
 			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };
@@ -119,16 +122,26 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		dBoxes.add(0, dBox);
 	}
 
-	@Deprecated
-	public void setDialogBox(Dialog dBox) {
-		addDialogBox(dBox);
-	}
+	private BufferedImage surf;
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setBackground(new Color(0, 0, 0, 0));
+		g2d.clearRect(0, 0, getWidth(), getHeight());
+		FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
+		for (int xx = 16; xx < getWidth() - 16; xx += 3) {
+			g.drawImage(Resources.drag, xx, 16, null);
+			g.drawImage(Resources.drag, xx, 24, null);
+		}
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
-		Graphics2D g2d = (Graphics2D) g;
+		if (surf == null)
+			surf = new BufferedImage(winSize2.width, winSize2.height, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics og = g;
+		g = surf.getGraphics();
+		g2d = (Graphics2D) g;
+		// START RENDER CODE
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
@@ -221,6 +234,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		// dialog boxes
 		for (int i = dBoxes.size() - 1; i >= 0; i--)
 			dBoxes.get(i).render(g);
+		// END RENDER CODE
+		g.dispose();
+		g = og;
+		g.drawImage(surf, OFFSET_X, OFFSET_Y, this);
 	}
 
 	private void loadProfile() {
@@ -335,18 +352,38 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 	}
 
+	private int dragInitialX, dragInitialY;
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (e.getButton() != MouseEvent.BUTTON1)
+			return;
+		int px = e.getX(), py = e.getY();
+		dragInitialX = px;
+		dragInitialY = py;
+	}
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON1)
 			return;
+		draggingWindow = false;
+		int px = e.getX(), py = e.getY();
 		final Insets i = Main.window.getInsets();
-		final int px = e.getX() - i.left, py = e.getY() - i.top;
+		px -= i.left + OFFSET_X;
+		py -= i.top + OFFSET_Y;
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		final int mod = e.getModifiersEx();
 		final boolean shift = (mod & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK,
 				ctrl = (mod & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK;
-		if (py <= 17) {
+		if (!dBoxes.isEmpty()) {
+			// dialog box
+			Dialog dBox = dBoxes.get(0);
+			if (dBox.onClick(px, py))
+				dBoxes.remove(0);
+			repaint();
+		} else if (py <= 17) {
 			// toolbar
 			int bi = 0;
 			for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
@@ -398,12 +435,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				ti++;
 			}
-		} else if (!dBoxes.isEmpty()) {
-			// dialog box
-			Dialog dBox = dBoxes.get(0);
-			if (dBox.onClick(px, py))
-				dBoxes.remove(0);
-			repaint();
 		} else if (Profile.isLoaded()) {
 			// components
 			Component newFocus = null;
@@ -440,6 +471,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	private Map<IDraggable, Boolean> lastDragged;
+	private boolean draggingWindow = false;
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -447,8 +479,18 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			return;
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
+		int px = e.getX(), py = e.getY();
+		if (py < OFFSET_Y || draggingWindow) {
+			draggingWindow = true;
+			int wx = Main.window.getX(), wy = Main.window.getY();
+			int moveX = px - dragInitialX;
+			int moveY = py - dragInitialY;
+			Main.window.setLocation(wx + moveX, wy + moveY);
+			return;
+		}
 		final Insets i = Main.window.getInsets();
-		final int px = e.getX() - i.left, py = e.getY() - i.top;
+		px -= i.left + OFFSET_X;
+		py -= i.top + OFFSET_Y;
 		Component newFocus = null;
 		for (Component comp : tabMap.get(currentTab).getComponents()) {
 			if (!(comp instanceof IDraggable))
@@ -508,10 +550,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
-	public static final Dimension WINDOW_SIZE = new Dimension(867, 682 + 33);
+	public static final Dimension WINDOW_SIZE = new Dimension(867, 711);
 	public static final Version VERSION = new Version("1.0.6");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
@@ -96,9 +96,9 @@ public class Main extends JFrame implements ProfileChangeListener {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
-		setBackground(COLOR_BG);
 		setIconImage(Resources.icon);
 		setUndecorated(true);
+		setBackground(new Color(0, 0, 0, 0));
 	}
 
 	private void initPanel() {
@@ -108,9 +108,12 @@ public class Main extends JFrame implements ProfileChangeListener {
 		addMouseListener(sep);
 		addMouseMotionListener(sep);
 		addMouseWheelListener(sep);
-		setMaximumSize(WINDOW_SIZE);
-		setMinimumSize(WINDOW_SIZE);
-		setPreferredSize(WINDOW_SIZE);
+		Dimension winSize = new Dimension(WINDOW_SIZE);
+		winSize.width += 32;
+		winSize.height += 48;
+		setMaximumSize(winSize);
+		setMinimumSize(winSize);
+		setPreferredSize(winSize);
 		pack();
 		setResizable(false);
 		setLocationRelativeTo(null);

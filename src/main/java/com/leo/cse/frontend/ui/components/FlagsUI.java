@@ -94,7 +94,7 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 		final Dimension winSize = Main.window.getActualSize(true);
 		final int xx = 4;
 		final int shownFlagsNum = Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL);
-		int yy = 19;
+		int yy = 18;
 		for (int i = sSup.get(); i < shownFlagsNum; i++) {
 			final int flagId = shownFlags.get(i);
 			Image chkImage = Resources.checkboxDisabled;
@@ -105,7 +105,7 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 			FrontUtils.drawString(g, getFlagDescription(flagId), xx + 42, yy - 14);
 			yy += 18;
 		}
-		final int cy = 16 + 18 * FLAGS_PER_SCROLL + 4;
+		final int cy = 12 + 18 * FLAGS_PER_SCROLL + 4;
 		g.setColor(Main.lineColor);
 		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 5, null);
 		FrontUtils.drawString(g, "Hide Undefined Flags?", xx + 16, cy - 7);
@@ -146,14 +146,14 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 				amount *= 10;
 			if (ctrlDown)
 				amount *= 100;
-			if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, 0, 20, 18))
+			if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, 0, 20, 18)) {
 				sUpdate.accept(Math.max(sSup.get() - amount, 0));
-			else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 42, 20, 18))
-				sUpdate.accept(Math.max(0,
-						Math.min(sSup.get() + amount, shownFlags.size() - (shownFlags.size() - FLAGS_PER_SCROLL))));
+			} else if (FrontUtils.pointInRectangle(x, y, winSize.width - 20, winSize.height - 42, 20, 18)) {
+				sUpdate.accept(Math.min(sSup.get() + amount, shownFlags.size() - FLAGS_PER_SCROLL));
+			}
 		} else {
 			final int xx = 4;
-			int yy = 19;
+			int yy = 18;
 			for (int i = sSup.get(); i < Math.min(shownFlags.size(), sSup.get() + FLAGS_PER_SCROLL); i++) {
 				final int flagId = shownFlags.get(i);
 				if (flagIsValid(flagId) && FrontUtils.pointInRectangle(x, y, xx, yy - 16, 16, 16)) {
@@ -162,7 +162,7 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 				}
 				yy += 18;
 			}
-			final int cy = 16 + 18 * FLAGS_PER_SCROLL + 4;
+			final int cy = 12 + 18 * FLAGS_PER_SCROLL + 4;
 			if (FrontUtils.pointInRectangle(x, y, xx, cy - 7, 16, 16)) {
 				huUpdate.accept(!huSup.get());
 				calculateShownFlags();
