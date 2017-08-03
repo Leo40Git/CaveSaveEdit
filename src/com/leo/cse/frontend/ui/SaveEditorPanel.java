@@ -371,7 +371,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 						addDialogBox(new AboutDialog());
 						break;
 					case 6: // quit
-						Main.close(true);
+						Main.close();
 						break;
 					default:
 						System.out.println("no defined behavior for toolbar item " + bi);
@@ -478,10 +478,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		int mods = e.getModifiersEx();
 		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) != 0;
 		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) != 0;
+		if (code == KeyEvent.VK_ESCAPE) {
+			Main.close();
+		}
 		if (lastFocus == null) {
-			if (code == KeyEvent.VK_ESCAPE) {
-				Main.close(true);
-			}
 			if (code == KeyEvent.VK_O) {
 				if (ctrl) {
 					if (shift)

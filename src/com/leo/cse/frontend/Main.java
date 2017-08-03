@@ -63,27 +63,26 @@ public class Main extends JFrame implements ProfileChangeListener {
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent e) {
-			Main.close(false);
+			Main.close();
 		}
 	}
 
-	public static void close(boolean alwaysShowDialog) {
+	public static void close() {
 		if (Profile.isLoaded() && Profile.isModified()) {
-			int sel = JOptionPane.showConfirmDialog(window,
-					"Save profile?",
-					"Unsaved changes detected", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+			int sel = JOptionPane.showConfirmDialog(window, "Save profile?", "Unsaved changes detected",
+					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (sel == JOptionPane.YES_OPTION)
 				try {
 					Profile.write();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			if (sel == JOptionPane.CANCEL_OPTION)
+			else if (sel == JOptionPane.CANCEL_OPTION)
 				return;
-		} else if (alwaysShowDialog) {
+		} else {
 			int sel = JOptionPane.showConfirmDialog(window, "Are you sure you want to close the editor?",
 					"Quit CaveSaveEditor?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-			if (sel == JOptionPane.NO_OPTION)
+			if (sel != JOptionPane.YES_OPTION)
 				return;
 		}
 		Config.setColor(Config.KEY_LINE_COLOR, lineColor);
@@ -99,6 +98,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		setTitle(this);
 		setBackground(COLOR_BG);
 		setIconImage(Resources.icon);
+		setUndecorated(true);
 	}
 
 	private void initPanel() {
@@ -287,41 +287,41 @@ public class Main extends JFrame implements ProfileChangeListener {
 		if (downloadFailed) {
 			System.err.println("Update check failed: download failed");
 		} else if (verFile.exists()) {
-				System.out.println("Update check: reading version");
-				try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
-					Version check = new Version(reader.readLine());
-					if (VERSION.compareTo(check) < 0) {
-						System.out.println("Update check successful: have update");
-						int result = JOptionPane.showConfirmDialog(null, "A new update is available: " + check
-								+ "\nClick \"Yes\" to go to the download site, click \"No\" to continue to the save editor.",
-								"New update!", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-						if (result == JOptionPane.YES_OPTION) {
-							URI dlSite = new URI(DOWNLOAD_SITE);
-							if (Desktop.isDesktopSupported())
-								Desktop.getDesktop().browse(dlSite);
-							else
-								JOptionPane.showMessageDialog(null,
-										"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
-												+ dlSite + "\nto get the newest update!",
-										"Operation not supported...", JOptionPane.ERROR_MESSAGE);
-							System.exit(0);
-						}
-					} else {
-						System.out.println("Update check successful: up to date");
+			System.out.println("Update check: reading version");
+			try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
+				Version check = new Version(reader.readLine());
+				if (VERSION.compareTo(check) < 0) {
+					System.out.println("Update check successful: have update");
+					int result = JOptionPane.showConfirmDialog(null, "A new update is available: " + check
+							+ "\nClick \"Yes\" to go to the download site, click \"No\" to continue to the save editor.",
+							"New update!", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					if (result == JOptionPane.YES_OPTION) {
+						URI dlSite = new URI(DOWNLOAD_SITE);
+						if (Desktop.isDesktopSupported())
+							Desktop.getDesktop().browse(dlSite);
+						else
+							JOptionPane.showMessageDialog(null,
+									"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
+											+ dlSite + "\nto get the newest update!",
+									"Operation not supported...", JOptionPane.ERROR_MESSAGE);
+						System.exit(0);
 					}
-				} catch (IOException e) {
-					System.err.println("Update check failed: attempt to read downloaded file caused exception");
-					e.printStackTrace();
-				} catch (URISyntaxException e1) {
-					System.out.println("Browse to download site failed: bad URI syntax");
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
-							"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
-				} finally {
-					verFile.delete();
+				} else {
+					System.out.println("Update check successful: up to date");
 				}
-			} else
-				System.err.println("Update check failed: downloaded file doesn't exist");
+			} catch (IOException e) {
+				System.err.println("Update check failed: attempt to read downloaded file caused exception");
+				e.printStackTrace();
+			} catch (URISyntaxException e1) {
+				System.out.println("Browse to download site failed: bad URI syntax");
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
+						"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				verFile.delete();
+			}
+		} else
+			System.err.println("Update check failed: downloaded file doesn't exist");
 		SwingUtilities.invokeLater(() -> {
 			loadFrame.setLoadString("Loading...");
 			loadFrame.repaint();
