@@ -16,6 +16,7 @@ public class Config {
 	public static final String KEY_HIDE_UNDEFINED_FLAGS = "hide_undefined_flags";
 	public static final String KEY_HIDE_SYSTEM_FLAGS = "hide_system_flags";
 	public static final String KEY_SORT_MAPS_ALPHABETICALLY = "sort_maps_alphabetically";
+	public static final String KEY_SHOW_MAP_GRID = "show_map_grid";
 	public static final String KEY_LINE_COLOR = "line_color";
 	public static final String KEY_LOAD_NPCS = "load_npcs";
 	public static final String KEY_ENCODING = "encoding";

@@ -6,16 +6,18 @@ import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.ui.components.FlagsUI;
 
 public class FlagsPanel extends Panel {
+	
+	private int flagScroll;
 
 	public FlagsPanel() {
 		super();
 		compList.add(new FlagsUI(new Supplier<Integer>() {
 			@Override
 			public Integer get() {
-				return SaveEditorPanel.flagScroll;
+				return flagScroll;
 			}
 		}, (Integer t) -> {
-			SaveEditorPanel.flagScroll = t;
+			flagScroll = t;
 		}, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
