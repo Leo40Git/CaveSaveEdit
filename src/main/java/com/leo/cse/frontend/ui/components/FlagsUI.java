@@ -105,7 +105,7 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 			FrontUtils.drawString(g, getFlagDescription(flagId), xx + 42, yy - 14);
 			yy += 18;
 		}
-		final int cy = 16 + 18 * FLAGS_PER_SCROLL - 6;
+		final int cy = 9 + 18 * FLAGS_PER_SCROLL;
 		g.setColor(Main.lineColor);
 		g.drawImage((huSup.get() ? Resources.checkboxOn : Resources.checkboxOff), xx - 2, cy - 5, null);
 		FrontUtils.drawString(g, "Hide Undefined Flags?", xx + 16, cy - 7);
@@ -162,7 +162,7 @@ public class FlagsUI extends Component implements IScrollable, IDraggable {
 				}
 				yy += 18;
 			}
-			final int cy = 16 + 18 * FLAGS_PER_SCROLL - 6;
+			final int cy = 9 + 18 * FLAGS_PER_SCROLL;
 			if (FrontUtils.pointInRectangle(x, y, xx, cy - 7, 16, 16)) {
 				huUpdate.accept(!huSup.get());
 				calculateShownFlags();

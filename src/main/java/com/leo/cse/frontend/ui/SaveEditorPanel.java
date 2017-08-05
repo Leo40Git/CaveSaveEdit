@@ -157,9 +157,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.fillRect(0, 0, winSize2.width, 17);
 		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, 0, winSize.width, 0);
-
 		g2d.drawLine(0, 17, winSize.width, 17);
-
 		int bi = 0;
 		for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
 			g2d.drawLine(xx, 1, xx, 17);
@@ -217,7 +215,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
 		g2d.setColor(Main.lineColor);
-		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
+		g2d.drawLine(0, winSize2.height - 18, winSize2.width, winSize2.height - 18);
 		g2d.drawLine(0, winSize2.height - 1, winSize2.width, winSize2.height - 1);
 		final EditorTab[] tv = EditorTab.values();
 		int tn = tv.length;
@@ -228,7 +226,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			final EditorTab t = tv[ti];
 			if (Profile.isLoaded() && t == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
-				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 16);
+				g2d.fillRect(xx + 1, winSize2.height - 18, winSize2.width / tn + 1, 17);
 				g2d.setColor(Main.lineColor);
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
@@ -439,7 +437,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				bi++;
 			}
-		} else if (py >= winSize2.height - 17 && Profile.isLoaded()) {
+		} else if (py >= winSize2.height - 18 && Profile.isLoaded()) {
 			// editor tabs
 			final EditorTab[] tv = EditorTab.values();
 			int tn = tv.length;
@@ -447,7 +445,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				tn--;
 			int ti = 0;
 			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
-				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 17, winSize2.width / tn + 1, 16)) {
+				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
 					currentTab = tv[ti];
 					lastFocus = null;
 					repaint();

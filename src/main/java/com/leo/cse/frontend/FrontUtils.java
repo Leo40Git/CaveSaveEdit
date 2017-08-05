@@ -91,8 +91,6 @@ public class FrontUtils {
 		Color oc = g.getColor();
 		Color sc = oc.darker().darker().darker().darker();
 		g.setColor(sc);
-		g.drawString(str, x + 1, y);
-		g.drawString(str, x, y + 1);
 		g.drawString(str, x + 1, y + 1);
 		g.setColor(oc);
 		g.drawString(str, x, y);
