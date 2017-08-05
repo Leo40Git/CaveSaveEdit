@@ -6,6 +6,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class StrTools {
+	
+	public static final String DEFAULT_ENCODING = "Cp943C";
 
 	public static String CString(byte[] buf, String encoding) {
 		int l = 0;
@@ -26,6 +28,6 @@ public class StrTools {
 	}
 
 	public static String CString(byte[] buf) {
-		return CString(buf, "UTF-8");
+		return CString(buf, DEFAULT_ENCODING);
 	}
 }

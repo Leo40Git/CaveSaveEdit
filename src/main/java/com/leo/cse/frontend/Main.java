@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.carrotlord.string.StrTools;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.backend.profile.ProfileChangeListener;
@@ -339,7 +340,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		});
 		Config.init();
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
-		encoding = Config.get(Config.KEY_ENCODING, "Cp943C");
+		encoding = Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING);
 		/// TODO Fix NPCs
 		// ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
 		ExeData.setLoadNpc(false);
