@@ -50,7 +50,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	public static final int OFFSET_X = 16, OFFSET_Y = 16;
+	public static final int OFFSET_X = 16, OFFSET_Y = 32;
 
 	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
 			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };

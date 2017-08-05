@@ -40,7 +40,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
-	public static final Version VERSION = new Version("1.0.7.2");
+	public static final Version VERSION = new Version("1.0.7.3");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
@@ -110,7 +110,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		addMouseWheelListener(sep);
 		Dimension winSize = new Dimension(WINDOW_SIZE);
 		winSize.width += 32;
-		winSize.height += 32;
+		winSize.height += 48;
 		setMaximumSize(winSize);
 		setMinimumSize(winSize);
 		setPreferredSize(winSize);
