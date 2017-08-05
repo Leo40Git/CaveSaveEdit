@@ -40,7 +40,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
-	public static final Version VERSION = new Version("1.0.7.1");
+	public static final Version VERSION = new Version("1.0.7.2");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
@@ -176,12 +176,9 @@ public class Main extends JFrame implements ProfileChangeListener {
 
 		private PrintStream consoleOut;
 
-		public MyPrintStream(File file, boolean err) throws FileNotFoundException {
+		public MyPrintStream(File file) throws FileNotFoundException {
 			super(file);
-			if (err)
-				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.err));
-			else
-				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.out));
+			consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.err));
 		}
 
 		@Override
@@ -263,8 +260,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 			e.printStackTrace();
 		}
 		try {
-			System.setOut(new MyPrintStream(log, false));
-			System.setErr(new MyPrintStream(log, true));
+			System.setErr(new MyPrintStream(log));
 		} catch (FileNotFoundException e1) {
 			System.exit(1);
 		}
@@ -289,11 +285,9 @@ public class Main extends JFrame implements ProfileChangeListener {
 		}
 		Loading loadFrame = new Loading();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
-		boolean downloadFailed = false;
 		final String skipuc = "skipuc";
 		if (new File(System.getProperty("user.dir") + "/" + skipuc).exists()) {
-			System.out.println("Update check: skip file detected, skipping. Ignore warning about download failing");
-			downloadFailed = true;
+			System.out.println("Update check: skip file detected, skipping");
 		} else {
 			System.out.println("Update check: starting");
 			try {
@@ -301,47 +295,44 @@ public class Main extends JFrame implements ProfileChangeListener {
 			} catch (IOException e1) {
 				System.err.println("Update check failed: attempt to download caused exception");
 				e1.printStackTrace();
-				downloadFailed = true;
 			}
-		}
-		if (downloadFailed) {
-			System.err.println("Update check failed: download failed");
-		} else if (verFile.exists()) {
-			System.out.println("Update check: reading version");
-			try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
-				Version check = new Version(reader.readLine());
-				if (VERSION.compareTo(check) < 0) {
-					System.out.println("Update check successful: have update");
-					int result = JOptionPane.showConfirmDialog(null, "A new update is available: " + check
-							+ "\nClick \"Yes\" to go to the download site, click \"No\" to continue to the save editor.",
-							"New update!", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-					if (result == JOptionPane.YES_OPTION) {
-						URI dlSite = new URI(DOWNLOAD_SITE);
-						if (Desktop.isDesktopSupported())
-							Desktop.getDesktop().browse(dlSite);
-						else
-							JOptionPane.showMessageDialog(null,
-									"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
-											+ dlSite + "\nto get the newest update!",
-									"Operation not supported...", JOptionPane.ERROR_MESSAGE);
-						System.exit(0);
+			if (verFile.exists()) {
+				System.out.println("Update check: reading version");
+				try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
+					Version check = new Version(reader.readLine());
+					if (VERSION.compareTo(check) < 0) {
+						System.out.println("Update check successful: have update");
+						int result = JOptionPane.showConfirmDialog(null, "A new update is available: " + check
+								+ "\nClick \"Yes\" to go to the download site, click \"No\" to continue to the save editor.",
+								"New update!", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+						if (result == JOptionPane.YES_OPTION) {
+							URI dlSite = new URI(DOWNLOAD_SITE);
+							if (Desktop.isDesktopSupported())
+								Desktop.getDesktop().browse(dlSite);
+							else
+								JOptionPane.showMessageDialog(null,
+										"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
+												+ dlSite + "\nto get the newest update!",
+										"Operation not supported...", JOptionPane.ERROR_MESSAGE);
+							System.exit(0);
+						}
+					} else {
+						System.out.println("Update check successful: up to date");
 					}
-				} else {
-					System.out.println("Update check successful: up to date");
+				} catch (IOException e) {
+					System.err.println("Update check failed: attempt to read downloaded file caused exception");
+					e.printStackTrace();
+				} catch (URISyntaxException e1) {
+					System.out.println("Browse to download site failed: bad URI syntax");
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
+							"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
+				} finally {
+					verFile.delete();
 				}
-			} catch (IOException e) {
-				System.err.println("Update check failed: attempt to read downloaded file caused exception");
-				e.printStackTrace();
-			} catch (URISyntaxException e1) {
-				System.out.println("Browse to download site failed: bad URI syntax");
-				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
-						"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
-			} finally {
-				verFile.delete();
-			}
-		} else
-			System.err.println("Update check failed: downloaded file doesn't exist");
+			} else
+				System.err.println("Update check failed: downloaded file doesn't exist");
+		}
 		SwingUtilities.invokeLater(() -> {
 			loadFrame.setLoadString("Loading...");
 			loadFrame.repaint();
