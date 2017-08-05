@@ -40,7 +40,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
-	public static final Version VERSION = new Version("1.0.7");
+	public static final Version VERSION = new Version("1.0.7.1");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
@@ -230,6 +230,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 					g2d.setColor(COLOR_BG);
 					g2d.fillRect(16, 16, win.width - 32, win.height - 32);
 					g2d.setColor(Color.white);
+					g2d.drawRect(16, 16, win.width - 32, win.height - 32);
 					g2d.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 					FrontUtils.drawStringCentered(g2d, loadString, win.width / 2, win.height / 2, true);
 				}

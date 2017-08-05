@@ -77,7 +77,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private Component lastFocus;
 	private List<Dialog> dBoxes;
 	private boolean loading;
-	
+
 	public static boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
 	public static boolean showMapGrid = Config.getBoolean(Config.KEY_SHOW_MAP_GRID, false);
 	public static boolean hideSystemFlags = Config.getBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, true);
@@ -157,7 +157,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.fillRect(0, 0, winSize2.width, 17);
 		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, 0, winSize.width, 0);
+
 		g2d.drawLine(0, 17, winSize.width, 17);
+
 		int bi = 0;
 		for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
 			g2d.drawLine(xx, 1, xx, 17);
@@ -216,6 +218,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.fillRect(0, winSize2.height - 17, winSize2.width, winSize2.height);
 		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, winSize2.height - 17, winSize2.width, winSize2.height - 17);
+		g2d.drawLine(0, winSize2.height - 1, winSize2.width, winSize2.height - 1);
 		final EditorTab[] tv = EditorTab.values();
 		int tn = tv.length;
 		if (!MCI.getSpecial("VarHack"))
@@ -225,17 +228,20 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			final EditorTab t = tv[ti];
 			if (Profile.isLoaded() && t == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
-				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 17);
+				g2d.fillRect(xx + 1, winSize2.height - 17, winSize2.width / tn + 1, 16);
 				g2d.setColor(Main.lineColor);
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
-			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 16, null);
+			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 17, null);
 			String label = "";
 			if (tabMap.get(t) != null)
 				label = t.label();
 			FrontUtils.drawString(g2d, label, xx + 18, winSize2.height - 19);
 			ti++;
 		}
+		g2d.setColor(Main.lineColor);
+		g2d.drawLine(0, 0, 0, winSize2.height);
+		g2d.drawLine(winSize.width - 1, 0, winSize.width - 1, winSize2.height);
 		// dialog boxes
 		for (int i = dBoxes.size() - 1; i >= 0; i--)
 			dBoxes.get(i).render(g);
@@ -356,7 +362,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 		}
 	}
-	
+
 	private boolean dragLeftMouse;
 	private int dragInitialX, dragInitialY;
 
