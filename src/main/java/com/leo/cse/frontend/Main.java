@@ -39,8 +39,8 @@ public class Main extends JFrame implements ProfileChangeListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
-	public static final Dimension WINDOW_SIZE = new Dimension(867, 711);
-	public static final Version VERSION = new Version("1.0.6");
+	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
+	public static final Version VERSION = new Version("1.0.7");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
@@ -110,7 +110,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		addMouseWheelListener(sep);
 		Dimension winSize = new Dimension(WINDOW_SIZE);
 		winSize.width += 32;
-		winSize.height += 48;
+		winSize.height += 32;
 		setMaximumSize(winSize);
 		setMinimumSize(winSize);
 		setPreferredSize(winSize);
@@ -211,7 +211,8 @@ public class Main extends JFrame implements ProfileChangeListener {
 		}
 
 		public Loading() {
-			final Dimension win = new Dimension(200, 80);
+			final Dimension win = new Dimension(232, 112);
+			setIconImage(Resources.icon);
 			setPreferredSize(win);
 			setMaximumSize(win);
 			setMinimumSize(win);
@@ -222,9 +223,12 @@ public class Main extends JFrame implements ProfileChangeListener {
 				@Override
 				protected void paintComponent(Graphics g) {
 					Graphics2D g2d = (Graphics2D) g;
+					g2d.setColor(new Color(0, 0, 0, 0));
+					g2d.clearRect(0, 0, win.width, win.height);
+					FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
 					g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 					g2d.setColor(COLOR_BG);
-					g2d.fillRect(0, 0, win.width, win.height);
+					g2d.fillRect(16, 16, win.width - 32, win.height - 32);
 					g2d.setColor(Color.white);
 					g2d.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 					FrontUtils.drawStringCentered(g2d, loadString, win.width / 2, win.height / 2, true);
@@ -234,6 +238,13 @@ public class Main extends JFrame implements ProfileChangeListener {
 			setLocationRelativeTo(null);
 			setVisible(true);
 		}
+	}
+
+	private static void resourceError(Throwable e) {
+		e.printStackTrace();
+		JOptionPane.showMessageDialog(null, "Could not load resources!\nPlease report this error to the programmer.",
+				"Could not load resources", JOptionPane.ERROR_MESSAGE);
+		System.exit(1);
 	}
 
 	public static void main(String[] args) {
@@ -270,6 +281,11 @@ public class Main extends JFrame implements ProfileChangeListener {
 						"Could not set Look & Feel", JOptionPane.ERROR_MESSAGE);
 				System.exit(1);
 			}
+		try {
+			Resources.loadWindow();
+		} catch (Exception e) {
+			resourceError(e);
+		}
 		Loading loadFrame = new Loading();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
 		boolean downloadFailed = false;
@@ -336,15 +352,11 @@ public class Main extends JFrame implements ProfileChangeListener {
 		// ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
 		ExeData.setLoadNpc(false);
 		try {
-			Resources.load();
+			Resources.loadUI();
 			Resources.colorImages(lineColor);
 			MCI.readDefault();
 		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,
-					"Could not load resources!\nPlease report this error to the programmer.",
-					"Could not load resources", JOptionPane.ERROR_MESSAGE);
-			System.exit(1);
+			resourceError(e);
 		}
 		SwingUtilities.invokeLater(() -> {
 			window = new Main();

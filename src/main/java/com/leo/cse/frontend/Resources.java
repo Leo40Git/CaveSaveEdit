@@ -32,11 +32,14 @@ public class Resources {
 	// uncolored images
 	public static BufferedImage drag;
 	public static BufferedImage[] editorTabIcons, toolbarIcons, miscIcons;
-
-	public static void load() throws IOException, FontFormatException {
-		loadFonts();
+	
+	public static void loadWindow() throws IOException {
 		icon = ImageIO.read(Resources.class.getResourceAsStream("icon.png"));
 		shadow = ImageIO.read(Resources.class.getResource("shadow.png"));
+	}
+
+	public static void loadUI() throws IOException, FontFormatException {
+		loadFonts();
 		ui = ImageIO.read(Resources.class.getResourceAsStream("ui.png"));
 		loadImages();
 	}

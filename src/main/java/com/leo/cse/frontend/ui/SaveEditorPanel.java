@@ -50,7 +50,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	public static final int OFFSET_X = 16, OFFSET_Y = 32;
+	public static final int OFFSET_X = 16, OFFSET_Y = 16;
 
 	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
 			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };
@@ -362,6 +362,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if (loading)
+			return;
 		if (e.getButton() != MouseEvent.BUTTON1) {
 			dragLeftMouse = false;
 			return;
@@ -374,6 +376,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (loading)
+			return;
 		if (e.getButton() != MouseEvent.BUTTON1)
 			return;
 		dragLeftMouse = false;
@@ -485,6 +489,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (loading)
+			return;
 		if (!dragLeftMouse)
 			return;
 		if (!dBoxes.isEmpty())
