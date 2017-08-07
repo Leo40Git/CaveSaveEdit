@@ -245,12 +245,31 @@ public class MapView extends Component implements IDraggable {
 		int yPixel = Profile.getY() - 16;
 		yPixel /= snap;
 		yPixel *= 2;
+		int sourceX = 0;
 		int sourceY = (int) (64 * costume + 32 * dir);
 		Composite oc = g.getComposite();
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (trans ? 0.5f : 1));
 		g.setComposite(ac);
-		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + 32, yPixel + 32, 0, sourceY, 32,
-				sourceY + 32, null);
+		EntityExtras pe = null;
+		try {
+			pe = MCI.getPlayerExtras(xPixel, yPixel, (dir == 1 ? true : false), costume);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		int width = 32, height = 32;
+		if (pe != null) {
+			Rectangle pf = pe.getFrameRect();
+			Point po = pe.getOffset();
+			sourceX = pf.x;
+			sourceY = pf.y;
+			width = pf.width;
+			height = pf.height;
+			xPixel += po.x;
+			yPixel += po.y;
+
+		}
+		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + width, yPixel + height, sourceX,
+				sourceY, sourceX + width, sourceY + height, null);
 		g.setComposite(oc);
 	}
 

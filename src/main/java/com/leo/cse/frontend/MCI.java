@@ -58,8 +58,13 @@ public class MCI {
 	private static Object invokeFunction(Context cx, Scriptable scope, String name, Object... args)
 			throws NoSuchMethodException {
 		Object fObj = scope.get(name, scope);
-		if (!(fObj instanceof Function))
-			throw new NoSuchMethodException(name);
+		if (!(fObj instanceof Function)) {
+			try {
+				invokeFunction(defaultCx, defaultScope, name, args);
+			} catch (NoSuchMethodException e) {
+				throw e;
+			}
+		}
 		Function f = (Function) fObj;
 		ContextFactory.getGlobal().enterContext(cx);
 		Object result = f.call(cx, scope, scope, args);
@@ -67,6 +72,8 @@ public class MCI {
 		return result;
 	}
 
+	private static Context defaultCx;
+	private static Scriptable defaultScope;
 	private static Context cx;
 	private static Scriptable scope;
 
@@ -150,6 +157,8 @@ public class MCI {
 	public static void readDefault() throws Exception {
 		read0(MCI.class.getResourceAsStream("default.mci"), new File("default.mci"));
 		validate();
+		defaultCx = cx;
+		defaultScope = scope;
 	}
 
 	public static void read(File file) throws Exception {
@@ -271,16 +280,33 @@ public class MCI {
 			this.frameRect = frameRect;
 			this.offset = offset;
 		}
-		
+
 		public Rectangle getFrameRect() {
 			return frameRect;
 		}
-		
+
 		public Point getOffset() {
 			return offset;
 		}
 	}
-	
+
+	public static EntityExtras getPlayerExtras(int x, int y, boolean leftright, long costume)
+			throws NoSuchMethodException {
+		Object oe1 = Context.jsToJava(invokeFunction("getPlayerFrame", x, y, leftright, costume), Rectangle.class);
+		if (!(oe1 instanceof Rectangle)) {
+			System.err.println("oe1 is not Rectangle: " + oe1.getClass().getName());
+			return null;
+		}
+		Rectangle frameRect = (Rectangle) oe1;
+		Object oe2 = Context.jsToJava(invokeFunction("getPlayerOffset", x, y, leftright, costume), Point.class);
+		if (!(oe2 instanceof Point)) {
+			System.err.println("oe2 is not Point: " + oe1.getClass().getName());
+			return null;
+		}
+		Point offset = (Point) oe2;
+		return new EntityExtras(frameRect, offset);
+	}
+
 	public static class WrappedPxeEntry {
 		public short x;
 		public short y;
@@ -288,6 +314,7 @@ public class MCI {
 		public short eventNum;
 		public short type;
 		public boolean[] flags;
+
 		public WrappedPxeEntry(PxeEntry e) {
 			x = e.getX();
 			y = e.getY();

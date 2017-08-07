@@ -27,243 +27,84 @@ function getSpecials() {
 }
 // Array of map names
 function getMapNames() {
-	return [
-		"Credits",
-		"Arthur's House (Normal)",
-		"Egg Corridor",
-		"Egg No. 00 (Normal)",
-		"Egg No. 06",
-		"Egg Observation Room",
-		"Grasstown",
-		"Santa's House",
-		"Chaco's House",
-		"Labyrinth I",
-		"Sand Zone (Normal)",
-		"Mimiga Village",
-		"First Cave",
-		"Start Point",
-		"Shack",
-		"Reservoir",
-		"Graveyard",
-		"Yamashita Farm",
-		"Shelter",
-		"Assembly Hall",
-		"Save Point (Mimiga Village)",
-		"Side Room (Egg Corridor)",
-		"Cthulhu's Abode (Egg Corridor)",
-		"Egg No. 01",
-		"Arthur's House (cutscene)",
-		"Power Room",
-		"Save Point (Grasstown)",
-		"Execution Chamber",
-		"Gum",
-		"Sand Zone Residence",
-		"Grasstown Hut",
-		"Main Artery",
-		"Small Room",
-		"Jenka's House (before Balrog attack)",
-		"Deserted House",
-		"Sand Zone Storehouse",
-		"Jenka's House (after Balrog attack)",
-		"Sand Zone (After boss fight)",
-		"Labyrinth H",
-		"Labyrinth W",
-		"Camp",
-		"Clinic Ruins",
-		"Labyrinth Shop",
-		"Labyrinth B",
-		"Boulder Chamber",
-		"Labyrinth M",
-		"Dark Place",
-		"Core",
-		"Waterway",
-		"Egg Corridor?",
-		"Cthulhu's Abode?",
-		"Egg Observation Room?",
-		"Egg No. 00 (hatched)",
-		"Outer Wall",
-		"Side Room (Egg Corridor?)",
-		"Storehouse",
-		"Plantation",
-		"Jail No. 1",
-		"Hideout",
-		"Rest Area",
-		"Teleporter",
-		"Jail No. 2",
-		"Balcony (normal)",
-		"Final Cave",
-		"Throne Room",
-		"The King's Table",
-		"Prefab House (normal)",
-		"Last Cave (Hidden)",
-		"Black Space",
-		"Little House",
-		"Balcony (escaping)",
-		"Ending",
-		"Intro",
-		"Waterway Cabin",
-		"Credits - Labyrinth",
-		"Credits - Jenka's House",
-		"Credits - Power Room",
-		"Credits - Graveyard",
-		"Credits - Sky",
-		"Prefab House (entrance to Hell)",
-		"Sacred Grounds B1",
-		"Sacred Grounds B2",
-		"Sacred Grounds B3",
-		"Storage",
-		"Passage? (normal)",
-		"Passage? (from Sacred Grounds B3)",
-		"Statue Chamber",
-		"Seal Chamber (normal)",
-		"Corridor",
-		"Credits - Laboratory",
-		"Hermit Gunsmith",
-		"Island Cutscene",
-		"Seal Chamber (after fight)",
-		"Credits - Balcony",
-		"Clock Room"
-	];
+	return [ "Credits", "Arthur's House (Normal)", "Egg Corridor",
+			"Egg No. 00 (Normal)", "Egg No. 06", "Egg Observation Room",
+			"Grasstown", "Santa's House", "Chaco's House", "Labyrinth I",
+			"Sand Zone (Normal)", "Mimiga Village", "First Cave",
+			"Start Point", "Shack", "Reservoir", "Graveyard", "Yamashita Farm",
+			"Shelter", "Assembly Hall", "Save Point (Mimiga Village)",
+			"Side Room (Egg Corridor)", "Cthulhu's Abode (Egg Corridor)",
+			"Egg No. 01", "Arthur's House (cutscene)", "Power Room",
+			"Save Point (Grasstown)", "Execution Chamber", "Gum",
+			"Sand Zone Residence", "Grasstown Hut", "Main Artery",
+			"Small Room", "Jenka's House (before Balrog attack)",
+			"Deserted House", "Sand Zone Storehouse",
+			"Jenka's House (after Balrog attack)",
+			"Sand Zone (After boss fight)", "Labyrinth H", "Labyrinth W",
+			"Camp", "Clinic Ruins", "Labyrinth Shop", "Labyrinth B",
+			"Boulder Chamber", "Labyrinth M", "Dark Place", "Core", "Waterway",
+			"Egg Corridor?", "Cthulhu's Abode?", "Egg Observation Room?",
+			"Egg No. 00 (hatched)", "Outer Wall", "Side Room (Egg Corridor?)",
+			"Storehouse", "Plantation", "Jail No. 1", "Hideout", "Rest Area",
+			"Teleporter", "Jail No. 2", "Balcony (normal)", "Final Cave",
+			"Throne Room", "The King's Table", "Prefab House (normal)",
+			"Last Cave (Hidden)", "Black Space", "Little House",
+			"Balcony (escaping)", "Ending", "Intro", "Waterway Cabin",
+			"Credits - Labyrinth", "Credits - Jenka's House",
+			"Credits - Power Room", "Credits - Graveyard", "Credits - Sky",
+			"Prefab House (entrance to Hell)", "Sacred Grounds B1",
+			"Sacred Grounds B2", "Sacred Grounds B3", "Storage",
+			"Passage? (normal)", "Passage? (from Sacred Grounds B3)",
+			"Statue Chamber", "Seal Chamber (normal)", "Corridor",
+			"Credits - Laboratory", "Hermit Gunsmith", "Island Cutscene",
+			"Seal Chamber (after fight)", "Credits - Balcony", "Clock Room" ];
 }
 // Array of song names
 function getSongNames() {
-	return [
-		"None",
-		"Mischiveous Robot",
-		"Safety",
-		"Game Over",
-		"Gravity",
-		"On To Grasstown",
-		"Meltdown 2",
-		"Eyes of Flame",
-		"Gestation",
-		"Mimiga Town",
-		"Get Item!",
-		"Balrog's Theme",
-		"Cemetary",
-		"Plant",
-		"Pulse",
-		"Victory!",
-		"Get Heart Tank!",
-		"Tyrant",
-		"Run!",
-		"Jenka 1",
-		"Labyrinth Fight",
-		"Access",
-		"Oppresion",
-		"Geothermal",
-		"Cave Story",
-		"Moonsong",
-		"Hero's End",
-		"Scorching Back",
-		"Quiet",
-		"Final Cave",
-		"Balcony",
-		"Charge",
-		"Last Battle",
-		"The Way Back Home",
-		"Zombie",
-		"Break Down",
-		"Running Hell",
-		"Jenka 2",
-		"Living Waterway",
-		"Seal Chamber",
-		"Toroko's Theme",
-		"White Stone Wall"
-	];
+	return [ "None", "Mischiveous Robot", "Safety", "Game Over", "Gravity",
+			"On To Grasstown", "Meltdown 2", "Eyes of Flame", "Gestation",
+			"Mimiga Town", "Get Item!", "Balrog's Theme", "Cemetary", "Plant",
+			"Pulse", "Victory!", "Get Heart Tank!", "Tyrant", "Run!",
+			"Jenka 1", "Labyrinth Fight", "Access", "Oppresion", "Geothermal",
+			"Cave Story", "Moonsong", "Hero's End", "Scorching Back", "Quiet",
+			"Final Cave", "Balcony", "Charge", "Last Battle",
+			"The Way Back Home", "Zombie", "Break Down", "Running Hell",
+			"Jenka 2", "Living Waterway", "Seal Chamber", "Toroko's Theme",
+			"White Stone Wall" ];
 }
 // Array of equip names
 function getEquipNames() {
-	return [
-		"Booster v0.8",
-		"Map System",
-		"Arms Barrier",
-		"Turbocharge",
-		"Curly's Air Tank",
-		"Booster v2.0",
-		"Mimiga Mask",
-		"Whimsical Star",
-		"Nikumaru Counter"
-	];
+	return [ "Booster v0.8", "Map System", "Arms Barrier", "Turbocharge",
+			"Curly's Air Tank", "Booster v2.0", "Mimiga Mask",
+			"Whimsical Star", "Nikumaru Counter" ];
 }
 // Array of weapon names
 function getWeaponNames() {
-	return [
-		"None",
-		"Snake",
-		"Polar Star",
-		"Fireball",
-		"Machine Gun",
-		"Missile Launcher",
-		null,
-		"Bubbler",
-		null,
-		"Blade",
-		"Super Missile",
-		null,
-		"Nemesis",
-		"Spur"
-	];
+	return [ "None", "Snake", "Polar Star", "Fireball", "Machine Gun",
+			"Missile Launcher", null, "Bubbler", null, "Blade",
+			"Super Missile", null, "Nemesis", "Spur" ];
 }
 // Array of item names
 function getItemNames() {
-	return [
-		"None",
-		"Arthur's Key",
-		"Map System",
-		"Santa's Key",
-		"Silver Locket",
-		"Beast Fang",
-		"Life Capsule",
-		"ID Card",
-		"Jellyfish Juice",
-		"Rusty Key",
-		"Gum Key",
-		"Gum Base",
-		"Charcoal",
-		"Explosive",
-		"Puppy",
-		"Life Pot",
-		"Cure-All",
-		"Clinic Key",
-		"Booster v0.8",
-		"Arms Barrier",
-		"Turbocharge",
-		"Curly's Air Tank",
-		"Nikumaru Counter",
-		"Booster v2.0",
-		"Mimiga Mask",
-		"Teleporter Room Key",
-		"Sue's Letter",
-		"Controller",
-		"Broken Sprinkler",
-		"Sprinkler",
-		"Tow Rope",
-		"Clay Figure Medal",
-		"Little Man",
-		"Mushroom Badge",
-		"Ma Pignon",
-		"Curly's Underwear",
-		"Alien Medal",
-		"Chaco's Lipstick",
-		"Whimsical Star",
-		"Iron Bond"
-	];
+	return [ "None", "Arthur's Key", "Map System", "Santa's Key",
+			"Silver Locket", "Beast Fang", "Life Capsule", "ID Card",
+			"Jellyfish Juice", "Rusty Key", "Gum Key", "Gum Base", "Charcoal",
+			"Explosive", "Puppy", "Life Pot", "Cure-All", "Clinic Key",
+			"Booster v0.8", "Arms Barrier", "Turbocharge", "Curly's Air Tank",
+			"Nikumaru Counter", "Booster v2.0", "Mimiga Mask",
+			"Teleporter Room Key", "Sue's Letter", "Controller",
+			"Broken Sprinkler", "Sprinkler", "Tow Rope", "Clay Figure Medal",
+			"Little Man", "Mushroom Badge", "Ma Pignon", "Curly's Underwear",
+			"Alien Medal", "Chaco's Lipstick", "Whimsical Star", "Iron Bond" ];
 }
 // Array of warp menu names
 function getWarpNames() {
-	return [
-		"None",
-		"Egg Corridor",
-		"Grasstown",
-		"Sand Zone",
-		"Labyrinth",
-		"Plantation"
-	];
+	return [ "None", "Egg Corridor", "Grasstown", "Sand Zone", "Labyrinth",
+			"Plantation" ];
 }
 // Array of warp location names
 function getWarpLocNames() {
-	var warpLoc = ["None"];
+	var warpLoc = [ "None" ];
 	warpLoc[6001] = "Egg Corridor";
 	warpLoc[6002] = "Grasstown";
 	warpLoc[6003] = "Sand Zone";
@@ -560,6 +401,16 @@ function getFlagDescriptions() {
 	flagDesc[3004] = "No description yet.";
 	flagDesc[4000] = "Set after defeating the Core. Makes drowning run an alternate event.";
 	return flagDesc;
+}
+// Player extras
+function getPlayerFrame(x, y, leftright, costume) {
+	var yoff = 0;
+	if (leftright)
+		yoff = 32;
+	return new java.awt.Rectangle(0, costume * 64 + yoff, 32, 32)
+}
+function getPlayerOffset(x, y, leftright, costume) {
+	return new java.awt.Point(0, 0);
 }
 // Entity extras
 function getEntityFrame(entity) {

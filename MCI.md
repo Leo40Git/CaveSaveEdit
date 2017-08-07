@@ -34,8 +34,17 @@ If no special support is required, `null` can also be returned.
 - `getSaveFlagID:Number` - Gets the ID of the "game was saved" flag. This flag ID will not be modifiable.
 - `getFlagDescriptions:Array<String>` - Gets a list of flag descriptions.
 
+## Player extras
+- `getPlayerFrame:java.awt.Rectangle` - Gets the player's frame rectangle.
+- `getPlayerOffset:java.awt.Point` - Gets the player's offset in pixels.
+
+Both of these functions get the following parameters:  
+- `x:Number` - The X position of the player in pixels.
+- `y:Number` - The Y position of the player in pixels.
+- `leftright:Boolean` - `false` if the player is facing left, `right` if the player is facing right.
+- `costume:Number` - The costume ID the player is currently using. If no costume hacks (<MIM or TSC+) are applied: 0 if the Mimiga Mask is not equipped, 1 if the Mimiga Mask is equipped.
+
 ## Entity extras
-Now this is where it gets interesting...
 Both of the following functions receive one parameter: a `WrappedPxeEntry` object.
 Every `WrappedPxeEntry` object has the following fields (they're public, so just doing `object.field` is okay):
 - `x:Number` - The X position of the entity in tiles.
