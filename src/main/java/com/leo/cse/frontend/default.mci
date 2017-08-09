@@ -1,421 +1,421 @@
 // Metadata
 function getName() {
-	return "Cave Story";
+    return "Cave Story";
 }
 function getAuthor() {
-	return "Leo40Story, zxin (flag list)";
+    return "Leo40Story, zxin (flag list)";
 }
 // Game information
 function getExeName() {
-	return "Doukutsu";
+    return "Doukutsu";
 }
 function getArmsImageYStart() {
-	return 0;
+    return 0;
 }
 function getArmsImageSize() {
-	return 32;
+    return 32;
 }
 function getFPS() {
-	return 50;
+    return 50;
 }
 function getGraphicsResolution() {
-	return 1;
+    return 1;
 }
 // Special support
 function getSpecials() {
-	return [];
+    return [];
 }
 // Array of map names
 function getMapNames() {
-	return [ "Credits", "Arthur's House (Normal)", "Egg Corridor",
-			"Egg No. 00 (Normal)", "Egg No. 06", "Egg Observation Room",
-			"Grasstown", "Santa's House", "Chaco's House", "Labyrinth I",
-			"Sand Zone (Normal)", "Mimiga Village", "First Cave",
-			"Start Point", "Shack", "Reservoir", "Graveyard", "Yamashita Farm",
-			"Shelter", "Assembly Hall", "Save Point (Mimiga Village)",
-			"Side Room (Egg Corridor)", "Cthulhu's Abode (Egg Corridor)",
-			"Egg No. 01", "Arthur's House (cutscene)", "Power Room",
-			"Save Point (Grasstown)", "Execution Chamber", "Gum",
-			"Sand Zone Residence", "Grasstown Hut", "Main Artery",
-			"Small Room", "Jenka's House (before Balrog attack)",
-			"Deserted House", "Sand Zone Storehouse",
-			"Jenka's House (after Balrog attack)",
-			"Sand Zone (After boss fight)", "Labyrinth H", "Labyrinth W",
-			"Camp", "Clinic Ruins", "Labyrinth Shop", "Labyrinth B",
-			"Boulder Chamber", "Labyrinth M", "Dark Place", "Core", "Waterway",
-			"Egg Corridor?", "Cthulhu's Abode?", "Egg Observation Room?",
-			"Egg No. 00 (hatched)", "Outer Wall", "Side Room (Egg Corridor?)",
-			"Storehouse", "Plantation", "Jail No. 1", "Hideout", "Rest Area",
-			"Teleporter", "Jail No. 2", "Balcony (normal)", "Final Cave",
-			"Throne Room", "The King's Table", "Prefab House (normal)",
-			"Last Cave (Hidden)", "Black Space", "Little House",
-			"Balcony (escaping)", "Ending", "Intro", "Waterway Cabin",
-			"Credits - Labyrinth", "Credits - Jenka's House",
-			"Credits - Power Room", "Credits - Graveyard", "Credits - Sky",
-			"Prefab House (entrance to Hell)", "Sacred Grounds B1",
-			"Sacred Grounds B2", "Sacred Grounds B3", "Storage",
-			"Passage? (normal)", "Passage? (from Sacred Grounds B3)",
-			"Statue Chamber", "Seal Chamber (normal)", "Corridor",
-			"Credits - Laboratory", "Hermit Gunsmith", "Island Cutscene",
-			"Seal Chamber (after fight)", "Credits - Balcony", "Clock Room" ];
+    return [ "Credits", "Arthur's House (Normal)", "Egg Corridor",
+	    "Egg No. 00 (Normal)", "Egg No. 06", "Egg Observation Room",
+	    "Grasstown", "Santa's House", "Chaco's House", "Labyrinth I",
+	    "Sand Zone (Normal)", "Mimiga Village", "First Cave",
+	    "Start Point", "Shack", "Reservoir", "Graveyard", "Yamashita Farm",
+	    "Shelter", "Assembly Hall", "Save Point (Mimiga Village)",
+	    "Side Room (Egg Corridor)", "Cthulhu's Abode (Egg Corridor)",
+	    "Egg No. 01", "Arthur's House (cutscene)", "Power Room",
+	    "Save Point (Grasstown)", "Execution Chamber", "Gum",
+	    "Sand Zone Residence", "Grasstown Hut", "Main Artery",
+	    "Small Room", "Jenka's House (before Balrog attack)",
+	    "Deserted House", "Sand Zone Storehouse",
+	    "Jenka's House (after Balrog attack)",
+	    "Sand Zone (After boss fight)", "Labyrinth H", "Labyrinth W",
+	    "Camp", "Clinic Ruins", "Labyrinth Shop", "Labyrinth B",
+	    "Boulder Chamber", "Labyrinth M", "Dark Place", "Core", "Waterway",
+	    "Egg Corridor?", "Cthulhu's Abode?", "Egg Observation Room?",
+	    "Egg No. 00 (hatched)", "Outer Wall", "Side Room (Egg Corridor?)",
+	    "Storehouse", "Plantation", "Jail No. 1", "Hideout", "Rest Area",
+	    "Teleporter", "Jail No. 2", "Balcony (normal)", "Final Cave",
+	    "Throne Room", "The King's Table", "Prefab House (normal)",
+	    "Last Cave (Hidden)", "Black Space", "Little House",
+	    "Balcony (escaping)", "Ending", "Intro", "Waterway Cabin",
+	    "Credits - Labyrinth", "Credits - Jenka's House",
+	    "Credits - Power Room", "Credits - Graveyard", "Credits - Sky",
+	    "Prefab House (entrance to Hell)", "Sacred Grounds B1",
+	    "Sacred Grounds B2", "Sacred Grounds B3", "Storage",
+	    "Passage? (normal)", "Passage? (from Sacred Grounds B3)",
+	    "Statue Chamber", "Seal Chamber (normal)", "Corridor",
+	    "Credits - Laboratory", "Hermit Gunsmith", "Island Cutscene",
+	    "Seal Chamber (after fight)", "Credits - Balcony", "Clock Room" ];
 }
 // Array of song names
 function getSongNames() {
-	return [ "None", "Mischiveous Robot", "Safety", "Game Over", "Gravity",
-			"On To Grasstown", "Meltdown 2", "Eyes of Flame", "Gestation",
-			"Mimiga Town", "Get Item!", "Balrog's Theme", "Cemetary", "Plant",
-			"Pulse", "Victory!", "Get Heart Tank!", "Tyrant", "Run!",
-			"Jenka 1", "Labyrinth Fight", "Access", "Oppresion", "Geothermal",
-			"Cave Story", "Moonsong", "Hero's End", "Scorching Back", "Quiet",
-			"Final Cave", "Balcony", "Charge", "Last Battle",
-			"The Way Back Home", "Zombie", "Break Down", "Running Hell",
-			"Jenka 2", "Living Waterway", "Seal Chamber", "Toroko's Theme",
-			"White Stone Wall" ];
+    return [ "None", "Mischiveous Robot", "Safety", "Game Over", "Gravity",
+	    "On To Grasstown", "Meltdown 2", "Eyes of Flame", "Gestation",
+	    "Mimiga Town", "Get Item!", "Balrog's Theme", "Cemetary", "Plant",
+	    "Pulse", "Victory!", "Get Heart Tank!", "Tyrant", "Run!",
+	    "Jenka 1", "Labyrinth Fight", "Access", "Oppresion", "Geothermal",
+	    "Cave Story", "Moonsong", "Hero's End", "Scorching Back", "Quiet",
+	    "Final Cave", "Balcony", "Charge", "Last Battle",
+	    "The Way Back Home", "Zombie", "Break Down", "Running Hell",
+	    "Jenka 2", "Living Waterway", "Seal Chamber", "Toroko's Theme",
+	    "White Stone Wall" ];
 }
 // Array of equip names
 function getEquipNames() {
-	return [ "Booster v0.8", "Map System", "Arms Barrier", "Turbocharge",
-			"Curly's Air Tank", "Booster v2.0", "Mimiga Mask",
-			"Whimsical Star", "Nikumaru Counter" ];
+    return [ "Booster v0.8", "Map System", "Arms Barrier", "Turbocharge",
+	    "Curly's Air Tank", "Booster v2.0", "Mimiga Mask",
+	    "Whimsical Star", "Nikumaru Counter" ];
 }
 // Array of weapon names
 function getWeaponNames() {
-	return [ "None", "Snake", "Polar Star", "Fireball", "Machine Gun",
-			"Missile Launcher", null, "Bubbler", null, "Blade",
-			"Super Missile", null, "Nemesis", "Spur" ];
+    return [ "None", "Snake", "Polar Star", "Fireball", "Machine Gun",
+	    "Missile Launcher", null, "Bubbler", null, "Blade",
+	    "Super Missile", null, "Nemesis", "Spur" ];
 }
 // Array of item names
 function getItemNames() {
-	return [ "None", "Arthur's Key", "Map System", "Santa's Key",
-			"Silver Locket", "Beast Fang", "Life Capsule", "ID Card",
-			"Jellyfish Juice", "Rusty Key", "Gum Key", "Gum Base", "Charcoal",
-			"Explosive", "Puppy", "Life Pot", "Cure-All", "Clinic Key",
-			"Booster v0.8", "Arms Barrier", "Turbocharge", "Curly's Air Tank",
-			"Nikumaru Counter", "Booster v2.0", "Mimiga Mask",
-			"Teleporter Room Key", "Sue's Letter", "Controller",
-			"Broken Sprinkler", "Sprinkler", "Tow Rope", "Clay Figure Medal",
-			"Little Man", "Mushroom Badge", "Ma Pignon", "Curly's Underwear",
-			"Alien Medal", "Chaco's Lipstick", "Whimsical Star", "Iron Bond" ];
+    return [ "None", "Arthur's Key", "Map System", "Santa's Key",
+	    "Silver Locket", "Beast Fang", "Life Capsule", "ID Card",
+	    "Jellyfish Juice", "Rusty Key", "Gum Key", "Gum Base", "Charcoal",
+	    "Explosive", "Puppy", "Life Pot", "Cure-All", "Clinic Key",
+	    "Booster v0.8", "Arms Barrier", "Turbocharge", "Curly's Air Tank",
+	    "Nikumaru Counter", "Booster v2.0", "Mimiga Mask",
+	    "Teleporter Room Key", "Sue's Letter", "Controller",
+	    "Broken Sprinkler", "Sprinkler", "Tow Rope", "Clay Figure Medal",
+	    "Little Man", "Mushroom Badge", "Ma Pignon", "Curly's Underwear",
+	    "Alien Medal", "Chaco's Lipstick", "Whimsical Star", "Iron Bond" ];
 }
 // Array of warp menu names
 function getWarpNames() {
-	return [ "None", "Egg Corridor", "Grasstown", "Sand Zone", "Labyrinth",
-			"Plantation" ];
+    return [ "None", "Egg Corridor", "Grasstown", "Sand Zone", "Labyrinth",
+	    "Plantation" ];
 }
 // Array of warp location names
 function getWarpLocNames() {
-	var warpLoc = [ "None" ];
-	warpLoc[6001] = "Egg Corridor";
-	warpLoc[6002] = "Grasstown";
-	warpLoc[6003] = "Sand Zone";
-	warpLoc[6004] = "Labyrinth";
-	warpLoc[6005] = "Plantation";
-	return warpLoc;
+    var warpLoc = [ "None" ];
+    warpLoc[6001] = "Egg Corridor";
+    warpLoc[6002] = "Grasstown";
+    warpLoc[6003] = "Sand Zone";
+    warpLoc[6004] = "Labyrinth";
+    warpLoc[6005] = "Plantation";
+    return warpLoc;
 }
 // Save flag ID, this flag will be unmodifiable!
 function getSaveFlagID() {
-	return 431;
+    return 431;
 }
 // Array of flag descriptions
 function getFlagDescriptions() {
-	var flagDesc = [];
-	flagDesc[100] = "Egg Corridor Sue & Igor cutscene has been seen.";
-	flagDesc[101] = "1st Egg Corridor Life Capsule obtained. (Near teleporter)";
-	flagDesc[102] = "2nd Egg Corridor Life Capsule obtained. (Cthulhu's Abode)";
-	flagDesc[103] = "Igor beaten.";
-	flagDesc[105] = "Opens Side Room door. Set by Sue in Egg No. 00.";
-	flagDesc[106] = "Shows you the Sue and Kazuma cutscene when leaving Egg Corridor. Set by Sue in Egg No. 00.";
-	flagDesc[120] = "Sue left Egg No. 00. Changes Mahin dialogue.";
-	flagDesc[140] = "ID Card obtained.";
-	flagDesc[153] = "Set once Egg Corridor teleportation is permitted.";
-	flagDesc[154] = "Computer displays \"Connecting to Grasstown\". Set by Sue in Egg No. 00.";
-	flagDesc[155] = "Shows Sue trapped in cage cutscene when leaving Arthur's House. Set by Sue in Egg No. 00.";
-	flagDesc[156] = "Changes Mahin dialogue. Set when Kazuma and Booster return from Grasstown.";
-	flagDesc[157] = "Changes computer text. Set in the cutscene when returning to Arthur's house, post-Grasstown.";
-	flagDesc[158] = "Set once Sand Zone teleportation is permitted. Changes Arthur's House dialogues.";
-	flagDesc[159] = "Takes you to the \"Egg Corridor?\". Changes computer text.";
-	flagDesc[160] = "Makes Booster teleport into Arthur's house and give you the Booster v2.0.";
-	flagDesc[161] = "Booster is in Arthur's house. Hides \"Provided only I live\" text in Prefab Building.";
-	flagDesc[162] = "Professor Booster is still alive for a credits cutscene. Used to tell which booster you had.";
-	flagDesc[200] = "Egg Observation Room ML chest opened.";
-	flagDesc[201] = "Set once the Missile Launcher (ML) is obtained.";
-	flagDesc[202] = "Set once the Super Missile Launcher (SML) is obtained.";
-	flagDesc[210] = "Set once Santa's Key is obtained.";
-	flagDesc[211] = "Advances Santa's dialogue outside his house.";
-	flagDesc[212] = "Set once you give Santa his key. Lets you into his house and stops him appearing outside.";
-	flagDesc[213] = "Remove the grate on Chaco's fireplace. For when you go trough the fireplace.";
-	flagDesc[214] = "Allows the player to get into the Power Room in Grasstown. Set after the Rusty Key has been used.";
-	flagDesc[215] = "Set when Kazuma asks you to open the Shelter's door with the Rusty Key.";
-	flagDesc[216] = "Set when you discover that there's no keyhole in the door.";
-	flagDesc[217] = "Turns off Grasstown teleporter lights. Never set in-game.";
-	flagDesc[218] = "Grasstown ML chest opened.";
-	flagDesc[219] = "Kazuma and Booster have ridden the scooter. Shows King releasing Sue when teleporting back.";
-	flagDesc[221] = "Set when you get the Gum Key.";
-	flagDesc[222] = "Set after using Gum Key to get to Gum.";
-	flagDesc[223] = "Set when Kazuma discovers that the Rusty Key doesn't open the door. Advances door text.";
-	flagDesc[224] = "Set every time you teleport into Grasstown. Advances King's dialogue, and Sue's jail dialogue.";
-	flagDesc[225] = "Stops the scooter from appearing next to Shelter.";
-	flagDesc[226] = "Makes the scooter appear broken next to the teleporter.";
-	flagDesc[227] = "Makes smoke generator appear next to scooter. Unset if you teleport out of Grasstown or look at Santa's locked door.";
-	flagDesc[228] = "Makes Grasstown's near-teleporter Cthulhu skip the 'soldier from the surface' dialogue.";
-	flagDesc[240] = "Set just before you get the Fireball. Would make Santa run a nonexistent event if 241 weren't set at the same time.";
-	flagDesc[241] = "Set once Fireball is obtained. Advances Santa and Chaco dialogue.";
-	flagDesc[242] = "Set once Charcoal is obtained. Advances Santa dialogue.";
-	flagDesc[243] = "Set once you get teleported to Labyrinth I. Unused?";
-	flagDesc[261] = "Set once you interact with Chaco's fireplace.";
-	flagDesc[262] = "Set once you get teleported to Labyrinth I. Unused?";
-	flagDesc[263] = "Set when you interact with Chaco's fireplace. Used to jump to the lipstick event. Unset every time you re-enter her house.";
-	flagDesc[272] = "Set when you start the Omega fight. Lifts the curse on the sunstones.";
-	flagDesc[273] = "Gets rid of the sunstones.";
-	flagDesc[274] = "Set whenever you have one of Jenka's puppies. Makes them appear on your back.";
-	flagDesc[275] = "Set once you get the puppy that's next to the Sand Zone Storehouse.";
-	flagDesc[276] = "Set once you get the puppy in the middle of the Sand Zone";
-	flagDesc[278] = "Set after Jenka gets creamed by Balrog.";
-	flagDesc[279] = "Set once you get the puppy that's in the treasure chest.";
-	flagDesc[280] = "Makes you go to the alternate version of Jenka's house whenever you go to her house.";
-	flagDesc[301] = "Set when you kill the eye door in the First Cave.";
-	flagDesc[302] = "Set when you exit the First Cave for the first time.";
-	flagDesc[303] = "Set after the Spur is obtained.";
-	flagDesc[320] = "Set in the Mimiga Village opening cutscene. Also set when you talk to King. Makes King disappear.";
-	flagDesc[321] = "Makes King appear in a different place.";
-	flagDesc[322] = "Set once you get the Map System.";
-	flagDesc[323] = "Set once you interact with King before getting the Silver Locket. Advances his dialogue.";
-	flagDesc[324] = "Set once you use Arthur's Key for the first time. Skips the \"Used Arthur's Key\" text in future.";
-	flagDesc[325] = "Set once teleportation to Grasstown is permitted.";
-	flagDesc[326] = "Makes Toroko appear in the Shack with her stick.";
-	flagDesc[327] = "Makes Jack appear in Assembly Hall instead of Cemetery entrance. Advances King dialogue.";
-	flagDesc[329] = "Set by Sue in Egg No. 00. Unset when teleport to Arthur's House from Grasstown. Unknown use.";
-	flagDesc[340] = "Set in post-Core drowning dialogue. Unknown use.";
-	flagDesc[341] = "Set in Core defeated dialogue. Changes Mimiga Village/Chako's House/Sand Zone Residence music to Quiet. Changes Arthur's House music to Pulse.";
-	flagDesc[360] = "Set Toroko's Shack dialogue. Makes the door to the Shack broken.";
-	flagDesc[361] = "Set in Balrog's Shack dialogue. Makes the door tell you that you can't escape.";
-	flagDesc[362] = "Set when getting Silver Locket. Prevents Shack door openeding pre-Toroko/Balrog dialogue.";
-	flagDesc[370] = "Set when getting Silver Locket. Stops Silver Locket from appearing.";
-	flagDesc[371] = "Set when getting Silver Locket. Shows Toroko and King cutscene when exiting Resovoir.";
-	flagDesc[372] = "Set when you get Curly's Air Tank. Unknown use.";
-	flagDesc[390] = "If set, Arthur's Key does not appear.";
-	flagDesc[410] = "If set, Beast Fang does not appear.";
-	flagDesc[411] = "Set in post-core drowning dialogue. Unknown use.";
-	flagDesc[430] = "Set in opening cut-scene dialogue. Makes OOB null entity in Start Point disappear.";
-	flagDesc[431] = "Set the first time you save. Makes the game load your save profile when you retry after dying.";
-	flagDesc[440] = "Set in Toroko Shack dialogue. Unset in Kazuma/Sue pre-Grasstown cutscene. Unknown use.";
-	flagDesc[441] = "Set when first entering Arthur's House. Unknown use.";
-	flagDesc[442] = "Set when getting the Bubbler. Stops you from getting the weapon again.";
-	flagDesc[443] = "If set, Arthur is in the Assembly Hall. Unset in Kazuma/Sue pre-Grasstown cutscene.";
-	flagDesc[444] = "Set in post-Grasstown Kazuma/Booster cutscene. Unset in pre-Labyrinth cutscene. Unknown use.";
-	flagDesc[470] = "Set when lowering Egg Corridor sheild. Changes computer terminal text.";
-	flagDesc[480] = "Prevents Power Room door from being opened. Set for Balrog boss fight.";
-	flagDesc[481] = "Set in Grasstown Balrog boss dialogue. Turns on Grasstown fans.";
-	flagDesc[482] = "Set in Grasstown Balrog boss dialogue. Changes Malco interaction text for boss fight.";
-	flagDesc[483] = "Set in Grasstown Balrog post-boss dialogue. Changes Malco interaction to allow pulling out post-boss fight.";
-	flagDesc[484] = "No description yet.";
-	flagDesc[485] = "No description yet.";
-	flagDesc[486] = "No description yet.";
-	flagDesc[500] = "No description yet.";
-	flagDesc[501] = "No description yet.";
-	flagDesc[520] = "No description yet.";
-	flagDesc[521] = "No description yet.";
-	flagDesc[522] = "No description yet.";
-	flagDesc[523] = "No description yet.";
-	flagDesc[524] = "No description yet.";
-	flagDesc[525] = "No description yet.";
-	flagDesc[550] = "No description yet.";
-	flagDesc[561] = "No description yet.";
-	flagDesc[562] = "No description yet.";
-	flagDesc[563] = "No description yet.";
-	flagDesc[564] = "No description yet.";
-	flagDesc[565] = "No description yet.";
-	flagDesc[580] = "No description yet.";
-	flagDesc[590] = "No description yet.";
-	flagDesc[591] = "No description yet.";
-	flagDesc[592] = "No description yet.";
-	flagDesc[593] = "No description yet.";
-	flagDesc[594] = "No description yet.";
-	flagDesc[595] = "No description yet.";
-	flagDesc[596] = "No description yet.";
-	flagDesc[610] = "No description yet.";
-	flagDesc[620] = "No description yet.";
-	flagDesc[621] = "No description yet.";
-	flagDesc[622] = "No description yet.";
-	flagDesc[623] = "No description yet.";
-	flagDesc[624] = "No description yet.";
-	flagDesc[641] = "No description yet.";
-	flagDesc[680] = "No description yet.";
-	flagDesc[681] = "No description yet.";
-	flagDesc[700] = "No description yet.";
-	flagDesc[701] = "No description yet.";
-	flagDesc[702] = "No description yet.";
-	flagDesc[703] = "No description yet.";
-	flagDesc[704] = "No description yet.";
-	flagDesc[705] = "No description yet.";
-	flagDesc[710] = "No description yet.";
-	flagDesc[711] = "No description yet.";
-	flagDesc[720] = "No description yet.";
-	flagDesc[721] = "No description yet.";
-	flagDesc[722] = "No description yet.";
-	flagDesc[740] = "No description yet.";
-	flagDesc[741] = "No description yet.";
-	flagDesc[742] = "No description yet.";
-	flagDesc[743] = "No description yet.";
-	flagDesc[744] = "No description yet.";
-	flagDesc[760] = "No description yet.";
-	flagDesc[761] = "No description yet.";
-	flagDesc[762] = "No description yet.";
-	flagDesc[763] = "No description yet.";
-	flagDesc[764] = "No description yet.";
-	flagDesc[765] = "No description yet.";
-	flagDesc[766] = "No description yet.";
-	flagDesc[780] = "No description yet.";
-	flagDesc[781] = "No description yet.";
-	flagDesc[782] = "No description yet.";
-	flagDesc[783] = "No description yet.";
-	flagDesc[800] = "No description yet.";
-	flagDesc[801] = "No description yet.";
-	flagDesc[820] = "No description yet.";
-	flagDesc[821] = "No description yet.";
-	flagDesc[822] = "No description yet.";
-	flagDesc[823] = "No description yet.";
-	flagDesc[824] = "No description yet.";
-	flagDesc[825] = "No description yet.";
-	flagDesc[826] = "No description yet.";
-	flagDesc[827] = "No description yet.";
-	flagDesc[828] = "No description yet.";
-	flagDesc[829] = "No description yet.";
-	flagDesc[830] = "No description yet.";
-	flagDesc[832] = "No description yet.";
-	flagDesc[834] = "No description yet.";
-	flagDesc[835] = "No description yet.";
-	flagDesc[836] = "No description yet.";
-	flagDesc[837] = "No description yet.";
-	flagDesc[838] = "No description yet.";
-	flagDesc[839] = "No description yet.";
-	flagDesc[851] = "No description yet.";
-	flagDesc[880] = "No description yet.";
-	flagDesc[920] = "No description yet.";
-	flagDesc[921] = "No description yet.";
-	flagDesc[940] = "No description yet.";
-	flagDesc[941] = "No description yet.";
-	flagDesc[960] = "No description yet.";
-	flagDesc[961] = "No description yet.";
-	flagDesc[1000] = "No description yet.";
-	flagDesc[1001] = "No description yet.";
-	flagDesc[1002] = "No description yet.";
-	flagDesc[1003] = "No description yet.";
-	flagDesc[1004] = "No description yet.";
-	flagDesc[1020] = "No description yet.";
-	flagDesc[1021] = "No description yet.";
-	flagDesc[1022] = "No description yet.";
-	flagDesc[1023] = "No description yet.";
-	flagDesc[1024] = "No description yet.";
-	flagDesc[1025] = "No description yet.";
-	flagDesc[1026] = "No description yet.";
-	flagDesc[1027] = "No description yet.";
-	flagDesc[1028] = "No description yet.";
-	flagDesc[1029] = "No description yet.";
-	flagDesc[1030] = "No description yet.";
-	flagDesc[1031] = "No description yet.";
-	flagDesc[1032] = "No description yet.";
-	flagDesc[1033] = "No description yet.";
-	flagDesc[1034] = "No description yet.";
-	flagDesc[1035] = "No description yet.";
-	flagDesc[1036] = "No description yet.";
-	flagDesc[1037] = "No description yet.";
-	flagDesc[1038] = "No description yet.";
-	flagDesc[1039] = "No description yet.";
-	flagDesc[1040] = "No description yet.";
-	flagDesc[1041] = "No description yet.";
-	flagDesc[1042] = "No description yet.";
-	flagDesc[1044] = "No description yet.";
-	flagDesc[1045] = "No description yet.";
-	flagDesc[1046] = "No description yet.";
-	flagDesc[1080] = "No description yet.";
-	flagDesc[1080] = "No description yet.";
-	flagDesc[1081] = "No description yet.";
-	flagDesc[1082] = "No description yet.";
-	flagDesc[1100] = "No description yet.";
-	flagDesc[1101] = "No description yet.";
-	flagDesc[1102] = "No description yet.";
-	flagDesc[1103] = "No description yet.";
-	flagDesc[1105] = "No description yet.";
-	flagDesc[1106] = "No description yet.";
-	flagDesc[1107] = "No description yet.";
-	flagDesc[1120] = "No description yet.";
-	flagDesc[1121] = "No description yet.";
-	flagDesc[1140] = "No description yet.";
-	flagDesc[1141] = "No description yet.";
-	flagDesc[1190] = "No description yet.";
-	flagDesc[1191] = "No description yet.";
-	flagDesc[1192] = "No description yet.";
-	flagDesc[1250] = "No description yet.";
-	flagDesc[1270] = "No description yet.";
-	flagDesc[1271] = "No description yet.";
-	flagDesc[1272] = "No description yet.";
-	flagDesc[1273] = "No description yet.";
-	flagDesc[1274] = "No description yet.";
-	flagDesc[1290] = "No description yet.";
-	flagDesc[1320] = "No description yet.";
-	flagDesc[1340] = "No description yet.";
-	flagDesc[1341] = "No description yet.";
-	flagDesc[1370] = "No description yet.";
-	flagDesc[1371] = "No description yet.";
-	flagDesc[1372] = "No description yet.";
-	flagDesc[1373] = "No description yet.";
-	flagDesc[1390] = "No description yet.";
-	flagDesc[1391] = "No description yet.";
-	flagDesc[1392] = "No description yet.";
-	flagDesc[1393] = "No description yet.";
-	flagDesc[1440] = "No description yet.";
-	flagDesc[1441] = "No description yet.";
-	flagDesc[1442] = "No description yet.";
-	flagDesc[1443] = "No description yet.";
-	flagDesc[1444] = "No description yet.";
-	flagDesc[1445] = "No description yet.";
-	flagDesc[1460] = "No description yet.";
-	flagDesc[1531] = "No description yet.";
-	flagDesc[1532] = "No description yet.";
-	flagDesc[1533] = "No description yet.";
-	flagDesc[1534] = "No description yet.";
-	flagDesc[1550] = "No description yet.";
-	flagDesc[1551] = "No description yet.";
-	flagDesc[1561] = "No description yet.";
-	flagDesc[1562] = "No description yet.";
-	flagDesc[1563] = "No description yet.";
-	flagDesc[1564] = "No description yet.";
-	flagDesc[1590] = "No description yet.";
-	flagDesc[1591] = "No description yet.";
-	flagDesc[1592] = "No description yet.";
-	flagDesc[1593] = "No description yet.";
-	flagDesc[1600] = "No description yet.";
-	flagDesc[1620] = "No description yet.";
-	flagDesc[1640] = "No description yet.";
-	flagDesc[1641] = "No description yet.";
-	flagDesc[1642] = "No description yet.";
-	flagDesc[1643] = "No description yet.";
-	flagDesc[1644] = "No description yet.";
-	flagDesc[1700] = "No description yet.";
-	flagDesc[2000] = "No description yet.";
-	flagDesc[3000] = "No description yet.";
-	flagDesc[3001] = "No description yet.";
-	flagDesc[3002] = "No description yet.";
-	flagDesc[3003] = "No description yet.";
-	flagDesc[3004] = "No description yet.";
-	flagDesc[4000] = "Set after defeating the Core. Makes drowning run an alternate event.";
-	return flagDesc;
+    var flagDesc = [];
+    flagDesc[100] = "Egg Corridor Sue & Igor cutscene has been seen.";
+    flagDesc[101] = "1st Egg Corridor Life Capsule obtained. (Near teleporter)";
+    flagDesc[102] = "2nd Egg Corridor Life Capsule obtained. (Cthulhu's Abode)";
+    flagDesc[103] = "Igor beaten.";
+    flagDesc[105] = "Opens Side Room door. Set by Sue in Egg No. 00.";
+    flagDesc[106] = "Shows you the Sue and Kazuma cutscene when leaving Egg Corridor. Set by Sue in Egg No. 00.";
+    flagDesc[120] = "Sue left Egg No. 00. Changes Mahin dialogue.";
+    flagDesc[140] = "ID Card obtained.";
+    flagDesc[153] = "Set once Egg Corridor teleportation is permitted.";
+    flagDesc[154] = "Computer displays \"Connecting to Grasstown\". Set by Sue in Egg No. 00.";
+    flagDesc[155] = "Shows Sue trapped in cage cutscene when leaving Arthur's House. Set by Sue in Egg No. 00.";
+    flagDesc[156] = "Changes Mahin dialogue. Set when Kazuma and Booster return from Grasstown.";
+    flagDesc[157] = "Changes computer text. Set in the cutscene when returning to Arthur's house, post-Grasstown.";
+    flagDesc[158] = "Set once Sand Zone teleportation is permitted. Changes Arthur's House dialogues.";
+    flagDesc[159] = "Takes you to the \"Egg Corridor?\". Changes computer text.";
+    flagDesc[160] = "Makes Booster teleport into Arthur's house and give you the Booster v2.0.";
+    flagDesc[161] = "Booster is in Arthur's house. Hides \"Provided only I live\" text in Prefab Building.";
+    flagDesc[162] = "Professor Booster is still alive for a credits cutscene. Used to tell which booster you had.";
+    flagDesc[200] = "Egg Observation Room ML chest opened.";
+    flagDesc[201] = "Set once the Missile Launcher (ML) is obtained.";
+    flagDesc[202] = "Set once the Super Missile Launcher (SML) is obtained.";
+    flagDesc[210] = "Set once Santa's Key is obtained.";
+    flagDesc[211] = "Advances Santa's dialogue outside his house.";
+    flagDesc[212] = "Set once you give Santa his key. Lets you into his house and stops him appearing outside.";
+    flagDesc[213] = "Remove the grate on Chaco's fireplace. For when you go trough the fireplace.";
+    flagDesc[214] = "Allows the player to get into the Power Room in Grasstown. Set after the Rusty Key has been used.";
+    flagDesc[215] = "Set when Kazuma asks you to open the Shelter's door with the Rusty Key.";
+    flagDesc[216] = "Set when you discover that there's no keyhole in the door.";
+    flagDesc[217] = "Turns off Grasstown teleporter lights. Never set in-game.";
+    flagDesc[218] = "Grasstown ML chest opened.";
+    flagDesc[219] = "Kazuma and Booster have ridden the scooter. Shows King releasing Sue when teleporting back.";
+    flagDesc[221] = "Set when you get the Gum Key.";
+    flagDesc[222] = "Set after using Gum Key to get to Gum.";
+    flagDesc[223] = "Set when Kazuma discovers that the Rusty Key doesn't open the door. Advances door text.";
+    flagDesc[224] = "Set every time you teleport into Grasstown. Advances King's dialogue, and Sue's jail dialogue.";
+    flagDesc[225] = "Stops the scooter from appearing next to Shelter.";
+    flagDesc[226] = "Makes the scooter appear broken next to the teleporter.";
+    flagDesc[227] = "Makes smoke generator appear next to scooter. Unset if you teleport out of Grasstown or look at Santa's locked door.";
+    flagDesc[228] = "Makes Grasstown's near-teleporter Cthulhu skip the 'soldier from the surface' dialogue.";
+    flagDesc[240] = "Set just before you get the Fireball. Would make Santa run a nonexistent event if 241 weren't set at the same time.";
+    flagDesc[241] = "Set once Fireball is obtained. Advances Santa and Chaco dialogue.";
+    flagDesc[242] = "Set once Charcoal is obtained. Advances Santa dialogue.";
+    flagDesc[243] = "Set once you get teleported to Labyrinth I. Unused?";
+    flagDesc[261] = "Set once you interact with Chaco's fireplace.";
+    flagDesc[262] = "Set once you get teleported to Labyrinth I. Unused?";
+    flagDesc[263] = "Set when you interact with Chaco's fireplace. Used to jump to the lipstick event. Unset every time you re-enter her house.";
+    flagDesc[272] = "Set when you start the Omega fight. Lifts the curse on the sunstones.";
+    flagDesc[273] = "Gets rid of the sunstones.";
+    flagDesc[274] = "Set whenever you have one of Jenka's puppies. Makes them appear on your back.";
+    flagDesc[275] = "Set once you get the puppy that's next to the Sand Zone Storehouse.";
+    flagDesc[276] = "Set once you get the puppy in the middle of the Sand Zone";
+    flagDesc[278] = "Set after Jenka gets creamed by Balrog.";
+    flagDesc[279] = "Set once you get the puppy that's in the treasure chest.";
+    flagDesc[280] = "Makes you go to the alternate version of Jenka's house whenever you go to her house.";
+    flagDesc[301] = "Set when you kill the eye door in the First Cave.";
+    flagDesc[302] = "Set when you exit the First Cave for the first time.";
+    flagDesc[303] = "Set after the Spur is obtained.";
+    flagDesc[320] = "Set in the Mimiga Village opening cutscene. Also set when you talk to King. Makes King disappear.";
+    flagDesc[321] = "Makes King appear in a different place.";
+    flagDesc[322] = "Set once you get the Map System.";
+    flagDesc[323] = "Set once you interact with King before getting the Silver Locket. Advances his dialogue.";
+    flagDesc[324] = "Set once you use Arthur's Key for the first time. Skips the \"Used Arthur's Key\" text in future.";
+    flagDesc[325] = "Set once teleportation to Grasstown is permitted.";
+    flagDesc[326] = "Makes Toroko appear in the Shack with her stick.";
+    flagDesc[327] = "Makes Jack appear in Assembly Hall instead of Cemetery entrance. Advances King dialogue.";
+    flagDesc[329] = "Set by Sue in Egg No. 00. Unset when teleport to Arthur's House from Grasstown. Unknown use.";
+    flagDesc[340] = "Set in post-Core drowning dialogue. Unknown use.";
+    flagDesc[341] = "Set in Core defeated dialogue. Changes Mimiga Village/Chako's House/Sand Zone Residence music to Quiet. Changes Arthur's House music to Pulse.";
+    flagDesc[360] = "Set Toroko's Shack dialogue. Makes the door to the Shack broken.";
+    flagDesc[361] = "Set in Balrog's Shack dialogue. Makes the door tell you that you can't escape.";
+    flagDesc[362] = "Set when getting Silver Locket. Prevents Shack door openeding pre-Toroko/Balrog dialogue.";
+    flagDesc[370] = "Set when getting Silver Locket. Stops Silver Locket from appearing.";
+    flagDesc[371] = "Set when getting Silver Locket. Shows Toroko and King cutscene when exiting Resovoir.";
+    flagDesc[372] = "Set when you get Curly's Air Tank. Unknown use.";
+    flagDesc[390] = "If set, Arthur's Key does not appear.";
+    flagDesc[410] = "If set, Beast Fang does not appear.";
+    flagDesc[411] = "Set in post-core drowning dialogue. Unknown use.";
+    flagDesc[430] = "Set in opening cut-scene dialogue. Makes OOB null entity in Start Point disappear.";
+    flagDesc[431] = "Set the first time you save. Makes the game load your save profile when you retry after dying.";
+    flagDesc[440] = "Set in Toroko Shack dialogue. Unset in Kazuma/Sue pre-Grasstown cutscene. Unknown use.";
+    flagDesc[441] = "Set when first entering Arthur's House. Unknown use.";
+    flagDesc[442] = "Set when getting the Bubbler. Stops you from getting the weapon again.";
+    flagDesc[443] = "If set, Arthur is in the Assembly Hall. Unset in Kazuma/Sue pre-Grasstown cutscene.";
+    flagDesc[444] = "Set in post-Grasstown Kazuma/Booster cutscene. Unset in pre-Labyrinth cutscene. Unknown use.";
+    flagDesc[470] = "Set when lowering Egg Corridor sheild. Changes computer terminal text.";
+    flagDesc[480] = "Prevents Power Room door from being opened. Set for Balrog boss fight.";
+    flagDesc[481] = "Set in Grasstown Balrog boss dialogue. Turns on Grasstown fans.";
+    flagDesc[482] = "Set in Grasstown Balrog boss dialogue. Changes Malco interaction text for boss fight.";
+    flagDesc[483] = "Set in Grasstown Balrog post-boss dialogue. Changes Malco interaction to allow pulling out post-boss fight.";
+    flagDesc[484] = "No description yet.";
+    flagDesc[485] = "No description yet.";
+    flagDesc[486] = "No description yet.";
+    flagDesc[500] = "No description yet.";
+    flagDesc[501] = "No description yet.";
+    flagDesc[520] = "No description yet.";
+    flagDesc[521] = "No description yet.";
+    flagDesc[522] = "No description yet.";
+    flagDesc[523] = "No description yet.";
+    flagDesc[524] = "No description yet.";
+    flagDesc[525] = "No description yet.";
+    flagDesc[550] = "No description yet.";
+    flagDesc[561] = "No description yet.";
+    flagDesc[562] = "No description yet.";
+    flagDesc[563] = "No description yet.";
+    flagDesc[564] = "No description yet.";
+    flagDesc[565] = "No description yet.";
+    flagDesc[580] = "No description yet.";
+    flagDesc[590] = "No description yet.";
+    flagDesc[591] = "No description yet.";
+    flagDesc[592] = "No description yet.";
+    flagDesc[593] = "No description yet.";
+    flagDesc[594] = "No description yet.";
+    flagDesc[595] = "No description yet.";
+    flagDesc[596] = "No description yet.";
+    flagDesc[610] = "No description yet.";
+    flagDesc[620] = "No description yet.";
+    flagDesc[621] = "No description yet.";
+    flagDesc[622] = "No description yet.";
+    flagDesc[623] = "No description yet.";
+    flagDesc[624] = "No description yet.";
+    flagDesc[641] = "No description yet.";
+    flagDesc[680] = "No description yet.";
+    flagDesc[681] = "No description yet.";
+    flagDesc[700] = "No description yet.";
+    flagDesc[701] = "No description yet.";
+    flagDesc[702] = "No description yet.";
+    flagDesc[703] = "No description yet.";
+    flagDesc[704] = "No description yet.";
+    flagDesc[705] = "No description yet.";
+    flagDesc[710] = "No description yet.";
+    flagDesc[711] = "No description yet.";
+    flagDesc[720] = "No description yet.";
+    flagDesc[721] = "No description yet.";
+    flagDesc[722] = "No description yet.";
+    flagDesc[740] = "No description yet.";
+    flagDesc[741] = "No description yet.";
+    flagDesc[742] = "No description yet.";
+    flagDesc[743] = "No description yet.";
+    flagDesc[744] = "No description yet.";
+    flagDesc[760] = "No description yet.";
+    flagDesc[761] = "No description yet.";
+    flagDesc[762] = "No description yet.";
+    flagDesc[763] = "No description yet.";
+    flagDesc[764] = "No description yet.";
+    flagDesc[765] = "No description yet.";
+    flagDesc[766] = "No description yet.";
+    flagDesc[780] = "No description yet.";
+    flagDesc[781] = "No description yet.";
+    flagDesc[782] = "No description yet.";
+    flagDesc[783] = "No description yet.";
+    flagDesc[800] = "No description yet.";
+    flagDesc[801] = "No description yet.";
+    flagDesc[820] = "No description yet.";
+    flagDesc[821] = "No description yet.";
+    flagDesc[822] = "No description yet.";
+    flagDesc[823] = "No description yet.";
+    flagDesc[824] = "No description yet.";
+    flagDesc[825] = "No description yet.";
+    flagDesc[826] = "No description yet.";
+    flagDesc[827] = "No description yet.";
+    flagDesc[828] = "No description yet.";
+    flagDesc[829] = "No description yet.";
+    flagDesc[830] = "No description yet.";
+    flagDesc[832] = "No description yet.";
+    flagDesc[834] = "No description yet.";
+    flagDesc[835] = "No description yet.";
+    flagDesc[836] = "No description yet.";
+    flagDesc[837] = "No description yet.";
+    flagDesc[838] = "No description yet.";
+    flagDesc[839] = "No description yet.";
+    flagDesc[851] = "No description yet.";
+    flagDesc[880] = "No description yet.";
+    flagDesc[920] = "No description yet.";
+    flagDesc[921] = "No description yet.";
+    flagDesc[940] = "No description yet.";
+    flagDesc[941] = "No description yet.";
+    flagDesc[960] = "No description yet.";
+    flagDesc[961] = "No description yet.";
+    flagDesc[1000] = "No description yet.";
+    flagDesc[1001] = "No description yet.";
+    flagDesc[1002] = "No description yet.";
+    flagDesc[1003] = "No description yet.";
+    flagDesc[1004] = "No description yet.";
+    flagDesc[1020] = "No description yet.";
+    flagDesc[1021] = "No description yet.";
+    flagDesc[1022] = "No description yet.";
+    flagDesc[1023] = "No description yet.";
+    flagDesc[1024] = "No description yet.";
+    flagDesc[1025] = "No description yet.";
+    flagDesc[1026] = "No description yet.";
+    flagDesc[1027] = "No description yet.";
+    flagDesc[1028] = "No description yet.";
+    flagDesc[1029] = "No description yet.";
+    flagDesc[1030] = "No description yet.";
+    flagDesc[1031] = "No description yet.";
+    flagDesc[1032] = "No description yet.";
+    flagDesc[1033] = "No description yet.";
+    flagDesc[1034] = "No description yet.";
+    flagDesc[1035] = "No description yet.";
+    flagDesc[1036] = "No description yet.";
+    flagDesc[1037] = "No description yet.";
+    flagDesc[1038] = "No description yet.";
+    flagDesc[1039] = "No description yet.";
+    flagDesc[1040] = "No description yet.";
+    flagDesc[1041] = "No description yet.";
+    flagDesc[1042] = "No description yet.";
+    flagDesc[1044] = "No description yet.";
+    flagDesc[1045] = "No description yet.";
+    flagDesc[1046] = "No description yet.";
+    flagDesc[1080] = "No description yet.";
+    flagDesc[1080] = "No description yet.";
+    flagDesc[1081] = "No description yet.";
+    flagDesc[1082] = "No description yet.";
+    flagDesc[1100] = "No description yet.";
+    flagDesc[1101] = "No description yet.";
+    flagDesc[1102] = "No description yet.";
+    flagDesc[1103] = "No description yet.";
+    flagDesc[1105] = "No description yet.";
+    flagDesc[1106] = "No description yet.";
+    flagDesc[1107] = "No description yet.";
+    flagDesc[1120] = "No description yet.";
+    flagDesc[1121] = "No description yet.";
+    flagDesc[1140] = "No description yet.";
+    flagDesc[1141] = "No description yet.";
+    flagDesc[1190] = "No description yet.";
+    flagDesc[1191] = "No description yet.";
+    flagDesc[1192] = "No description yet.";
+    flagDesc[1250] = "No description yet.";
+    flagDesc[1270] = "No description yet.";
+    flagDesc[1271] = "No description yet.";
+    flagDesc[1272] = "No description yet.";
+    flagDesc[1273] = "No description yet.";
+    flagDesc[1274] = "No description yet.";
+    flagDesc[1290] = "No description yet.";
+    flagDesc[1320] = "No description yet.";
+    flagDesc[1340] = "No description yet.";
+    flagDesc[1341] = "No description yet.";
+    flagDesc[1370] = "No description yet.";
+    flagDesc[1371] = "No description yet.";
+    flagDesc[1372] = "No description yet.";
+    flagDesc[1373] = "No description yet.";
+    flagDesc[1390] = "No description yet.";
+    flagDesc[1391] = "No description yet.";
+    flagDesc[1392] = "No description yet.";
+    flagDesc[1393] = "No description yet.";
+    flagDesc[1440] = "No description yet.";
+    flagDesc[1441] = "No description yet.";
+    flagDesc[1442] = "No description yet.";
+    flagDesc[1443] = "No description yet.";
+    flagDesc[1444] = "No description yet.";
+    flagDesc[1445] = "No description yet.";
+    flagDesc[1460] = "No description yet.";
+    flagDesc[1531] = "No description yet.";
+    flagDesc[1532] = "No description yet.";
+    flagDesc[1533] = "No description yet.";
+    flagDesc[1534] = "No description yet.";
+    flagDesc[1550] = "No description yet.";
+    flagDesc[1551] = "No description yet.";
+    flagDesc[1561] = "No description yet.";
+    flagDesc[1562] = "No description yet.";
+    flagDesc[1563] = "No description yet.";
+    flagDesc[1564] = "No description yet.";
+    flagDesc[1590] = "No description yet.";
+    flagDesc[1591] = "No description yet.";
+    flagDesc[1592] = "No description yet.";
+    flagDesc[1593] = "No description yet.";
+    flagDesc[1600] = "No description yet.";
+    flagDesc[1620] = "No description yet.";
+    flagDesc[1640] = "No description yet.";
+    flagDesc[1641] = "No description yet.";
+    flagDesc[1642] = "No description yet.";
+    flagDesc[1643] = "No description yet.";
+    flagDesc[1644] = "No description yet.";
+    flagDesc[1700] = "No description yet.";
+    flagDesc[2000] = "No description yet.";
+    flagDesc[3000] = "No description yet.";
+    flagDesc[3001] = "No description yet.";
+    flagDesc[3002] = "No description yet.";
+    flagDesc[3003] = "No description yet.";
+    flagDesc[3004] = "No description yet.";
+    flagDesc[4000] = "Set after defeating the Core. Makes drowning run an alternate event.";
+    return flagDesc;
 }
 // Player extras
 function getPlayerFrame(x, y, leftright, costume) {
-	var yoff = 0;
-	if (leftright)
-		yoff = 32;
-	return new java.awt.Rectangle(0, costume * 64 + yoff, 32, 32)
+    var yoff = 0;
+    if (leftright)
+	yoff = 32;
+    return new java.awt.Rectangle(0, costume * 64 + yoff, 32, 32)
 }
 function getPlayerOffset(x, y, leftright, costume) {
-	return new java.awt.Point(0, 0);
+    return new java.awt.Point(0, 0);
 }
 // Entity extras
 function getEntityFrame(entity) {
-	return new java.awt.Rectangle(0, 0, 32, 32);
+    return new java.awt.Rectangle(0, 0, 32, 32);
 }
 function getEntityOffset(entity) {
-	return new java.awt.Point(0, 0);
+    return new java.awt.Point(0, 0);
 }
