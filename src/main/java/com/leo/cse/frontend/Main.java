@@ -23,9 +23,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.function.Supplier;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -215,14 +219,16 @@ public class Main extends JFrame implements ProfileChangeListener {
 			setMaximumSize(win);
 			setMinimumSize(win);
 			setUndecorated(true);
+			final Color trans = new Color(0, 0, 0, 0);
+			setBackground(trans);
 			add(new JPanel() {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				protected void paintComponent(Graphics g) {
 					Graphics2D g2d = (Graphics2D) g;
-					g2d.setColor(new Color(0, 0, 0, 0));
-					g2d.clearRect(0, 0, win.width, win.height);
+					g2d.setBackground(trans);
+					g2d.clearRect(0, 0, getWidth(), getHeight());
 					FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
 					g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 					g2d.setColor(COLOR_BG);
@@ -236,6 +242,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 			pack();
 			setLocationRelativeTo(null);
 			setVisible(true);
+			requestFocus();
 		}
 	}
 
@@ -286,7 +293,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		}
 		Loading loadFrame = new Loading();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
-		final String skipuc = "skipuc";
+		final String skipuc = "skipuc0";
 		if (new File(System.getProperty("user.dir") + "/" + skipuc).exists()) {
 			System.out.println("Update check: skip file detected, skipping");
 		} else {
@@ -303,9 +310,28 @@ public class Main extends JFrame implements ProfileChangeListener {
 					Version check = new Version(reader.readLine());
 					if (VERSION.compareTo(check) < 0) {
 						System.out.println("Update check successful: have update");
-						int result = JOptionPane.showConfirmDialog(null, "A new update is available: " + check
-								+ "\nClick \"Yes\" to go to the download site, click \"No\" to continue to the save editor.",
-								"New update!", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+						JPanel panel = new JPanel();
+						panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+						panel.add(new JLabel("A new update is available: " + check));
+						panel.add(new JLabel("Changelog:"));
+						final String defaultCl = "None.";
+						String cl = defaultCl;
+						while (reader.ready()) {
+							if (defaultCl.equals(cl))
+								cl = reader.readLine();
+							else
+								cl += "\n" + reader.readLine();
+						}
+						JTextArea chglog = new JTextArea(cl);
+						chglog.setEditable(false);
+						chglog.setFont(Resources.font);
+						JScrollPane scrollChglog = new JScrollPane(chglog);
+						scrollChglog.setAlignmentX(0.1f);
+						panel.add(scrollChglog);
+						panel.add(new JLabel(
+								"Click \"Yes\" to go to the download site, click \"No\" to continue to the save editor."));
+						int result = JOptionPane.showConfirmDialog(null, panel, "New update!",
+								JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 						if (result == JOptionPane.YES_OPTION) {
 							URI dlSite = new URI(DOWNLOAD_SITE);
 							if (Desktop.isDesktopSupported())
@@ -356,6 +382,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 			window.initPanel();
 			loadFrame.dispose();
 			window.setVisible(true);
+			window.requestFocus();
 			SwingUtilities.invokeLater(() -> {
 				File p = new File(System.getProperty("user.dir") + "/Profile.dat");
 				if (p.exists())
