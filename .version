@@ -1,4 +1,7 @@
-1.0.7.4
-?!error.!!!!
-changelog test, can you believe it?
-WOO
+1.0.8
+Update 1.0.8: The Changelog Update
+- New icon for warps tab
+- Better shadow
+- Moved stuff away from bottom border
+- Changed default encoding
+- Added support for custom player frame rectangle and offset
