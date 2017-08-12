@@ -293,7 +293,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		}
 		Loading loadFrame = new Loading();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
-		final String skipuc = "skipuc0";
+		final String skipuc = "skipuc";
 		if (new File(System.getProperty("user.dir") + "/" + skipuc).exists()) {
 			System.out.println("Update check: skip file detected, skipping");
 		} else {
