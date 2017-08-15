@@ -24,7 +24,8 @@ import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
-// credit to Noxid for making Booster's Lab open source so I could steal code from it
+// credit to Noxid for making Booster's Lab open source so I could steal code
+// from it
 /**
  * Stores information for a mod executable.
  * 
@@ -330,6 +331,20 @@ public class ExeData {
 	}
 
 	/**
+	 * Enables CS+ compatibility, allowing stage.tbl files to be loaded as mods.
+	 * Disables fancy EXE loading, however.
+	 */
+	private static boolean plusMode = false;
+
+	public static boolean isPlusMode() {
+		return plusMode;
+	}
+
+	public static void setPlusMode(boolean plusMode) {
+		ExeData.plusMode = plusMode;
+	}
+
+	/**
 	 * If <code>true</code>, NPC files (spritesheets and PXEs) will be loaded,
 	 * otherwise they will be ignored.
 	 */
@@ -485,6 +500,13 @@ public class ExeData {
 	 */
 	private static void load0(File base) throws IOException {
 		ExeData.base = base;
+		if (base.getName().endsWith(".tbl")) {
+			// assume stage.tbl
+			plusMode = true;
+			loadPlus();
+			return;
+		} else
+			plusMode = false;
 		try {
 			loadExeStrings();
 			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
@@ -502,6 +524,26 @@ public class ExeData {
 			throw e;
 		}
 		loaded = true;
+	}
+
+	/**
+	 * Loads mapdata from a stage.tbl file. Maybe.
+	 * 
+	 * @throws IOException
+	 *             probably all the time because this code is designed for
+	 *             executables.
+	 */
+	private static void loadPlus() throws IOException {
+		dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
+		entityList = new Vector<EntityData>();
+		mapdata = new Vector<Mapdata>();
+		mapInfo = new Vector<MapInfo>();
+		imageMap = new HashMap<File, BufferedImage>();
+		pxaMap = new HashMap<File, byte[]>();
+		loadNpcTbl();
+		fillMapdata();
+		loadMapInfo();
+		loadGraphics();
 	}
 
 	/**
