@@ -7,10 +7,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
-//import javax.swing.SwingUtilities;
 
 import com.leo.cse.backend.exe.ExeData;
-//import com.leo.cse.frontend.Config;
+import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
@@ -21,7 +20,7 @@ public class SettingsDialog extends BaseDialog {
 	private static final byte[] TEST_STRING = new byte[] { (byte) 'T', (byte) 'e', (byte) 's', (byte) 't' };
 
 	public SettingsDialog() {
-		super("Settings", 300, 84);
+		super("Settings", 300, 104);
 	}
 
 	@Override
@@ -45,6 +44,8 @@ public class SettingsDialog extends BaseDialog {
 		FrontUtils.drawString(g, "Encoding:", x + 4, y + 62);
 		g.drawRect(x + 54, y + 63, 242, 17);
 		FrontUtils.drawString(g, Main.encoding, x + 56, y + 62);
+		g.drawRect(x + 4, y + 83, 292, 17);
+		FrontUtils.drawStringCentered(g, "Wipe Settings", x + 150, y + 83);
 	}
 
 	@Override
@@ -96,6 +97,14 @@ public class SettingsDialog extends BaseDialog {
 				ExeData.reload();
 			} catch (IOException ignore) {
 			}
+		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 83, 292, 17)) {
+			int sel = JOptionPane.showConfirmDialog(Main.window, "Are you sure you want to wipe all settings?\nThis will exit the editor WITHOUT saving changes!",
+					"Wipe Settings?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (sel != JOptionPane.YES_OPTION)
+				return false;
+			Config.wipe();
+			Config.init();
+			System.exit(0);
 		}
 		return false;
 	}

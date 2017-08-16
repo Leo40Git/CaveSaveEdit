@@ -1,7 +1,5 @@
-1.0.8
-Update 1.0.8: The Changelog Update
-- New icon for warps tab
-- Better shadow
-- Moved stuff away from bottom border
-- Changed default encoding
-- Added support for custom player frame rectangle and offset
+1.0.9
+Update 1.0.9: Flag UI Rewrite
+- Better scrollbar, with mouse dragging functionality!
+- Added option to wipe settings
+- Added option to check for updates (in About)

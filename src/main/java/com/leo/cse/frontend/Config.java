@@ -1,6 +1,7 @@
 package com.leo.cse.frontend;
 
 import java.awt.Color;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class Config {
@@ -21,26 +22,37 @@ public class Config {
 	public static final String KEY_LOAD_NPCS = "load_npcs";
 	public static final String KEY_ENCODING = "encoding";
 
-	private static final Preferences CONFIG = Preferences.userNodeForPackage(Main.class);
+	private static Preferences config;
 
 	public static void init() {
-		CONFIG.putLong(KEY_CONFIG_BUILD, BUILD);
+		if (config == null)
+			config = Preferences.userNodeForPackage(Main.class);
+		config.putLong(KEY_CONFIG_BUILD, BUILD);
+	}
+	
+	public static void wipe() {
+		try {
+			config.removeNode();
+			config = null;
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static String get(String key, String def) {
-		return CONFIG.get(key, def);
+		return config.get(key, def);
 	}
 
 	public static void set(String key, String value) {
-		CONFIG.put(key, value);
+		config.put(key, value);
 	}
 
 	public static boolean getBoolean(String key, boolean def) {
-		return CONFIG.getBoolean(key, def);
+		return config.getBoolean(key, def);
 	}
 
 	public static void setBoolean(String key, boolean value) {
-		CONFIG.putBoolean(key, value);
+		config.putBoolean(key, value);
 	}
 
 	public static Color getColor(String key, Color def) {

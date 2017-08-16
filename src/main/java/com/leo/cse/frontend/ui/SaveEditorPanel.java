@@ -474,7 +474,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!dBoxes.isEmpty())
 			return;
 		final Insets i = Main.window.getInsets();
-		final int px = e.getX() - i.left, py = e.getY() - i.top;
+		int px = e.getX(), py = e.getY();
+		px -= i.left + OFFSET_X;
+		py -= i.top + OFFSET_Y;
 		final int mod = e.getModifiersEx();
 		final boolean shift = (mod & MouseWheelEvent.SHIFT_DOWN_MASK) != 0,
 				ctrl = (mod & MouseWheelEvent.CTRL_DOWN_MASK) != 0;
@@ -502,14 +504,15 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
 		int px = e.getX(), py = e.getY();
-		if (py < OFFSET_Y || draggingWindow) {
-			draggingWindow = true;
-			int wx = Main.window.getX(), wy = Main.window.getY();
-			int moveX = px - dragInitialX;
-			int moveY = py - dragInitialY;
-			Main.window.setLocation(wx + moveX, wy + moveY);
-			return;
-		}
+		if (lastDragged.isEmpty())
+			if (py < OFFSET_Y || draggingWindow) {
+				draggingWindow = true;
+				int wx = Main.window.getX(), wy = Main.window.getY();
+				int moveX = px - dragInitialX;
+				int moveY = py - dragInitialY;
+				Main.window.setLocation(wx + moveX, wy + moveY);
+				return;
+			}
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
@@ -517,16 +520,17 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		for (Component comp : tabMap.get(currentTab).getComponents()) {
 			if (!(comp instanceof IDraggable))
 				continue;
+			IDraggable drag = (IDraggable) comp;
 			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
-			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
-				((IDraggable) comp).onDrag(px, py);
-				lastDragged.put((IDraggable) comp, true);
+			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh) || lastDragged.get(drag) != null) {
+				drag.onDrag(px, py);
+				lastDragged.put(drag, true);
 				newFocus = comp;
 				repaint();
 			} else {
-				if (lastDragged.get((IDraggable) comp) != null) {
-					((IDraggable) comp).onDragEnd(px, py);
-					lastDragged.remove((IDraggable) comp);
+				if (lastDragged.get(drag) != null) {
+					drag.onDragEnd(px, py);
+					lastDragged.remove(drag);
 					repaint();
 				}
 			}

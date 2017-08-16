@@ -45,7 +45,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
-	public static final Version VERSION = new Version("1.0.7.3");
+	public static final Version VERSION = new Version("1.0.9");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
@@ -203,7 +203,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		}
 	}
 
-	private static class Loading extends JFrame {
+	public static class LoadFrame extends JFrame {
 		private static final long serialVersionUID = 1L;
 
 		private String loadString = "Checking for updates...";
@@ -212,7 +212,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 			this.loadString = loadString;
 		}
 
-		public Loading() {
+		public LoadFrame() {
 			final Dimension win = new Dimension(232, 112);
 			setIconImage(Resources.icon);
 			setPreferredSize(win);
@@ -251,6 +251,83 @@ public class Main extends JFrame implements ProfileChangeListener {
 		JOptionPane.showMessageDialog(null, "Could not load resources!\nPlease report this error to the programmer.",
 				"Could not load resources", JOptionPane.ERROR_MESSAGE);
 		System.exit(1);
+	}
+	
+	public static LoadFrame updateCheck(boolean disposeOfLoadFrame, boolean showUpToDate) {
+		LoadFrame loadFrame = new LoadFrame();
+		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
+		System.out.println("Update check: starting");
+		try {
+			FrontUtils.downloadFile(UPDATE_CHECK_SITE, verFile);
+		} catch (IOException e1) {
+			System.err.println("Update check failed: attempt to download caused exception");
+			e1.printStackTrace();
+		}
+		if (verFile.exists()) {
+			System.out.println("Update check: reading version");
+			try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
+				Version check = new Version(reader.readLine());
+				if (VERSION.compareTo(check) < 0) {
+					System.out.println("Update check successful: have update");
+					JPanel panel = new JPanel();
+					panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+					panel.add(new JLabel("A new update is available: " + check));
+					panel.add(new JLabel("Changelog:"));
+					final String defaultCl = "None.";
+					String cl = defaultCl;
+					while (reader.ready()) {
+						if (defaultCl.equals(cl))
+							cl = reader.readLine();
+						else
+							cl += "\n" + reader.readLine();
+					}
+					JTextArea chglog = new JTextArea(cl);
+					chglog.setEditable(false);
+					chglog.setFont(Resources.font);
+					JScrollPane scrollChglog = new JScrollPane(chglog);
+					scrollChglog.setAlignmentX(0.1f);
+					panel.add(scrollChglog);
+					panel.add(new JLabel(
+							"Click \"Yes\" to go to the download site, click \"No\" to continue to the save editor."));
+					int result = JOptionPane.showConfirmDialog(null, panel, "New update!",
+							JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+					if (result == JOptionPane.YES_OPTION) {
+						URI dlSite = new URI(DOWNLOAD_SITE);
+						if (Desktop.isDesktopSupported())
+							Desktop.getDesktop().browse(dlSite);
+						else
+							JOptionPane.showMessageDialog(null,
+									"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
+											+ dlSite + "\nto get the newest update!",
+									"Operation not supported...", JOptionPane.ERROR_MESSAGE);
+						System.exit(0);
+					}
+				} else {
+					System.out.println("Update check successful: up to date");
+					if (showUpToDate) {
+						JOptionPane.showMessageDialog(null,
+								"You are using the most up to date version of CaveSaveEdit! Have fun!",
+								"Up to date!", JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+			} catch (IOException e) {
+				System.err.println("Update check failed: attempt to read downloaded file caused exception");
+				e.printStackTrace();
+			} catch (URISyntaxException e1) {
+				System.out.println("Browse to download site failed: bad URI syntax");
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
+						"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				verFile.delete();
+			}
+		} else
+			System.err.println("Update check failed: downloaded file doesn't exist");
+		if (disposeOfLoadFrame) {
+			loadFrame.dispose();
+			return null;
+		}
+		return loadFrame;
 	}
 
 	public static void main(String[] args) {
@@ -291,74 +368,13 @@ public class Main extends JFrame implements ProfileChangeListener {
 		} catch (Exception e) {
 			resourceError(e);
 		}
-		Loading loadFrame = new Loading();
-		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
+		LoadFrame loadFrame;
 		final String skipuc = "skipuc";
 		if (new File(System.getProperty("user.dir") + "/" + skipuc).exists()) {
 			System.out.println("Update check: skip file detected, skipping");
+			loadFrame = new LoadFrame();
 		} else {
-			System.out.println("Update check: starting");
-			try {
-				FrontUtils.downloadFile(UPDATE_CHECK_SITE, verFile);
-			} catch (IOException e1) {
-				System.err.println("Update check failed: attempt to download caused exception");
-				e1.printStackTrace();
-			}
-			if (verFile.exists()) {
-				System.out.println("Update check: reading version");
-				try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
-					Version check = new Version(reader.readLine());
-					if (VERSION.compareTo(check) < 0) {
-						System.out.println("Update check successful: have update");
-						JPanel panel = new JPanel();
-						panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-						panel.add(new JLabel("A new update is available: " + check));
-						panel.add(new JLabel("Changelog:"));
-						final String defaultCl = "None.";
-						String cl = defaultCl;
-						while (reader.ready()) {
-							if (defaultCl.equals(cl))
-								cl = reader.readLine();
-							else
-								cl += "\n" + reader.readLine();
-						}
-						JTextArea chglog = new JTextArea(cl);
-						chglog.setEditable(false);
-						chglog.setFont(Resources.font);
-						JScrollPane scrollChglog = new JScrollPane(chglog);
-						scrollChglog.setAlignmentX(0.1f);
-						panel.add(scrollChglog);
-						panel.add(new JLabel(
-								"Click \"Yes\" to go to the download site, click \"No\" to continue to the save editor."));
-						int result = JOptionPane.showConfirmDialog(null, panel, "New update!",
-								JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
-						if (result == JOptionPane.YES_OPTION) {
-							URI dlSite = new URI(DOWNLOAD_SITE);
-							if (Desktop.isDesktopSupported())
-								Desktop.getDesktop().browse(dlSite);
-							else
-								JOptionPane.showMessageDialog(null,
-										"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
-												+ dlSite + "\nto get the newest update!",
-										"Operation not supported...", JOptionPane.ERROR_MESSAGE);
-							System.exit(0);
-						}
-					} else {
-						System.out.println("Update check successful: up to date");
-					}
-				} catch (IOException e) {
-					System.err.println("Update check failed: attempt to read downloaded file caused exception");
-					e.printStackTrace();
-				} catch (URISyntaxException e1) {
-					System.out.println("Browse to download site failed: bad URI syntax");
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
-							"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
-				} finally {
-					verFile.delete();
-				}
-			} else
-				System.err.println("Update check failed: downloaded file doesn't exist");
+			loadFrame = updateCheck(false, false);
 		}
 		SwingUtilities.invokeLater(() -> {
 			loadFrame.setLoadString("Loading...");
