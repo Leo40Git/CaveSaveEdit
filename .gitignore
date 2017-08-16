@@ -13,7 +13,6 @@ hs_err_pid*
 
 .gradle
 /bin/
-/.settings/
 /CaveStory/
 /doukutsu/
 /test/
