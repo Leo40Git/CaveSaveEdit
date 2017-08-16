@@ -10,3 +10,7 @@ dependencies {
 	compile group: 'org.mozilla', name: 'rhino', version: '1.7R5'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.1'
+}
+
