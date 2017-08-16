@@ -1,8 +1,8 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
-import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
@@ -38,21 +38,34 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 
 	@Override
 	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		if (y < this.y + width) {
-
-		} else if (y > this.y + height) {
-
-		} else
-			scrollbarY = y - 26;
+		int amount = 1;
+		if (shiftDown)
+			amount *= 10;
+		if (ctrlDown)
+			amount *= 100;
+		if (y < this.y + width)
+			scrollbarY -= amount;
+		else if (y > this.y + height - width)
+			scrollbarY += amount;
 		limitScroll();
 		return false;
 	}
 
 	@Override
+	public void onKey(int code, boolean shiftDown, boolean ctrlDown) {
+		if (code == KeyEvent.VK_HOME)
+			scrollbarY = 0;
+		else if (code == KeyEvent.VK_END)
+			scrollbarY = Integer.MAX_VALUE;
+		limitScroll();
+	}
+
+	@Override
 	public void onDrag(int x, int y) {
-		if (y < this.y + width || y > this.y + height)
+		y -= 25;
+		if (y < this.y + width || y > this.y + height - width)
 			return;
-		scrollbarY = y - 26;
+		scrollbarY = y;
 		limitScroll();
 	}
 
@@ -68,8 +81,8 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 		g.drawLine(x, y + width, x + width, y + width);
 		g.drawLine(x, y + height - width, x + width, y + height - width);
 		g.drawRect(x + 2, scrollbarY, 16, 16);
-		g.setFont(Resources.font);
-		FrontUtils.drawString(g, "scrollbarY=" + scrollbarY + "\nvalue=" + getValue(), x, y + height + 20);
+		g.drawImage(Resources.arrowUp, x + 6, y + 6, null);
+		g.drawImage(Resources.arrowDown, x + 6, y + height - width + 6, null);
 	}
 
 }

@@ -36,6 +36,7 @@ import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.IDraggable;
 import com.leo.cse.frontend.ui.components.IScrollable;
+import com.leo.cse.frontend.ui.components.ScrollBar;
 import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
@@ -480,13 +481,17 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final int mod = e.getModifiersEx();
 		final boolean shift = (mod & MouseWheelEvent.SHIFT_DOWN_MASK) != 0,
 				ctrl = (mod & MouseWheelEvent.CTRL_DOWN_MASK) != 0;
-		for (Component comp : tabMap.get(currentTab).getComponents()) {
-			if (!(comp instanceof IScrollable))
-				continue;
-			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
-			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
-				((IScrollable) comp).onScroll(e.getWheelRotation(), shift, ctrl);
-		}
+		ScrollBar scroll = tabMap.get(currentTab).getGlobalScrollbar();
+		if (scroll != null)
+			scroll.onScroll(e.getWheelRotation(), shift, ctrl);
+		else
+			for (Component comp : tabMap.get(currentTab).getComponents()) {
+				if (!(comp instanceof IScrollable))
+					continue;
+				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
+				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
+					((IScrollable) comp).onScroll(e.getWheelRotation(), shift, ctrl);
+			}
 		repaint();
 	}
 
@@ -549,7 +554,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (code == KeyEvent.VK_ESCAPE) {
 			Main.close();
 		}
-		if (lastFocus == null) {
+		ScrollBar scroll = tabMap.get(currentTab).getGlobalScrollbar();
+		if (scroll != null && (code == KeyEvent.VK_HOME || code == KeyEvent.VK_END)) {
+			scroll.onKey(code, shift, ctrl);
+			repaint();
+		} else if (lastFocus == null) {
 			if (code == KeyEvent.VK_O) {
 				if (ctrl) {
 					if (shift)

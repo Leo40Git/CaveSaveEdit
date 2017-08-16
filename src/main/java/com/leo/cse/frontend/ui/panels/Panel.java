@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.leo.cse.frontend.ui.components.Component;
+import com.leo.cse.frontend.ui.components.ScrollBar;
 
 public abstract class Panel {
 	
@@ -15,6 +16,10 @@ public abstract class Panel {
 	
 	public List<Component> getComponents() {
 		return compList;
+	}
+	
+	public ScrollBar getGlobalScrollbar() {
+		return null;
 	}
 
 }
