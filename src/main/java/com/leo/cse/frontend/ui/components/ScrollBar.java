@@ -8,10 +8,12 @@ import com.leo.cse.frontend.Resources;
 
 public class ScrollBar extends Component implements IDraggable, IScrollable {
 
+	public static final int WIDTH = 20;
+
 	protected int scrollbarY;
 
 	public ScrollBar(int x, int y, int height) {
-		super(x, y, 20, height);
+		super(x, y, WIDTH, height);
 		limitScroll();
 	}
 
@@ -19,10 +21,10 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 		scrollbarY = Math.max(y + 2 + width, Math.min(y + height - 18 - width, scrollbarY));
 	}
 
-	public int getValue() {
-		int sby = scrollbarY;
+	public float getValue() {
+		float sby = scrollbarY;
 		sby -= y + 2 + width;
-		sby = (int) (((float) sby / (height - width * 3)) * 100);
+		sby = (float) sby / (height - width * 3);
 		return sby;
 	}
 
@@ -37,7 +39,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		int amount = 1;
 		if (shiftDown)
 			amount *= 10;
@@ -48,7 +50,6 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 		else if (y > this.y + height - width)
 			scrollbarY += amount;
 		limitScroll();
-		return false;
 	}
 
 	@Override

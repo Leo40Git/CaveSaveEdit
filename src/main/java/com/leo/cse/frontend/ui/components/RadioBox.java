@@ -1,11 +1,11 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.util.function.Function;
 
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
-import com.leo.cse.frontend.ui.components.RadioBoxes.RadioBoxEnabledCheck;
 
 class RadioBox extends Component {
 
@@ -13,9 +13,9 @@ class RadioBox extends Component {
 	private RadioBoxes parent;
 	private int id;
 	private boolean small;
-	private RadioBoxEnabledCheck check;
+	private Function<Integer, Boolean> check;
 
-	public RadioBox(String label, int x, int y, RadioBoxes parent, int id, boolean small, RadioBoxEnabledCheck check) {
+	public RadioBox(String label, int x, int y, RadioBoxes parent, int id, boolean small, Function<Integer, Boolean> check) {
 		super(x, y, (small ? 8 : 16), (small ? 8 : 16));
 		this.label = label;
 		this.parent = parent;
@@ -28,7 +28,7 @@ class RadioBox extends Component {
 	public void render(Graphics g) {
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
-		boolean enabled = check.check(id);
+		boolean enabled = check.apply(id);
 		if (small) {
 			if (enabled)
 				g.drawImage((parent.isSelected(id) ? Resources.radioOnS : Resources.radioOffS), x, y, null);
@@ -45,11 +45,10 @@ class RadioBox extends Component {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		if (!check.check(id))
-			return false;
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (!check.apply(id))
+			return;
 		parent.setSelected(id);
-		return false;
 	}
 
 }

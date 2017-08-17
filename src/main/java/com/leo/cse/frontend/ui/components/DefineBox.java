@@ -56,9 +56,9 @@ public class DefineBox extends IntegerBox {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!enabled.get())
-			return false;
+			return;
 		Map<Integer, String> map = MCI.getAll(type);
 		if (sSup.get())
 			map = FrontUtils.sortMapByValue(map);
@@ -67,7 +67,7 @@ public class DefineBox extends IntegerBox {
 		String nVal = FrontUtils.showSelectionDialog(Main.window, "Select " + description, map.values(),
 				vSup.get() + " - " + MCI.get(type, vSup.get()));
 		if (nVal == null)
-			return true;
+			return;
 		nVal = nVal.substring(nVal.indexOf('-') + 2);
 		int i = MCI.getId(type, nVal);
 		if (i == -1) {
@@ -75,7 +75,6 @@ public class DefineBox extends IntegerBox {
 					JOptionPane.ERROR_MESSAGE);
 		}
 		update.apply(i);
-		return true;
 	}
 
 }

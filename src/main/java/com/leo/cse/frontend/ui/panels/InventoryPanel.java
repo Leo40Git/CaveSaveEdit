@@ -35,7 +35,7 @@ public class InventoryPanel extends Panel {
 						Profile.setCurWeapon(t);
 						return t;
 					}
-				}, true, (int index) -> {
+				}, true, (Integer index) -> {
 					return true;
 				}));
 		for (int i = 0; i < 7; i++) {

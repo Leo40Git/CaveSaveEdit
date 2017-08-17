@@ -293,17 +293,17 @@ public class MapView extends Component implements IDraggable {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!ExeData.isLoaded())
-			return false;
+			return;
 		if (SaveEditorPanel.panel.getLastFocus() != this) {
 			getCamCoords();
-			return false;
+			return;
 		}
 		if (mapInfo == null)
-			return false;
+			return;
 		if (mapInfo.hasMissingAssets())
-			return false;
+			return;
 		getCamCoords();
 		if (ignoreClick > 0)
 			ignoreClick--;
@@ -311,7 +311,6 @@ public class MapView extends Component implements IDraggable {
 			Profile.setX((short) (x - this.x + camX));
 			Profile.setY((short) (y - this.y + camY));
 		}
-		return false;
 	}
 
 	@Override

@@ -56,12 +56,8 @@ public class WarpBox extends DefineBox {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		/*
-		if (id != 0 && Profile.getWarp(id - 1).getId() == 0)
-			return false;
-		*/
-		return super.onClick(x, y, shiftDown, ctrlDown);
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		super.onClick(x, y, shiftDown, ctrlDown);
 	}
 
 }

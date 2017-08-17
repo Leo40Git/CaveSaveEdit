@@ -40,20 +40,19 @@ public class IntegerBox extends InputBox {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!enabled.get())
-			return false;
+			return;
 		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":",
 				Integer.toUnsignedString(vSup.get()));
 		if (nVal == null)
-			return true;
+			return;
 		try {
 			update.apply(Integer.parseUnsignedInt(nVal));
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
 					"Error while parsing input!", JOptionPane.ERROR_MESSAGE);
 		}
-		return true;
 	}
 
 }

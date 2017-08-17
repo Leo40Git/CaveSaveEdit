@@ -45,19 +45,18 @@ public class MapBox extends DefineBox {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		String nVal = FrontUtils.showSelectionDialog(Main.window, "Select " + description, map.values(),
 				map.get(vSup.get()));
 		if (nVal == null)
-			return true;
+			return;
 		Integer i = FrontUtils.getKey(map, nVal);
 		if (i == null) {
 			JOptionPane.showMessageDialog(Main.window, "Value \"" + nVal + "\" is unknown!", "Unknown value",
 					JOptionPane.ERROR_MESSAGE);
-			return false;
+			return;
 		}
 		update.apply(i);
-		return true;
 	}
 
 	private void loadMap() {

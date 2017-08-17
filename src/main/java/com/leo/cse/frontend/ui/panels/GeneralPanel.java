@@ -126,7 +126,7 @@ public class GeneralPanel extends Panel {
 				Profile.setDirection((t == 1 ? 2 : 0));
 				return t;
 			}
-		}, false, (int index) -> {
+		}, false, (Integer index) -> {
 			return true;
 		}));
 		compList.add(new Label("Health:", 4, 104));
@@ -192,14 +192,10 @@ public class GeneralPanel extends Panel {
 				return ExeData.isLoaded();
 			}
 		}));
-		compList.add(new Button("Snap to Grid", 756, 426, 100, 20, new Supplier<Boolean>() {
-			@Override
-			public Boolean get() {
-				Profile.setX((short) (Math.round(Profile.getX() / 32.0) * 32));
-				Profile.setY((short) (Math.round(Profile.getY() / 32.0) * 32));
-				mp.getCamCoords();
-				return false;
-			}
+		compList.add(new Button("Snap to Grid", 756, 426, 100, 20, () -> {
+			Profile.setX((short) (Math.round(Profile.getX() / 32.0) * 32));
+			Profile.setY((short) (Math.round(Profile.getY() / 32.0) * 32));
+			mp.getCamCoords();
 		}).setEnabled(new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {

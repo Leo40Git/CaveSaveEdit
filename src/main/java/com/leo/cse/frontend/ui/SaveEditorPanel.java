@@ -509,8 +509,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
 		int px = e.getX(), py = e.getY();
-		if (lastDragged.isEmpty())
-			if (py < OFFSET_Y || draggingWindow) {
+		if (py < OFFSET_Y) {
+			if (lastDragged.isEmpty() || draggingWindow) {
 				draggingWindow = true;
 				int wx = Main.window.getX(), wy = Main.window.getY();
 				int moveX = px - dragInitialX;
@@ -518,6 +518,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				Main.window.setLocation(wx + moveX, wy + moveY);
 				return;
 			}
+		}
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;

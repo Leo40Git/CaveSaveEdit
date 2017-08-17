@@ -9,11 +9,6 @@ import java.util.function.Supplier;
 import com.leo.cse.frontend.FrontUtils;
 
 public class RadioBoxes extends Component {
-	
-	@FunctionalInterface
-	public interface RadioBoxEnabledCheck {
-		public boolean check(int index);
-	}
 
 	private int number;
 	private String[] labels;
@@ -22,7 +17,7 @@ public class RadioBoxes extends Component {
 	private List<RadioBox> radioBoxes;
 
 	public RadioBoxes(int x, int y, int width, int number, String[] labels, Supplier<Integer> sSup,
-			Function<Integer, Integer> update, boolean small, RadioBoxEnabledCheck check) {
+			Function<Integer, Integer> update, boolean small, Function<Integer, Boolean> check) {
 		super(x, y, width, (small ? 8 : 16));
 		this.number = number;
 		this.labels = labels;
@@ -50,14 +45,13 @@ public class RadioBoxes extends Component {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		for (RadioBox comp : radioBoxes) {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			if (FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh)) {
 				comp.onClick(x, y, shiftDown, ctrlDown);
 			}
 		}
-		return false;
 	}
 
 }

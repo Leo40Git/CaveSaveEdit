@@ -45,11 +45,10 @@ public class BooleanBox extends Component {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!enabled.get() || missingMCI)
-			return false;
+			return;
 		update.apply(!vSup.get());
-		return false;
 	}
 
 }

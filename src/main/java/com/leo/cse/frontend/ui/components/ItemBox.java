@@ -58,12 +58,8 @@ public class ItemBox extends DefineBox {
 	}
 
 	@Override
-	public boolean onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		/*
-		if (id != 0 && Profile.getItem(id - 1) == 0)
-			return false;
-		*/
-		return super.onClick(x, y, shiftDown, ctrlDown);
+	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		super.onClick(x, y, shiftDown, ctrlDown);
 	}
 
 }
