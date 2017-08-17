@@ -282,50 +282,105 @@ public class Profile {
 			ByteUtils.writeInt(data, ptr + Integer.BYTES * 4, curAmmo);
 		}
 
+		/**
+		 * Gets the weapon's ID.
+		 * 
+		 * @return weapon id
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * Sets the weapon's ID.
+		 * 
+		 * @param id
+		 *            new weapon id
+		 */
 		public void setId(int id) {
 			if (this.id != id)
 				notifyListeners(FIELD_WEAPON_ID, slot);
 			this.id = id;
 		}
 
+		/**
+		 * Gets the weapon's level.
+		 * 
+		 * @return weapon level
+		 */
 		public int getLevel() {
 			return level;
 		}
 
+		/**
+		 * Sets the weapon's level.
+		 * 
+		 * @param level
+		 *            new weapon level
+		 */
 		public void setLevel(int level) {
 			if (this.level != level)
 				notifyListeners(FIELD_WEAPON_LEVEL, slot);
 			this.level = level;
 		}
 
+		/**
+		 * Gets the weapon's extra EXP.
+		 * 
+		 * @return weapon EXP
+		 */
 		public int getExp() {
 			return exp;
 		}
 
+		/**
+		 * Sets the weapon's extra EXP.
+		 * 
+		 * @param id
+		 *            new weapon EXP
+		 */
 		public void setExp(int exp) {
 			if (this.exp != exp)
 				notifyListeners(FIELD_WEAPON_EXP, slot);
 			this.exp = exp;
 		}
 
+		/**
+		 * Gets the weapon's max ammo capacity.
+		 * 
+		 * @return weapon max ammo
+		 */
 		public int getMaxAmmo() {
 			return maxAmmo;
 		}
 
+		/**
+		 * Sets the weapon's max ammo capacity.
+		 * 
+		 * @param maxAmmo
+		 *            new weapon max ammo
+		 */
 		public void setMaxAmmo(int maxAmmo) {
 			if (this.maxAmmo != maxAmmo)
 				notifyListeners(FIELD_WEAPON_MAXIMUM_AMMO, slot);
 			this.maxAmmo = maxAmmo;
 		}
 
+		/**
+		 * Gets the weapon's current ammo capacity.
+		 * 
+		 * @return weapon current ammo
+		 */
 		public int getCurAmmo() {
 			return curAmmo;
 		}
 
+		/**
+		 * Sets the weapon's max ammo capacity.
+		 * 
+		 * @param curAmmo
+		 *            new weapon current ammo
+		 */
 		public void setCurAmmo(int curAmmo) {
 			if (this.curAmmo != curAmmo)
 				notifyListeners(FIELD_WEAPON_CURRENT_AMMO, slot);
@@ -425,20 +480,42 @@ public class Profile {
 			ByteUtils.writeInt(data, ptr + Integer.BYTES, location);
 		}
 
+		/**
+		 * Gets the warp's ID.
+		 * 
+		 * @return warp ID
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * Sets the warp's ID.
+		 * 
+		 * @param id
+		 *            new warp ID
+		 */
 		public void setId(int id) {
 			if (this.id != id)
 				notifyListeners(FIELD_WARP_ID, slot);
 			this.id = id;
 		}
 
+		/**
+		 * Gets the warp's location.
+		 * 
+		 * @return warp location
+		 */
 		public int getLocation() {
 			return location;
 		}
 
+		/**
+		 * Sets the warp's location.
+		 * 
+		 * @param location
+		 *            new warp location
+		 */
 		public void setLocation(int location) {
 			if (this.location != location)
 				notifyListeners(FIELD_WARP_LOCATION, slot);
@@ -776,112 +853,238 @@ public class Profile {
 		write(file);
 	}
 
+	/**
+	 * Checks if a profile is loaded.
+	 * 
+	 * @return <code>true</code> if a profile is loaded, <code>false</code>
+	 *         otherwise.
+	 */
 	public static boolean isLoaded() {
 		return loaded;
 	}
 
+	/**
+	 * Gets the loaded profile.
+	 * 
+	 * @return loaded profile
+	 */
 	public static File getFile() {
 		return file;
 	}
 
+	/**
+	 * Gets the raw data array.
+	 * 
+	 * @return data array
+	 */
 	public static byte[] getData() {
 		return data;
 	}
 
+	/**
+	 * Checks if the profile was modified since the last time it was saved.
+	 * 
+	 * @return <code>true</code> if modified, <code>false</code> otherwise.
+	 */
 	public static boolean isModified() {
 		return modified;
 	}
 
+	/**
+	 * Gets the current map ID.
+	 * 
+	 * @return map ID
+	 */
 	public static int getMap() {
 		return map;
 	}
 
+	/**
+	 * Sets the current map ID.
+	 * 
+	 * @param map
+	 *            new map ID
+	 */
 	public static void setMap(int map) {
 		if (Profile.map != map)
 			notifyListeners(FIELD_MAP, -1);
 		Profile.map = map;
 	}
 
+	/**
+	 * Gets the currently playing song ID.
+	 * 
+	 * @return song ID
+	 */
 	public static int getSong() {
 		return song;
 	}
 
+	/**
+	 * Sets the currently playing song ID.
+	 * 
+	 * @param song
+	 *            new song ID
+	 */
 	public static void setSong(int song) {
 		if (Profile.song != song)
 			notifyListeners(FIELD_SONG, -1);
 		Profile.song = song;
 	}
 
+	/**
+	 * Gets the player's X position.
+	 * 
+	 * @return X position
+	 */
 	public static short getX() {
 		return x;
 	}
 
+	/**
+	 * Sets the player's X position.
+	 * 
+	 * @param x
+	 *            new X position
+	 */
 	public static void setX(short x) {
 		if (Profile.x != x)
 			notifyListeners(FIELD_X_POSITION, -1);
 		Profile.x = x;
 	}
 
+	/**
+	 * Gets the player's Y position.
+	 * 
+	 * @return Y position
+	 */
 	public static short getY() {
 		return y;
 	}
 
+	/**
+	 * Gets the player's Y position.
+	 * 
+	 * @param y
+	 *            new Y position
+	 */
 	public static void setY(short y) {
 		if (Profile.y != y)
 			notifyListeners(FIELD_Y_POSITION, -1);
 		Profile.y = y;
 	}
 
+	/**
+	 * Gets the direction the player is facing in.
+	 * 
+	 * @return direction
+	 */
 	public static int getDirection() {
 		return direction;
 	}
 
+	/**
+	 * Sets the direction the player is facing in.
+	 * 
+	 * @param direction
+	 *            new direction
+	 */
 	public static void setDirection(int direction) {
 		if (Profile.direction != direction)
 			notifyListeners(FIELD_DIRECTION, -1);
 		Profile.direction = direction;
 	}
 
+	/**
+	 * Gets the maximum health.
+	 * 
+	 * @return maximum health
+	 */
 	public static short getMaxHealth() {
 		return maxHealth;
 	}
 
+	/**
+	 * Sets the maximum health.
+	 * 
+	 * @param maxHealth
+	 *            new maximum health
+	 */
 	public static void setMaxHealth(short maxHealth) {
 		if (Profile.maxHealth != maxHealth)
 			notifyListeners(FIELD_MAXIMUM_HEALTH, -1);
 		Profile.maxHealth = maxHealth;
 	}
 
+	/**
+	 * Gets the number of Whimsical Stars.
+	 * 
+	 * @return star count
+	 */
 	public static short getStarCount() {
 		return starCount;
 	}
 
+	/**
+	 * Sets the number of Whimsical Stars. See {@linkplain #starCount here} for
+	 * details.
+	 * 
+	 * @param starCount
+	 *            new star count
+	 */
 	public static void setStarCount(short starCount) {
 		if (Profile.starCount != starCount)
 			notifyListeners(FIELD_STAR_COUNT, -1);
 		Profile.starCount = starCount;
 	}
 
+	/**
+	 * Gets the current health.
+	 * 
+	 * @return current health
+	 */
 	public static short getCurHealth() {
 		return curHealth;
 	}
 
+	/**
+	 * Sets the current health.
+	 * 
+	 * @param curHealth
+	 *            new current health
+	 */
 	public static void setCurHealth(short curHealth) {
 		if (Profile.curHealth != curHealth)
 			notifyListeners(FIELD_CURRENT_HEALTH, -1);
 		Profile.curHealth = curHealth;
 	}
 
+	/**
+	 * Gets the currently selected weapon slot.
+	 * 
+	 * @return current weapon
+	 */
 	public static int getCurWeapon() {
 		return curWeapon;
 	}
 
+	/**
+	 * Sets the currently selected weapon slot.
+	 * 
+	 * @param curWeapon
+	 *            new current weapon
+	 */
 	public static void setCurWeapon(int curWeapon) {
 		if (Profile.curWeapon != curWeapon)
 			notifyListeners(FIELD_CURRENT_WEAPON, -1);
 		Profile.curWeapon = curWeapon;
 	}
 
+	/**
+	 * Gets the state of all equipments.
+	 * 
+	 * @return all equips
+	 */
 	public static boolean[] getEquips() {
 		return equips.clone();
 	}
@@ -916,6 +1119,12 @@ public class Profile {
 		}
 	}
 
+	/**
+	 * Sets the state of multiple equipment flags.
+	 * 
+	 * @param values
+	 *            flag states
+	 */
 	public static void setEquips(boolean[] values) {
 		setEquips(0, values);
 	}
@@ -937,16 +1146,32 @@ public class Profile {
 		equips[id] = equipped;
 	}
 
+	/**
+	 * Gets the time played.
+	 * 
+	 * @return time played
+	 */
 	public static int getTime() {
 		return time;
 	}
 
+	/**
+	 * Sets the time played.
+	 * 
+	 * @param time
+	 *            new time played
+	 */
 	public static void setTime(int time) {
 		if (Profile.time != time)
 			notifyListeners(FIELD_TIME_PLAYED, -1);
 		Profile.time = time;
 	}
 
+	/**
+	 * Gets weapon data from all slots.
+	 * 
+	 * @return all weapons
+	 */
 	public static Weapon[] getWeapons() {
 		return weapons.clone();
 	}
@@ -962,6 +1187,11 @@ public class Profile {
 		return weapons[id];
 	}
 
+	/**
+	 * Gets the items in all slots.
+	 * 
+	 * @return all items
+	 */
 	public static int[] getItems() {
 		return items.clone();
 	}
@@ -995,6 +1225,12 @@ public class Profile {
 		}
 	}
 
+	/**
+	 * Sets the items of multiple slots.
+	 * 
+	 * @param values
+	 *            item IDs
+	 */
 	public static void setItems(int[] values) {
 		setItems(0, values);
 	}
@@ -1016,6 +1252,15 @@ public class Profile {
 	}
 
 	/**
+	 * Gets warp data from all slots.
+	 * 
+	 * @return all warps
+	 */
+	public static Warp[] getWarps() {
+		return warps.clone();
+	}
+
+	/**
 	 * Gets warp data in a specific slot.
 	 * 
 	 * @param id
@@ -1028,6 +1273,11 @@ public class Profile {
 		return warps[id];
 	}
 
+	/**
+	 * Gets the state of all flags.
+	 * 
+	 * @return all flags
+	 */
 	public static boolean[] getFlags() {
 		return flags;
 	}
@@ -1063,6 +1313,12 @@ public class Profile {
 		}
 	}
 
+	/**
+	 * Sets the states of multiple flags.
+	 * 
+	 * @param values
+	 *            flag states
+	 */
 	public static void setFlags(boolean[] values) {
 		setFlags(0, values);
 	}

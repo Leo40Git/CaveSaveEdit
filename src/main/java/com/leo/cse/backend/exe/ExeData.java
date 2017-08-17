@@ -38,6 +38,7 @@ public class ExeData {
 	 * Make sure an instance of this class cannot be created.
 	 */
 	private ExeData() {
+		throw new AssertionError("No " + getClass().getName() + " object for you!");
 	}
 
 	// --------
@@ -330,16 +331,35 @@ public class ExeData {
 		STRING_NPC_PREFIX = Arrays.binarySearch(STRING_POINTERS, NPC_PREFIX_PTR);
 	}
 
+	// TODO CS+ compatibility
 	/**
 	 * Enables CS+ compatibility, allowing stage.tbl files to be loaded as mods.
 	 * Disables fancy EXE loading, however.
+	 * <p>
+	 * <b>NOTE:</b> <i>Currently does nothing.</i>
 	 */
 	private static boolean plusMode = false;
 
+	/**
+	 * Checks if CS+ compatibility is currently enabled.
+	 * <p>
+	 * <b>NOTE:</b> <i>Currently does nothing.</i>
+	 * 
+	 * @return <code>true</code> if in CS+ mode, <code>false</code> otherwise
+	 */
 	public static boolean isPlusMode() {
 		return plusMode;
 	}
 
+	/**
+	 * Enables or disables CS+ compatibility.
+	 * <p>
+	 * <b>NOTE:</b> <i>Currently does nothing.</i>
+	 * 
+	 * @param plusMode
+	 *            <code>true</code> to enable CS+ mode, <code>false</code> to
+	 *            disable it.
+	 */
 	public static void setPlusMode(boolean plusMode) {
 		ExeData.plusMode = plusMode;
 	}
@@ -350,10 +370,21 @@ public class ExeData {
 	 */
 	private static boolean loadNpc = true;
 
+	/**
+	 * Checks if NPC files will be loaded.
+	 * 
+	 * @return <code>true</code> if will be loaded, <code>false</code> otherwise.
+	 */
 	public static boolean doLoadNpc() {
 		return loadNpc;
 	}
 
+	/**
+	 * Enables or disables NPC file loading.
+	 * 
+	 * @param loadNpc
+	 *            <code>true</code> to enable, <code>false</code> to disable.
+	 */
 	public static void setLoadNpc(boolean loadNpc) {
 		ExeData.loadNpc = loadNpc;
 	}
@@ -502,13 +533,13 @@ public class ExeData {
 		ExeData.base = base;
 		// TODO CS+ support
 		/*
-		if (base.getName().endsWith(".tbl")) {
-			// assume stage.tbl
-			plusMode = true;
-			loadPlus();
-			return;
-		} else
-		*/
+		 * if (base.getName().endsWith(".tbl")) {
+		 * // assume stage.tbl
+		 * plusMode = true;
+		 * loadPlus();
+		 * return;
+		 * } else
+		 */
 		plusMode = false;
 		try {
 			loadExeStrings();
@@ -1252,14 +1283,30 @@ public class ExeData {
 		return exeStrings[id];
 	}
 
+	/**
+	 * Checks if an executable is currently loaded.
+	 * 
+	 * @return <code>true</code> if executable is loaded, <code>false</code>
+	 *         otherwise.
+	 */
 	public static boolean isLoaded() {
 		return loaded;
 	}
 
+	/**
+	 * Gets the base file - the executable.
+	 * 
+	 * @return base file
+	 */
 	public static File getBase() {
 		return base;
 	}
 
+	/**
+	 * Gets the "data" directory.
+	 * 
+	 * @return data directory
+	 */
 	public static File getDataDir() {
 		return dataDir;
 	}
@@ -1300,58 +1347,128 @@ public class ExeData {
 		return entityList.get(entityType);
 	}
 
+	/**
+	 * Gets the "Title" graphics file.
+	 * 
+	 * @return Title file
+	 */
 	public static File getTitle() {
 		return title;
 	}
 
+	/**
+	 * Gets the "MyChar" graphics file.
+	 * 
+	 * @return MyChar file
+	 */
 	public static File getMyChar() {
 		return myChar;
 	}
 
+	/**
+	 * Gets the "ArmsImage" graphics file.
+	 * 
+	 * @return ArmsImage file
+	 */
 	public static File getArmsImage() {
 		return armsImage;
 	}
 
+	/**
+	 * Gets the "Arms" graphics file.
+	 * 
+	 * @return Arms file
+	 */
 	public static File getArms() {
 		return arms;
 	}
 
+	/**
+	 * Gets the "ItemImage" graphics file.
+	 * 
+	 * @return ItemImage file
+	 */
 	public static File getItemImage() {
 		return itemImage;
 	}
 
+	/**
+	 * Gets the "StageImage" graphics file.
+	 * 
+	 * @return StageImage file
+	 */
 	public static File getStageImage() {
 		return stageImage;
 	}
 
+	/**
+	 * Gets the "NpcSym" graphics file.
+	 * 
+	 * @return NpcSym file
+	 */
 	public static File getNpcSym() {
 		return npcSym;
 	}
 
+	/**
+	 * Gets the "NpcRegu" graphics file.
+	 * 
+	 * @return NpcRegu file
+	 */
 	public static File getNpcRegu() {
 		return npcRegu;
 	}
 
+	/**
+	 * Gets the "TextBox" graphics file.
+	 * 
+	 * @return TextBox file
+	 */
 	public static File getTextBox() {
 		return textBox;
 	}
 
+	/**
+	 * Gets the "Caret" graphics file.
+	 * 
+	 * @return Caret file
+	 */
 	public static File getCaret() {
 		return caret;
 	}
 
+	/**
+	 * Gets the "Bullet" graphics file.
+	 * 
+	 * @return Bullet file
+	 */
 	public static File getBullet() {
 		return bullet;
 	}
 
+	/**
+	 * Gets the "Face" graphics file.
+	 * 
+	 * @return Face file
+	 */
 	public static File getFace() {
 		return face;
 	}
 
+	/**
+	 * Gets the "Fade" graphics file.
+	 * 
+	 * @return Fade file
+	 */
 	public static File getFade() {
 		return fade;
 	}
 
+	/**
+	 * Gets the "Loading" graphics file.
+	 * 
+	 * @return Loading file
+	 */
 	public static File getLoading() {
 		return loading;
 	}

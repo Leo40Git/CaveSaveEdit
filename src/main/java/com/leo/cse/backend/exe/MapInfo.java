@@ -12,7 +12,8 @@ import java.util.LinkedList;
 
 import com.leo.cse.backend.ResUtils;
 
-//credit to Noxid for making Booster's Lab open source so I could steal code from it
+// credit to Noxid for making Booster's Lab open source so I could steal code
+// from it
 /**
  * Stores information for loaded maps.
  * 
@@ -395,14 +396,29 @@ public class MapInfo {
 		}
 	}
 
+	/**
+	 * Gets the map's width.
+	 * 
+	 * @return width
+	 */
 	public int getMapX() {
 		return mapX;
 	}
 
+	/**
+	 * Gets the map's height.
+	 * 
+	 * @return height
+	 */
 	public int getMapY() {
 		return mapY;
 	}
 
+	/**
+	 * Get the map's ID.
+	 * 
+	 * @return map ID
+	 */
 	public int getMapNumber() {
 		return mapNumber;
 	}
@@ -417,34 +433,74 @@ public class MapInfo {
 		return map.clone();
 	}
 
+	/**
+	 * Gets the map's tileset.
+	 * 
+	 * @return tileset
+	 */
 	public File getTileset() {
 		return tileset;
 	}
 
+	/**
+	 * Gets the map's background image.
+	 * 
+	 * @return background image
+	 */
 	public File getBgImage() {
 		return bgImage;
 	}
 
+	/**
+	 * Gets the map's file name.
+	 * 
+	 * @return file name
+	 */
 	public String getFileName() {
 		return fileName;
 	}
 
+	/**
+	 * Gets the map's scroll type.
+	 * 
+	 * @return scroll type
+	 */
 	public int getScrollType() {
 		return scrollType;
 	}
 
+	/**
+	 * Gets the map's 1st NPC sheet.
+	 * 
+	 * @return 1st NPC sheet
+	 */
 	public File getNpcSheet1() {
 		return npcSheet1;
 	}
 
+	/**
+	 * Gets the map's 2nd NPC sheet.
+	 * 
+	 * @return 2nd NPC sheet
+	 */
 	public File getNpcSheet2() {
 		return npcSheet2;
 	}
 
+	/**
+	 * Gets the map's name.
+	 * 
+	 * @return display name
+	 */
 	public String getMapName() {
 		return mapName;
 	}
 
+	/**
+	 * Gets the map's PXA file.
+	 * 
+	 * @return PXA file
+	 */
 	public File getPxaFile() {
 		return pxaFile;
 	}
