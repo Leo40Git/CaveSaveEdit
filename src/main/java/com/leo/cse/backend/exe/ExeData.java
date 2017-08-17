@@ -500,13 +500,16 @@ public class ExeData {
 	 */
 	private static void load0(File base) throws IOException {
 		ExeData.base = base;
+		// TODO CS+ support
+		/*
 		if (base.getName().endsWith(".tbl")) {
 			// assume stage.tbl
 			plusMode = true;
 			loadPlus();
 			return;
 		} else
-			plusMode = false;
+		*/
+		plusMode = false;
 		try {
 			loadExeStrings();
 			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
@@ -533,6 +536,8 @@ public class ExeData {
 	 *             probably all the time because this code is designed for
 	 *             executables.
 	 */
+	// TODO CS+ support
+	@SuppressWarnings("unused")
 	private static void loadPlus() throws IOException {
 		dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
 		entityList = new Vector<EntityData>();
