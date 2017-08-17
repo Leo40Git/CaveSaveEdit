@@ -464,6 +464,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 					newFocus = comp;
 					break;
 				}
+				if (comp instanceof IDraggable) {
+					IDraggable drag = (IDraggable) comp;
+					if (lastDragged.get(drag) != null) {
+						drag.onDragEnd(px, py);
+						lastDragged.remove(drag);
+					}
+				}
 			}
 			lastFocus = newFocus;
 			repaint();
@@ -509,8 +516,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
 		int px = e.getX(), py = e.getY();
-		if (py < OFFSET_Y) {
-			if (lastDragged.isEmpty() || draggingWindow) {
+		if (lastDragged.isEmpty()) {
+			if (py < OFFSET_Y || draggingWindow) {
 				draggingWindow = true;
 				int wx = Main.window.getX(), wy = Main.window.getY();
 				int moveX = px - dragInitialX;
@@ -533,12 +540,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				lastDragged.put(drag, true);
 				newFocus = comp;
 				repaint();
-			} else {
-				if (lastDragged.get(drag) != null) {
-					drag.onDragEnd(px, py);
-					lastDragged.remove(drag);
-					repaint();
-				}
 			}
 		}
 		lastFocus = newFocus;

@@ -11,6 +11,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 	public static final int WIDTH = 20;
 
 	protected int scrollbarY;
+	protected boolean scrolling;
 
 	public ScrollBar(int x, int y, int height) {
 		super(x, y, WIDTH, height);
@@ -40,6 +41,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		scrolling = false;
 		int amount = 1;
 		if (shiftDown)
 			amount *= 10;
@@ -64,8 +66,10 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 	@Override
 	public void onDrag(int x, int y) {
 		y -= 25;
-		if (y < this.y + width || y > this.y + height - width)
-			return;
+		if (!scrolling)
+			if (y < this.y + width || y > this.y + height - width)
+				return;
+		scrolling = true;
 		scrollbarY = y;
 		limitScroll();
 	}
@@ -73,6 +77,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 	@Override
 	public void onDragEnd(int px, int py) {
 		onDrag(x, y);
+		scrolling = false;
 	}
 
 	@Override
