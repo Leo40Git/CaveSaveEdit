@@ -293,12 +293,18 @@ public class MCI {
 	public static EntityExtras getPlayerExtras(int x, int y, boolean leftright, long costume)
 			throws NoSuchMethodException {
 		Object oe1 = Context.jsToJava(invokeFunction("getPlayerFrame", x, y, leftright, costume), Rectangle.class);
+		if (oe1 == null)
+			oe1 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getPlayerFrame", x, y, leftright, costume),
+					Rectangle.class);
 		if (!(oe1 instanceof Rectangle)) {
 			System.err.println("oe1 is not Rectangle: " + oe1.getClass().getName());
 			return null;
 		}
 		Rectangle frameRect = (Rectangle) oe1;
 		Object oe2 = Context.jsToJava(invokeFunction("getPlayerOffset", x, y, leftright, costume), Point.class);
+		if (oe2 == null)
+			oe2 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getPlayerOffset", x, y, leftright, costume),
+					Point.class);
 		if (!(oe2 instanceof Point)) {
 			System.err.println("oe2 is not Point: " + oe1.getClass().getName());
 			return null;
@@ -332,12 +338,16 @@ public class MCI {
 	public static EntityExtras getEntityExtras(PxeEntry e) throws NoSuchMethodException {
 		WrappedPxeEntry we = new WrappedPxeEntry(e);
 		Object oe1 = Context.jsToJava(invokeFunction("getEntityFrame", we), Rectangle.class);
+		if (oe1 == null)
+			oe1 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getEntityFrame", we), Rectangle.class);
 		if (!(oe1 instanceof Rectangle)) {
 			System.err.println("oe1 is not Rectangle: " + oe1.getClass().getName());
 			return null;
 		}
 		Rectangle frameRect = (Rectangle) oe1;
 		Object oe2 = Context.jsToJava(invokeFunction("getEntityOffset", we), Point.class);
+		if (oe2 == null)
+			oe2 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getEntityOffset", we), Point.class);
 		if (!(oe2 instanceof Point)) {
 			System.err.println("oe2 is not Point: " + oe1.getClass().getName());
 			return null;
