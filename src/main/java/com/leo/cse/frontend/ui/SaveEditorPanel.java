@@ -459,11 +459,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			Component newFocus = null;
 			for (Component comp : tabMap.get(currentTab).getComponents()) {
 				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
-				if (comp instanceof IDraggable) {
-					IDraggable drag = (IDraggable) comp;
-					if (lastDragged.get(drag) != null) {
-						drag.onDragEnd(px, py);
-						lastDragged.remove(drag);
+				if (lastDragged != null) {
+					if (comp instanceof IDraggable) {
+						IDraggable drag = (IDraggable) comp;
+						if (lastDragged.get(drag) != null) {
+							drag.onDragEnd(px, py);
+							lastDragged.remove(drag);
+						}
 					}
 				}
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
