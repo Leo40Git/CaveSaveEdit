@@ -1,6 +1,5 @@
 package com.leo.cse.frontend.ui.components;
 
-//import java.awt.Color;
 import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -12,8 +11,6 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
 public class ItemBox extends DefineBox {
-
-	// private int id;
 
 	public ItemBox(int x, int y, int width, int height, int itemId) {
 		super(x, y, width, height, new Supplier<Integer>() {
@@ -28,7 +25,6 @@ public class ItemBox extends DefineBox {
 				return t;
 			}
 		}, "Item", "item " + (itemId + 1));
-		// id = itemId;
 	}
 
 	@Override
@@ -37,14 +33,6 @@ public class ItemBox extends DefineBox {
 		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);
-		/*
-		if (id != 0 && Profile.getItem(id - 1) == 0) {
-			Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31);
-			g.setColor(lc2);
-			g.fillRect(x, y, width, height - 1);
-			return;
-		}
-		*/
 		int item = vSup.get();
 		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 31);
 		if (item == 0)
