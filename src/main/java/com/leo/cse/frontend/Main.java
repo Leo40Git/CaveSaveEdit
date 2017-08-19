@@ -383,9 +383,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		Config.init();
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING);
-		/// TODO Fix NPCs
-		// ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
-		ExeData.setLoadNpc(false);
+		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
 		try {
 			Resources.loadUI();
 			Resources.colorImages(lineColor);

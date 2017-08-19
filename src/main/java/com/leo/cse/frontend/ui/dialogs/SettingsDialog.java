@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.frontend.Config;
@@ -34,13 +35,9 @@ public class SettingsDialog extends BaseDialog {
 		g.drawRect(x + 4, y + 23, 292, 17);
 		FrontUtils.drawStringCentered(g, "Change Line Color", x + 150, y + 23);
 		g.drawImage(Resources.miscIcons[1], x + 5, y + 24, null);
-		/// TODO: Fix NPCs
-		//Image chkImage = (ExeData.doLoadNpc() ? Resources.checkboxOn : Resources.checkboxOff);
-		Image chkImage = Resources.checkboxDisabled;
+		Image chkImage = (ExeData.doLoadNpc() ? Resources.checkboxOn : Resources.checkboxOff);
 		g.drawImage(chkImage, x + 4, y + 43, null);
-		/// TODO: Fix NPCs
-		//FrontUtils.drawString(g, "Load NPCs?", x + 22, y + 41);
-		FrontUtils.drawString(g, "Load NPCs? (not yet available, sorry!)", x + 22, y + 41);
+		FrontUtils.drawString(g, "Load NPCs?", x + 22, y + 41);
 		FrontUtils.drawString(g, "Encoding:", x + 4, y + 62);
 		g.drawRect(x + 54, y + 63, 242, 17);
 		FrontUtils.drawString(g, Main.encoding, x + 56, y + 62);
@@ -58,8 +55,6 @@ public class SettingsDialog extends BaseDialog {
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 23, 292, 17)) {
 			setLineColor();
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 43, 16, 16)) {
-			/// TODO: Fix NPCs
-			/*
 			ExeData.setLoadNpc(!ExeData.doLoadNpc());
 			SaveEditorPanel.panel.setLoading(true);
 			Main.window.repaint();
@@ -76,7 +71,6 @@ public class SettingsDialog extends BaseDialog {
 					});
 				}
 			});
-			*/
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 54, wy + 63, 242, 17)) {
 			String e = null;
 			while (e == null) {
@@ -98,7 +92,8 @@ public class SettingsDialog extends BaseDialog {
 			} catch (IOException ignore) {
 			}
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 83, 292, 17)) {
-			int sel = JOptionPane.showConfirmDialog(Main.window, "Are you sure you want to wipe all settings?\nThis will exit the editor WITHOUT saving changes!",
+			int sel = JOptionPane.showConfirmDialog(Main.window,
+					"Are you sure you want to wipe all settings?\nThis will exit the editor WITHOUT saving changes!",
 					"Wipe Settings?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (sel != JOptionPane.YES_OPTION)
 				return false;

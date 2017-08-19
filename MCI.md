@@ -51,6 +51,7 @@ Every `WrappedPxeEntry` object has the following fields (they're public, so just
 - `y:Number` - The Y position of the entity in tiles.
 - `flagID:Number` - The entity's assigned flag ID.
 - `eventNum:Number` - The entity's assigned event number.
+- `type:Number` - The entity's type (NPC ID).
 - `flags:Array<Boolean>` - The entity's flags.
 
 Here are the functions themselves:

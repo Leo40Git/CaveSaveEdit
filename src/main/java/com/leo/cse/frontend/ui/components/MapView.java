@@ -214,6 +214,8 @@ public class MapView extends Component implements IDraggable {
 			if (ee == null)
 				continue;
 			Rectangle frameRect = ee.getFrameRect();
+			if (frameRect.width < 1 || frameRect.height < 1)
+				continue;
 			Point offset = ee.getOffset();
 			if (srcImg != null) {
 				int srcX = frameRect.x;

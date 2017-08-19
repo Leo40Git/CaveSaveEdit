@@ -19,7 +19,7 @@ import com.leo.cse.frontend.ui.SaveEditorPanel;
 public class MCIDialog extends BaseDialog {
 
 	public MCIDialog() {
-		super("MCI Settings", 300, 114);
+		super("MCI Settings", 360, 114);
 	}
 
 	@Override
