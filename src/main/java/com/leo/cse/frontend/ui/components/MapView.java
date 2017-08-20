@@ -35,6 +35,7 @@ public class MapView extends Component implements IDraggable {
 	private int ignoreClick = 0;
 	private int lastMap;
 	private Supplier<Boolean> gSup;
+	private short playerX = -1, playerY = -1;
 
 	public MapView(int x, int y, Supplier<Boolean> gSup) {
 		super(x, y, 640, 480);
@@ -82,12 +83,14 @@ public class MapView extends Component implements IDraggable {
 		map = mapInfo.getMap();
 		tileset = ExeData.getImage(mapInfo.getTileset());
 		setWidth = tileset.getWidth() / 32;
+		if (playerX == -1 || playerY == -1)
+			updatePlayerPos();
 		BufferedImage surf = new BufferedImage(640, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
 		sg.fillRect(0, 0, 640, height);
 		if (Profile.getMap() != lastMap || ignoreClick == 0)
-			getCamCoords();
+			updateCamCoords();
 		lastMap = Profile.getMap();
 		drawBackground(sg);
 		sg.translate(-camX, -camY);
@@ -241,10 +244,10 @@ public class MapView extends Component implements IDraggable {
 			costume = Profile.getMimCostume();
 		else
 			costume = (Profile.getEquip(6) ? 1 : 0);
-		int xPixel = Profile.getX() - 16;
+		int xPixel = playerX - 16;
 		xPixel /= snap;
 		xPixel *= 2;
-		int yPixel = Profile.getY() - 16;
+		int yPixel = playerY - 16;
 		yPixel /= snap;
 		yPixel *= 2;
 		int sourceX = 0;
@@ -289,9 +292,14 @@ public class MapView extends Component implements IDraggable {
 		g.setComposite(oc);
 	}
 
-	public void getCamCoords() {
-		camX = Math.max(0, Math.min((map[0][0].length - 21) * 32, Profile.getX() - width / 2));
-		camY = Math.max(0, Math.min((map[0].length - 16) * 32, Profile.getY() - height / 2));
+	public void updateCamCoords() {
+		camX = Math.max(0, Math.min((map[0][0].length - 21) * 32, playerX - width / 2));
+		camY = Math.max(0, Math.min((map[0].length - 16) * 32, playerY - height / 2));
+	}
+	
+	public void updatePlayerPos() {
+		playerX = Profile.getX();
+		playerY = Profile.getY();
 	}
 
 	@Override
@@ -299,19 +307,21 @@ public class MapView extends Component implements IDraggable {
 		if (!ExeData.isLoaded())
 			return;
 		if (SaveEditorPanel.panel.getLastFocus() != this) {
-			getCamCoords();
+			updateCamCoords();
 			return;
 		}
 		if (mapInfo == null)
 			return;
 		if (mapInfo.hasMissingAssets())
 			return;
-		getCamCoords();
+		updateCamCoords();
 		if (ignoreClick > 0)
 			ignoreClick--;
 		else {
 			Profile.setX((short) (x - this.x + camX));
 			Profile.setY((short) (y - this.y + camY));
+			playerX = Profile.getX();
+			playerY = Profile.getY();
 		}
 	}
 
@@ -346,7 +356,7 @@ public class MapView extends Component implements IDraggable {
 		py = Math.max(0, Math.min(map[0].length * 32, py));
 		Profile.setX((short) px);
 		Profile.setY((short) py);
-		getCamCoords();
+		updateCamCoords();
 	}
 
 	@Override
@@ -357,8 +367,10 @@ public class MapView extends Component implements IDraggable {
 			return;
 		if (mapInfo.hasMissingAssets())
 			return;
-		Profile.setX((short) (x - this.x + camX));
-		Profile.setY((short) (y - 16 - this.y + camY));
+		playerX = (short) (x - this.x + camX);
+		playerX = (short) Math.max(0, Math.min(map[0][0].length * 32, playerX));
+		playerY = (short) (y - 16 - this.y + camY);
+		playerY = (short) Math.max(0, Math.min(map[0].length * 32, playerY));
 		ignoreClick = 2;
 	}
 
@@ -370,7 +382,9 @@ public class MapView extends Component implements IDraggable {
 			return;
 		if (mapInfo.hasMissingAssets())
 			return;
-		getCamCoords();
+		Profile.setX(playerX);
+		Profile.setY(playerY);
+		updateCamCoords();
 		ignoreClick = 1;
 	}
 

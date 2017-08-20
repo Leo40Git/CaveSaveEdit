@@ -195,7 +195,8 @@ public class GeneralPanel extends Panel {
 		compList.add(new Button("Snap to Grid", 756, 426, 100, 20, () -> {
 			Profile.setX((short) (Math.round(Profile.getX() / 32.0) * 32));
 			Profile.setY((short) (Math.round(Profile.getY() / 32.0) * 32));
-			mp.getCamCoords();
+			mp.updatePlayerPos();
+			mp.updateCamCoords();
 		}).setEnabled(new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {

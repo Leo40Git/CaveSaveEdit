@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -51,8 +52,23 @@ public class MCI {
 					continue;
 				p.put(group + "." + d, list[d]);
 			}
+		} else if (obj instanceof List<?>) {
+			List<?> list = (List<?>) obj;
+			for (int i = 0; i < list.size(); i++) {
+				String s = list.get(i).toString();
+				if (s == null)
+					continue;
+				p.put(group + "." + i, s);
+			}
+		} else if (obj instanceof Map<?, ?>) {
+			readMap(p, group, (Map<?, ?>) obj);
 		} else
 			throw new RuntimeException("Unsupported list type: " + obj.getClass().getName());
+	}
+
+	private static <K, V> void readMap(Properties p, String group, Map<K, V> map) {
+		for (Map.Entry<K, V> entry : map.entrySet())
+			p.put(group + "." + entry.getKey(), entry.getValue());
 	}
 
 	private static Object invokeFunction(Context cx, Scriptable scope, String name, Object... args)
