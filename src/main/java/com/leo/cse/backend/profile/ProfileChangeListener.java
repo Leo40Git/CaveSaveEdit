@@ -16,7 +16,11 @@ public interface ProfileChangeListener {
 	 * @param id
 	 *            index of field being modified, or -1 if the field does not have
 	 *            indexes
+	 * @param oldValue
+	 *            the field's old value
+	 * @param newValue
+	 *            the field's new value
 	 */
-	public void onChange(String field, int id);
+	public void onChange(String field, int id, Object oldValue, Object newValue);
 
 }

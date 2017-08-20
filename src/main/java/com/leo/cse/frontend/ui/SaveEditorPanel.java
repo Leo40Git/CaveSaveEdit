@@ -563,15 +563,16 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			scroll.onKey(code, shift, ctrl);
 			repaint();
 		} else if (lastFocus == null) {
-			if (code == KeyEvent.VK_O) {
+			switch (code) {
+			case KeyEvent.VK_O:
 				if (ctrl) {
 					if (shift)
 						loadExe();
 					else
 						loadProfile();
 				}
-			}
-			if (code == KeyEvent.VK_S) {
+				break;
+			case KeyEvent.VK_S:
 				if (ctrl) {
 					if (shift)
 						saveProfileAs();
@@ -580,6 +581,24 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 						Main.setTitle(Main.window);
 					}
 				}
+				break;
+			case KeyEvent.VK_Z:
+				if (ctrl) {
+					if (shift)
+						Profile.redo();
+					else
+						Profile.undo();
+					repaint();
+				}
+				break;
+			case KeyEvent.VK_Y:
+				if (ctrl) {
+					Profile.redo();
+					repaint();
+				}
+				break;
+			default:
+				break;
 			}
 		} else {
 			lastFocus.onKey(code, shift, ctrl);

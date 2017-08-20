@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEdit;
+
 import com.leo.cse.backend.ByteUtils;
 
 /**
@@ -299,7 +304,7 @@ public class Profile {
 		 */
 		public void setId(int id) {
 			if (this.id != id)
-				notifyListeners(FIELD_WEAPON_ID, slot);
+				notifyListeners(FIELD_WEAPON_ID, slot, this.id, id);
 			this.id = id;
 		}
 
@@ -320,7 +325,7 @@ public class Profile {
 		 */
 		public void setLevel(int level) {
 			if (this.level != level)
-				notifyListeners(FIELD_WEAPON_LEVEL, slot);
+				notifyListeners(FIELD_WEAPON_LEVEL, slot, this.level, level);
 			this.level = level;
 		}
 
@@ -341,7 +346,7 @@ public class Profile {
 		 */
 		public void setExp(int exp) {
 			if (this.exp != exp)
-				notifyListeners(FIELD_WEAPON_EXP, slot);
+				notifyListeners(FIELD_WEAPON_EXP, slot, this.exp, exp);
 			this.exp = exp;
 		}
 
@@ -362,7 +367,7 @@ public class Profile {
 		 */
 		public void setMaxAmmo(int maxAmmo) {
 			if (this.maxAmmo != maxAmmo)
-				notifyListeners(FIELD_WEAPON_MAXIMUM_AMMO, slot);
+				notifyListeners(FIELD_WEAPON_MAXIMUM_AMMO, slot, this.maxAmmo, maxAmmo);
 			this.maxAmmo = maxAmmo;
 		}
 
@@ -383,7 +388,7 @@ public class Profile {
 		 */
 		public void setCurAmmo(int curAmmo) {
 			if (this.curAmmo != curAmmo)
-				notifyListeners(FIELD_WEAPON_CURRENT_AMMO, slot);
+				notifyListeners(FIELD_WEAPON_CURRENT_AMMO, slot, this.curAmmo, curAmmo);
 			this.curAmmo = curAmmo;
 		}
 
@@ -497,7 +502,7 @@ public class Profile {
 		 */
 		public void setId(int id) {
 			if (this.id != id)
-				notifyListeners(FIELD_WARP_ID, slot);
+				notifyListeners(FIELD_WARP_ID, slot, this.id, id);
 			this.id = id;
 		}
 
@@ -518,7 +523,7 @@ public class Profile {
 		 */
 		public void setLocation(int location) {
 			if (this.location != location)
-				notifyListeners(FIELD_WARP_LOCATION, slot);
+				notifyListeners(FIELD_WARP_LOCATION, slot, this.location, location);
 			this.location = location;
 		}
 
@@ -568,6 +573,145 @@ public class Profile {
 	 * modified.
 	 */
 	private static boolean modified = false;
+	/**
+	 * Disables the undo/redo manager.
+	 */
+	private static boolean noUndo = true;
+	/**
+	 * Undo/redo manager.
+	 */
+	private static UndoManager undoMan;
+
+	/**
+	 * Represents an edit to a field in the profile.
+	 * 
+	 * @author Leo
+	 *
+	 */
+	public static class ProfileEdit implements UndoableEdit {
+
+		/**
+		 * The name of the field that was modified.
+		 */
+		private String field;
+		/**
+		 * The index of the field that was modified.
+		 */
+		private int index;
+		/**
+		 * The field's old value.
+		 */
+		private Object oldVal;
+		/**
+		 * The field's new value.
+		 */
+		private Object newVal;
+		/**
+		 * If <code>true</code>, this edit has been undone and thus can be redone.
+		 */
+		private boolean hasBeenUndone;
+
+		/**
+		 * Constructs a new <code>ProfileEdit</code>.
+		 * 
+		 * @param field
+		 *            the name of the field that was modified
+		 * @param index
+		 *            the index of the field that was modified
+		 * @param oldVal
+		 *            the field's old value
+		 * @param newVal
+		 *            the field's new value
+		 */
+		public ProfileEdit(String field, int index, Object oldVal, Object newVal) {
+			this.field = field;
+			this.index = index;
+			this.oldVal = oldVal;
+			this.newVal = newVal;
+		}
+
+		@Override
+		public void undo() throws CannotUndoException {
+			setField(field, index, oldVal);
+			hasBeenUndone = true;
+		}
+
+		@Override
+		public boolean canUndo() {
+			return !hasBeenUndone;
+		}
+
+		@Override
+		public void redo() throws CannotRedoException {
+			setField(field, index, newVal);
+			hasBeenUndone = false;
+		}
+
+		@Override
+		public boolean canRedo() {
+			return hasBeenUndone;
+		}
+
+		@Override
+		public void die() {
+			oldVal = null;
+			newVal = null;
+		}
+
+		@Override
+		public boolean addEdit(UndoableEdit anEdit) {
+			return false;
+		}
+
+		@Override
+		public boolean replaceEdit(UndoableEdit anEdit) {
+			return false;
+		}
+
+		@Override
+		public boolean isSignificant() {
+			return true;
+		}
+
+		@Override
+		public String getPresentationName() {
+			String fn = field;
+			if (index > -1)
+				fn += "[" + fn + "]";
+			return fn;
+		}
+
+		@Override
+		public String getUndoPresentationName() {
+			String pn = getPresentationName();
+			return "undo " + pn + " from " + newVal + " to " + oldVal;
+		}
+
+		@Override
+		public String getRedoPresentationName() {
+			String pn = getPresentationName();
+			return "redo " + pn + " from " + oldVal + " to " + newVal;
+		}
+
+	}
+
+	/**
+	 * Undoes an edit.
+	 */
+	public static void undo() {
+		if (!loaded || undoMan == null || !undoMan.canUndo())
+			return;
+		undoMan.undo();
+	}
+
+	/**
+	 * Redoes an edit.
+	 */
+	public static void redo() {
+		if (!loaded || undoMan == null || !undoMan.canRedo())
+			return;
+		undoMan.redo();
+	}
 
 	// reference for pointers: http://www.cavestory.org/guides/profile.txt
 	/**
@@ -658,24 +802,47 @@ public class Profile {
 	}
 
 	/**
-	 * Notifies all changes attached to this profile.
+	 * Notifies all change listeners attached to this profile of a change to a
+	 * field.
 	 * 
+	 * @param field
+	 *            name of the field that was modified
+	 * @param index
+	 *            index of the field that was modified, or <code>-1</code> if not
+	 *            applicable
+	 * @param oldValue
+	 *            old value of the field
+	 * @param newValue
+	 *            new value of the field
 	 * @param modified
 	 *            modified flag state
 	 */
-	private static void notifyListeners(String field, int id, boolean modified) {
+	private static void notifyListeners(String field, int id, Object oldValue, Object newValue, boolean modified) {
 		Profile.modified = modified;
+		if (!noUndo && undoMan != null && !EVENT_SAVE.equals(field) && !EVENT_LOAD.equals(field))
+			undoMan.addEdit(new ProfileEdit(field, id, oldValue, newValue));
 		if (listeners == null)
 			return;
 		for (ProfileChangeListener l : listeners)
-			l.onChange(field, id);
+			l.onChange(field, id, oldValue, newValue);
 	}
 
 	/**
-	 * Sets the modified flag and notifies all changes attached to this profile.
+	 * Sets the modified flag and notifies all change listeners attached to this
+	 * profile of a change to a field.
+	 * 
+	 * @param field
+	 *            name of the field that was modified
+	 * @param index
+	 *            index of the field that was modified, or <code>-1</code> if not
+	 *            applicable
+	 * @param oldValue
+	 *            old value of the field
+	 * @param newValue
+	 *            new value of the field
 	 */
-	private static void notifyListeners(String field, int id) {
-		notifyListeners(field, id, true);
+	private static void notifyListeners(String field, int id, Object oldValue, Object newValue) {
+		notifyListeners(field, id, oldValue, newValue, true);
 	}
 
 	/**
@@ -778,8 +945,13 @@ public class Profile {
 		pullFromData();
 		// set loaded flag
 		loaded = true;
+		// new undo manager
+		if (noUndo)
+			undoMan = null;
+		else
+			undoMan = new UndoManager();
 		// notify listeners with "field" EVENT_LOAD
-		notifyListeners(EVENT_LOAD, -1, false);
+		notifyListeners(EVENT_LOAD, -1, null, null, false);
 	}
 
 	/**
@@ -840,7 +1012,7 @@ public class Profile {
 		// set new file
 		file = dest;
 		// notify listeners with "field" EVENT_SAVE
-		notifyListeners(EVENT_SAVE, -1, false);
+		notifyListeners(EVENT_SAVE, -1, null, null, false);
 	}
 
 	/**
@@ -891,6 +1063,29 @@ public class Profile {
 	}
 
 	/**
+	 * Checks if the undo/redo manager is disabled.
+	 * 
+	 * @return <code>true</code> if disabled, <code>false</code> otherwise.
+	 */
+	public static boolean isNoUndo() {
+		return noUndo;
+	}
+
+	/**
+	 * Disables or enables the undo/redo manager.
+	 * 
+	 * @param noUndo
+	 *            <code>true</code> to disable, <code>false</code> to enable
+	 */
+	public static void setNoUndo(boolean noUndo) {
+		Profile.noUndo = noUndo;
+		if (noUndo)
+			undoMan = null;
+		else
+			undoMan = new UndoManager();
+	}
+
+	/**
 	 * Gets the current map ID.
 	 * 
 	 * @return map ID
@@ -907,7 +1102,7 @@ public class Profile {
 	 */
 	public static void setMap(int map) {
 		if (Profile.map != map)
-			notifyListeners(FIELD_MAP, -1);
+			notifyListeners(FIELD_MAP, -1, Profile.map, map);
 		Profile.map = map;
 	}
 
@@ -928,7 +1123,7 @@ public class Profile {
 	 */
 	public static void setSong(int song) {
 		if (Profile.song != song)
-			notifyListeners(FIELD_SONG, -1);
+			notifyListeners(FIELD_SONG, -1, Profile.song, song);
 		Profile.song = song;
 	}
 
@@ -949,7 +1144,7 @@ public class Profile {
 	 */
 	public static void setX(short x) {
 		if (Profile.x != x)
-			notifyListeners(FIELD_X_POSITION, -1);
+			notifyListeners(FIELD_X_POSITION, -1, Profile.x, x);
 		Profile.x = x;
 	}
 
@@ -970,7 +1165,7 @@ public class Profile {
 	 */
 	public static void setY(short y) {
 		if (Profile.y != y)
-			notifyListeners(FIELD_Y_POSITION, -1);
+			notifyListeners(FIELD_Y_POSITION, -1, Profile.y, y);
 		Profile.y = y;
 	}
 
@@ -991,7 +1186,7 @@ public class Profile {
 	 */
 	public static void setDirection(int direction) {
 		if (Profile.direction != direction)
-			notifyListeners(FIELD_DIRECTION, -1);
+			notifyListeners(FIELD_DIRECTION, -1, Profile.direction, direction);
 		Profile.direction = direction;
 	}
 
@@ -1012,7 +1207,7 @@ public class Profile {
 	 */
 	public static void setMaxHealth(short maxHealth) {
 		if (Profile.maxHealth != maxHealth)
-			notifyListeners(FIELD_MAXIMUM_HEALTH, -1);
+			notifyListeners(FIELD_MAXIMUM_HEALTH, -1, Profile.maxHealth, maxHealth);
 		Profile.maxHealth = maxHealth;
 	}
 
@@ -1034,7 +1229,7 @@ public class Profile {
 	 */
 	public static void setStarCount(short starCount) {
 		if (Profile.starCount != starCount)
-			notifyListeners(FIELD_STAR_COUNT, -1);
+			notifyListeners(FIELD_STAR_COUNT, -1, Profile.starCount, starCount);
 		Profile.starCount = starCount;
 	}
 
@@ -1055,7 +1250,7 @@ public class Profile {
 	 */
 	public static void setCurHealth(short curHealth) {
 		if (Profile.curHealth != curHealth)
-			notifyListeners(FIELD_CURRENT_HEALTH, -1);
+			notifyListeners(FIELD_CURRENT_HEALTH, -1, Profile.curHealth, curHealth);
 		Profile.curHealth = curHealth;
 	}
 
@@ -1076,7 +1271,7 @@ public class Profile {
 	 */
 	public static void setCurWeapon(int curWeapon) {
 		if (Profile.curWeapon != curWeapon)
-			notifyListeners(FIELD_CURRENT_WEAPON, -1);
+			notifyListeners(FIELD_CURRENT_WEAPON, -1, Profile.curWeapon, curWeapon);
 		Profile.curWeapon = curWeapon;
 	}
 
@@ -1142,7 +1337,7 @@ public class Profile {
 		if (id >= equips.length)
 			return;
 		if (equips[id] != equipped)
-			notifyListeners(FIELD_EQUIPS, id);
+			notifyListeners(FIELD_EQUIPS, id, equips[id], equipped);
 		equips[id] = equipped;
 	}
 
@@ -1163,7 +1358,7 @@ public class Profile {
 	 */
 	public static void setTime(int time) {
 		if (Profile.time != time)
-			notifyListeners(FIELD_TIME_PLAYED, -1);
+			notifyListeners(FIELD_TIME_PLAYED, -1, Profile.time, time);
 		Profile.time = time;
 	}
 
@@ -1247,7 +1442,7 @@ public class Profile {
 		if (id >= items.length)
 			return;
 		if (items[id] != value)
-			notifyListeners(FIELD_ITEMS, id);
+			notifyListeners(FIELD_ITEMS, id, items[id], value);
 		items[id] = value;
 	}
 
@@ -1335,7 +1530,7 @@ public class Profile {
 		if (id >= flags.length)
 			return;
 		if (flags[id] != set)
-			notifyListeners(FIELD_FLAGS, id);
+			notifyListeners(FIELD_FLAGS, id, flags[id], set);
 		flags[id] = set;
 	}
 
@@ -1363,8 +1558,9 @@ public class Profile {
 	 *            new costume
 	 */
 	public static void setMimCostume(long costume) {
-		if (getMimCostume() != costume)
-			notifyListeners(FIELD_MIM_COSTUME, 0);
+		long curCostume = getMimCostume();
+		if (curCostume != costume)
+			notifyListeners(FIELD_MIM_COSTUME, -1, curCostume, costume);
 		for (int i = 7968; i < 7995; i++)
 			setFlag(i, (costume & (long) Math.pow(2, i - 7968)) != 0);
 	}
@@ -1390,8 +1586,9 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setVariable(int id, short value) {
-		if (getVariable(id) != value)
-			notifyListeners(FIELD_VARIABLES, id);
+		short oldValue = getVariable(id);
+		if (oldValue != value)
+			notifyListeners(FIELD_VARIABLES, id, oldValue, value);
 		pushToData();
 		ByteUtils.writeShort(data, 0x50A + id * Short.BYTES, value);
 		pullFromData();
@@ -1418,8 +1615,9 @@ public class Profile {
 	 *            new value
 	 */
 	public static void setPhysVariable(int id, short value) {
-		if (getPhysVariable(id) != value)
-			notifyListeners(FIELD_PHYSICS_VARIABLES, id);
+		short oldValue = getPhysVariable(id);
+		if (oldValue != value)
+			notifyListeners(FIELD_PHYSICS_VARIABLES, id, oldValue, value);
 		pushToData();
 		ByteUtils.writeShort(data, 0x4DC + id * Short.BYTES, value);
 		pullFromData();
@@ -1445,10 +1643,198 @@ public class Profile {
 	 *            new amount of cash
 	 */
 	public static void setCash(long cash) {
-		if (getCash() != cash)
-			notifyListeners(FIELD_CASH, 0);
+		long oldCash = getCash();
+		if (oldCash != cash)
+			notifyListeners(FIELD_CASH, -1, oldCash, cash);
 		for (int i = 7968; i < 7999; i++)
 			setFlag(i, (cash & (long) Math.pow(2, i - 7968)) != 0);
+	}
+
+	/**
+	 * Sets a field.
+	 * 
+	 * @param field
+	 *            field to set
+	 * @param index
+	 *            index to set
+	 * @param value
+	 *            value to set
+	 */
+	public static void setField(String field, int index, Object value) {
+		boolean oldUndo = noUndo;
+		noUndo = true;
+		Weapon w;
+		Warp t;
+		switch (field) {
+		case FIELD_MAP:
+			if (!(value instanceof Integer))
+				return;
+			setMap((Integer) value);
+			break;
+		case FIELD_SONG:
+			if (!(value instanceof Integer))
+				return;
+			setSong((Integer) value);
+			break;
+		case FIELD_X_POSITION:
+			if (!(value instanceof Short))
+				return;
+			setX((Short) value);
+			break;
+		case FIELD_Y_POSITION:
+			if (!(value instanceof Short))
+				return;
+			setY((Short) value);
+			break;
+		case FIELD_DIRECTION:
+			if (!(value instanceof Integer))
+				return;
+			setDirection((Integer) value);
+			break;
+		case FIELD_MAXIMUM_HEALTH:
+			if (!(value instanceof Short))
+				return;
+			setMaxHealth((Short) value);
+			break;
+		case FIELD_STAR_COUNT:
+			if (!(value instanceof Short))
+				return;
+			setStarCount((Short) value);
+			break;
+		case FIELD_CURRENT_HEALTH:
+			if (!(value instanceof Short))
+				return;
+			setCurHealth((Short) value);
+			break;
+		case FIELD_CURRENT_WEAPON:
+			if (!(value instanceof Integer))
+				return;
+			setCurWeapon((Integer) value);
+			break;
+		case FIELD_EQUIPS:
+			if (index < 0)
+				return;
+			if (!(value instanceof Boolean))
+				return;
+			setEquip(index, (Boolean) value);
+			break;
+		case FIELD_TIME_PLAYED:
+			if (!(value instanceof Integer))
+				return;
+			setTime((Integer) value);
+			break;
+		case FIELD_WEAPON_ID:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			w = getWeapon(index);
+			if (w == null)
+				return;
+			w.setId((Integer) value);
+			break;
+		case FIELD_WEAPON_LEVEL:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			w = getWeapon(index);
+			if (w == null)
+				return;
+			w.setLevel((Integer) value);
+			break;
+		case FIELD_WEAPON_EXP:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			w = getWeapon(index);
+			if (w == null)
+				return;
+			w.setExp((Integer) value);
+			break;
+		case FIELD_WEAPON_CURRENT_AMMO:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			w = getWeapon(index);
+			if (w == null)
+				return;
+			w.setCurAmmo((Integer) value);
+			break;
+		case FIELD_WEAPON_MAXIMUM_AMMO:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			w = getWeapon(index);
+			if (w == null)
+				return;
+			w.setMaxAmmo((Integer) value);
+			break;
+		case FIELD_ITEMS:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			setItem(index, (Integer) value);
+			break;
+		case FIELD_WARP_ID:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			t = getWarp(index);
+			if (t == null)
+				return;
+			t.setId((Integer) value);
+		case FIELD_WARP_LOCATION:
+			if (index < 0)
+				return;
+			if (!(value instanceof Integer))
+				return;
+			t = getWarp(index);
+			if (t == null)
+				return;
+			t.setLocation((Integer) value);
+		case FIELD_FLAGS:
+			if (index < 0)
+				return;
+			if (!(value instanceof Boolean))
+				return;
+			setFlag(index, (Boolean) value);
+			break;
+		case FIELD_MIM_COSTUME:
+			if (!(value instanceof Long))
+				return;
+			setMimCostume((Long) value);
+			break;
+		case FIELD_VARIABLES:
+			if (index < 0)
+				return;
+			if (!(value instanceof Short))
+				return;
+			setVariable(index, (Short) value);
+			break;
+		case FIELD_PHYSICS_VARIABLES:
+			if (index < 0)
+				return;
+			if (!(value instanceof Short))
+				return;
+			setPhysVariable(index, (Short) value);
+			break;
+		case FIELD_CASH:
+			if (!(value instanceof Long))
+				return;
+			setCash((Long) value);
+			break;
+		case EVENT_SAVE:
+		case EVENT_LOAD:
+		default:
+			break;
+		}
+		noUndo = oldUndo;
 	}
 
 	/**

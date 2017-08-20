@@ -252,7 +252,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 				"Could not load resources", JOptionPane.ERROR_MESSAGE);
 		System.exit(1);
 	}
-	
+
 	public static LoadFrame updateCheck(boolean disposeOfLoadFrame, boolean showUpToDate) {
 		LoadFrame loadFrame = new LoadFrame();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
@@ -289,8 +289,8 @@ public class Main extends JFrame implements ProfileChangeListener {
 					panel.add(scrollChglog);
 					panel.add(new JLabel(
 							"Click \"Yes\" to go to the download site, click \"No\" to continue to the save editor."));
-					int result = JOptionPane.showConfirmDialog(null, panel, "New update!",
-							JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+					int result = JOptionPane.showConfirmDialog(null, panel, "New update!", JOptionPane.YES_NO_OPTION,
+							JOptionPane.PLAIN_MESSAGE);
 					if (result == JOptionPane.YES_OPTION) {
 						URI dlSite = new URI(DOWNLOAD_SITE);
 						if (Desktop.isDesktopSupported())
@@ -306,8 +306,8 @@ public class Main extends JFrame implements ProfileChangeListener {
 					System.out.println("Update check successful: up to date");
 					if (showUpToDate) {
 						JOptionPane.showMessageDialog(null,
-								"You are using the most up to date version of CaveSaveEdit! Have fun!",
-								"Up to date!", JOptionPane.INFORMATION_MESSAGE);
+								"You are using the most up to date version of CaveSaveEdit! Have fun!", "Up to date!",
+								JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 			} catch (IOException e) {
@@ -384,6 +384,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING);
 		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
+		Profile.setNoUndo(false);
 		try {
 			Resources.loadUI();
 			Resources.colorImages(lineColor);
@@ -406,7 +407,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 	}
 
 	@Override
-	public void onChange(String field, int id) {
+	public void onChange(String field, int id, Object oldValue, Object newValue) {
 		setTitle(this);
 	}
 
