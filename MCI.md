@@ -35,7 +35,7 @@ If no special support is required, `null` can also be returned.
 - `getFlagDescriptions:Array<String>` - Gets a list of flag descriptions.
 
 ## Player extras
-- `getPlayerFrame:java.awt.Rectangle` - Gets the player's frame rectangle.
+- `getPlayerFrame:java.awt.Rectangle` - Gets the player's frame rectangle. `x` and `y` are the top-left corner's position, and `width` and `height` are the bottom-right corner's position.
 - `getPlayerOffset:java.awt.Point` - Gets the player's offset in pixels.
 
 Both of these functions get the following parameters:  
@@ -55,5 +55,5 @@ Every `WrappedPxeEntry` object has the following fields (they're public, so just
 - `flags:Array<Boolean>` - The entity's flags.
 
 Here are the functions themselves:
-- `getEntityFrame:java.awt.Rectangle` - Gets the entity's frame rectangle.
+- `getEntityFrame:java.awt.Rectangle` - Gets the entity's frame rectangle. `x` and `y` are the top-left corner's position, and `width` and `height` are the bottom-right corner's position.
 - `getEntityOffset:java.awt.Point` - Gets the entity's position offset in pixels.

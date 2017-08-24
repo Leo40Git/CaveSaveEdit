@@ -217,14 +217,14 @@ public class MapView extends Component implements IDraggable {
 			if (ee == null)
 				continue;
 			Rectangle frameRect = ee.getFrameRect();
-			if (frameRect.width < 1 || frameRect.height < 1)
+			if (frameRect.x < 0 || frameRect.y < 0 || frameRect.width < 0 || frameRect.height < 0)
 				continue;
 			Point offset = ee.getOffset();
 			if (srcImg != null) {
 				int srcX = frameRect.x;
 				int srcY = frameRect.y;
-				int srcX2 = srcX + frameRect.width;
-				int srcY2 = srcY + frameRect.height;
+				int srcX2 = frameRect.width;
+				int srcY2 = frameRect.height;
 				Rectangle dest = e.getDrawArea();
 				int dstX = (int) (dest.x + offset.x);
 				int dstY = (int) (dest.y + offset.y);
@@ -250,8 +250,8 @@ public class MapView extends Component implements IDraggable {
 		int yPixel = playerY - 16;
 		yPixel /= snap;
 		yPixel *= 2;
-		int sourceX = 0;
-		int sourceY = (int) (64 * costume + 32 * dir);
+		int sourceX1 = 0;
+		int sourceY1 = (int) (64 * costume + 32 * dir);
 		Composite oc = g.getComposite();
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (trans ? 0.5f : 1));
 		g.setComposite(ac);
@@ -261,20 +261,20 @@ public class MapView extends Component implements IDraggable {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
-		int width = 32, height = 32;
+		int sourceX2 = 32, sourceY2 = sourceY1 + 32;
 		if (pe != null) {
 			Rectangle pf = pe.getFrameRect();
 			Point po = pe.getOffset();
-			sourceX = pf.x;
-			sourceY = pf.y;
-			width = pf.width;
-			height = pf.height;
+			sourceX1 = pf.x;
+			sourceY1 = pf.y;
+			sourceX2 = pf.width;
+			sourceY2 = pf.height;
 			xPixel += po.x;
 			yPixel += po.y;
 
 		}
-		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + width, yPixel + height, sourceX,
-				sourceY, sourceX + width, sourceY + height, null);
+		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + Math.abs(sourceX2 - sourceX1),
+				yPixel + Math.abs(sourceY2 - sourceY1), sourceX1, sourceY1, sourceX2, sourceY2, null);
 		g.setComposite(oc);
 	}
 
@@ -296,7 +296,7 @@ public class MapView extends Component implements IDraggable {
 		camX = Math.max(0, Math.min((map[0][0].length - 21) * 32, playerX - width / 2));
 		camY = Math.max(0, Math.min((map[0].length - 16) * 32, playerY - height / 2));
 	}
-	
+
 	public void updatePlayerPos() {
 		playerX = Profile.getX();
 		playerY = Profile.getY();
