@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -177,13 +178,16 @@ public class Main extends JFrame implements ProfileChangeListener {
 			window.setTitle("CaveSaveEdit");
 	}
 
-	private static class MyPrintStream extends PrintStream {
+	private static class FNCPrintStream extends PrintStream {
 
 		private PrintStream consoleOut;
 
-		public MyPrintStream(File file) throws FileNotFoundException {
+		public FNCPrintStream(OutputStream file, boolean err) throws FileNotFoundException {
 			super(file);
-			consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.err));
+			if (err)
+				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.err));
+			else
+				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.out));
 		}
 
 		@Override
@@ -204,12 +208,39 @@ public class Main extends JFrame implements ProfileChangeListener {
 	}
 
 	public static class LoadFrame extends JFrame {
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 5562200728043308281L;
 
 		private String loadString = "Checking for updates...";
 
 		public void setLoadString(String loadString) {
 			this.loadString = loadString;
+		}
+
+		private class LoadFramePanel extends JPanel {
+			private static final long serialVersionUID = 191674646820485865L;
+
+			private Color trans;
+			private Dimension size;
+
+			public LoadFramePanel(Color trans, Dimension win) {
+				this.trans = trans;
+				this.size = win;
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.setBackground(trans);
+				g2d.clearRect(0, 0, getWidth(), getHeight());
+				FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
+				g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				g2d.setColor(COLOR_BG);
+				g2d.fillRect(16, 16, size.width - 32, size.height - 32);
+				g2d.setColor(Color.white);
+				g2d.drawRect(16, 16, size.width - 32, size.height - 32);
+				g2d.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+				FrontUtils.drawStringCentered(g2d, loadString, size.width / 2, size.height / 2, true);
+			}
 		}
 
 		public LoadFrame() {
@@ -221,24 +252,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 			setUndecorated(true);
 			final Color trans = new Color(0, 0, 0, 0);
 			setBackground(trans);
-			add(new JPanel() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				protected void paintComponent(Graphics g) {
-					Graphics2D g2d = (Graphics2D) g;
-					g2d.setBackground(trans);
-					g2d.clearRect(0, 0, getWidth(), getHeight());
-					FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
-					g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-					g2d.setColor(COLOR_BG);
-					g2d.fillRect(16, 16, win.width - 32, win.height - 32);
-					g2d.setColor(Color.white);
-					g2d.drawRect(16, 16, win.width - 32, win.height - 32);
-					g2d.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
-					FrontUtils.drawStringCentered(g2d, loadString, win.width / 2, win.height / 2, true);
-				}
-			});
+			add(new LoadFramePanel(trans, win));
 			pack();
 			setLocationRelativeTo(null);
 			setVisible(true);
@@ -248,7 +262,9 @@ public class Main extends JFrame implements ProfileChangeListener {
 
 	private static void resourceError(Throwable e) {
 		e.printStackTrace();
-		JOptionPane.showMessageDialog(null, "Could not load resources!\nPlease report this error to the programmer.",
+		JOptionPane.showMessageDialog(null,
+				"Could not load resources!\nPlease report this error to the programmer.\nAn exception has occured:\n"
+						+ e,
 				"Could not load resources", JOptionPane.ERROR_MESSAGE);
 		System.exit(1);
 	}
@@ -262,10 +278,12 @@ public class Main extends JFrame implements ProfileChangeListener {
 		} catch (IOException e1) {
 			System.err.println("Update check failed: attempt to download caused exception");
 			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "The update check has failed!\nAre you not connected to the internet?",
+					"Update check failed", JOptionPane.ERROR_MESSAGE);
 		}
 		if (verFile.exists()) {
 			System.out.println("Update check: reading version");
-			try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr)) {
+			try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr);) {
 				Version check = new Version(reader.readLine());
 				if (VERSION.compareTo(check) < 0) {
 					System.out.println("Update check successful: have update");
@@ -313,6 +331,9 @@ public class Main extends JFrame implements ProfileChangeListener {
 			} catch (IOException e) {
 				System.err.println("Update check failed: attempt to read downloaded file caused exception");
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"The update check has failed!\nAn exception occured while reading update check results:\n" + e,
+						"Update check failed", JOptionPane.ERROR_MESSAGE);
 			} catch (URISyntaxException e1) {
 				System.out.println("Browse to download site failed: bad URI syntax");
 				e1.printStackTrace();
@@ -344,11 +365,19 @@ public class Main extends JFrame implements ProfileChangeListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		FileOutputStream logOut = null;
 		try {
-			System.setErr(new MyPrintStream(log));
+			logOut = new FileOutputStream(log);
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		try {
+			System.setOut(new FNCPrintStream(logOut, false));
+			System.setErr(new FNCPrintStream(logOut, true));
 		} catch (FileNotFoundException e1) {
 			System.exit(1);
 		}
+		Config.init();
 		final String nolaf = "nolaf";
 		if (new File(System.getProperty("user.dir") + "/" + nolaf).exists())
 			System.out.println("No L&F file detected, skipping setting Look & Feel");
@@ -370,7 +399,13 @@ public class Main extends JFrame implements ProfileChangeListener {
 		}
 		LoadFrame loadFrame;
 		final String skipuc = "skipuc";
-		if (new File(System.getProperty("user.dir") + "/" + skipuc).exists()) {
+		boolean skipucF = new File(System.getProperty("user.dir") + "/" + skipuc).exists();
+		boolean skipucR = Config.getBoolean(Config.KEY_SKIP_UPDATE_CHECK, false);
+		if (skipucR) {
+			Config.setBoolean(Config.KEY_SKIP_UPDATE_CHECK, false);
+			skipucF = skipucR;
+		}
+		if (skipucF) {
 			System.out.println("Update check: skip file detected, skipping");
 			loadFrame = new LoadFrame();
 		} else {
@@ -380,7 +415,6 @@ public class Main extends JFrame implements ProfileChangeListener {
 			loadFrame.setLoadString("Loading...");
 			loadFrame.repaint();
 		});
-		Config.init();
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		encoding = Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING);
 		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
