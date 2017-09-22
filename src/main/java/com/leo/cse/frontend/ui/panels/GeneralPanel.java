@@ -175,6 +175,7 @@ public class GeneralPanel extends Panel {
 				return SaveEditorPanel.showMapGrid;
 			}
 		}));
+		Profile.addListener(mp);
 		compList.add(new BooleanBox("Show Grid?", 756, 406, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {

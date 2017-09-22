@@ -16,6 +16,7 @@ import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo;
 import com.leo.cse.backend.exe.MapInfo.PxeEntry;
 import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.ProfileChangeListener;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.MCI.EntityExtras;
@@ -23,7 +24,7 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
-public class MapView extends Component implements IDraggable {
+public class MapView extends Component implements IDraggable, ProfileChangeListener {
 
 	private static final Color COLOR_NULL = new Color(0, 0, 16);
 
@@ -318,8 +319,7 @@ public class MapView extends Component implements IDraggable {
 		if (ignoreClick > 0)
 			ignoreClick--;
 		else {
-			Profile.setX((short) (x - this.x + camX));
-			Profile.setY((short) (y - this.y + camY));
+			Profile.setPosition((short) (x - this.x + camX), (short) (y - this.y + camY));
 			playerX = Profile.getX();
 			playerY = Profile.getY();
 		}
@@ -354,8 +354,7 @@ public class MapView extends Component implements IDraggable {
 			return;
 		px = Math.max(0, Math.min(map[0][0].length * 32, px));
 		py = Math.max(0, Math.min(map[0].length * 32, py));
-		Profile.setX((short) px);
-		Profile.setY((short) py);
+		Profile.setPosition((short) px, (short) py);
 		updateCamCoords();
 	}
 
@@ -382,10 +381,33 @@ public class MapView extends Component implements IDraggable {
 			return;
 		if (mapInfo.hasMissingAssets())
 			return;
-		Profile.setX(playerX);
-		Profile.setY(playerY);
+		Profile.setPosition(playerX, playerY);
 		updateCamCoords();
 		ignoreClick = 1;
+	}
+
+	@Override
+	public void onChange(String field, int id, Object oldValue, Object newValue) {
+		Short newShort = 0;
+		if (newValue instanceof Short)
+			newShort = (Short) newValue;
+		switch (field) {
+		case Profile.FIELD_POSITION:
+			Short[] newArray = new Short[] { playerX, playerY };
+			if (newValue instanceof Short[])
+				newArray = (Short[]) newValue;
+			playerX = newArray[0];
+			playerY = newArray[1];
+			break;
+		case Profile.FIELD_X_POSITION:
+			playerX = newShort;
+			break;
+		case Profile.FIELD_Y_POSITION:
+			playerY = newShort;
+			break;
+		default:
+			break;
+		}
 	}
 
 }

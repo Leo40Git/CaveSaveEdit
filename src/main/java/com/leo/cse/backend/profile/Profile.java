@@ -44,17 +44,24 @@ public class Profile {
 	 */
 	public static final String FIELD_SONG = "song";
 	/**
+	 * Position field.
+	 * 
+	 * @see #x
+	 * @see #y
+	 */
+	public static final String FIELD_POSITION = "position";
+	/**
 	 * X position field.
 	 * 
 	 * @see #x
 	 */
-	public static final String FIELD_X_POSITION = "x";
+	public static final String FIELD_X_POSITION = "position_x";
 	/**
 	 * Y position field.
 	 * 
 	 * @see #y
 	 */
-	public static final String FIELD_Y_POSITION = "y";
+	public static final String FIELD_Y_POSITION = "position_y";
 	/**
 	 * Direction field.
 	 * 
@@ -632,6 +639,7 @@ public class Profile {
 
 		@Override
 		public void undo() throws CannotUndoException {
+			System.out.println("Attempting to undo: " + getUndoPresentationName());
 			setField(field, index, oldVal);
 			hasBeenUndone = true;
 		}
@@ -643,6 +651,7 @@ public class Profile {
 
 		@Override
 		public void redo() throws CannotRedoException {
+			System.out.println("Attempting to redo: " + getRedoPresentationName());
 			setField(field, index, newVal);
 			hasBeenUndone = false;
 		}
@@ -1134,6 +1143,17 @@ public class Profile {
 	 */
 	public static short getX() {
 		return x;
+	}
+
+	public static void setPosition(Short[] value) {
+		if (Profile.x != value[0] && Profile.y != value[1])
+			notifyListeners(FIELD_POSITION, -1, new Short[] { Profile.x, Profile.y }, value);
+		Profile.x = value[0];
+		Profile.y = value[1];
+	}
+
+	public static void setPosition(short x, short y) {
+		setPosition(new Short[] { x, y });
 	}
 
 	/**
@@ -1675,6 +1695,11 @@ public class Profile {
 			if (!(value instanceof Integer))
 				return;
 			setSong((Integer) value);
+			break;
+		case FIELD_POSITION:
+			if (!(value instanceof Short[]))
+				return;
+			setPosition((Short[]) value);
 			break;
 		case FIELD_X_POSITION:
 			if (!(value instanceof Short))

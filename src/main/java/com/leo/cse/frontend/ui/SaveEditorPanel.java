@@ -548,7 +548,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {
 		if (!dBoxes.isEmpty())
 			return;
 		int code = e.getKeyCode();
@@ -621,13 +621,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	@Override
 	public void mouseMoved(MouseEvent e) {
 	}
-
+	
 	@Override
-	public void keyTyped(KeyEvent e) {
+	public void keyPressed(KeyEvent e) {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyTyped(KeyEvent e) {
 	}
 
 }

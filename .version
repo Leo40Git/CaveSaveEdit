@@ -1,6 +1,3 @@
-1.0.9
-Update 1.0.9: Flag UI Rewrite
-- Better scrollbar, with mouse dragging functionality!
-- Undoing & redoing!
-- Added option to wipe settings
-- Added option to check for updates (in About)
+1.0.10
+Update 1.0.10:
+- Made undoing position change on map view smoother
