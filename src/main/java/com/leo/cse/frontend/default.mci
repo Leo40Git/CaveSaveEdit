@@ -3,7 +3,7 @@ function getName() {
     return "Cave Story";
 }
 function getAuthor() {
-    return "Leo40Story, zxin (flag list), Wistil, Noxid, Carrotlord, BLink (entity frames)";
+    return "Leo40Story (misc), Wistil, Noxid, Carrotlord, BLink (entity frames)";
 }
 // Game information
 function getExeName() {
