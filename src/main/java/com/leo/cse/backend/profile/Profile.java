@@ -44,10 +44,9 @@ public class Profile {
 	 */
 	public static final String FIELD_SONG = "song";
 	/**
-	 * Position field.
+	 * Position "field". A field for this doesn't actually exist.
 	 * 
-	 * @see #x
-	 * @see #y
+	 * @see #getPosition()
 	 */
 	public static final String FIELD_POSITION = "position";
 	/**
@@ -640,7 +639,7 @@ public class Profile {
 		@Override
 		public void undo() throws CannotUndoException {
 			System.out.println("Attempting to undo: " + getUndoPresentationName());
-			setField(field, index, oldVal);
+			setFieldNoUndo(field, index, oldVal);
 			hasBeenUndone = true;
 		}
 
@@ -652,7 +651,7 @@ public class Profile {
 		@Override
 		public void redo() throws CannotRedoException {
 			System.out.println("Attempting to redo: " + getRedoPresentationName());
-			setField(field, index, newVal);
+			setFieldNoUndo(field, index, newVal);
 			hasBeenUndone = false;
 		}
 
@@ -1135,6 +1134,46 @@ public class Profile {
 			notifyListeners(FIELD_SONG, -1, Profile.song, song);
 		Profile.song = song;
 	}
+	
+	/**
+	 * Gets the player's current position.
+	 * @return position array, index 0 is X, index 1 is Y
+	 */
+	public static short[] getPosition() {
+		return new short[] { x, y };
+	}
+	
+	/**
+	 * Sets the player's current position.
+	 * @param value new position array, index 0 is X, index 1 is Y
+	 */
+	public static void setPosition(short[] value) {
+		if (value.length < 2)
+			return;
+		if (Profile.x != value[0] && Profile.y != value[1])
+			notifyListeners(FIELD_POSITION, -1, new short[] { Profile.x, Profile.y }, value);
+		Profile.x = value[0];
+		Profile.y = value[1];
+	}
+	
+	/**
+	 * Sets the player's current position.
+	 * @param x new X position
+	 * @param y new Y position
+	 */
+	public static void setPosition(short x, short y) {
+		setPosition(new short[] { x, y });
+	}
+	
+	/**
+	 * Sets the player's current position.
+	 * @param value position array, index 0 is X, index 1 is Y
+	 */
+	public static void setPosition(Short[] value) {
+		if (value.length < 2)
+			return;
+		setPosition(value[0], value[1]);
+	}
 
 	/**
 	 * Gets the player's X position.
@@ -1143,17 +1182,6 @@ public class Profile {
 	 */
 	public static short getX() {
 		return x;
-	}
-
-	public static void setPosition(Short[] value) {
-		if (Profile.x != value[0] && Profile.y != value[1])
-			notifyListeners(FIELD_POSITION, -1, new Short[] { Profile.x, Profile.y }, value);
-		Profile.x = value[0];
-		Profile.y = value[1];
-	}
-
-	public static void setPosition(short x, short y) {
-		setPosition(new Short[] { x, y });
 	}
 
 	/**
@@ -1671,7 +1699,7 @@ public class Profile {
 	}
 
 	/**
-	 * Sets a field.
+	 * Sets a field without adding an undoable edit.
 	 * 
 	 * @param field
 	 *            field to set
@@ -1680,7 +1708,7 @@ public class Profile {
 	 * @param value
 	 *            value to set
 	 */
-	public static void setField(String field, int index, Object value) {
+	public static void setFieldNoUndo(String field, int index, Object value) {
 		boolean oldUndo = noUndo;
 		noUndo = true;
 		Weapon w;
@@ -1917,14 +1945,8 @@ public class Profile {
 		}
 		ret += "\n]";
 		ret += "\nFlags: [\n  ";
-		int fc = 0;
 		for (int i = 0; i < flags.length; i++) {
-			ret += (flags[i] ? "T" : "F") + ",";
-			fc++;
-			if (fc > 50) {
-				ret += "\n  ";
-				fc = 0;
-			}
+			ret += i + ": " + (flags[i] ? "T" : "F") + ",\n  ";
 		}
 		ret += "\n]";
 		return ret;
