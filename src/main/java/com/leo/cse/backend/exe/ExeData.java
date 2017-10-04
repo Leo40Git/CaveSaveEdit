@@ -331,19 +331,15 @@ public class ExeData {
 		STRING_NPC_PREFIX = Arrays.binarySearch(STRING_POINTERS, NPC_PREFIX_PTR);
 	}
 
-	// TODO CS+ compatibility
+	// TODO CS+ support
 	/**
 	 * Enables CS+ compatibility, allowing stage.tbl files to be loaded as mods.
 	 * Disables fancy EXE loading, however.
-	 * <p>
-	 * <b>NOTE:</b> <i>Currently does nothing.</i>
 	 */
 	private static boolean plusMode = false;
 
 	/**
 	 * Checks if CS+ compatibility is currently enabled.
-	 * <p>
-	 * <b>NOTE:</b> <i>Currently does nothing.</i>
 	 * 
 	 * @return <code>true</code> if in CS+ mode, <code>false</code> otherwise
 	 */
@@ -353,8 +349,6 @@ public class ExeData {
 
 	/**
 	 * Enables or disables CS+ compatibility.
-	 * <p>
-	 * <b>NOTE:</b> <i>Currently does nothing.</i>
 	 * 
 	 * @param plusMode
 	 *            <code>true</code> to enable CS+ mode, <code>false</code> to
@@ -531,16 +525,13 @@ public class ExeData {
 	 */
 	private static void load0(File base) throws IOException {
 		ExeData.base = base;
-		// TODO CS+ support
-		/*
-		 * if (base.getName().endsWith(".tbl")) {
-		 * // assume stage.tbl
-		 * plusMode = true;
-		 * loadPlus();
-		 * return;
-		 * } else
-		 */
-		plusMode = false;
+		if (base.getName().endsWith(".tbl")) {
+			// assume stage.tbl
+			plusMode = true;
+			loadPlus();
+			return;
+		} else
+			plusMode = false;
 		try {
 			loadExeStrings();
 			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
@@ -561,23 +552,23 @@ public class ExeData {
 	}
 
 	/**
-	 * Loads mapdata from a stage.tbl file. Maybe.
+	 * Loads mapdata from a stage.tbl file.
 	 * 
 	 * @throws IOException
 	 *             probably all the time because this code is designed for
 	 *             executables.
 	 */
 	// TODO CS+ support
-	@SuppressWarnings("unused")
 	private static void loadPlus() throws IOException {
-		dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
+		// TODO default EXE strings
+		dataDir = base.getParentFile();
 		entityList = new Vector<EntityData>();
 		mapdata = new Vector<Mapdata>();
 		mapInfo = new Vector<MapInfo>();
 		imageMap = new HashMap<File, BufferedImage>();
 		pxaMap = new HashMap<File, byte[]>();
 		loadNpcTbl();
-		fillMapdata();
+		fillMapdataPlus();
 		loadMapInfo();
 		loadGraphics();
 	}
@@ -801,7 +792,6 @@ public class ExeData {
 			inChan.read(uBuf);
 			uBuf.flip();
 			String segStr = new String(uBuf.array());
-
 			if (segStr.contains(".csmap"))
 				mapSec = i;
 			else if (segStr.contains(".swdata"))
@@ -928,6 +918,17 @@ public class ExeData {
 		}
 
 		inStream.close();
+	}
+
+	/**
+	 * Loads map data from a "stage.tbl" file.
+	 * 
+	 * @exception IOException
+	 *                if an I/O error occurs.
+	 */
+	// TODO CS+ support
+	private static void fillMapdataPlus() throws IOException {
+
 	}
 
 	/**
