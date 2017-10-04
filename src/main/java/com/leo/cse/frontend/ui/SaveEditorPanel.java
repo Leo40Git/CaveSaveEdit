@@ -588,22 +588,19 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 						Profile.redo();
 					else
 						Profile.undo();
-					repaint();
 				}
 				break;
 			case KeyEvent.VK_Y:
 				if (ctrl) {
 					Profile.redo();
-					repaint();
 				}
 				break;
 			default:
 				break;
 			}
-		} else {
+		} else
 			lastFocus.onKey(code, shift, ctrl);
-			repaint();
-		}
+		repaint();
 	}
 
 	@Override

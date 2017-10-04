@@ -355,6 +355,7 @@ public class MapView extends Component implements IDraggable, ProfileChangeListe
 		px = Math.max(0, Math.min(map[0][0].length * 32, px));
 		py = Math.max(0, Math.min(map[0].length * 32, py));
 		Profile.setPosition((short) px, (short) py);
+		updatePlayerPos();
 		updateCamCoords();
 	}
 
