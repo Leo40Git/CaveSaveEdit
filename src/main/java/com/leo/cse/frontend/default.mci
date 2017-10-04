@@ -3,7 +3,7 @@ function getName() {
     return "Cave Story";
 }
 function getAuthor() {
-    return "Leo40Story (misc), Wistil, Noxid, Carrotlord, BLink (entity frames)";
+    return "Kapow (general), Wistil, Noxid, Carrotlord, BLink (entity frames), Leo40Story";
 }
 // Game information
 function getExeName() {
@@ -119,287 +119,306 @@ function getSaveFlagID() {
 // Array of flag descriptions
 function getFlagDescriptions() {
     var flagDesc = [];
-    flagDesc[100] = "No description yet.";
-    flagDesc[101] = "No description yet.";
-    flagDesc[102] = "No description yet.";
-    flagDesc[103] = "No description yet.";
-    flagDesc[105] = "No description yet.";
-    flagDesc[106] = "No description yet.";
-    flagDesc[120] = "No description yet.";
-    flagDesc[140] = "No description yet.";
-    flagDesc[153] = "No description yet.";
-    flagDesc[154] = "No description yet.";
-    flagDesc[155] = "No description yet.";
-    flagDesc[156] = "No description yet.";
-    flagDesc[157] = "No description yet.";
-    flagDesc[158] = "No description yet.";
-    flagDesc[159] = "No description yet.";
-    flagDesc[160] = "No description yet.";
-    flagDesc[161] = "No description yet.";
-    flagDesc[162] = "No description yet.";
-    flagDesc[200] = "No description yet.";
-    flagDesc[201] = "No description yet.";
-    flagDesc[202] = "No description yet.";
-    flagDesc[210] = "No description yet.";
-    flagDesc[211] = "No description yet.";
-    flagDesc[212] = "No description yet.";
-    flagDesc[213] = "No description yet.";
-    flagDesc[214] = "No description yet.";
-    flagDesc[215] = "No description yet.";
-    flagDesc[216] = "No description yet.";
-    flagDesc[217] = "No description yet.";
-    flagDesc[218] = "No description yet.";
-    flagDesc[219] = "No description yet.";
-    flagDesc[221] = "No description yet.";
-    flagDesc[222] = "No description yet.";
-    flagDesc[223] = "No description yet.";
-    flagDesc[224] = "No description yet.";
-    flagDesc[225] = "No description yet.";
-    flagDesc[226] = "No description yet.";
-    flagDesc[227] = "No description yet.";
-    flagDesc[228] = "No description yet.";
-    flagDesc[240] = "No description yet.";
-    flagDesc[241] = "No description yet.";
-    flagDesc[242] = "No description yet.";
-    flagDesc[243] = "No description yet.";
-    flagDesc[261] = "No description yet.";
-    flagDesc[262] = "No description yet.";
-    flagDesc[263] = "No description yet.";
-    flagDesc[272] = "No description yet.";
-    flagDesc[273] = "No description yet.";
-    flagDesc[274] = "No description yet.";
-    flagDesc[275] = "No description yet.";
-    flagDesc[276] = "No description yet.";
-    flagDesc[278] = "No description yet.";
-    flagDesc[279] = "No description yet.";
-    flagDesc[280] = "No description yet.";
-    flagDesc[301] = "No description yet.";
-    flagDesc[302] = "No description yet.";
-    flagDesc[303] = "No description yet.";
-    flagDesc[320] = "No description yet.";
-    flagDesc[321] = "No description yet.";
-    flagDesc[322] = "No description yet.";
-    flagDesc[323] = "No description yet.";
-    flagDesc[324] = "No description yet.";
-    flagDesc[325] = "No description yet.";
-    flagDesc[326] = "No description yet.";
-    flagDesc[327] = "No description yet.";
-    flagDesc[329] = "No description yet.";
-    flagDesc[340] = "No description yet.";
-    flagDesc[341] = "No description yet.";
-    flagDesc[360] = "No description yet.";
-    flagDesc[361] = "No description yet.";
-    flagDesc[362] = "No description yet.";
-    flagDesc[370] = "No description yet.";
-    flagDesc[371] = "No description yet.";
-    flagDesc[372] = "No description yet.";
-    flagDesc[390] = "No description yet.";
-    flagDesc[410] = "No description yet.";
-    flagDesc[411] = "No description yet.";
-    flagDesc[430] = "No description yet.";
-    flagDesc[431] = "No description yet.";
-    flagDesc[440] = "No description yet.";
-    flagDesc[441] = "No description yet.";
-    flagDesc[442] = "No description yet.";
-    flagDesc[443] = "No description yet.";
-    flagDesc[444] = "No description yet.";
-    flagDesc[470] = "No description yet.";
-    flagDesc[480] = "No description yet.";
-    flagDesc[481] = "No description yet.";
-    flagDesc[482] = "No description yet.";
-    flagDesc[483] = "No description yet.";
-    flagDesc[484] = "No description yet.";
-    flagDesc[485] = "No description yet.";
-    flagDesc[486] = "No description yet.";
-    flagDesc[500] = "No description yet.";
-    flagDesc[501] = "No description yet.";
-    flagDesc[520] = "No description yet.";
-    flagDesc[521] = "No description yet.";
-    flagDesc[522] = "No description yet.";
-    flagDesc[523] = "No description yet.";
-    flagDesc[524] = "No description yet.";
-    flagDesc[525] = "No description yet.";
-    flagDesc[550] = "No description yet.";
-    flagDesc[561] = "No description yet.";
-    flagDesc[562] = "No description yet.";
-    flagDesc[563] = "No description yet.";
-    flagDesc[564] = "No description yet.";
-    flagDesc[565] = "No description yet.";
-    flagDesc[580] = "No description yet.";
-    flagDesc[590] = "No description yet.";
-    flagDesc[591] = "No description yet.";
-    flagDesc[592] = "No description yet.";
-    flagDesc[593] = "No description yet.";
-    flagDesc[594] = "No description yet.";
-    flagDesc[595] = "No description yet.";
-    flagDesc[596] = "No description yet.";
-    flagDesc[610] = "No description yet.";
-    flagDesc[620] = "No description yet.";
-    flagDesc[621] = "No description yet.";
-    flagDesc[622] = "No description yet.";
-    flagDesc[623] = "No description yet.";
-    flagDesc[624] = "No description yet.";
-    flagDesc[641] = "No description yet.";
-    flagDesc[680] = "No description yet.";
-    flagDesc[681] = "No description yet.";
-    flagDesc[700] = "No description yet.";
-    flagDesc[701] = "No description yet.";
-    flagDesc[702] = "No description yet.";
-    flagDesc[703] = "No description yet.";
-    flagDesc[704] = "No description yet.";
-    flagDesc[705] = "No description yet.";
-    flagDesc[710] = "No description yet.";
-    flagDesc[711] = "No description yet.";
-    flagDesc[720] = "No description yet.";
-    flagDesc[721] = "No description yet.";
-    flagDesc[722] = "No description yet.";
-    flagDesc[740] = "No description yet.";
-    flagDesc[741] = "No description yet.";
-    flagDesc[742] = "No description yet.";
-    flagDesc[743] = "No description yet.";
-    flagDesc[744] = "No description yet.";
-    flagDesc[760] = "No description yet.";
-    flagDesc[761] = "No description yet.";
-    flagDesc[762] = "No description yet.";
-    flagDesc[763] = "No description yet.";
-    flagDesc[764] = "No description yet.";
-    flagDesc[765] = "No description yet.";
-    flagDesc[766] = "No description yet.";
-    flagDesc[780] = "No description yet.";
-    flagDesc[781] = "No description yet.";
-    flagDesc[782] = "No description yet.";
-    flagDesc[783] = "No description yet.";
-    flagDesc[800] = "No description yet.";
-    flagDesc[801] = "No description yet.";
-    flagDesc[820] = "No description yet.";
-    flagDesc[821] = "No description yet.";
-    flagDesc[822] = "No description yet.";
-    flagDesc[823] = "No description yet.";
-    flagDesc[824] = "No description yet.";
-    flagDesc[825] = "No description yet.";
-    flagDesc[826] = "No description yet.";
-    flagDesc[827] = "No description yet.";
-    flagDesc[828] = "No description yet.";
-    flagDesc[829] = "No description yet.";
-    flagDesc[830] = "No description yet.";
-    flagDesc[832] = "No description yet.";
-    flagDesc[834] = "No description yet.";
-    flagDesc[835] = "No description yet.";
-    flagDesc[836] = "No description yet.";
-    flagDesc[837] = "No description yet.";
-    flagDesc[838] = "No description yet.";
-    flagDesc[839] = "No description yet.";
-    flagDesc[851] = "No description yet.";
-    flagDesc[880] = "No description yet.";
-    flagDesc[920] = "No description yet.";
-    flagDesc[921] = "No description yet.";
-    flagDesc[940] = "No description yet.";
-    flagDesc[941] = "No description yet.";
-    flagDesc[960] = "No description yet.";
-    flagDesc[961] = "No description yet.";
-    flagDesc[1000] = "No description yet.";
-    flagDesc[1001] = "No description yet.";
-    flagDesc[1002] = "No description yet.";
-    flagDesc[1003] = "No description yet.";
-    flagDesc[1004] = "No description yet.";
-    flagDesc[1020] = "No description yet.";
-    flagDesc[1021] = "No description yet.";
-    flagDesc[1022] = "No description yet.";
-    flagDesc[1023] = "No description yet.";
-    flagDesc[1024] = "No description yet.";
-    flagDesc[1025] = "No description yet.";
-    flagDesc[1026] = "No description yet.";
-    flagDesc[1027] = "No description yet.";
-    flagDesc[1028] = "No description yet.";
-    flagDesc[1029] = "No description yet.";
-    flagDesc[1030] = "No description yet.";
-    flagDesc[1031] = "No description yet.";
-    flagDesc[1032] = "No description yet.";
-    flagDesc[1033] = "No description yet.";
-    flagDesc[1034] = "No description yet.";
-    flagDesc[1035] = "No description yet.";
-    flagDesc[1036] = "No description yet.";
-    flagDesc[1037] = "No description yet.";
-    flagDesc[1038] = "No description yet.";
-    flagDesc[1039] = "No description yet.";
-    flagDesc[1040] = "No description yet.";
-    flagDesc[1041] = "No description yet.";
-    flagDesc[1042] = "No description yet.";
-    flagDesc[1044] = "No description yet.";
-    flagDesc[1045] = "No description yet.";
-    flagDesc[1046] = "No description yet.";
-    flagDesc[1080] = "No description yet.";
-    flagDesc[1080] = "No description yet.";
-    flagDesc[1081] = "No description yet.";
-    flagDesc[1082] = "No description yet.";
-    flagDesc[1100] = "No description yet.";
-    flagDesc[1101] = "No description yet.";
-    flagDesc[1102] = "No description yet.";
-    flagDesc[1103] = "No description yet.";
-    flagDesc[1105] = "No description yet.";
-    flagDesc[1106] = "No description yet.";
-    flagDesc[1107] = "No description yet.";
-    flagDesc[1120] = "No description yet.";
-    flagDesc[1121] = "No description yet.";
-    flagDesc[1140] = "No description yet.";
-    flagDesc[1141] = "No description yet.";
-    flagDesc[1190] = "No description yet.";
-    flagDesc[1191] = "No description yet.";
-    flagDesc[1192] = "No description yet.";
-    flagDesc[1250] = "No description yet.";
-    flagDesc[1270] = "No description yet.";
-    flagDesc[1271] = "No description yet.";
-    flagDesc[1272] = "No description yet.";
-    flagDesc[1273] = "No description yet.";
-    flagDesc[1274] = "No description yet.";
-    flagDesc[1290] = "No description yet.";
-    flagDesc[1320] = "No description yet.";
-    flagDesc[1340] = "No description yet.";
-    flagDesc[1341] = "No description yet.";
-    flagDesc[1370] = "No description yet.";
-    flagDesc[1371] = "No description yet.";
-    flagDesc[1372] = "No description yet.";
-    flagDesc[1373] = "No description yet.";
-    flagDesc[1390] = "No description yet.";
-    flagDesc[1391] = "No description yet.";
-    flagDesc[1392] = "No description yet.";
-    flagDesc[1393] = "No description yet.";
-    flagDesc[1440] = "No description yet.";
-    flagDesc[1441] = "No description yet.";
-    flagDesc[1442] = "No description yet.";
-    flagDesc[1443] = "No description yet.";
-    flagDesc[1444] = "No description yet.";
-    flagDesc[1445] = "No description yet.";
-    flagDesc[1460] = "No description yet.";
-    flagDesc[1531] = "No description yet.";
-    flagDesc[1532] = "No description yet.";
-    flagDesc[1533] = "No description yet.";
-    flagDesc[1534] = "No description yet.";
-    flagDesc[1550] = "No description yet.";
-    flagDesc[1551] = "No description yet.";
-    flagDesc[1561] = "No description yet.";
-    flagDesc[1562] = "No description yet.";
-    flagDesc[1563] = "No description yet.";
-    flagDesc[1564] = "No description yet.";
-    flagDesc[1590] = "No description yet.";
-    flagDesc[1591] = "No description yet.";
-    flagDesc[1592] = "No description yet.";
-    flagDesc[1593] = "No description yet.";
-    flagDesc[1600] = "No description yet.";
-    flagDesc[1620] = "No description yet.";
-    flagDesc[1640] = "No description yet.";
-    flagDesc[1641] = "No description yet.";
-    flagDesc[1642] = "No description yet.";
-    flagDesc[1643] = "No description yet.";
-    flagDesc[1644] = "No description yet.";
-    flagDesc[1700] = "No description yet.";
-    flagDesc[2000] = "No description yet.";
-    flagDesc[3000] = "No description yet.";
-    flagDesc[3001] = "No description yet.";
-    flagDesc[3002] = "No description yet.";
-    flagDesc[3003] = "No description yet.";
-    flagDesc[3004] = "No description yet.";
-    flagDesc[4000] = "Set after defeating the Core. Makes drowning run an alternate event.";
+    flagDesc[0100] = "Igor/Sue not in Eggs";
+    flagDesc[0101] = "POWER-UP - Life Capsule in Eggs (1)";
+    flagDesc[0102] = "POWER-UP - Life Capsule in Eggs (2)";
+    flagDesc[0103] = "Igor defeated (opens doors from Eggs to EggX, Eggs2 to EggX2)";
+    flagDesc[0105] = "Opens door from Eggs to Side Room";
+    flagDesc[0106] = "Teleport from Eggs/Eggs2 to Pens2 instead of Pens1 (for Pens cutscene)";
+    flagDesc[0120] = "Sue not in EggX";
+    flagDesc[0140] = "ITEM - ID Card";
+    flagDesc[0151] = "[UNUSED? - dummied treasure chest in Pens1? the chest triggers a nonexistant event]";
+    flagDesc[0153] = "Prevents Egg Chamber teleportation";
+    flagDesc[0154] = "Jack in Pens1, King in Mimi (after Eggs, before King leaves to resure Toroko)";
+    flagDesc[0155] = "Shows first Sue in cage cutscene after leaving Pens1";
+    flagDesc[0156] = "Kazuma, Booster, Sue, King in Pens1";
+    flagDesc[0157] = "Kazuma/Booster arrival cutscene (set during second Sue in cage cutscene)";
+    flagDesc[0158] = "Teleporter access to Sand Zone";
+    flagDesc[0159] = "Teleport to Eggs2 instead of Eggs (after drowning cutscene)";
+    flagDesc[0160] = "Triggers Booster v2.0 dialogue";
+    flagDesc[0161] = "Booster survived";
+    flagDesc[0162] = "ITEM - Booster v2.0";
+    flagDesc[0200] = "POWER-UP - Missiles in EggR";
+    flagDesc[0201] = "WEAPON - Missile Launcher (enables hidden Missile ammo entities)";
+    flagDesc[0202] = "WEAPON - Super Missile";
+    flagDesc[0210] = "ITEM - Santa's Key";
+    flagDesc[0211] = "Talked to Santa about key";
+    flagDesc[0212] = "Gave Santa's Key to Santa";
+    flagDesc[0213] = "Fireplace grate is gone";
+    flagDesc[0214] = "Opens door from Weed to Malco";
+    flagDesc[0215] = "ITEM - Rusty Key";
+    flagDesc[0216] = "Tried Rusty Key on door to Shelt (dialogue change if you try it again)";
+    flagDesc[0217] = "[Deactivates teleporter in Weed - not sure when/why]";
+    flagDesc[0218] = "POWER-UP - Missiles in Weed";
+    flagDesc[0219] = "Shows second Sue in cage cutscene after leaving Weed (set after Kazuma/Booster take scooter) ";
+    flagDesc[0220] = "POWER-UP - Life Capsule in Weed";
+    flagDesc[0221] = "ITEM - Gum Key";
+    flagDesc[0222] = "Opens door from Weed to Frog";
+    flagDesc[0223] = "Told Kazuma that Rusty Key doesn't work on Door to Shelt (dialogue change if you talk to him again)";
+    flagDesc[0224] = "Have visited Weed (dialogue change with caged Sue and King next to her)";
+    flagDesc[0225] = "Scooter not at shelter";
+    flagDesc[0226] = "Scooter crashed";
+    flagDesc[0227] = "Scooter wreckage is smoking (stops once you teleport or enter Santa's house)";
+    flagDesc[0228] = "Talked to Cthulhu 1 in Weed once (dialogue change)";
+    flagDesc[0240] = "[set with 0241, Santa dialogue jump is after 0241's, jump target doesn't exist]";
+    flagDesc[0241] = "WEAPON - Fireball, (dialogue changes regarding Chaco's fireplace)";
+    flagDesc[0242] = "Got Charcoal";
+    flagDesc[0243] = "Santa kidnapped";
+    flagDesc[0261] = "Learned about Jellyfish Juice (enables enemies)";
+    flagDesc[0262] = "Chaco kidnapped";
+    flagDesc[0263] = "Can get Lipstick (use bed right after Chaco first mentions Jellyfish Juice)";
+    flagDesc[0270] = "POWER-UP - Life Capsule in Sand (1)";
+    flagDesc[0271] = "POWER-UP - Life Capsule 2 in Sand (2)";
+    flagDesc[0272] = "Defeated Omega (Sunstones move when you reach them)";
+    flagDesc[0273] = "Sunstones moved";
+    flagDesc[0274] = "Currently have a Puppy on your back";
+    flagDesc[0275] = "ITEM - Kakeru (puppy)";
+    flagDesc[0276] = "ITEM - Nene (puppy)";
+    flagDesc[0277] = "[Shinobu leaves Sand? I don't understand how this is set]";
+    flagDesc[0278] = "Opens door from Sand to Gard";
+    flagDesc[0279] = "ITEM - Mick (puppy)";
+    flagDesc[0280] = "Go to Jenka2 instead of Jenka1 (Balrog stole storehouse key)";
+    flagDesc[0281] = "Curly not in Sand (saw you at entrance and ran away)";
+    flagDesc[0301] = "Opens door from Cave to Mimi";
+    flagDesc[0302] = "Entered Mimi once (disables falling on King cutscene)";
+    flagDesc[0303] = "More enemies in Cave";
+    flagDesc[0304] = "ITEM - Life Capsule in Cave";
+    flagDesc[0320] = "Toroko, King moved from platform (after falling on King)";
+    flagDesc[0321] = "King on left side of platform (before getting locket)";
+    flagDesc[0322] = "ITEM - Map System";
+    flagDesc[0323] = "Talked to King on platform once";
+    flagDesc[0324] = "Opens door from Mimi to Pens1";
+    flagDesc[0325] = "Teleporter access to Grasstown";
+    flagDesc[0326] = "King near door from Mimi to Pool";
+    flagDesc[0327] = "Jack stops guarding door to Cemet";
+    flagDesc[0329] = "Sue caged in Mimi";
+    flagDesc[0340] = "Mahin kidnapped (after drowning cutscene)";
+    flagDesc[0341] = "Changes music in Mimiga areas (after drowning cutscene)";
+    flagDesc[0360] = "Toroko kidnapped";
+    flagDesc[0361] = "Currently fighting Balrog";
+    flagDesc[0362] = "Locks door from Barr to Mimi";
+    flagDesc[0370] = "ITEM - Silver Locket";
+    flagDesc[0371] = "Toroko not in Pool";
+    flagDesc[0372] = "Kanpachi kidnapped";
+    flagDesc[0390] = "ITEM - Arthur's Key";
+    flagDesc[0391] = "ITEM - Little Man";
+    flagDesc[0410] = "ITEM - Beast Fang (can't get it)";
+    flagDesc[0411] = "Sandaime kidnapped";
+    flagDesc[0412] = "POWER-UP - Life Capsule in Plant";
+    flagDesc[0430] = "Saw first Kazuma on computer cutscene";
+    flagDesc[0431] = "Have saved at least once (loads saved game on Retry)";
+    flagDesc[0440] = "King in Comu";
+    flagDesc[0441] = "[set when first entering Pens1, but has no effect?]";
+    flagDesc[0442] = "WEAPON - Bubbler";
+    flagDesc[0443] = "Jack in Comu after leaving Cemet door";
+    flagDesc[0444] = "Jack in Comu after Kazuma/Booster arrive";
+    flagDesc[0470] = "Shield lowered in Eggs (used ID Card)";
+    flagDesc[0480] = "Currently fighting Balrog 2 (locks door from Malco to Weed)";
+    flagDesc[0481] = "Fans activated";
+    flagDesc[0482] = "Defeated Balrog 2 (can pull Malco out of ground)";
+    flagDesc[0483] = "Malco is not inactive or in ground";
+    flagDesc[0484] = "Malco says he can make a bomb";
+    flagDesc[0485] = "Malco is standing";
+    flagDesc[0486] = "ITEM - Explosive";
+    flagDesc[0500] = "Currently fighting Balfrog (locks door from Frog to Weed)";
+    flagDesc[0501] = "ITEM - Gum Base";
+    flagDesc[0520] = "Opens door from Weed to Shelt";
+    flagDesc[0521] = "Kazuma is not at the computer";
+    flagDesc[0522] = "Kazuma is standing";
+    flagDesc[0523] = "Kazuma/Booster in Weed (before scooter)";
+    flagDesc[0524] = "Teleporter in Shelt is active";
+    flagDesc[0525] = "Save Point and Health Refill appear in Shelt";
+    flagDesc[0540] = "POWER-UP - Life Capsule in WeedD";
+    flagDesc[0550] = "POWER-UP - Missiles in WeedB (fought Rabil)";
+    flagDesc[0560] = "[set when Curly fight starts]";
+    flagDesc[0561] = "Currently fighting Curly (locks doors from Curly to Sand/CurlyS)";
+    flagDesc[0562] = "Told Curly you won't kill the Mimigas";
+    flagDesc[0563] = "WEAPON - Machine Gun";
+    flagDesc[0564] = "Can get Hajime (after Jenka asks you to get the puppies)";
+    flagDesc[0565] = "Curly and Mimiga children not in Curly (sand zone residence)   I don't understand how the Curly fight sets this…";
+    flagDesc[0580] = "ITEM - Hajime";
+    flagDesc[0581] = "ITEM - Curly's Underwear";
+    flagDesc[0590] = "Gave 1st Puppy to Jenka (note: says \"Arf!\"";
+    flagDesc[0591] = "Gave 2nd Puppy to Jenka (note: says \"Arf arf!\"";
+    flagDesc[0592] = "Gave 3rd Puppy to Jenka (note: says \"Arf arf arf!\"";
+    flagDesc[0593] = "Gave 4th Puppy to Jenka (note: says \"Booop.\"";
+    flagDesc[0594] = "Gave 5th Puppy to Jenka (note: says \"Five!\", but you don't get a chance to talk to it)";
+    flagDesc[0595] = "Balrog stole storehouse key";
+    flagDesc[0596] = "Jenka stood up after Balrog's attack";
+    flagDesc[0610] = "ITEM - Shinobu";
+    flagDesc[0620] = "Saw Toroko red flowers cutscene";
+    flagDesc[0621] = "Currently fighting Frenzied Toroko (locks door from Gard to Sand)";
+    flagDesc[0622] = "King died";
+    flagDesc[0623] = "Frenzied Toroko defeated (can talk to King)";
+    flagDesc[0624] = "Door leads to SandE (for Misery teleport cutscene)";
+    flagDesc[0640] = "[something with Quote falling into the room?]";
+    flagDesc[0641] = "Opens door from MazeI to MazeH";
+    flagDesc[0642] = "POWER-UP - Life Capsule in MazeI";
+    flagDesc[0680] = "[Monster X fight triggered?]";
+    flagDesc[0681] = "Opens door from MazeW to MazeD";
+    flagDesc[0700] = "ITEM - Clinic Key";
+    flagDesc[0701] = "Talked to Curly in MazeO once";
+    flagDesc[0702] = "Gave Cure All to Gero";
+    flagDesc[0703] = "Curly will be cured";
+    flagDesc[0704] = "Curly not in MazeW";
+    flagDesc[0705] = "ITEM - Arms Barrier";
+    flagDesc[0710] = "Currently fighting Pooh Black (locks door from MazeD to MazeW)";
+    flagDesc[0711] = "ITEM - Cure All";
+    flagDesc[0720] = "Teleporter in MazeM active";
+    flagDesc[0721] = "Bought something from Chaba (Turbocharge, Snake, or Whimsical Star)";
+    flagDesc[0722] = "EQUIP - Whimsical Star";
+    flagDesc[0740] = "Saw Booster fall in MazeB";
+    flagDesc[0741] = "Booster not in MazeB";
+    flagDesc[0742] = "EQUIP - Booster v0.8";
+    flagDesc[0743] = "EQUIP - Booster v2.0";
+    flagDesc[0744] = "Teleporter in MazeB active";
+    flagDesc[0760] = "Curly not in MazeO";
+    flagDesc[0761] = "Curly ready to lift boulder";
+    flagDesc[0762] = "Balrog in MazeS";
+    flagDesc[0763] = "Currently fighting Balrog 3 (locks door from MazeS to MazeB)";
+    flagDesc[0764] = "Opens door from MazeS to MazeM (boulder moved)";
+    flagDesc[0765] = "Balrog 3 defeated (Super Missile chest appears)";
+    flagDesc[0766] = "WEAPON - Super Missile";
+    flagDesc[0780] = "Passageway in MazeM permanently open (from entering Drain once)";
+    flagDesc[0781] = "Curly in MazeM";
+    flagDesc[0782] = "Used computer to open passageway in MazeM";
+    flagDesc[0783] = "Locks door from MazeM to Drain (after drowning cutscene)";
+    flagDesc[0800] = "Locks door from Drain to MazeM (after drowning cutscene)";
+    flagDesc[0801] = "Opens grate from MazeM to River (after drowning cutscene)";
+    flagDesc[0820] = "Curly is next to first shutter";
+    flagDesc[0821] = "Opens shutters";
+    flagDesc[0822] = "Shutter 4 stuck, Curly is next to shutter 4";
+    flagDesc[0823] = "Shutter 4 fixed";
+    flagDesc[0824] = "Lowered lift in Almond";
+    flagDesc[0825] = "Opens big shutter";
+    flagDesc[0826] = "Curly is next to big shutter";
+    flagDesc[0827] = "Curly is next to broken robot";
+    flagDesc[0828] = "Currently fighting Core (can't get Tow Rope)";
+    flagDesc[0829] = "Curly drowning in Almond (before picking her up with Tow Rope)";
+    flagDesc[0830] = "[lots of effects, set after drowning cutscene]";
+    flagDesc[0831] = "Closes big shutter";
+    flagDesc[0832] = "[water level rose?]";
+    flagDesc[0834] = "ITEM - Tow Rope (also set when getting Booster v0.8)";
+    flagDesc[0835] = "Brought Curly out of Almond (computer in Pixel mentions notebook)";
+    flagDesc[0836] = "Currently have Curly (unconscious) on your back";
+    flagDesc[0837] = "Core defeated (Curly dialogue change)";
+    flagDesc[0838] = "[set after drowning cutscene, but has no effect?]";
+    flagDesc[0839] = "Locks door from Almond to Drain (after getting Tow Rope, before drowning cutscene)";
+    flagDesc[0850] = "River leads to Pool instead of Stream (but you can't get back to River anyway)";
+    flagDesc[0851] = "Curly dead (after message shown in River)";
+    flagDesc[0880] = "POWER-UP - Missiles in Eggs2";
+    flagDesc[0920] = "POWER-UP - Missiles in EggR2 (makes Save Point appear)";
+    flagDesc[0921] = "Currently fighting Sisters (locks doors from EggR2 to Eggs2)";
+    flagDesc[0923] = "Sisters defeated (small spikes gone from EggR2)";
+    flagDesc[0940] = "Opens door from EggX2 to Oside";
+    flagDesc[0941] = "Kazuma entered EggX2";
+    flagDesc[0960] = "Told Kazuma you'd escape with him (triggers bad ending if you talk to him in Oside)";
+    flagDesc[0961] = "Kazuma and Sky Dragon not in Oside";
+    flagDesc[1000] = "Scared Itoh";
+    flagDesc[1001] = "Talked to Itoh once";
+    flagDesc[1002] = "Talked to Itoh twice";
+    flagDesc[1003] = "ITEM - Controller";
+    flagDesc[1004] = "Itoh not in Itoh (the storehouse)";
+    flagDesc[1020] = "EQUIP - Mimiga Mask (note: there's a jump in the credits, but it doesn't change anything - was he going to have different illustrations?)";
+    flagDesc[1021] = "Kanpachi in Cent with bucket, sparkle not in Cent (he caught it)";
+    flagDesc[1022] = "ITEM - Teleporter Room Key";
+    flagDesc[1023] = "Opens door from Cent to CentW";
+    flagDesc[1024] = "Know Momorin's password (can enter door from Cent to Momo)";
+    flagDesc[1025] = "Red Flowers growing in Cent";
+    flagDesc[1026] = "Red Flowers blooming in Cent";
+    flagDesc[1027] = "Leftmost (working) sprinkler not in Cent";
+    flagDesc[1028] = "Broken Sprinkler in Cent";
+    flagDesc[1029] = "Can get Broken Sprinkler (after Shovel Brigade guy tells you to replace it)";
+    flagDesc[1030] = "Rocket is finished (opens door from Cent to Priso1/Priso2)";
+    flagDesc[1031] = "Itoh in Cent";
+    flagDesc[1032] = "Momorin in Cent";
+    flagDesc[1033] = "Shovel Brigade and other Mimigas taken away";
+    flagDesc[1034] = "Momorin took Mimiga Mask and gave back Booster";
+    flagDesc[1035] = "Can get Teleporter Room Key (Kanpachi told you he caught something)";
+    flagDesc[1036] = "Red Flowers, Sprinklers not in Cent (petals are left)";
+    flagDesc[1037] = "Talked to Shovel Brigade (the talkative one) without Mimiga Mask once";
+    flagDesc[1038] = "[set after meeting Itoh, cleared after long sleep in Momo]";
+    flagDesc[1039] = "[set after long sleep in Momo - Drolls gone, Puppy appears, more? rocket?]";
+    flagDesc[1040] = "POWER-UP - Life Capsule in Cent (2)";
+    flagDesc[1041] = "Talked to Curly in Cent once";
+    flagDesc[1042] = "Curly survived after Stream (can get Nikumaru Counter)";
+    flagDesc[1043] = "POWER-UP - Life Capsule in Cent (1)";
+    flagDesc[1044] = "Talked to Cthulhu in Cent once";
+    flagDesc[1045] = "Restored Curly's memory";
+    flagDesc[1046] = "ITEM - Iron Bond";
+    flagDesc[1080] = "Talked to Mahin in Jail1 once";
+    flagDesc[1081] = "Talked to Mahin in Jail1 twice";
+    flagDesc[1082] = "Sue and Jack not in Jail1";
+    flagDesc[1100] = "Talked to Momorin once";
+    flagDesc[1101] = "ITEM - Mimiga Mask";
+    flagDesc[1102] = "Know to talk to Itoh for Momorin (note: sprinklers in Cent use this for dialogue, but should probably use 1121)";
+    flagDesc[1103] = "Can use bed in Momo (long sleep)";
+    flagDesc[1105] = "Momorin not in Momo";
+    flagDesc[1106] = "Gave Booster to Momorin";
+    flagDesc[1107] = "Gave Sprinkler to Momorin";
+    flagDesc[1120] = "Kanpachi not in Lounge";
+    flagDesc[1121] = "ITEM - Sprinkler";
+    flagDesc[1140] = "Was captured by Droll (doesn't appear again)";
+    flagDesc[1141] = "Used Teleporter in CentW once (redundant with 1140 set)";
+    flagDesc[1190] = "Entered Blcny1 from Priso1/Priso2 (changes teleport from clouds at top of screen)";
+    flagDesc[1191] = "Entered Blcny1 from Prefa1/Prefa2 (changes teleport from clouds at top of screen)";
+    flagDesc[1192] = "Entered Blcny1 from Ring1 (changes teleport from clouds at top of screen)";
+    flagDesc[1250] = "[not sure how this is set - Misery not in Ring1]";
+    flagDesc[1270] = "Defeated Doctor (Mimiga dialogues change)";
+    flagDesc[1271] = "Started fighting Doctor   (note: not currently fighting, since it never gets unset)";
+    flagDesc[1272] = "Talked to Chaco once after defeating Doctor";
+    flagDesc[1273] = "[mimigas gone from Ring2? set after island starts to collapse]";
+    flagDesc[1274] = "Hearts appeared in Ring2 (talk to Chaco twice defeating Doctor)";
+    flagDesc[1290] = "Talked to Cthulhu in Cthu once";
+    flagDesc[1320] = "ITEM - Clay Figure Medal (after defeating Red Demon)";
+    flagDesc[1340] = "[something with Undead Core fight]";
+    flagDesc[1341] = "[island is collapsing - makes screen shake?]";
+    flagDesc[1370] = "Little Man is in Little";
+    flagDesc[1371] = "Can get Little Man (talked to Little Man's Wife)";
+    flagDesc[1372] = "Traded Blade for Nemesis";
+    flagDesc[1373] = "[UNUSED - never set, Little Man dialogue jump target doesn't exist - there's also an incomplete event in the script]";
+    flagDesc[1390] = "Helicopter in Blcny2";
+    flagDesc[1391] = "Sue in Blcny2 near Ring1 entrance";
+    flagDesc[1392] = "Sue in Blcny2 at cliff's edge";
+    flagDesc[1393] = "Opens door from Blcny2 to Prefa2";
+    flagDesc[1440] = "Curly on bed";
+    flagDesc[1441] = "Can drain Curly (after reading notebook)";
+    flagDesc[1442] = "Curly drained";
+    flagDesc[1443] = "Can take Curly from bed (after reboot time message)";
+    flagDesc[1444] = "Currently have Curly (drained) on your back";
+    flagDesc[1445] = "Can read notebook (after using computer)";
+    flagDesc[1460] = "[set when carried by Balrog, but has no effect?]";
+    flagDesc[1530] = "POWER-UP - Life Capsule in Hell1";
+    flagDesc[1531] = "Curly is in Hell1";
+    flagDesc[1532] = "Currently have Curly (not shooting) on your back";
+    flagDesc[1533] = "Currently have Curly (shooting) on your back";
+    flagDesc[1534] = "[enables Hell enemies etc.?  set when entering Hell1 from Prefa2, so there's no avoiding it]";
+    flagDesc[1550] = "[changes something when entering Hell3 from Hell2?  set when entering Hell1, cleared after defeating Heavy Press?]";
+    flagDesc[1551] = "POWER-UP - Missiles in Hell3 (note: if you get the Missile Launcher here, it has 100 ammo)";
+    flagDesc[1560] = "[Ma Pignon not in Mapi - how is this set?]";
+    flagDesc[1561] = "Mentioned amnesia to Ma Pignon";
+    flagDesc[1562] = "ITEM - Mushroom Badge";
+    flagDesc[1563] = "Viewed Mushroom Badge description on menu (so you know it's worthless)";
+    flagDesc[1564] = "Currently fighting Ma Pignon (locks door from Mapi to Cemet)";
+    flagDesc[1590] = "Shot Statue 1";
+    flagDesc[1591] = "Shot Statue 2";
+    flagDesc[1592] = "Shot Statue 3";
+    flagDesc[1593] = "Shot Statue 4";
+    flagDesc[1600] = "Fought Ballos Head once (must kill it twice to finally defeat him)";
+    flagDesc[1620] = "Ballos's dog not in Ostep";
+    flagDesc[1640] = "ITEM - Polar Star";
+    flagDesc[1641] = "Hermit Gunsmith not asleep in Pole";
+    flagDesc[1642] = "Signpost in Pole";
+    flagDesc[1643] = "Hermit Gunsmith awake in Pole";
+    flagDesc[1644] = "ITEM - Spur";
+    flagDesc[1700] = "ITEM - Nikumaru Counter";
+    flagDesc[2000] = "Got best ending (set when carried by Balrog)";
+    flagDesc[3000] = "Current Puppy is Hajime";
+    flagDesc[3001] = "Current Puppy is Mick";
+    flagDesc[3002] = "Current Puppy is Shinobu";
+    flagDesc[3003] = "Current Puppy is Kakeru";
+    flagDesc[3004] = "Current Puppy is Nene";
+    flagDesc[4000] = "Run alternate drowning event (set after defeating Core)";
     return flagDesc;
 }
 // Player extras
@@ -415,732 +434,732 @@ function getPlayerOffset(x, y, leftright, costume) {
 }
 // Entity extras
 function getEntityFrame(entity) {
-	switch (entity.type) {
-	case 0: // Null ()
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 1: // EXP (Weapn energy)
-		return java.awt.Rectangle(0, 32, 32, 64);
-	case 2: // Behemoth (Enemy Behem)
-		return java.awt.Rectangle(0, 0, 64, 48);
-	case 3: // Null_disappear (?)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 4: // Smoke (Smoke)
-		return java.awt.Rectangle(128, 0, 160, 32);
-	case 5: // Critter(g) (Enemy CrtHG)
-		return java.awt.Rectangle(0, 94, 32, 124);
-	case 6: // Beetle(horiz_g) (Enemy BtlHG)
-		return java.awt.Rectangle(0, 160, 32, 192);
-	case 7: // Basil (Enemy Basil)
-		return java.awt.Rectangle(512, 128, 560, 166);
-	case 8: // Beetle(follow) (Enemy BtlF1)
-		return java.awt.Rectangle(160, 160, 192, 192);
-	case 9: // Balrog(DropIn) (Blrg drop)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 10: // Balrog(Shoot) (Boss Blrg0)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 11: // Shot(Balrog) (Proj Blrg1)
-		return java.awt.Rectangle(480, 160, 512, 192);
-	case 12: // Balrog(cutscene) (Blrg)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 13: // ForceField (Force field)
-		return java.awt.Rectangle(256, 0, 288, 32);
-	case 14: // SantaKey (Santa Key)
-		return java.awt.Rectangle(450, 0, 480, 32);
-	case 15: // Chest(closed) (Chest closd)
-		return java.awt.Rectangle(480, 0, 512, 32);
-	case 16: // SavePoint (Save point)
-		return java.awt.Rectangle(192, 32, 224, 64);
-	case 17: // Refill (Refil)
-		return java.awt.Rectangle(576, 0, 608, 32);
-	case 18: // Door (Door)
-		return java.awt.Rectangle(448, 32, 480, 80);
-	case 19: // Balrog(burst) (Blrg bust)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 20: // Computer (Compu)
-		return java.awt.Rectangle(576, 32, 640, 80);
-	case 21: // Chest(open) (Chest open)
-		return java.awt.Rectangle(448, 80, 480, 96);
-	case 22: // Teleporter (Telep)
-		return java.awt.Rectangle(480, 32, 528, 96);
-	case 23: // TP_lights (Telep light)
-		return java.awt.Rectangle(528, 64, 576, 72);
-	case 24: // PowerCritter (Enemy PCrit)
-		return java.awt.Rectangle(0, 0, 48, 48);
-	case 25: // Lift (Lift platf)
-		return java.awt.Rectangle(512, 128, 580, 160);
-	case 26: // Bat(circle_black) (Enemy BatBC)
-		return java.awt.Rectangle(64, 160, 96, 192);
-	case 27: // DeathTrap (Death trap)
-		return java.awt.Rectangle(192, 128, 256, 176);
-	case 28: // Critter(fly_g) (Enemy CrtFy)
-		return java.awt.Rectangle(96, 96, 128, 128);
-	case 29: // Cthulhu (Cthu)
-		return java.awt.Rectangle(0, 384, 32, 432);
-	case 30: // Gunsmith (Hermt Gunsm)
-		return java.awt.Rectangle(0, 64, 32, 96);
-	case 31: // Bat(hang_black) (Enemy BatBH)
-		return java.awt.Rectangle(0, 158, 32, 190);
-	case 32: // Life Capsule (Capsl life)
-		return java.awt.Rectangle(64, 192, 96, 224);
-	case 33: // Shot(Bllg_bounce) (Proj Blrg2)
-		return java.awt.Rectangle(480, 160, 512, 192);
-	case 34: // Bed (Bed)
-		return java.awt.Rectangle(384, 96, 448, 128);
-	case 35: // Mannan (Enemy Manan)
-		return java.awt.Rectangle(192, 128, 240, 192);
-	case 36: // Balrog(hover) (Boss Blrg2)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 37: // Signpost (Sign post)
-		return java.awt.Rectangle(384, 128, 416, 160);
-	case 38: // Fire (Fire place)
-		return java.awt.Rectangle(256, 128, 288, 160);
-	case 39: // SaveSign (Save sign)
-		return java.awt.Rectangle(448, 128, 480, 160);
-	case 40: // Santa (Santa)
-		return java.awt.Rectangle(0, 64, 32, 96);
-	case 41: // BustedDoor (Door bustd)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 42: // Sue (Sue)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 43: // Chalkboard (Black board)
-		return java.awt.Rectangle(256, 160, 336, 224);
-	case 44: // Polish (Enemy Polsh)
-		return java.awt.Rectangle(0, 0, 64, 64);
-	case 45: // Baby (Enemy Baby)
-		return java.awt.Rectangle(32, 64, 64, 96);
-	case 46: // H/V_trigger (H/V trigr)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 47: // SandCroc (Enemy SandCroc)
-		return java.awt.Rectangle(306, 94, 376, 160);
-	case 48: // ProjOmega (Proj Omega)
-		return java.awt.Rectangle(574, 174, 606, 206);
-	case 49: // SkullHead (Enemy SkulH)
-		return java.awt.Rectangle(64, 160, 128, 204);
-	case 50: // ProjSkeleton (Proj Skele)
-		return java.awt.Rectangle(96, 64, 128, 96);
-	case 51: // Crow&SkullHead (Enemy CrowS)
-		return java.awt.Rectangle(128, 160, 252, 204);
-	case 52: // BlueRobot(sit) (BRobt sit)
-		return java.awt.Rectangle(512, 400, 544, 432);
-	case 53: // Unknown(crash) (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 54: // SkullStep (Enemy SkulS)
-		return java.awt.Rectangle(64, 160, 128, 204);
-	case 55: // Cairn (Kazum)
-		return java.awt.Rectangle(384, 384, 416, 432);
-	case 56: // BeetleHorizBrown (Enemy BtlHB)
-		return java.awt.Rectangle(0, 284, 32, 316);
-	case 57: // Crow (Enemy Crow)
-		return java.awt.Rectangle(192, 160, 256, 224);
-	case 58: // Basu(1) (Enemy Basu1)
-		return java.awt.Rectangle(384, 0, 432, 48);
-	case 59: // EyeDoor (Enemy Door)
-		return java.awt.Rectangle(416, 160, 448, 208);
-	case 60: // Toroko (Torok)
-		return java.awt.Rectangle(0, 128, 32, 160);
-	case 61: // King (King)
-		return java.awt.Rectangle(448, 64, 480, 96);
-	case 62: // Kazuma(pc) (Kazum compu)
-		return java.awt.Rectangle(544, 384, 576, 432);
-	case 63: // Toroko(stick) (Torok attck)
-		return java.awt.Rectangle(128, 128, 160, 160);
-	case 64: // Critter(b) (Enemy CrtHB)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 65: // Bat(blue) (Enemy BatBu)
-		return java.awt.Rectangle(64, 64, 96, 96);
-	case 66: // MiseryBubble (Bubbl)
-		return java.awt.Rectangle(64, 432, 110, 480);
-	case 67: // Misery(float) (Msry float)
-		return java.awt.Rectangle(160, 0, 192, 32);
-	case 68: // Balrog(run) (Boss Blrg1)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 69: // Pignon (Enemy Pign)
-		return java.awt.Rectangle(96, 0, 128, 32);
-	case 70: // Sparkle (Spark item)
-		return java.awt.Rectangle(192, 96, 224, 128);
-	case 71: // Chinfish (Enemy Chinf)
-		return java.awt.Rectangle(128, 64, 160, 96);
-	case 72: // Sprinkler (Sprnk)
-		return java.awt.Rectangle(448, 96, 480, 128);
-	case 73: // Water drop (Water drop)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 74: // Jack (Jack)
-		return java.awt.Rectangle(128, 0, 160, 32);
-	case 75: // Kanpachi(fishn) (Kanpa fishn)
-		return java.awt.Rectangle(554, 64, 602, 112);
-	case 76: // Flowers (Flowr)
-		return java.awt.Rectangle(64, 0, 96, 32);
-	case 77: // Yamashita (Sanda pavil)
-		return java.awt.Rectangle(0, 32, 96, 96);
-	case 78: // Pot (Pot)
-		return java.awt.Rectangle(320, 96, 352, 128);
-	case 79: // Mahin (Mahin)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 80: // Gravekeeper (Enemy GravK)
-		return java.awt.Rectangle(0, 128, 48, 176);
-	case 81: // Giant_Pignon (Enemy GPign)
-		return java.awt.Rectangle(288, 128, 336, 176);
-	case 82: // Misery(stand) (Msry stand)
-		return java.awt.Rectangle(224, 0, 256, 32);
-	case 83: // Igor(cutscene) (Igor)
-		return java.awt.Rectangle(0, 0, 80, 80);
-	case 84: // Shot(basu1) (Proj Basu1)
-		return java.awt.Rectangle(128, 96, 160, 128);
-	case 85: // Terminal (Termn)
-		return java.awt.Rectangle(544, 192, 574, 240);
-	case 86: // Missle (Missl)
-		return java.awt.Rectangle(0, 160, 32, 192);
-	case 87: // Heart (Heart)
-		return java.awt.Rectangle(64, 160, 96, 192);
-	case 88: // Igor (Boss Igor)
-		return java.awt.Rectangle(0, 0, 80, 80);
-	case 89: // Igor(dead) (Dead Igor)
-		return java.awt.Rectangle(574, 176, 616, 208);
-	case 90: // Unknown(90) (Backg)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 91: // Cage (Cage)
-		return java.awt.Rectangle(192, 176, 256, 224);
-	case 92: // Sue(pc) (Sue compu)
-		return java.awt.Rectangle(544, 432, 576, 480);
-	case 93: // Chaco (Chaco)
-		return java.awt.Rectangle(256, 0, 288, 32);
-	case 94: // Kulala (Enemy Kulal)
-		return java.awt.Rectangle(544, 0, 640, 48);
-	case 95: // Jelly (Enemy Jelly)
-		return java.awt.Rectangle(384, 130, 416, 162);
-	case 96: // Fan(l) (Fan left)
-		return java.awt.Rectangle(576, 240, 608, 272);
-	case 97: // Fan(u) (Fan up)
-		return java.awt.Rectangle(576, 272, 608, 304);
-	case 98: // Fan(r) (Fan right)
-		return java.awt.Rectangle(576, 304, 608, 336);
-	case 99: // Fan(d) (Fan down)
-		return java.awt.Rectangle(576, 336, 608, 368);
-	case 100: // Grate (Grate)
-		return java.awt.Rectangle(544, 96, 576, 128);
-	case 101: // ControlScreen (PowCn scrn)
-		return java.awt.Rectangle(480, 272, 512, 304);
-	case 102: // PowerWave (PowCn pflow)
-		return java.awt.Rectangle(416, 240, 448, 272);
-	case 103: // Shot(manann) (Proj Manan)
-		return java.awt.Rectangle(386, 198, 418, 230);
-	case 104: // Frog (Enemy Frog)
-		return java.awt.Rectangle(0, 224, 64, 288);
-	case 105: // Balloon(hey_low) (Bloon HeyL)
-		return java.awt.Rectangle(256, 64, 288, 96);
-	case 106: // Balloon(hey_high) (Bloon HeyH)
-		return java.awt.Rectangle(256, 64, 288, 96);
-	case 107: // Malco (Malco)
-		return java.awt.Rectangle(416, 0, 448, 48);
-	case 108: // Shot(Balfrog) (Proj Bfrog)
-		return java.awt.Rectangle(192, 96, 220, 126);
-	case 109: // Malco(broke) (Malco damgd)
-		return java.awt.Rectangle(480, 0, 512, 48);
-	case 110: // Puchi (Enemy Puchi)
-		return java.awt.Rectangle(192, 256, 224, 288);
-	case 111: // Quote(teleOut) (Quote t-out)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 112: // Quote(teleIn) (Quote t-in)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 113: // Booster (Boost)
-		return java.awt.Rectangle(448, 0, 480, 32);
-	case 114: // Press (Enemy Press)
-		return java.awt.Rectangle(352, 224, 384, 272);
-	case 115: // Ravil (Enemy Ravil)
-		return java.awt.Rectangle(0, 240, 48, 288);
-	case 116: // RedPetals (RFlow petal)
-		return java.awt.Rectangle(544, 368, 640, 400);
-	case 117: // Curly (Curly)
-		return java.awt.Rectangle(0, 192, 32, 224);
-	case 118: // Curly(boss) (Boss Curly)
-		return java.awt.Rectangle(0, 64, 64, 112);
-	case 119: // Table&Chair (Table chair)
-		return java.awt.Rectangle(496, 368, 544, 400);
-	case 120: // Colon_1 (Colon 1)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 121: // Colon_2 (Colon 2)
-		return java.awt.Rectangle(128, 32, 160, 64);
-	case 122: // Colon_attack (Enemy Colon)
-		return java.awt.Rectangle(160, 0, 192, 32);
-	case 123: // Shot(Curly) (Proj Curly)
-		return java.awt.Rectangle(384, 0, 416, 32);
-	case 124: // Sunstone (Sun stone)
-		return java.awt.Rectangle(384, 0, 446, 64);
-	case 125: // HiddenItem (Hiddn H/M)
-		return java.awt.Rectangle(288, 400, 320, 432);
-	case 126: // Puppy (Puppy run)
-		return java.awt.Rectangle(48, 144, 64, 160);
-	case 127: // MG_trail_2 (Glows Momnt)
-		return java.awt.Rectangle(128, 172, 224, 180);
-	case 128: // MG_trail_3 (Glows Momnt)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 129: // Snake_Fball_trail (Glows Momnt)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 130: // Puppy_wag (Puppy wag)
-		return java.awt.Rectangle(96, 288, 128, 320);
-	case 131: // Puppy_sleep (Puppy sleep)
-		return java.awt.Rectangle(288, 288, 320, 320);
-	case 132: // Puppy_bark (Puppy bark)
-		return java.awt.Rectangle(256, 288, 288, 320);
-	case 133: // Jenka (Jenka)
-		return java.awt.Rectangle(352, 64, 384, 96);
-	case 134: // Armadillo (Enemy Armdl)
-		return java.awt.Rectangle(448, 0, 512, 32);
-	case 135: // Skeleton (Enemy Skelt)
-		return java.awt.Rectangle(576, 64, 640, 128);
-	case 136: // Puppy_hat (Carry Puppy)
-		return java.awt.Rectangle(96, 288, 128, 320);
-	case 137: // LargeDoor_frame (LDoor frame)
-		return java.awt.Rectangle(192, 272, 256, 336);
-	case 138: // LargeDoor_door (LDoor doors)
-		return java.awt.Rectangle(192, 224, 256, 272);
-	case 139: // Doctor(crown) (Doctr)
-		return java.awt.Rectangle(0, 256, 48, 320);
-	case 140: // Toroko(frenzy) (Boss Torok)
-		return java.awt.Rectangle(0, 0, 64, 64);
-	case 141: // TorokoBlock (CRASH)
-		return java.awt.Rectangle(576, 64, 608, 96);
-	case 142: // FlowerCub (Enemy Flwcb)
-		return java.awt.Rectangle(0, 256, 32, 288);
-	case 143: // Jenka(collapse) (Jenka uncon)
-		return java.awt.Rectangle(416, 64, 510, 96);
-	case 144: // Toroko(teleIn) (Torok telep)
-		return java.awt.Rectangle(64, 128, 96, 160);
-	case 145: // Unknown(145) (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 146: // Lightning (Ligtn)
-		return java.awt.Rectangle(608, 416, 640, 480);
-	case 147: // Critter(hover) (Enemy CrtHv)
-		return java.awt.Rectangle(0, 192, 32, 224);
-	case 148: // Shot(crit_p) (Proj CrtHv)
-		return java.awt.Rectangle(192, 192, 208, 208);
-	case 149: // MovBlock_h (Block MoveH)
-		return java.awt.Rectangle(32, 0, 96, 64);
-	case 150: // Quote (Quote)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 151: // BlueRobot(stand) (BRobt stand)
-		return java.awt.Rectangle(384, 0, 416, 32);
-	case 152: // Shutter(stuck) (Shutr stuck)
-		return java.awt.Rectangle(192, 128, 224, 192);
-	case 153: // Gaudi (Enemy Gaudi)
-		return java.awt.Rectangle(0, 0, 48, 48);
-	case 154: // Gaudi(dead) (Dead Gaudi)
-		return java.awt.Rectangle(384, 0, 432, 48);
-	case 155: // Gaudi(flying) (Enemy GaudF)
-		return java.awt.Rectangle(0, 96, 48, 144);
-	case 156: // Shot(Gaudi) (Proj GaudF)
-		return java.awt.Rectangle(192, 224, 224, 256);
-	case 157: // MovBlock_v (Block MoveV)
-		return java.awt.Rectangle(32, 0, 96, 64);
-	case 158: // FishMissle(x) (Proj MonX)
-		return java.awt.Rectangle(0, 448, 32, 480);
-	case 159: // X(dead) (Dead MonX)
-		return java.awt.Rectangle(288, 262, 384, 398);
-	case 160: // Pooh_black (Boss PoohB)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 161: // Shot(p_black) (Proj PoohB)
-		return java.awt.Rectangle(0, 96, 32, 128);
-	case 162: // p_black(dead) (Dead PoohB)
-		return java.awt.Rectangle(80, 0, 160, 48);
-	case 163: // Dr.Gero (Dr Gero)
-		return java.awt.Rectangle(384, 0, 416, 32);
-	case 164: // Nurse_Hasumi (Nurse Hasum)
-		return java.awt.Rectangle(448, 0, 480, 32);
-	case 165: // Curly(collapse) (Curly uncon)
-		return java.awt.Rectangle(448, 192, 480, 224);
-	case 166: // Chaba (Chaba Gaudi)
-		return java.awt.Rectangle(292, 212, 362, 255);
-	case 167: // Booster(fall) (Boost fall)
-		return java.awt.Rectangle(608, 0, 640, 32);
-	case 168: // Boulder (Bould)
-		return java.awt.Rectangle(527, 115, 640, 192);
-	case 169: // Balrog(Missle) (Boss Blrg3)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 170: // Shot(bllg_msl) (Proj Blrg3)
-		return java.awt.Rectangle(224, 192, 256, 208);
-	case 171: // Fire_Whirr (Enemy FWhir)
-		return java.awt.Rectangle(244, 96, 308, 160);
-	case 172: // Shot(Whirr) (Proj FWhir)
-		return java.awt.Rectangle(496, 96, 528, 160);
-	case 173: // Gaudi(Armor) (Enemy GaudA)
-		return java.awt.Rectangle(0, 256, 48, 304);
-	case 174: // Shot(gaud_arm) (Proj GaudA)
-		return java.awt.Rectangle(240, 160, 272, 192);
-	case 175: // Gaudi_Egg (Enemy GaudE)
-		return java.awt.Rectangle(336, 160, 384, 208);
-	case 176: // BuyoBuyo (Enemy BuyoB)
-		return java.awt.Rectangle(192, 256, 256, 288);
-	case 177: // Buyo_baby (Enemy Buyo)
-		return java.awt.Rectangle(384, 288, 416, 320);
-	case 178: // Shot(core_spin) (Proj Core1)
-		return java.awt.Rectangle(0, 448, 32, 480);
-	case 179: // Shot(core_wisp) (Proj Core2)
-		return java.awt.Rectangle(96, 448, 144, 480);
-	case 180: // Curly_AI (Curly A.I.)
-		return java.awt.Rectangle(0, 192, 32, 224);
-	case 181: // Unknown(181) (?)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 182: // Unknown(182) (?)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 183: // MiseryBubble (?)
-		return java.awt.Rectangle(64, 432, 110, 480);
-	case 184: // Shutter(big) (Shutr large)
-		return java.awt.Rectangle(0, 128, 64, 192);
-	case 185: // Shutter(small) (Shutr small)
-		return java.awt.Rectangle(192, 128, 224, 192);
-	case 186: // LiftBlock (Lift block)
-		return java.awt.Rectangle(96, 96, 128, 128);
-	case 187: // FuzzCore (Enemy FuzzC)
-		return java.awt.Rectangle(448, 208, 512, 272);
-	case 188: // Fuzz(baby) (Fuzz Baby)
-		return java.awt.Rectangle(576, 208, 608, 240);
-	case 189: // HomingFlame (Proj HomFl)
-		return java.awt.Rectangle(96, 448, 128, 480);
-	case 190: // BrokeRobo (Surfc robot)
-		return java.awt.Rectangle(384, 64, 416, 96);
-	case 191: // WaterLevel (Water level)
-		return java.awt.Rectangle(0, 416, 32, 448);
-	case 192: // Scooter (Scoot)
-		return java.awt.Rectangle(450, 128, 508, 160);
-	case 193: // Scooter(broke) (Scoot dead)
-		return java.awt.Rectangle(510, 190, 638, 224);
-	case 194: // BrokenRobo (BRobt dead)
-		return java.awt.Rectangle(384, 224, 450, 255);
-	case 195: // GrateMouth (Grate mouth)
-		return java.awt.Rectangle(224, 128, 255, 160);
-	case 196: // MotionWall (Mtion wall)
-		return java.awt.Rectangle(256, 64, 288, 96);
-	case 197: // PorcupineFish (Enemy PFish)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 198: // Shot(ironH) (Proj IronH)
-		return java.awt.Rectangle(480, 92, 410, 142);
-	case 199: // Current (Water curnt)
-		return java.awt.Rectangle(448, 100, 480, 128);
-	case 200: // Enemy - Dragon Zombie (Enemy DragZ)
-		return java.awt.Rectangle(0, 0, 80, 80);
-	case 201: // Dragon Zombie (dead) (Dead DragZ)
-		return java.awt.Rectangle(400, 40, 484, 72);
-	case 202: // Projectile - Dragon Zombie (Proj DragZ)
-		return java.awt.Rectangle(364, 432, 400, 478);
-	case 203: // Enemy - Critter (hopping, aqua) (Enemy CrtHA)
-		return java.awt.Rectangle(0, 160, 32, 192);
-	case 204: // Falling Spike (small) (Spike FallS)
-		return java.awt.Rectangle(480, 288, 512, 320);
-	case 205: // Falling Spike (large) (Spike FallL)
-		return java.awt.Rectangle(256, 160, 288, 224);
-	case 206: // Enemy - Counter Bomb (Enemy CBomb)
-		return java.awt.Rectangle(160, 160, 240, 248);
-	case 207: // Balloon (countdown) (Bloon CDown)
-		return java.awt.Rectangle(0, 288, 32, 314);
-	case 208: // Enemy - Basu (2) (Enemy Basu2)
-		return java.awt.Rectangle(496, 160, 544, 204);
-	case 209: // Projectile - Basu (2) (Proj Basu2)
-		return java.awt.Rectangle(400, 224, 432, 256);
-	case 210: // Enemy - Beetle (follow 2) (Enemy BtlF2)
-		return java.awt.Rectangle(0, 224, 32, 256);
-	case 211: // Spikes (Spike)
-		return java.awt.Rectangle(512, 400, 544, 432);
-	case 212: // Sky Dragon (Sky Dragn)
-		return java.awt.Rectangle(320, 320, 394, 384);
-	case 213: // Enemy - Night Spirit (Enemy NiteS)
-		return java.awt.Rectangle(0, 0, 96, 96);
-	case 214: // Projectile - Night Spirit (Proj NiteS)
-		return java.awt.Rectangle(288, 96, 352, 128);
-	case 215: // Enemy - Sandcroc (white) (Enemy ScrcW)
-		return java.awt.Rectangle(0, 240, 96, 256);
-	case 216: // Debug cat (Debug cat)
-		return java.awt.Rectangle(512, 400, 544, 432);
-	case 217: // Itoh (Itoh)
-		return java.awt.Rectangle(288, 128, 320, 160);
-	case 218: // Projectile? (Proj?)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 219: // Generator - Smoke/Underwater current (Genrt Smoke)
-		return java.awt.Rectangle(32, 0, 64, 32);
-	case 220: // Shovel Brigade (SBrig stand)
-		return java.awt.Rectangle(0, 128, 32, 160);
-	case 221: // Shovel Brigade (walking) (SBrig walk)
-		return java.awt.Rectangle(0, 128, 32, 160);
-	case 222: // Prison bars (Prisn bars)
-		return java.awt.Rectangle(192, 336, 224, 400);
-	case 223: // Momorin (Momo)
-		return java.awt.Rectangle(160, 388, 192, 432);
-	case 224: // Chie (Chie)
-		return java.awt.Rectangle(224, 64, 256, 96);
-	case 225: // Megane (Megan)
-		return java.awt.Rectangle(128, 128, 160, 160);
-	case 226: // Kanpachi (Kanpa stand)
-		return java.awt.Rectangle(544, 64, 592, 112);
-	case 227: // Bucket (Buckt)
-		return java.awt.Rectangle(416, 64, 448, 96);
-	case 228: // Droll (guard) (Droll guard)
-		return java.awt.Rectangle(0, 0, 64, 84);
-	case 229: // Red Flowers (sprouts) (RFlow sprts)
-		return java.awt.Rectangle(0, 200, 32, 224);
-	case 230: // Red Flowers (blooming) (RFlow bloom)
-		return java.awt.Rectangle(200, 200, 256, 256);
-	case 231: // Rocket (Rockt)
-		return java.awt.Rectangle(352, 64, 416, 96);
-	case 232: // Enemy - Orangebell (Enemy Orang)
-		return java.awt.Rectangle(256, 0, 320, 64);
-	case 233: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 234: // Red Flowers (picked) (RFlow pickd)
-		return java.awt.Rectangle(288, 200, 344, 224);
-	case 235: // Enemy - Midorin (Midor)
-		return java.awt.Rectangle(384, 200, 416, 224);
-	case 236: // Enemy - Gunfish (Enemy Gunfs)
-		return java.awt.Rectangle(256, 120, 308, 176);
-	case 237: // Projectile - Gunfish (Proj Gunfs)
-		return java.awt.Rectangle(624, 64, 638, 80);
-	case 238: // Enemy - Press (killer) (Enemy PresK)
-		return java.awt.Rectangle(368, 400, 416, 432);
-	case 239: // Cage bars (Cage bars)
-		return java.awt.Rectangle(192, 222, 288, 288);
-	case 240: // Mimiga (jailed) (Mimig jail)
-		return java.awt.Rectangle(0, 128, 32, 160);
-	case 241: // Enemy - Critter (hopping, red) (Enemy CritHR)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 242: // Enemy - Bat (red) (Enemy BatRd)
-		return java.awt.Rectangle(0, 64, 32, 96);
-	case 243: // Generator - Bat (red) (Genrt BatRd)
-		return java.awt.Rectangle(0, 64, 32, 96);
-	case 244: // Acid drop (Acid drop)
-		return java.awt.Rectangle(192, 0, 204, 32);
-	case 245: // Generator - Acid drop (Genrt Acid)
-		return java.awt.Rectangle(192, 0, 204, 32);
-	case 246: // Enemy - Press (proximity) (Enemy PresP)
-		return java.awt.Rectangle(288, 224, 320, 272);
-	case 247: // Boss - Misery (Boss Msry)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 248: // Boss - Misery (vanish) (Boss MsryV)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 249: // Projectile - Misery (energy shot) (Proj Msry1)
-		return java.awt.Rectangle(64, 64, 96, 96);
-	case 250: // Projectile - Misery (lightning ball) (Proj Msry2)
-		return java.awt.Rectangle(0, 64, 32, 96);
-	case 251: // Projectile - Misery (lightning) (Proj Msry3)
-		return java.awt.Rectangle(160, 64, 192, 128);
-	case 252: // Projectile - Misery (Bat) (Misery bat)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 253: // Energy Capsule (Capsl enrgy)
-		return java.awt.Rectangle(0, 128, 32, 160);
-	case 254: // Helicopter (Heli copter)
-		return java.awt.Rectangle(0, 0, 256, 128);
-	case 255: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 256: // Doctor (crowned, facing away) (Doctr back)
-		return java.awt.Rectangle(96, 320, 144, 384);
-	case 257: // Red Crystal (Red Cryst)
-		return java.awt.Rectangle(352, 64, 366, 96);
-	case 258: // Mimiga (sleeping) (Mimig sleep)
-		return java.awt.Rectangle(96, 64, 128, 96);
-	case 259: // Curly (carried, unconscious) (Carry Curl1)
-		return java.awt.Rectangle(320, 192, 352, 224);
-	case 260: // Shovel Brigade (caged) (SBrig cage)
-		return java.awt.Rectangle(0, 128, 32, 160);
-	case 261: // Chie (caged) (Chie cage)
-		return java.awt.Rectangle(224, 64, 256, 96);
-	case 262: // Chaco (caged) (Chaco cage)
-		return java.awt.Rectangle(256, 0, 288, 32);
-	case 263: // Boss - Doctor (Boss Doct1)
-		return java.awt.Rectangle(364, 320, 416, 384);
-	case 264: // Projectile - Doctor (red wave) (Proj Doct1)
-		return java.awt.Rectangle(572, 0, 604, 32);
-	case 265: // Projectile - Doctor (red ball - fast vanish) (Proj RFBal)
-		return java.awt.Rectangle(572, 0, 604, 32);
-	case 266: // Projectile - Doctor (red ball - slow vanish) (Proj RSBal)
-		return java.awt.Rectangle(572, 0, 604, 32);
-	case 267: // Boss - Muscle Doctor (Boss Doct2)
-		return java.awt.Rectangle(0, 128, 80, 224);
-	case 268: // Enemy - Igor (Enemy Igor)
-		return java.awt.Rectangle(0, 0, 80, 80);
-	case 269: // Enemy - Bat (red energy) (Enemy BatRE)
-		return java.awt.Rectangle(464, 0, 496, 32);
-	case 270: // Red energy (Red enrgy)
-		return java.awt.Rectangle(336, 64, 348, 80);
-	case 271: // Underwater block (UBlok)
-		return java.awt.Rectangle(256, 32, 288, 64);
-	case 272: // Generator - Underwater block (Genrt UBlok)
-		return java.awt.Rectangle(256, 32, 288, 64);
-	case 273: // Projectile - Droll (Proj Droll)
-		return java.awt.Rectangle(496, 80, 544, 128);
-	case 274: // Enemy - Droll (Enemy Droll)
-		return java.awt.Rectangle(0, 0, 64, 84);
-	case 275: // Puppy (with items) (Puppy items)
-		return java.awt.Rectangle(96, 288, 128, 320);
-	case 276: // Boss - Red Demon (Boss RDemn)
-		return java.awt.Rectangle(0, 128, 64, 204);
-	case 277: // Projectile - Red Demon (Proj RDemn)
-		return java.awt.Rectangle(256, 0, 300, 48);
-	case 278: // Little family (Littl famly)
-		return java.awt.Rectangle(0, 240, 12, 256);
-	case 279: // Falling block (large) (FBlck large)
-		return java.awt.Rectangle(0, 32, 64, 96);
-	case 280: // Sue (teleported in by Misery) (Sue telep)
-		return java.awt.Rectangle(224, 64, 254, 96);
-	case 281: // Doctor (red energy form) (Doctr enrgy)
-		return java.awt.Rectangle(366, 320, 416, 384);
-	case 282: // Mini Undead Core - floats forward (Mini UCore)
-		return java.awt.Rectangle(512, 240, 640, 320);
-	case 283: // Enemy - Misery (transformed) (Enemy Msry)
-		return java.awt.Rectangle(0, 128, 64, 192);
-	case 284: // Enemy - Sue (transformed) (Enemy Sue)
-		return java.awt.Rectangle(0, 256, 64, 320);
-	case 285: // Projectile - Undead Core (orange spiral shot) (Proj OSpir)
-		return java.awt.Rectangle(0, 448, 32, 480);
-	case 286: // Orange Dot (Orang Dot)
-		return java.awt.Rectangle(464, 210, 494, 238);
-	case 287: // Orange Smoke (Orang Smoke)
-		return java.awt.Rectangle(96, 448, 128, 438);
-	case 288: // Projectile - Undead Core (glowing rock thing) (Proj GRock)
-		return java.awt.Rectangle(464, 142, 496, 176);
-	case 289: // Enemy - Critter (hopping, orange) (Enemy CrtHO)
-		return java.awt.Rectangle(320, 64, 352, 96);
-	case 290: // Enemy - Bat (orange) (Enemy BatOr)
-		return java.awt.Rectangle(224, 64, 256, 96);
-	case 291: // Mini Undead Core (before fight) (UCore Mini)
-		return java.awt.Rectangle(512, 0, 640, 80);
-	case 292: // Quake (Quake)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 293: // Projectile - Undead Core (huge energy shot) (Proj HEner)
-		return java.awt.Rectangle(560, 400, 640, 480);
-	case 294: // Quake & Generator - Falling blocks (Quake FBlck)
-		return java.awt.Rectangle(0, 32, 64, 96);
-	case 295: // Cloud (Cloud)
-		return java.awt.Rectangle(288, 224, 384, 284);
-	case 296: // Generator - Cloud (Genrt Cloud)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 297: // <CRASH> (Sometimes) (CRASH SOME)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 298: // Doctor (uncrowned) (Intro Doctr)
-		return java.awt.Rectangle(200, 320, 240, 384);
-	case 299: // Balrog/Misery (bubble) (Intro Bubbl)
-		return java.awt.Rectangle(0, 0, 96, 96);
-	case 300: // Demon Crown (Intro Crown)
-		return java.awt.Rectangle(384, 160, 416, 192);
-	case 301: // Enemy - Fish Missile (orange) (Enemy FishO)
-		return java.awt.Rectangle(286, 0, 318, 32);
-	case 302: // Something with ending Scenes (End Scene)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 303: // <nothing?> (?)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 304: // Gaudi (sitting) (Gaudi sit)
-		return java.awt.Rectangle(0, 352, 48, 384);
-	case 305: // Puppy (small) (Puppy small)
-		return java.awt.Rectangle(320, 300, 352, 320);
-	case 306: // Balrog (nurse) (Blrg nurse)
-		return java.awt.Rectangle(480, 200, 560, 256);
-	case 307: // Santa (caged) (Santa cage)
-		return java.awt.Rectangle(0, 64, 32, 96);
-	case 308: // Enemy - Stumpy (Enemy Stump)
-		return java.awt.Rectangle(252, 228, 284, 260);
-	case 309: // Enemy - Bute (Enemy Bute)
-		return java.awt.Rectangle(0, 0, 32, 32);
-	case 310: // Enemy - Bute (sword) (Enemy ButeS)
-		return java.awt.Rectangle(64, 0, 108, 32);
-	case 311: // Enemy - Bute (archer) (Enemy ButeA)
-		return java.awt.Rectangle(0, 64, 48, 112);
-	case 312: // Projectile - Bute (archer) (Proj ButeA)
-		return java.awt.Rectangle(0, 320, 32, 352);
-	case 313: // Boss - Ma Pignon (Boss MPign)
-		return java.awt.Rectangle(256, 0, 288, 32);
-	case 314: // Falling, Indestructible (???)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 315: // Enemy (hopping, disappears) (Enemy ???)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 316: // Enemy - Bute (defeated) (Dead Bute)
-		return java.awt.Rectangle(542, 82, 586, 110);
-	case 317: // Enemy - Mesa (Enemy Mesa)
-		return java.awt.Rectangle(0, 160, 64, 236);
-	case 318: // Enemy - Mesa (defeated) (Dead Mesa)
-		return java.awt.Rectangle(448, 160, 512, 240);
-	case 319: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 320: // Curly (carried, shooting) (Carry Curl2)
-		return java.awt.Rectangle(0, 192, 32, 224);
-	case 321: // <nothing?> (?)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 322: // Enemy - Deleet (Enemy Delet)
-		return java.awt.Rectangle(320, 432, 364, 478);
-	case 323: // Enemy - Bute (generator) (Enemy ButeG)
-		return java.awt.Rectangle(432, 64, 464, 108);
-	case 324: // Generator - Bute (Genrt Bute)
-		return java.awt.Rectangle(432, 64, 464, 108);
-	case 325: // Projectile - Heavy Press (Proj HeavP)
-		return java.awt.Rectangle(476, 0, 510, 192);
-	case 326: // Itoh/Sue (turning human) (turn human)
-		return java.awt.Rectangle(194, 256, 320, 308);
-	case 327: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 328: // Transmogrifier (human machn)
-		return java.awt.Rectangle(192, 0, 256, 96);
-	case 329: // Building fan (Bldg fan)
-		return java.awt.Rectangle(96, 0, 128, 32);
-	case 330: // Enemy - Rolling (Enemy Rolln)
-		return java.awt.Rectangle(288, 272, 320, 304);
-	case 331: // Projectile - Ballos (bone) (Proj Blls1)
-		return java.awt.Rectangle(576, 160, 608, 192);
-	case 332: // Projectile - Ballos (shockwave) (Proj Blls2)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 333: // Projectile - Ballos (lightning) (Proj Blls3)
-		return java.awt.Rectangle(520, 0, 542, 480);
-	case 334: // Sweat (Sweat)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 335: // Ika-chan (Ika- chan)
-		return java.awt.Rectangle(0, 32, 32, 64);
-	case 336: // Generator - Ika-chan? (Genrt Ika)
-		return java.awt.Rectangle(0, 32, 32, 64);
-	case 337: // Numahachi (Numa hachi)
-		return java.awt.Rectangle(512, 224, 576, 300);
-	case 338: // Enemy - Green Devil (Enemy GDevl)
-		return java.awt.Rectangle(566, 0, 604, 32);
-	case 339: // Generator - Green Devil (Genrt GDevl)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 340: // Boss - Ballos (Boss Blls1)
-		return java.awt.Rectangle(0, 0, 88, 80);
-	case 341: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 342: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 343: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 344: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 345: // Projectile - Ballos (skull) (Proj Blls4)
-		return java.awt.Rectangle(256, 352, 288, 384);
-	case 346: // <CRASH> (CRASH)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 347: // Enemy - Hoppy (Enemy Hoppy)
-		return java.awt.Rectangle(512, 96, 544, 128);
-	case 348: // Ballos spikes (rising) (Spike Blls)
-		return java.awt.Rectangle(252, 302, 288, 352);
-	case 349: // Statue (Statu)
-		return java.awt.Rectangle(64, 200, 128, 288);
-	case 350: // Enemy - Bute (archer, red) (Enemy ButRA)
-		return java.awt.Rectangle(98, 324, 140, 364);
-	case 351: // Statue (can shoot) (Statu shoot)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 352: // King (sword) (King sword)
-		return java.awt.Rectangle(448, 64, 476, 96);
-	case 353: // Enemy - Bute (sword, red) (Enemy ButRS)
-		return java.awt.Rectangle(396, 316, 432, 352);
-	case 354: // Invisible deathtrap wall (Invis Trap)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 355: // <CRASH> (Sometimes) (CRASH SOME)
-		return java.awt.Rectangle(0, 0, 0, 0);
-	case 356: // Balrog (rescue) (Blrg rescu)
-		return java.awt.Rectangle(0, 0, 80, 48);
-	case 357: // Puppy (ghost) (Puppy ghost)
-		return java.awt.Rectangle(448, 274, 480, 306);
-	case 358: // Misery (wind) (Msry wind)
-		return java.awt.Rectangle(416, 20, 444, 64);
-	case 359: // Generator - Water drop (Genrt WDrop)
-		return java.awt.Rectangle(144, 32, 148, 36);
-	case 360: // 'Thank you!' (Thank you!)
-		return java.awt.Rectangle(0, 352, 96, 366);
-	default:
-		return java.awt.Rectangle(0, 0, 0, 0);
-	}
+    switch (entity.type) {
+    case 0: // Null ()
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 1: // EXP (Weapn energy)
+	return java.awt.Rectangle(0, 32, 32, 64);
+    case 2: // Behemoth (Enemy Behem)
+	return java.awt.Rectangle(0, 0, 64, 48);
+    case 3: // Null_disappear (?)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 4: // Smoke (Smoke)
+	return java.awt.Rectangle(128, 0, 160, 32);
+    case 5: // Critter(g) (Enemy CrtHG)
+	return java.awt.Rectangle(0, 94, 32, 124);
+    case 6: // Beetle(horiz_g) (Enemy BtlHG)
+	return java.awt.Rectangle(0, 160, 32, 192);
+    case 7: // Basil (Enemy Basil)
+	return java.awt.Rectangle(512, 128, 560, 166);
+    case 8: // Beetle(follow) (Enemy BtlF1)
+	return java.awt.Rectangle(160, 160, 192, 192);
+    case 9: // Balrog(DropIn) (Blrg drop)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 10: // Balrog(Shoot) (Boss Blrg0)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 11: // Shot(Balrog) (Proj Blrg1)
+	return java.awt.Rectangle(480, 160, 512, 192);
+    case 12: // Balrog(cutscene) (Blrg)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 13: // ForceField (Force field)
+	return java.awt.Rectangle(256, 0, 288, 32);
+    case 14: // SantaKey (Santa Key)
+	return java.awt.Rectangle(450, 0, 480, 32);
+    case 15: // Chest(closed) (Chest closd)
+	return java.awt.Rectangle(480, 0, 512, 32);
+    case 16: // SavePoint (Save point)
+	return java.awt.Rectangle(192, 32, 224, 64);
+    case 17: // Refill (Refil)
+	return java.awt.Rectangle(576, 0, 608, 32);
+    case 18: // Door (Door)
+	return java.awt.Rectangle(448, 32, 480, 80);
+    case 19: // Balrog(burst) (Blrg bust)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 20: // Computer (Compu)
+	return java.awt.Rectangle(576, 32, 640, 80);
+    case 21: // Chest(open) (Chest open)
+	return java.awt.Rectangle(448, 80, 480, 96);
+    case 22: // Teleporter (Telep)
+	return java.awt.Rectangle(480, 32, 528, 96);
+    case 23: // TP_lights (Telep light)
+	return java.awt.Rectangle(528, 64, 576, 72);
+    case 24: // PowerCritter (Enemy PCrit)
+	return java.awt.Rectangle(0, 0, 48, 48);
+    case 25: // Lift (Lift platf)
+	return java.awt.Rectangle(512, 128, 580, 160);
+    case 26: // Bat(circle_black) (Enemy BatBC)
+	return java.awt.Rectangle(64, 160, 96, 192);
+    case 27: // DeathTrap (Death trap)
+	return java.awt.Rectangle(192, 128, 256, 176);
+    case 28: // Critter(fly_g) (Enemy CrtFy)
+	return java.awt.Rectangle(96, 96, 128, 128);
+    case 29: // Cthulhu (Cthu)
+	return java.awt.Rectangle(0, 384, 32, 432);
+    case 30: // Gunsmith (Hermt Gunsm)
+	return java.awt.Rectangle(0, 64, 32, 96);
+    case 31: // Bat(hang_black) (Enemy BatBH)
+	return java.awt.Rectangle(0, 158, 32, 190);
+    case 32: // Life Capsule (Capsl life)
+	return java.awt.Rectangle(64, 192, 96, 224);
+    case 33: // Shot(Bllg_bounce) (Proj Blrg2)
+	return java.awt.Rectangle(480, 160, 512, 192);
+    case 34: // Bed (Bed)
+	return java.awt.Rectangle(384, 96, 448, 128);
+    case 35: // Mannan (Enemy Manan)
+	return java.awt.Rectangle(192, 128, 240, 192);
+    case 36: // Balrog(hover) (Boss Blrg2)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 37: // Signpost (Sign post)
+	return java.awt.Rectangle(384, 128, 416, 160);
+    case 38: // Fire (Fire place)
+	return java.awt.Rectangle(256, 128, 288, 160);
+    case 39: // SaveSign (Save sign)
+	return java.awt.Rectangle(448, 128, 480, 160);
+    case 40: // Santa (Santa)
+	return java.awt.Rectangle(0, 64, 32, 96);
+    case 41: // BustedDoor (Door bustd)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 42: // Sue (Sue)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 43: // Chalkboard (Black board)
+	return java.awt.Rectangle(256, 160, 336, 224);
+    case 44: // Polish (Enemy Polsh)
+	return java.awt.Rectangle(0, 0, 64, 64);
+    case 45: // Baby (Enemy Baby)
+	return java.awt.Rectangle(32, 64, 64, 96);
+    case 46: // H/V_trigger (H/V trigr)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 47: // SandCroc (Enemy SandCroc)
+	return java.awt.Rectangle(306, 94, 376, 160);
+    case 48: // ProjOmega (Proj Omega)
+	return java.awt.Rectangle(574, 174, 606, 206);
+    case 49: // SkullHead (Enemy SkulH)
+	return java.awt.Rectangle(64, 160, 128, 204);
+    case 50: // ProjSkeleton (Proj Skele)
+	return java.awt.Rectangle(96, 64, 128, 96);
+    case 51: // Crow&SkullHead (Enemy CrowS)
+	return java.awt.Rectangle(128, 160, 252, 204);
+    case 52: // BlueRobot(sit) (BRobt sit)
+	return java.awt.Rectangle(512, 400, 544, 432);
+    case 53: // Unknown(crash) (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 54: // SkullStep (Enemy SkulS)
+	return java.awt.Rectangle(64, 160, 128, 204);
+    case 55: // Cairn (Kazum)
+	return java.awt.Rectangle(384, 384, 416, 432);
+    case 56: // BeetleHorizBrown (Enemy BtlHB)
+	return java.awt.Rectangle(0, 284, 32, 316);
+    case 57: // Crow (Enemy Crow)
+	return java.awt.Rectangle(192, 160, 256, 224);
+    case 58: // Basu(1) (Enemy Basu1)
+	return java.awt.Rectangle(384, 0, 432, 48);
+    case 59: // EyeDoor (Enemy Door)
+	return java.awt.Rectangle(416, 160, 448, 208);
+    case 60: // Toroko (Torok)
+	return java.awt.Rectangle(0, 128, 32, 160);
+    case 61: // King (King)
+	return java.awt.Rectangle(448, 64, 480, 96);
+    case 62: // Kazuma(pc) (Kazum compu)
+	return java.awt.Rectangle(544, 384, 576, 432);
+    case 63: // Toroko(stick) (Torok attck)
+	return java.awt.Rectangle(128, 128, 160, 160);
+    case 64: // Critter(b) (Enemy CrtHB)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 65: // Bat(blue) (Enemy BatBu)
+	return java.awt.Rectangle(64, 64, 96, 96);
+    case 66: // MiseryBubble (Bubbl)
+	return java.awt.Rectangle(64, 432, 110, 480);
+    case 67: // Misery(float) (Msry float)
+	return java.awt.Rectangle(160, 0, 192, 32);
+    case 68: // Balrog(run) (Boss Blrg1)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 69: // Pignon (Enemy Pign)
+	return java.awt.Rectangle(96, 0, 128, 32);
+    case 70: // Sparkle (Spark item)
+	return java.awt.Rectangle(192, 96, 224, 128);
+    case 71: // Chinfish (Enemy Chinf)
+	return java.awt.Rectangle(128, 64, 160, 96);
+    case 72: // Sprinkler (Sprnk)
+	return java.awt.Rectangle(448, 96, 480, 128);
+    case 73: // Water drop (Water drop)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 74: // Jack (Jack)
+	return java.awt.Rectangle(128, 0, 160, 32);
+    case 75: // Kanpachi(fishn) (Kanpa fishn)
+	return java.awt.Rectangle(554, 64, 602, 112);
+    case 76: // Flowers (Flowr)
+	return java.awt.Rectangle(64, 0, 96, 32);
+    case 77: // Yamashita (Sanda pavil)
+	return java.awt.Rectangle(0, 32, 96, 96);
+    case 78: // Pot (Pot)
+	return java.awt.Rectangle(320, 96, 352, 128);
+    case 79: // Mahin (Mahin)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 80: // Gravekeeper (Enemy GravK)
+	return java.awt.Rectangle(0, 128, 48, 176);
+    case 81: // Giant_Pignon (Enemy GPign)
+	return java.awt.Rectangle(288, 128, 336, 176);
+    case 82: // Misery(stand) (Msry stand)
+	return java.awt.Rectangle(224, 0, 256, 32);
+    case 83: // Igor(cutscene) (Igor)
+	return java.awt.Rectangle(0, 0, 80, 80);
+    case 84: // Shot(basu1) (Proj Basu1)
+	return java.awt.Rectangle(128, 96, 160, 128);
+    case 85: // Terminal (Termn)
+	return java.awt.Rectangle(544, 192, 574, 240);
+    case 86: // Missle (Missl)
+	return java.awt.Rectangle(0, 160, 32, 192);
+    case 87: // Heart (Heart)
+	return java.awt.Rectangle(64, 160, 96, 192);
+    case 88: // Igor (Boss Igor)
+	return java.awt.Rectangle(0, 0, 80, 80);
+    case 89: // Igor(dead) (Dead Igor)
+	return java.awt.Rectangle(574, 176, 616, 208);
+    case 90: // Unknown(90) (Backg)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 91: // Cage (Cage)
+	return java.awt.Rectangle(192, 176, 256, 224);
+    case 92: // Sue(pc) (Sue compu)
+	return java.awt.Rectangle(544, 432, 576, 480);
+    case 93: // Chaco (Chaco)
+	return java.awt.Rectangle(256, 0, 288, 32);
+    case 94: // Kulala (Enemy Kulal)
+	return java.awt.Rectangle(544, 0, 640, 48);
+    case 95: // Jelly (Enemy Jelly)
+	return java.awt.Rectangle(384, 130, 416, 162);
+    case 96: // Fan(l) (Fan left)
+	return java.awt.Rectangle(576, 240, 608, 272);
+    case 97: // Fan(u) (Fan up)
+	return java.awt.Rectangle(576, 272, 608, 304);
+    case 98: // Fan(r) (Fan right)
+	return java.awt.Rectangle(576, 304, 608, 336);
+    case 99: // Fan(d) (Fan down)
+	return java.awt.Rectangle(576, 336, 608, 368);
+    case 100: // Grate (Grate)
+	return java.awt.Rectangle(544, 96, 576, 128);
+    case 101: // ControlScreen (PowCn scrn)
+	return java.awt.Rectangle(480, 272, 512, 304);
+    case 102: // PowerWave (PowCn pflow)
+	return java.awt.Rectangle(416, 240, 448, 272);
+    case 103: // Shot(manann) (Proj Manan)
+	return java.awt.Rectangle(386, 198, 418, 230);
+    case 104: // Frog (Enemy Frog)
+	return java.awt.Rectangle(0, 224, 64, 288);
+    case 105: // Balloon(hey_low) (Bloon HeyL)
+	return java.awt.Rectangle(256, 64, 288, 96);
+    case 106: // Balloon(hey_high) (Bloon HeyH)
+	return java.awt.Rectangle(256, 64, 288, 96);
+    case 107: // Malco (Malco)
+	return java.awt.Rectangle(416, 0, 448, 48);
+    case 108: // Shot(Balfrog) (Proj Bfrog)
+	return java.awt.Rectangle(192, 96, 220, 126);
+    case 109: // Malco(broke) (Malco damgd)
+	return java.awt.Rectangle(480, 0, 512, 48);
+    case 110: // Puchi (Enemy Puchi)
+	return java.awt.Rectangle(192, 256, 224, 288);
+    case 111: // Quote(teleOut) (Quote t-out)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 112: // Quote(teleIn) (Quote t-in)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 113: // Booster (Boost)
+	return java.awt.Rectangle(448, 0, 480, 32);
+    case 114: // Press (Enemy Press)
+	return java.awt.Rectangle(352, 224, 384, 272);
+    case 115: // Ravil (Enemy Ravil)
+	return java.awt.Rectangle(0, 240, 48, 288);
+    case 116: // RedPetals (RFlow petal)
+	return java.awt.Rectangle(544, 368, 640, 400);
+    case 117: // Curly (Curly)
+	return java.awt.Rectangle(0, 192, 32, 224);
+    case 118: // Curly(boss) (Boss Curly)
+	return java.awt.Rectangle(0, 64, 64, 112);
+    case 119: // Table&Chair (Table chair)
+	return java.awt.Rectangle(496, 368, 544, 400);
+    case 120: // Colon_1 (Colon 1)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 121: // Colon_2 (Colon 2)
+	return java.awt.Rectangle(128, 32, 160, 64);
+    case 122: // Colon_attack (Enemy Colon)
+	return java.awt.Rectangle(160, 0, 192, 32);
+    case 123: // Shot(Curly) (Proj Curly)
+	return java.awt.Rectangle(384, 0, 416, 32);
+    case 124: // Sunstone (Sun stone)
+	return java.awt.Rectangle(384, 0, 446, 64);
+    case 125: // HiddenItem (Hiddn H/M)
+	return java.awt.Rectangle(288, 400, 320, 432);
+    case 126: // Puppy (Puppy run)
+	return java.awt.Rectangle(48, 144, 64, 160);
+    case 127: // MG_trail_2 (Glows Momnt)
+	return java.awt.Rectangle(128, 172, 224, 180);
+    case 128: // MG_trail_3 (Glows Momnt)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 129: // Snake_Fball_trail (Glows Momnt)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 130: // Puppy_wag (Puppy wag)
+	return java.awt.Rectangle(96, 288, 128, 320);
+    case 131: // Puppy_sleep (Puppy sleep)
+	return java.awt.Rectangle(288, 288, 320, 320);
+    case 132: // Puppy_bark (Puppy bark)
+	return java.awt.Rectangle(256, 288, 288, 320);
+    case 133: // Jenka (Jenka)
+	return java.awt.Rectangle(352, 64, 384, 96);
+    case 134: // Armadillo (Enemy Armdl)
+	return java.awt.Rectangle(448, 0, 512, 32);
+    case 135: // Skeleton (Enemy Skelt)
+	return java.awt.Rectangle(576, 64, 640, 128);
+    case 136: // Puppy_hat (Carry Puppy)
+	return java.awt.Rectangle(96, 288, 128, 320);
+    case 137: // LargeDoor_frame (LDoor frame)
+	return java.awt.Rectangle(192, 272, 256, 336);
+    case 138: // LargeDoor_door (LDoor doors)
+	return java.awt.Rectangle(192, 224, 256, 272);
+    case 139: // Doctor(crown) (Doctr)
+	return java.awt.Rectangle(0, 256, 48, 320);
+    case 140: // Toroko(frenzy) (Boss Torok)
+	return java.awt.Rectangle(0, 0, 64, 64);
+    case 141: // TorokoBlock (CRASH)
+	return java.awt.Rectangle(576, 64, 608, 96);
+    case 142: // FlowerCub (Enemy Flwcb)
+	return java.awt.Rectangle(0, 256, 32, 288);
+    case 143: // Jenka(collapse) (Jenka uncon)
+	return java.awt.Rectangle(416, 64, 510, 96);
+    case 144: // Toroko(teleIn) (Torok telep)
+	return java.awt.Rectangle(64, 128, 96, 160);
+    case 145: // Unknown(145) (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 146: // Lightning (Ligtn)
+	return java.awt.Rectangle(608, 416, 640, 480);
+    case 147: // Critter(hover) (Enemy CrtHv)
+	return java.awt.Rectangle(0, 192, 32, 224);
+    case 148: // Shot(crit_p) (Proj CrtHv)
+	return java.awt.Rectangle(192, 192, 208, 208);
+    case 149: // MovBlock_h (Block MoveH)
+	return java.awt.Rectangle(32, 0, 96, 64);
+    case 150: // Quote (Quote)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 151: // BlueRobot(stand) (BRobt stand)
+	return java.awt.Rectangle(384, 0, 416, 32);
+    case 152: // Shutter(stuck) (Shutr stuck)
+	return java.awt.Rectangle(192, 128, 224, 192);
+    case 153: // Gaudi (Enemy Gaudi)
+	return java.awt.Rectangle(0, 0, 48, 48);
+    case 154: // Gaudi(dead) (Dead Gaudi)
+	return java.awt.Rectangle(384, 0, 432, 48);
+    case 155: // Gaudi(flying) (Enemy GaudF)
+	return java.awt.Rectangle(0, 96, 48, 144);
+    case 156: // Shot(Gaudi) (Proj GaudF)
+	return java.awt.Rectangle(192, 224, 224, 256);
+    case 157: // MovBlock_v (Block MoveV)
+	return java.awt.Rectangle(32, 0, 96, 64);
+    case 158: // FishMissle(x) (Proj MonX)
+	return java.awt.Rectangle(0, 448, 32, 480);
+    case 159: // X(dead) (Dead MonX)
+	return java.awt.Rectangle(288, 262, 384, 398);
+    case 160: // Pooh_black (Boss PoohB)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 161: // Shot(p_black) (Proj PoohB)
+	return java.awt.Rectangle(0, 96, 32, 128);
+    case 162: // p_black(dead) (Dead PoohB)
+	return java.awt.Rectangle(80, 0, 160, 48);
+    case 163: // Dr.Gero (Dr Gero)
+	return java.awt.Rectangle(384, 0, 416, 32);
+    case 164: // Nurse_Hasumi (Nurse Hasum)
+	return java.awt.Rectangle(448, 0, 480, 32);
+    case 165: // Curly(collapse) (Curly uncon)
+	return java.awt.Rectangle(448, 192, 480, 224);
+    case 166: // Chaba (Chaba Gaudi)
+	return java.awt.Rectangle(292, 212, 362, 255);
+    case 167: // Booster(fall) (Boost fall)
+	return java.awt.Rectangle(608, 0, 640, 32);
+    case 168: // Boulder (Bould)
+	return java.awt.Rectangle(527, 115, 640, 192);
+    case 169: // Balrog(Missle) (Boss Blrg3)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 170: // Shot(bllg_msl) (Proj Blrg3)
+	return java.awt.Rectangle(224, 192, 256, 208);
+    case 171: // Fire_Whirr (Enemy FWhir)
+	return java.awt.Rectangle(244, 96, 308, 160);
+    case 172: // Shot(Whirr) (Proj FWhir)
+	return java.awt.Rectangle(496, 96, 528, 160);
+    case 173: // Gaudi(Armor) (Enemy GaudA)
+	return java.awt.Rectangle(0, 256, 48, 304);
+    case 174: // Shot(gaud_arm) (Proj GaudA)
+	return java.awt.Rectangle(240, 160, 272, 192);
+    case 175: // Gaudi_Egg (Enemy GaudE)
+	return java.awt.Rectangle(336, 160, 384, 208);
+    case 176: // BuyoBuyo (Enemy BuyoB)
+	return java.awt.Rectangle(192, 256, 256, 288);
+    case 177: // Buyo_baby (Enemy Buyo)
+	return java.awt.Rectangle(384, 288, 416, 320);
+    case 178: // Shot(core_spin) (Proj Core1)
+	return java.awt.Rectangle(0, 448, 32, 480);
+    case 179: // Shot(core_wisp) (Proj Core2)
+	return java.awt.Rectangle(96, 448, 144, 480);
+    case 180: // Curly_AI (Curly A.I.)
+	return java.awt.Rectangle(0, 192, 32, 224);
+    case 181: // Unknown(181) (?)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 182: // Unknown(182) (?)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 183: // MiseryBubble (?)
+	return java.awt.Rectangle(64, 432, 110, 480);
+    case 184: // Shutter(big) (Shutr large)
+	return java.awt.Rectangle(0, 128, 64, 192);
+    case 185: // Shutter(small) (Shutr small)
+	return java.awt.Rectangle(192, 128, 224, 192);
+    case 186: // LiftBlock (Lift block)
+	return java.awt.Rectangle(96, 96, 128, 128);
+    case 187: // FuzzCore (Enemy FuzzC)
+	return java.awt.Rectangle(448, 208, 512, 272);
+    case 188: // Fuzz(baby) (Fuzz Baby)
+	return java.awt.Rectangle(576, 208, 608, 240);
+    case 189: // HomingFlame (Proj HomFl)
+	return java.awt.Rectangle(96, 448, 128, 480);
+    case 190: // BrokeRobo (Surfc robot)
+	return java.awt.Rectangle(384, 64, 416, 96);
+    case 191: // WaterLevel (Water level)
+	return java.awt.Rectangle(0, 416, 32, 448);
+    case 192: // Scooter (Scoot)
+	return java.awt.Rectangle(450, 128, 508, 160);
+    case 193: // Scooter(broke) (Scoot dead)
+	return java.awt.Rectangle(510, 190, 638, 224);
+    case 194: // BrokenRobo (BRobt dead)
+	return java.awt.Rectangle(384, 224, 450, 255);
+    case 195: // GrateMouth (Grate mouth)
+	return java.awt.Rectangle(224, 128, 255, 160);
+    case 196: // MotionWall (Mtion wall)
+	return java.awt.Rectangle(256, 64, 288, 96);
+    case 197: // PorcupineFish (Enemy PFish)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 198: // Shot(ironH) (Proj IronH)
+	return java.awt.Rectangle(480, 92, 410, 142);
+    case 199: // Current (Water curnt)
+	return java.awt.Rectangle(448, 100, 480, 128);
+    case 200: // Enemy - Dragon Zombie (Enemy DragZ)
+	return java.awt.Rectangle(0, 0, 80, 80);
+    case 201: // Dragon Zombie (dead) (Dead DragZ)
+	return java.awt.Rectangle(400, 40, 484, 72);
+    case 202: // Projectile - Dragon Zombie (Proj DragZ)
+	return java.awt.Rectangle(364, 432, 400, 478);
+    case 203: // Enemy - Critter (hopping, aqua) (Enemy CrtHA)
+	return java.awt.Rectangle(0, 160, 32, 192);
+    case 204: // Falling Spike (small) (Spike FallS)
+	return java.awt.Rectangle(480, 288, 512, 320);
+    case 205: // Falling Spike (large) (Spike FallL)
+	return java.awt.Rectangle(256, 160, 288, 224);
+    case 206: // Enemy - Counter Bomb (Enemy CBomb)
+	return java.awt.Rectangle(160, 160, 240, 248);
+    case 207: // Balloon (countdown) (Bloon CDown)
+	return java.awt.Rectangle(0, 288, 32, 314);
+    case 208: // Enemy - Basu (2) (Enemy Basu2)
+	return java.awt.Rectangle(496, 160, 544, 204);
+    case 209: // Projectile - Basu (2) (Proj Basu2)
+	return java.awt.Rectangle(400, 224, 432, 256);
+    case 210: // Enemy - Beetle (follow 2) (Enemy BtlF2)
+	return java.awt.Rectangle(0, 224, 32, 256);
+    case 211: // Spikes (Spike)
+	return java.awt.Rectangle(512, 400, 544, 432);
+    case 212: // Sky Dragon (Sky Dragn)
+	return java.awt.Rectangle(320, 320, 394, 384);
+    case 213: // Enemy - Night Spirit (Enemy NiteS)
+	return java.awt.Rectangle(0, 0, 96, 96);
+    case 214: // Projectile - Night Spirit (Proj NiteS)
+	return java.awt.Rectangle(288, 96, 352, 128);
+    case 215: // Enemy - Sandcroc (white) (Enemy ScrcW)
+	return java.awt.Rectangle(0, 240, 96, 256);
+    case 216: // Debug cat (Debug cat)
+	return java.awt.Rectangle(512, 400, 544, 432);
+    case 217: // Itoh (Itoh)
+	return java.awt.Rectangle(288, 128, 320, 160);
+    case 218: // Projectile? (Proj?)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 219: // Generator - Smoke/Underwater current (Genrt Smoke)
+	return java.awt.Rectangle(32, 0, 64, 32);
+    case 220: // Shovel Brigade (SBrig stand)
+	return java.awt.Rectangle(0, 128, 32, 160);
+    case 221: // Shovel Brigade (walking) (SBrig walk)
+	return java.awt.Rectangle(0, 128, 32, 160);
+    case 222: // Prison bars (Prisn bars)
+	return java.awt.Rectangle(192, 336, 224, 400);
+    case 223: // Momorin (Momo)
+	return java.awt.Rectangle(160, 388, 192, 432);
+    case 224: // Chie (Chie)
+	return java.awt.Rectangle(224, 64, 256, 96);
+    case 225: // Megane (Megan)
+	return java.awt.Rectangle(128, 128, 160, 160);
+    case 226: // Kanpachi (Kanpa stand)
+	return java.awt.Rectangle(544, 64, 592, 112);
+    case 227: // Bucket (Buckt)
+	return java.awt.Rectangle(416, 64, 448, 96);
+    case 228: // Droll (guard) (Droll guard)
+	return java.awt.Rectangle(0, 0, 64, 84);
+    case 229: // Red Flowers (sprouts) (RFlow sprts)
+	return java.awt.Rectangle(0, 200, 32, 224);
+    case 230: // Red Flowers (blooming) (RFlow bloom)
+	return java.awt.Rectangle(200, 200, 256, 256);
+    case 231: // Rocket (Rockt)
+	return java.awt.Rectangle(352, 64, 416, 96);
+    case 232: // Enemy - Orangebell (Enemy Orang)
+	return java.awt.Rectangle(256, 0, 320, 64);
+    case 233: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 234: // Red Flowers (picked) (RFlow pickd)
+	return java.awt.Rectangle(288, 200, 344, 224);
+    case 235: // Enemy - Midorin (Midor)
+	return java.awt.Rectangle(384, 200, 416, 224);
+    case 236: // Enemy - Gunfish (Enemy Gunfs)
+	return java.awt.Rectangle(256, 120, 308, 176);
+    case 237: // Projectile - Gunfish (Proj Gunfs)
+	return java.awt.Rectangle(624, 64, 638, 80);
+    case 238: // Enemy - Press (killer) (Enemy PresK)
+	return java.awt.Rectangle(368, 400, 416, 432);
+    case 239: // Cage bars (Cage bars)
+	return java.awt.Rectangle(192, 222, 288, 288);
+    case 240: // Mimiga (jailed) (Mimig jail)
+	return java.awt.Rectangle(0, 128, 32, 160);
+    case 241: // Enemy - Critter (hopping, red) (Enemy CritHR)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 242: // Enemy - Bat (red) (Enemy BatRd)
+	return java.awt.Rectangle(0, 64, 32, 96);
+    case 243: // Generator - Bat (red) (Genrt BatRd)
+	return java.awt.Rectangle(0, 64, 32, 96);
+    case 244: // Acid drop (Acid drop)
+	return java.awt.Rectangle(192, 0, 204, 32);
+    case 245: // Generator - Acid drop (Genrt Acid)
+	return java.awt.Rectangle(192, 0, 204, 32);
+    case 246: // Enemy - Press (proximity) (Enemy PresP)
+	return java.awt.Rectangle(288, 224, 320, 272);
+    case 247: // Boss - Misery (Boss Msry)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 248: // Boss - Misery (vanish) (Boss MsryV)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 249: // Projectile - Misery (energy shot) (Proj Msry1)
+	return java.awt.Rectangle(64, 64, 96, 96);
+    case 250: // Projectile - Misery (lightning ball) (Proj Msry2)
+	return java.awt.Rectangle(0, 64, 32, 96);
+    case 251: // Projectile - Misery (lightning) (Proj Msry3)
+	return java.awt.Rectangle(160, 64, 192, 128);
+    case 252: // Projectile - Misery (Bat) (Misery bat)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 253: // Energy Capsule (Capsl enrgy)
+	return java.awt.Rectangle(0, 128, 32, 160);
+    case 254: // Helicopter (Heli copter)
+	return java.awt.Rectangle(0, 0, 256, 128);
+    case 255: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 256: // Doctor (crowned, facing away) (Doctr back)
+	return java.awt.Rectangle(96, 320, 144, 384);
+    case 257: // Red Crystal (Red Cryst)
+	return java.awt.Rectangle(352, 64, 366, 96);
+    case 258: // Mimiga (sleeping) (Mimig sleep)
+	return java.awt.Rectangle(96, 64, 128, 96);
+    case 259: // Curly (carried, unconscious) (Carry Curl1)
+	return java.awt.Rectangle(320, 192, 352, 224);
+    case 260: // Shovel Brigade (caged) (SBrig cage)
+	return java.awt.Rectangle(0, 128, 32, 160);
+    case 261: // Chie (caged) (Chie cage)
+	return java.awt.Rectangle(224, 64, 256, 96);
+    case 262: // Chaco (caged) (Chaco cage)
+	return java.awt.Rectangle(256, 0, 288, 32);
+    case 263: // Boss - Doctor (Boss Doct1)
+	return java.awt.Rectangle(364, 320, 416, 384);
+    case 264: // Projectile - Doctor (red wave) (Proj Doct1)
+	return java.awt.Rectangle(572, 0, 604, 32);
+    case 265: // Projectile - Doctor (red ball - fast vanish) (Proj RFBal)
+	return java.awt.Rectangle(572, 0, 604, 32);
+    case 266: // Projectile - Doctor (red ball - slow vanish) (Proj RSBal)
+	return java.awt.Rectangle(572, 0, 604, 32);
+    case 267: // Boss - Muscle Doctor (Boss Doct2)
+	return java.awt.Rectangle(0, 128, 80, 224);
+    case 268: // Enemy - Igor (Enemy Igor)
+	return java.awt.Rectangle(0, 0, 80, 80);
+    case 269: // Enemy - Bat (red energy) (Enemy BatRE)
+	return java.awt.Rectangle(464, 0, 496, 32);
+    case 270: // Red energy (Red enrgy)
+	return java.awt.Rectangle(336, 64, 348, 80);
+    case 271: // Underwater block (UBlok)
+	return java.awt.Rectangle(256, 32, 288, 64);
+    case 272: // Generator - Underwater block (Genrt UBlok)
+	return java.awt.Rectangle(256, 32, 288, 64);
+    case 273: // Projectile - Droll (Proj Droll)
+	return java.awt.Rectangle(496, 80, 544, 128);
+    case 274: // Enemy - Droll (Enemy Droll)
+	return java.awt.Rectangle(0, 0, 64, 84);
+    case 275: // Puppy (with items) (Puppy items)
+	return java.awt.Rectangle(96, 288, 128, 320);
+    case 276: // Boss - Red Demon (Boss RDemn)
+	return java.awt.Rectangle(0, 128, 64, 204);
+    case 277: // Projectile - Red Demon (Proj RDemn)
+	return java.awt.Rectangle(256, 0, 300, 48);
+    case 278: // Little family (Littl famly)
+	return java.awt.Rectangle(0, 240, 12, 256);
+    case 279: // Falling block (large) (FBlck large)
+	return java.awt.Rectangle(0, 32, 64, 96);
+    case 280: // Sue (teleported in by Misery) (Sue telep)
+	return java.awt.Rectangle(224, 64, 254, 96);
+    case 281: // Doctor (red energy form) (Doctr enrgy)
+	return java.awt.Rectangle(366, 320, 416, 384);
+    case 282: // Mini Undead Core - floats forward (Mini UCore)
+	return java.awt.Rectangle(512, 240, 640, 320);
+    case 283: // Enemy - Misery (transformed) (Enemy Msry)
+	return java.awt.Rectangle(0, 128, 64, 192);
+    case 284: // Enemy - Sue (transformed) (Enemy Sue)
+	return java.awt.Rectangle(0, 256, 64, 320);
+    case 285: // Projectile - Undead Core (orange spiral shot) (Proj OSpir)
+	return java.awt.Rectangle(0, 448, 32, 480);
+    case 286: // Orange Dot (Orang Dot)
+	return java.awt.Rectangle(464, 210, 494, 238);
+    case 287: // Orange Smoke (Orang Smoke)
+	return java.awt.Rectangle(96, 448, 128, 438);
+    case 288: // Projectile - Undead Core (glowing rock thing) (Proj GRock)
+	return java.awt.Rectangle(464, 142, 496, 176);
+    case 289: // Enemy - Critter (hopping, orange) (Enemy CrtHO)
+	return java.awt.Rectangle(320, 64, 352, 96);
+    case 290: // Enemy - Bat (orange) (Enemy BatOr)
+	return java.awt.Rectangle(224, 64, 256, 96);
+    case 291: // Mini Undead Core (before fight) (UCore Mini)
+	return java.awt.Rectangle(512, 0, 640, 80);
+    case 292: // Quake (Quake)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 293: // Projectile - Undead Core (huge energy shot) (Proj HEner)
+	return java.awt.Rectangle(560, 400, 640, 480);
+    case 294: // Quake & Generator - Falling blocks (Quake FBlck)
+	return java.awt.Rectangle(0, 32, 64, 96);
+    case 295: // Cloud (Cloud)
+	return java.awt.Rectangle(288, 224, 384, 284);
+    case 296: // Generator - Cloud (Genrt Cloud)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 297: // <CRASH> (Sometimes) (CRASH SOME)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 298: // Doctor (uncrowned) (Intro Doctr)
+	return java.awt.Rectangle(200, 320, 240, 384);
+    case 299: // Balrog/Misery (bubble) (Intro Bubbl)
+	return java.awt.Rectangle(0, 0, 96, 96);
+    case 300: // Demon Crown (Intro Crown)
+	return java.awt.Rectangle(384, 160, 416, 192);
+    case 301: // Enemy - Fish Missile (orange) (Enemy FishO)
+	return java.awt.Rectangle(286, 0, 318, 32);
+    case 302: // Something with ending Scenes (End Scene)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 303: // <nothing?> (?)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 304: // Gaudi (sitting) (Gaudi sit)
+	return java.awt.Rectangle(0, 352, 48, 384);
+    case 305: // Puppy (small) (Puppy small)
+	return java.awt.Rectangle(320, 300, 352, 320);
+    case 306: // Balrog (nurse) (Blrg nurse)
+	return java.awt.Rectangle(480, 200, 560, 256);
+    case 307: // Santa (caged) (Santa cage)
+	return java.awt.Rectangle(0, 64, 32, 96);
+    case 308: // Enemy - Stumpy (Enemy Stump)
+	return java.awt.Rectangle(252, 228, 284, 260);
+    case 309: // Enemy - Bute (Enemy Bute)
+	return java.awt.Rectangle(0, 0, 32, 32);
+    case 310: // Enemy - Bute (sword) (Enemy ButeS)
+	return java.awt.Rectangle(64, 0, 108, 32);
+    case 311: // Enemy - Bute (archer) (Enemy ButeA)
+	return java.awt.Rectangle(0, 64, 48, 112);
+    case 312: // Projectile - Bute (archer) (Proj ButeA)
+	return java.awt.Rectangle(0, 320, 32, 352);
+    case 313: // Boss - Ma Pignon (Boss MPign)
+	return java.awt.Rectangle(256, 0, 288, 32);
+    case 314: // Falling, Indestructible (???)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 315: // Enemy (hopping, disappears) (Enemy ???)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 316: // Enemy - Bute (defeated) (Dead Bute)
+	return java.awt.Rectangle(542, 82, 586, 110);
+    case 317: // Enemy - Mesa (Enemy Mesa)
+	return java.awt.Rectangle(0, 160, 64, 236);
+    case 318: // Enemy - Mesa (defeated) (Dead Mesa)
+	return java.awt.Rectangle(448, 160, 512, 240);
+    case 319: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 320: // Curly (carried, shooting) (Carry Curl2)
+	return java.awt.Rectangle(0, 192, 32, 224);
+    case 321: // <nothing?> (?)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 322: // Enemy - Deleet (Enemy Delet)
+	return java.awt.Rectangle(320, 432, 364, 478);
+    case 323: // Enemy - Bute (generator) (Enemy ButeG)
+	return java.awt.Rectangle(432, 64, 464, 108);
+    case 324: // Generator - Bute (Genrt Bute)
+	return java.awt.Rectangle(432, 64, 464, 108);
+    case 325: // Projectile - Heavy Press (Proj HeavP)
+	return java.awt.Rectangle(476, 0, 510, 192);
+    case 326: // Itoh/Sue (turning human) (turn human)
+	return java.awt.Rectangle(194, 256, 320, 308);
+    case 327: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 328: // Transmogrifier (human machn)
+	return java.awt.Rectangle(192, 0, 256, 96);
+    case 329: // Building fan (Bldg fan)
+	return java.awt.Rectangle(96, 0, 128, 32);
+    case 330: // Enemy - Rolling (Enemy Rolln)
+	return java.awt.Rectangle(288, 272, 320, 304);
+    case 331: // Projectile - Ballos (bone) (Proj Blls1)
+	return java.awt.Rectangle(576, 160, 608, 192);
+    case 332: // Projectile - Ballos (shockwave) (Proj Blls2)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 333: // Projectile - Ballos (lightning) (Proj Blls3)
+	return java.awt.Rectangle(520, 0, 542, 480);
+    case 334: // Sweat (Sweat)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 335: // Ika-chan (Ika- chan)
+	return java.awt.Rectangle(0, 32, 32, 64);
+    case 336: // Generator - Ika-chan? (Genrt Ika)
+	return java.awt.Rectangle(0, 32, 32, 64);
+    case 337: // Numahachi (Numa hachi)
+	return java.awt.Rectangle(512, 224, 576, 300);
+    case 338: // Enemy - Green Devil (Enemy GDevl)
+	return java.awt.Rectangle(566, 0, 604, 32);
+    case 339: // Generator - Green Devil (Genrt GDevl)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 340: // Boss - Ballos (Boss Blls1)
+	return java.awt.Rectangle(0, 0, 88, 80);
+    case 341: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 342: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 343: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 344: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 345: // Projectile - Ballos (skull) (Proj Blls4)
+	return java.awt.Rectangle(256, 352, 288, 384);
+    case 346: // <CRASH> (CRASH)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 347: // Enemy - Hoppy (Enemy Hoppy)
+	return java.awt.Rectangle(512, 96, 544, 128);
+    case 348: // Ballos spikes (rising) (Spike Blls)
+	return java.awt.Rectangle(252, 302, 288, 352);
+    case 349: // Statue (Statu)
+	return java.awt.Rectangle(64, 200, 128, 288);
+    case 350: // Enemy - Bute (archer, red) (Enemy ButRA)
+	return java.awt.Rectangle(98, 324, 140, 364);
+    case 351: // Statue (can shoot) (Statu shoot)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 352: // King (sword) (King sword)
+	return java.awt.Rectangle(448, 64, 476, 96);
+    case 353: // Enemy - Bute (sword, red) (Enemy ButRS)
+	return java.awt.Rectangle(396, 316, 432, 352);
+    case 354: // Invisible deathtrap wall (Invis Trap)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 355: // <CRASH> (Sometimes) (CRASH SOME)
+	return java.awt.Rectangle(0, 0, 0, 0);
+    case 356: // Balrog (rescue) (Blrg rescu)
+	return java.awt.Rectangle(0, 0, 80, 48);
+    case 357: // Puppy (ghost) (Puppy ghost)
+	return java.awt.Rectangle(448, 274, 480, 306);
+    case 358: // Misery (wind) (Msry wind)
+	return java.awt.Rectangle(416, 20, 444, 64);
+    case 359: // Generator - Water drop (Genrt WDrop)
+	return java.awt.Rectangle(144, 32, 148, 36);
+    case 360: // 'Thank you!' (Thank you!)
+	return java.awt.Rectangle(0, 352, 96, 366);
+    default:
+	return java.awt.Rectangle(0, 0, 0, 0);
+    }
 }
 function getEntityOffset(entity) {
     return new java.awt.Point(0, 0);

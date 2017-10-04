@@ -9,7 +9,7 @@ import com.leo.cse.frontend.Resources;
 public class AboutDialog extends BaseDialog {
 
 	public AboutDialog() {
-		super("About CaveSaveEdit v" + Main.VERSION, 232, 84);
+		super("About CaveSaveEdit v" + Main.VERSION, 422, 106);
 	}
 
 	@Override
@@ -20,10 +20,10 @@ public class AboutDialog extends BaseDialog {
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g,
 				"CaveSaveEdit version " + Main.VERSION
-						+ "\nWritten by Leo40Story\nUI sprites by zxin\nEarly testers: zxin and gamemanj/20kdc",
+						+ "\nWritten by Leo40Story\nBased on Kapow's profile specs (http://www.cavestory.org/guides/profile.txt)\nUI sprites by zxin\nEarly testers: zxin and gamemanj/20kdc",
 				x + 38, y);
-		g.drawRect(x + 36, y + 64, 192, 17);
-		FrontUtils.drawStringCentered(g, "Check for Updates", x + 132, y + 64);
+		g.drawRect(x + 136, y + 80, 192, 17);
+		FrontUtils.drawStringCentered(g, "Check for Updates", x + 232, y + 80);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class AboutDialog extends BaseDialog {
 		if (super.onClick(x, y))
 			return true;
 		final int wx = getWindowX(), wy = getWindowY();
-		if (FrontUtils.pointInRectangle(x, y, wx + 36, wy + 64, 192, 17))
+		if (FrontUtils.pointInRectangle(x, y, wx + 136, wy + 64, 192, 17))
 			Main.updateCheck(true, true);
 		return false;
 	}
