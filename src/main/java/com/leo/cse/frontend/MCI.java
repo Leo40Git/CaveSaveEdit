@@ -371,5 +371,13 @@ public class MCI {
 		Point offset = (Point) oe2;
 		return new EntityExtras(frameRect, offset);
 	}
+	
+	public static void set(String key, String value) {
+		mci.put(key, value);
+	}
+	
+	public static void set(String key, int value) {
+		mci.put(key, value);
+	}
 
 }

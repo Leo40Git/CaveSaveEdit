@@ -8,7 +8,8 @@ import java.util.Map;
 
 import com.leo.cse.backend.exe.ExeData;
 
-//credit to Noxid for making Booster's Lab open source so I could steal code from it
+// credit to Noxid for making Booster's Lab open source so I could steal code
+// from it
 /**
  * Utility methods for loading resources.
  * 
@@ -73,7 +74,7 @@ public class ResUtils {
 	public static File getGraphicsFile(String name) {
 		return getGraphicsFile("", name);
 	}
-	
+
 	// code from https://stackoverflow.com/a/35325946
 	/**
 	 * Maps lower case strings to their case insensitive File
@@ -132,5 +133,33 @@ public class ResUtils {
 		}
 	}
 	// end code from stack overflow
+
+	/**
+	 * Attempts to get CS+'s "base" folder.
+	 * 
+	 * @param currentLoc
+	 *            current location
+	 * @return location of CS+'s "base" folder
+	 */
+	public static File getBaseFolder(File currentLoc) {
+		String place = "/";
+		if (currentLoc == null) {
+			// System.out.println(res);
+			return null;
+		}
+
+		while (!currentLoc.getName().equals("mod")) {
+			place = "/" + currentLoc.getName() + place;
+			if (currentLoc.getParentFile() == null) {
+				return null; // heirarchy crisis
+			}
+			currentLoc = currentLoc.getParentFile();
+		}
+		// so barring shenanigans we should be in the 'mod' directory now
+		currentLoc = currentLoc.getParentFile(); // modfolder (hurray unnecessarily nested folders)
+		currentLoc = currentLoc.getParentFile(); // data
+		currentLoc = new File(currentLoc + "/base"); // base... ofc
+		return currentLoc;
+	}
 
 }

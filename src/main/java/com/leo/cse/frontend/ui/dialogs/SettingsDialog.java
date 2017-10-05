@@ -40,7 +40,7 @@ public class SettingsDialog extends BaseDialog {
 		FrontUtils.drawString(g, "Load NPCs?", x + 22, y + 41);
 		FrontUtils.drawString(g, "Encoding:", x + 4, y + 62);
 		g.drawRect(x + 54, y + 63, 242, 17);
-		FrontUtils.drawString(g, Main.encoding, x + 56, y + 62);
+		FrontUtils.drawString(g, ExeData.getEncoding(), x + 56, y + 62);
 		g.drawRect(x + 4, y + 83, 292, 17);
 		FrontUtils.drawStringCentered(g, "Wipe Settings", x + 150, y + 83);
 	}
@@ -74,7 +74,7 @@ public class SettingsDialog extends BaseDialog {
 		} else if (FrontUtils.pointInRectangle(x, y, wx + 54, wy + 63, 242, 17)) {
 			String e = null;
 			while (e == null) {
-				e = JOptionPane.showInputDialog(SaveEditorPanel.panel, "Enter new encoding:", Main.encoding);
+				e = JOptionPane.showInputDialog(SaveEditorPanel.panel, "Enter new encoding:", ExeData.getEncoding());
 				if (e != null) {
 					try {
 						new String(TEST_STRING, e);
@@ -86,7 +86,7 @@ public class SettingsDialog extends BaseDialog {
 				} else
 					return false;
 			}
-			Main.encoding = e;
+			ExeData.setEncoding(e);
 			try {
 				ExeData.reload();
 			} catch (IOException ignore) {
