@@ -13,16 +13,17 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
-import com.carrotlord.string.StrTools;
 import com.leo.cse.backend.ResUtils;
+import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.frontend.MCI;
-import com.leo.cse.frontend.Main;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code
 // from it
@@ -39,6 +40,103 @@ public class ExeData {
 	 */
 	private ExeData() {
 		throw new AssertionError("No " + getClass().getName() + " object for you!");
+	}
+
+	/**
+	 * A list of {@link ExeLoadListener}s.
+	 */
+	private static List<ExeLoadListener> listeners;
+
+	/**
+	 * Attaches a load listener.
+	 * 
+	 * @param l
+	 *            listener
+	 */
+	public static void addListener(ExeLoadListener l) {
+		if (listeners == null)
+			listeners = new LinkedList<>();
+		listeners.add(l);
+	}
+
+	/**
+	 * Pre-load event.
+	 * 
+	 * @see ExeLoadListener#preLoad(boolean)
+	 * @see #notifyListeners(int)
+	 */
+	private static final int NOTIFY_PRELOAD = 0;
+	/**
+	 * Load event.
+	 * 
+	 * @see ExeLoadListener#load(boolean)
+	 * @see #notifyListeners(int)
+	 */
+	private static final int NOTIFY_LOAD = 1;
+	/**
+	 * Post-load event.
+	 * 
+	 * @see ExeLoadListener#postLoad(boolean)
+	 * @see #notifyListeners(int)
+	 */
+	private static final int NOTIFY_POSTLOAD = 2;
+	/**
+	 * Unload event.
+	 * 
+	 * @see ExeLoadListener#unload()
+	 * @see #notifyListeners(int)
+	 */
+	private static final int NOTIFY_UNLOAD = 3;
+
+	/**
+	 * Notifies all listeners of an event.
+	 * 
+	 * @param notifyType
+	 *            event type
+	 * @see #NOTIFY_PRELOAD
+	 * @see #NOTIFY_LOAD
+	 * @see #NOTIFY_POSTLOAD
+	 * @see #NOTIFY_UNLOAD
+	 */
+	private static void notifyListeners(int notifyType) {
+		if (listeners == null)
+			return;
+		for (ExeLoadListener l : listeners)
+			switch (notifyType) {
+			case NOTIFY_PRELOAD:
+				l.preLoad(plusMode);
+				break;
+			case NOTIFY_LOAD:
+				l.load(plusMode);
+				break;
+			case NOTIFY_POSTLOAD:
+				l.postLoad(plusMode);
+				break;
+			case NOTIFY_UNLOAD:
+				l.unload();
+				break;
+			}
+	}
+
+	private static String encoding = StrTools.DEFAULT_ENCODING;
+
+	/**
+	 * Gets the encoding to use to read strings.
+	 * 
+	 * @return encoding
+	 */
+	public static String getEncoding() {
+		return encoding;
+	}
+
+	/**
+	 * Sets the encoding to use to read strings.
+	 * 
+	 * @param encoding
+	 *            new encoding
+	 */
+	public static void setEncoding(String encoding) {
+		ExeData.encoding = encoding;
 	}
 
 	// --------
@@ -533,6 +631,7 @@ public class ExeData {
 		} else
 			plusMode = false;
 		try {
+			notifyListeners(NOTIFY_PRELOAD);
 			loadExeStrings();
 			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
 			entityList = new Vector<EntityData>();
@@ -543,7 +642,9 @@ public class ExeData {
 			loadNpcTbl();
 			fillMapdata();
 			loadMapInfo();
+			notifyListeners(NOTIFY_LOAD);
 			loadGraphics();
+			notifyListeners(NOTIFY_POSTLOAD);
 		} catch (IOException e) {
 			loaded = false;
 			throw e;
@@ -561,7 +662,7 @@ public class ExeData {
 	// TODO CS+ support
 	private static void loadPlus() throws IOException {
 		// TODO default EXE strings
-		dataDir = base.getParentFile();
+		dataDir = ResUtils.getBaseFolder(base);
 		entityList = new Vector<EntityData>();
 		mapdata = new Vector<Mapdata>();
 		mapInfo = new Vector<MapInfo>();
@@ -595,6 +696,7 @@ public class ExeData {
 		Profile.header = Profile.DEFAULT_HEADER;
 		Profile.flagH = Profile.DEFAULT_FLAGH;
 		System.gc();
+		notifyListeners(NOTIFY_UNLOAD);
 	}
 
 	/**
@@ -621,7 +723,7 @@ public class ExeData {
 			inChan.read(uBuf);
 			uBuf.flip();
 			uBuf.get(buffer);
-			String str = StrTools.CString(buffer, Main.encoding);
+			String str = StrTools.CString(buffer, encoding);
 			// Backslashes are Windows-only, so replace them with forward slashes
 			str = str.replaceAll("\\\\", "/");
 			exeStrings[i] = str;
@@ -799,7 +901,6 @@ public class ExeData {
 			secHeaders[i] = segStr;
 		}
 
-		String encoding = Main.encoding;
 		if (mapSec == -1) // virgin executable
 		{
 			int numMaps = 95;
@@ -928,7 +1029,40 @@ public class ExeData {
 	 */
 	// TODO CS+ support
 	private static void fillMapdataPlus() throws IOException {
-
+		File stageTbl = new File(dataDir + "/stage.tbl"); // int maps array data
+		FileChannel inChan;
+		FileInputStream inStream;
+		inStream = new FileInputStream(stageTbl);
+		inChan = inStream.getChannel();
+		int numMaps = (int) (stageTbl.length() / 229);
+		ByteBuffer dBuf = ByteBuffer.allocate(numMaps * 229);
+		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.read(dBuf);
+		dBuf.flip();
+		for (int i = 0; i < numMaps; i++) // for each map
+		{
+			Mapdata newMap = new Mapdata(i);
+			byte[] buf32 = new byte[32];
+			dBuf.get(buf32);
+			newMap.setTileset(StrTools.CString(buf32, encoding));
+			dBuf.get(buf32);
+			newMap.setFileName(StrTools.CString(buf32, encoding));
+			newMap.setScrollType(dBuf.getInt());
+			dBuf.get(buf32);
+			newMap.setBgName(StrTools.CString(buf32, encoding));
+			dBuf.get(buf32);
+			newMap.setNpcSheet1(StrTools.CString(buf32, encoding));
+			dBuf.get(buf32);
+			newMap.setNpcSheet2(StrTools.CString(buf32, encoding));
+			// newMap.setBoss(dBuf.get()); // not needed
+			dBuf.get(buf32);
+			// newMap.setJpName(buf32); // not needed
+			dBuf.get(buf32);
+			newMap.setMapName(StrTools.CString(buf32, encoding));
+			mapdata.add(newMap);
+		}
+		inChan.close();
+		inStream.close();
 	}
 
 	/**

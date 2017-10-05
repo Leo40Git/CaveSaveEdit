@@ -35,13 +35,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.carrotlord.string.StrTools;
+import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.backend.profile.ProfileChangeListener;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
-public class Main extends JFrame implements ProfileChangeListener {
+public class Main extends JFrame implements ProfileChangeListener, ExeLoadListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
@@ -64,7 +65,6 @@ public class Main extends JFrame implements ProfileChangeListener {
 
 	public static Main window;
 	public static Color lineColor;
-	public static String encoding;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
@@ -92,7 +92,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 				return;
 		}
 		Config.setColor(Config.KEY_LINE_COLOR, lineColor);
-		Config.set(Config.KEY_ENCODING, encoding);
+		Config.set(Config.KEY_ENCODING, ExeData.getEncoding());
 		SaveEditorPanel.panel.saveSettings();
 		System.exit(0);
 	}
@@ -416,7 +416,7 @@ public class Main extends JFrame implements ProfileChangeListener {
 			loadFrame.repaint();
 		});
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
-		encoding = Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING);
+		ExeData.setEncoding(Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING));
 		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
 		Profile.setNoUndo(false);
 		try {
@@ -443,6 +443,31 @@ public class Main extends JFrame implements ProfileChangeListener {
 	@Override
 	public void onChange(String field, int id, Object oldValue, Object newValue) {
 		setTitle(this);
+	}
+
+	@Override
+	public void preLoad(boolean plusMode) {
+		if (plusMode) {
+			try {
+				MCI.readDefault();
+			} catch (Exception e) {
+				resourceError(e);
+			}
+			// CS+ is always 2x res
+			MCI.set("Game.GraphicsResolution", 2);
+		}
+	}
+
+	@Override
+	public void load(boolean plusMode) {
+	}
+
+	@Override
+	public void postLoad(boolean plusMode) {
+	}
+
+	@Override
+	public void unload() {
 	}
 
 }
