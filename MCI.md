@@ -3,7 +3,7 @@ The MCI system, or the **M**od **C**ompatibility **I**nformation system (origina
 
 # How does MCI work?
 The MCI system uses JavaScript to define and declare values.
-An example for an MCI configuration file can be found [here](src/com/leo/cse/frontend/default.mci).  
+An example for an MCI configuration file can be found [here](src/main/resources/com/leo/cse/frontend/default.mci).  
 Every MCI file should contain the following functions. *Note: CSE always uses double resolution images, take this in consideration when dealing with positions and sizes!*
 ## Metadata
 - `getName:String` - Gets the MCI file's name.

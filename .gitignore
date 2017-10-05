@@ -27,3 +27,4 @@ window.rect
 *.log
 nolaf
 skipuc
+/build/
