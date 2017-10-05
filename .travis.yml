@@ -9,12 +9,12 @@ cache:
 jdk:
 - oraclejdk8
 install: true
-script: gradle fatJar && ls build
+script: gradle fatJar
 deploy:
   provider: releases
   api_key:
     secure: B//fG7VmTc/iSziIgj/NpCIGK9ePNxjRt0w0+3zVfhIKRp2WZ7TrEty9S8/+H4gVKvyUFmNhdd+YnXsaggKR577kzfJuaXW/HFDDG7iAL12j8P9gX2TZCXt93WX/uuvzREF7GEFnYjFUZwCCM4LeQvq6VwKn+U6S7lC8m6rdG2MtyaAs1rpp5+llO+5d/R9SxGK/JUQsEz+1qNa2w8S6nt7oFD41zKVO2wbfw11fICUImtxpk8oVUAkLuTFaM4Egq4qCTNpAP+jXVjEbmG8wk3mvtbkvOyUIUkNEUh0uqJG8RItQ+BMn56WWYkANGfCTcPrWTNukcpKUhoB7r8STj7tZEqhDoDgHMrYa3SA7vEIFDGZr7Dnao/RVNDo4M0Mir655gAY9ukj6Qh6/4hmiPDvgPjfEsVxwMFE+mVvkDrzoIRcwHoTVp3K6JjYKPDCTVkQb1gOjl5fNOj4/re9FDDie4G2JVSapb3MiPRqIQSuHxGXIpAhIiyd364T1jMrRV/CTQcv8AJ06XnOKUXDwUN+kusoObZrCAcHhCulL0pwY+8mRfYP6iXDkZffnIoyTajLCFmmG7Cy5w2RDk8ZG1hwg5Wtzips4GTCJX7PAP0lFoeFeB8dFy//TcvalS+6hYep02HxYRKsHI5x5kiQFIbbaqyMe+Byb269z/QCgkj8=
-  file: "$TRAVIS_BUILD_DIR/CaveSaveEdit.jar"
+  file: "$TRAVIS_BUILD_DIR/build/libs/CaveSaveEdit.jar"
   skip_cleanup: true
   on:
     repo: Leo40Git/CaveSaveEdit
