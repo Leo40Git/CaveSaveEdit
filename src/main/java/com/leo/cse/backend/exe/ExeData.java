@@ -661,17 +661,26 @@ public class ExeData {
 	 */
 	// TODO CS+ support
 	private static void loadPlus() throws IOException {
-		// TODO default EXE strings
-		dataDir = ResUtils.getBaseFolder(base);
-		entityList = new Vector<EntityData>();
-		mapdata = new Vector<Mapdata>();
-		mapInfo = new Vector<MapInfo>();
-		imageMap = new HashMap<File, BufferedImage>();
-		pxaMap = new HashMap<File, byte[]>();
-		loadNpcTbl();
-		fillMapdataPlus();
-		loadMapInfo();
-		loadGraphics();
+		try {
+			notifyListeners(NOTIFY_PRELOAD);
+			// TODO default EXE strings
+			dataDir = ResUtils.getBaseFolder(base);
+			entityList = new Vector<EntityData>();
+			mapdata = new Vector<Mapdata>();
+			mapInfo = new Vector<MapInfo>();
+			imageMap = new HashMap<File, BufferedImage>();
+			pxaMap = new HashMap<File, byte[]>();
+			loadNpcTbl();
+			fillMapdataPlus();
+			loadMapInfo();
+			notifyListeners(NOTIFY_LOAD);
+			loadGraphics();
+			notifyListeners(NOTIFY_POSTLOAD);
+		} catch (IOException e) {
+			loaded = false;
+			throw e;
+		}
+		loaded = true;
 	}
 
 	/**
