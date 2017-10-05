@@ -9,4 +9,4 @@ cache:
 jdk:
   - oraclejdk8
 install: true
-script: bundle exec gradle fatJar
+script: gradle fatJar
