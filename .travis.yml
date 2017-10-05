@@ -9,7 +9,7 @@ cache:
 jdk:
 - oraclejdk8
 install: true
-script: gradle fatJar && ls
+script: gradle fatJar && ls build
 deploy:
   provider: releases
   api_key:
