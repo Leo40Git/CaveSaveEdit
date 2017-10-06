@@ -806,10 +806,6 @@ public class Profile {
 	 * Flags.
 	 */
 	private static boolean[] flags = null;
-	/**
-	 * Curly Story flag. Only present in CS+ profiles.
-	 */
-	private static boolean isCurly = false;
 
 	/**
 	 * A list of {@link ProfileChangeListener}s.
@@ -880,8 +876,6 @@ public class Profile {
 		if (data == null)
 			return;
 		int offset = fileNum * CSPLUS_SECTION_LENGTH;
-		// TODO CS+ support: figure out where the Curly Story flag is
-		isCurly = false;
 		setMap(ByteUtils.readInt(data, offset + 0x008));
 		setSong(ByteUtils.readInt(data, offset + 0x00C));
 		setX(ByteUtils.readShort(data, offset + 0x011));
@@ -924,7 +918,6 @@ public class Profile {
 	public static void pushToData() {
 		if (data == null)
 			data = new byte[FILE_LENGTH];
-		// TODO CS+ support: figure out where the Curly Story flag is
 		ByteUtils.writeString(data, 0, header);
 		ByteUtils.writeInt(data, 0x008, map);
 		ByteUtils.writeInt(data, 0x00C, song);
@@ -960,6 +953,7 @@ public class Profile {
 		int expectedSize = FILE_LENGTH;
 		int offset = 0;
 		// TODO CS+ support
+		// files 1-3 are normal, files 4-6 are Curly Story
 		if (ExeData.isPlusMode()) {
 			// throw new IOException("CS+ profiles are currently not supported!");
 			expectedSize = CSPLUS_FILE_LENGTH;
@@ -1621,25 +1615,6 @@ public class Profile {
 		if (flags[id] != set)
 			notifyListeners(FIELD_FLAGS, id, flags[id], set);
 		flags[id] = set;
-	}
-
-	/**
-	 * Checks if the profile is a Curly Story profile.
-	 * 
-	 * @return <code>true</code> if Curly Story, <code>false</code> otherwise.
-	 */
-	public static boolean isCurly() {
-		return isCurly;
-	}
-
-	/**
-	 * Sets Curly Story flag.
-	 * 
-	 * @param isCurly
-	 *            new Curly Story flag
-	 */
-	public static void setCurly(boolean isCurly) {
-		Profile.isCurly = isCurly;
 	}
 
 	/// ------------------------
