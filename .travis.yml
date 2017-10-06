@@ -14,7 +14,7 @@ before_deploy:
   - git config --global user.email "builds@travis-ci.com"
   - git config --global user.name "Travis CI"
   - export GIT_TAG=$TRAVIS_BRANCH-EXPERIMENTAL-$TRAVIS_BUILD_NUMBER
-  - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+  - git tag $GIT_TAG -a -m "$TRAVIS_COMMIT_MESSAGE"
   - git push -q https://$TAGPERM@github.com/Leo40Git/CaveSaveEdit --tags
   - ls -R
 deploy:
