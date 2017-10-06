@@ -25,3 +25,6 @@ deploy:
   on:
     tags: false
     all_branches: true
+branches:
+  except:
+    - /^v[0-9]/
