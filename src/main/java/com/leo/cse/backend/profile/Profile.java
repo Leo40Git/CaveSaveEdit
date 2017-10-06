@@ -13,6 +13,9 @@ import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
 import com.leo.cse.backend.ByteUtils;
+import com.leo.cse.backend.exe.ExeData;
+
+// TODO CS+ support
 
 /**
  * The interface class between a Java application and a Cave Story profile.
@@ -934,6 +937,8 @@ public class Profile {
 	 *             if an I/O error occurs.
 	 */
 	public static void read(File file) throws IOException {
+		if (ExeData.isPlusMode())
+			throw new IOException("CS+ profiles are currently not supported!");
 		Profile.file = file;
 		// read data
 		data = new byte[FILE_LENGTH];

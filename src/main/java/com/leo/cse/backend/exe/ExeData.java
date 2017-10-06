@@ -431,29 +431,18 @@ public class ExeData {
 
 	// TODO CS+ support
 	/**
-	 * Enables CS+ compatibility, allowing stage.tbl files to be loaded as mods.
-	 * Disables fancy EXE loading, however.
+	 * CS+ flag. If <code>true</code>, the currently loaded "executable" is in fact
+	 * a stage.tbl file.
 	 */
 	private static boolean plusMode = false;
 
 	/**
-	 * Checks if CS+ compatibility is currently enabled.
+	 * Checks if the current "executable" is a stage.tbl file.
 	 * 
 	 * @return <code>true</code> if in CS+ mode, <code>false</code> otherwise
 	 */
 	public static boolean isPlusMode() {
 		return plusMode;
-	}
-
-	/**
-	 * Enables or disables CS+ compatibility.
-	 * 
-	 * @param plusMode
-	 *            <code>true</code> to enable CS+ mode, <code>false</code> to
-	 *            disable it.
-	 */
-	public static void setPlusMode(boolean plusMode) {
-		ExeData.plusMode = plusMode;
 	}
 
 	/**
@@ -641,8 +630,8 @@ public class ExeData {
 			pxaMap = new HashMap<File, byte[]>();
 			loadNpcTbl();
 			fillMapdata();
-			loadMapInfo();
 			notifyListeners(NOTIFY_LOAD);
+			loadMapInfo();
 			loadGraphics();
 			notifyListeners(NOTIFY_POSTLOAD);
 		} catch (IOException e) {
@@ -661,9 +650,10 @@ public class ExeData {
 	 */
 	// TODO CS+ support
 	private static void loadPlus() throws IOException {
+		System.out.println("Attempting to load CS+ stuff, errors may occur!");
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
-			// TODO default EXE strings
+			initExeStringsPlus();
 			dataDir = ResUtils.getBaseFolder(base);
 			entityList = new Vector<EntityData>();
 			mapdata = new Vector<Mapdata>();
@@ -672,8 +662,8 @@ public class ExeData {
 			pxaMap = new HashMap<File, byte[]>();
 			loadNpcTbl();
 			fillMapdataPlus();
-			loadMapInfo();
 			notifyListeners(NOTIFY_LOAD);
+			loadMapInfo();
 			loadGraphics();
 			notifyListeners(NOTIFY_POSTLOAD);
 		} catch (IOException e) {
@@ -737,8 +727,46 @@ public class ExeData {
 			str = str.replaceAll("\\\\", "/");
 			exeStrings[i] = str;
 			uBuf.clear();
+			// System.out.println("exeStrings[" + i + "] = " + str);
 		}
 		inStream.close();
+	}
+
+	/**
+	 * Initializes executable strings for CS+.
+	 */
+	private static void initExeStringsPlus() {
+		exeStrings = new String[STRING_POINTERS.length];
+		exeStrings[STRING_ARMSITEM] = "ArmsItem.tsc";
+		exeStrings[STRING_IMG_EXT] = "%s/%s.png"; // CS+ uses PNGs, not BMPs
+		exeStrings[STRING_NPC_TBL] = "npc.tbl";
+		exeStrings[STRING_MYCHAR] = "MyChar";
+		exeStrings[STRING_TITLE] = "Title";
+		exeStrings[STRING_ARMSIMAGE] = "ArmsImage";
+		exeStrings[STRING_ARMS] = "Arms";
+		exeStrings[STRING_ITEMIMAGE] = "ItemImage";
+		exeStrings[STRING_STAGEIMAGE] = "StageImage";
+		exeStrings[STRING_NPCSYM] = "Npc/NpcSym";
+		exeStrings[STRING_NPCREGU] = "Npc/NpcRegu";
+		exeStrings[STRING_TEXTBOX] = "Textbox";
+		exeStrings[STRING_CARET] = "Caret";
+		exeStrings[STRING_BULLET] = "Bullet";
+		exeStrings[STRING_FACE] = "Face";
+		exeStrings[STRING_FADE] = "Fade";
+		exeStrings[STRING_DATA_FOLDER] = ""; // not needed
+		exeStrings[STRING_LOADING] = "Loading";
+		exeStrings[STRING_PXM_TAG] = "PXM";
+		exeStrings[STRING_PROFILE_HEADER] = "Do041220"; // this is probably wrong!
+		exeStrings[STRING_PROFILE_FLAGH] = "FLAG";
+		exeStrings[STRING_STAGESELECT] = "StageSelect.tsc";
+		exeStrings[STRING_STAGE_FOLDER] = "Stage";
+		exeStrings[STRING_PRT_PREFIX] = "%s/Prt%s";
+		exeStrings[STRING_PXA_EXT] = "%s/%s.pxa";
+		exeStrings[STRING_PXM_EXT] = "%s/%s.pxm";
+		exeStrings[STRING_PXE_EXT] = "%s/%s.pxe";
+		exeStrings[STRING_TSC_EXT] = "%s/%s.tsc";
+		exeStrings[STRING_NPC_FOLDER] = "Npc";
+		exeStrings[STRING_NPC_PREFIX] = "%s/Npc%s";
 	}
 
 	/**
