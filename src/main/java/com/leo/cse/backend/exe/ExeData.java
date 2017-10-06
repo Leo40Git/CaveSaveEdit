@@ -586,8 +586,6 @@ public class ExeData {
 		if (!base.exists())
 			return;
 		load0(base);
-		Profile.header = getExeString(STRING_PROFILE_HEADER);
-		Profile.flagH = getExeString(STRING_PROFILE_FLAGH);
 	}
 
 	/**
@@ -622,6 +620,8 @@ public class ExeData {
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
 			loadExeStrings();
+			Profile.header = getExeString(STRING_PROFILE_HEADER);
+			Profile.flagH = getExeString(STRING_PROFILE_FLAGH);
 			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
 			entityList = new Vector<EntityData>();
 			mapdata = new Vector<Mapdata>();
@@ -654,6 +654,8 @@ public class ExeData {
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
 			initExeStringsPlus();
+			Profile.header = getExeString(STRING_PROFILE_HEADER);
+			Profile.flagH = getExeString(STRING_PROFILE_FLAGH);
 			dataDir = ResUtils.getBaseFolder(base);
 			entityList = new Vector<EntityData>();
 			mapdata = new Vector<Mapdata>();
@@ -756,8 +758,8 @@ public class ExeData {
 		exeStrings[STRING_DATA_FOLDER] = ""; // not needed
 		exeStrings[STRING_LOADING] = "Loading";
 		exeStrings[STRING_PXM_TAG] = "PXM";
-		exeStrings[STRING_PROFILE_HEADER] = "Do041220"; // this is probably wrong!
-		exeStrings[STRING_PROFILE_FLAGH] = "FLAG";
+		exeStrings[STRING_PROFILE_HEADER] = Profile.DEFAULT_HEADER;
+		exeStrings[STRING_PROFILE_FLAGH] = Profile.DEFAULT_FLAGH;
 		exeStrings[STRING_STAGESELECT] = "StageSelect.tsc";
 		exeStrings[STRING_STAGE_FOLDER] = "Stage";
 		exeStrings[STRING_PRT_PREFIX] = "%s/Prt%s";

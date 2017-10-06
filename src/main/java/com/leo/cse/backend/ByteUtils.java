@@ -2,6 +2,7 @@ package com.leo.cse.backend;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Vector;
 
 /**
  * Utilities for reading from and writing to byte arrays.
@@ -86,26 +87,46 @@ public class ByteUtils {
 	 *            starting position
 	 * @param length
 	 *            string length
+	 * @param encoding
+	 *            string encoding
 	 * @return string
 	 */
-	public static String readString(byte[] data, int ptr, int length) {
+	public static String readString(byte[] data, int ptr, int length, String encoding) {
+		byte[] dc;
 		if (length < 1) {
 			// length was either not specified or specified but invalid
 			// we're gonna have to guess the string's length
-			StringBuilder sb = new StringBuilder();
+			Vector<Byte> charVec = new Vector<>();
 			while (ptr < data.length) {
 				// string is (probably) terminated by 0
 				if (data[ptr] == 0)
 					break;
-				sb.append((char) data[ptr]);
+				charVec.add(data[ptr]);
 				ptr++;
 			}
-			return sb.toString();
+			dc = new byte[charVec.size()];
+			for (int i = 0; i < dc.length; i++)
+				dc[i] = charVec.get(i);
 		} else {
-			byte[] dc = new byte[length];
+			dc = new byte[length];
 			System.arraycopy(data, ptr, dc, 0, length);
-			return new String(dc);
 		}
+		return StrTools.CString(dc, encoding);
+	}
+
+	/**
+	 * Reads a <code>String</code> from a byte array.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @param ptr
+	 *            starting position
+	 * @param length
+	 *            string length
+	 * @return string
+	 */
+	public static String readString(byte[] data, int ptr, int length) {
+		return readString(data, ptr, length, StrTools.DEFAULT_ENCODING);
 	}
 
 	/**

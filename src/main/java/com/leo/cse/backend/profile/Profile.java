@@ -196,6 +196,14 @@ public class Profile {
 	 */
 	public static final int FILE_LENGTH = 0x604;
 	/**
+	 * The expected CS+ file section length.
+	 */
+	public static final int CSPLUS_SECTION_LENGTH = 0x620;
+	/**
+	 * The expected CS+ file length.
+	 */
+	public static final int CSPLUS_FILE_LENGTH = 0x20020;
+	/**
 	 * The default profile header string.
 	 */
 	public static final String DEFAULT_HEADER = "Do041220";
@@ -271,7 +279,7 @@ public class Profile {
 		 */
 		public Weapon(byte[] data, int slot) {
 			this.slot = slot;
-			final int ptr = getPointer(slot);
+			final int ptr = getPointer(slot) + fileNum * CSPLUS_SECTION_LENGTH;
 			setId(ByteUtils.readInt(data, ptr));
 			setLevel(ByteUtils.readInt(data, ptr + Integer.BYTES));
 			setExp(ByteUtils.readInt(data, ptr + Integer.BYTES * 2));
@@ -475,7 +483,7 @@ public class Profile {
 		 */
 		public Warp(byte[] data, int slot) {
 			this.slot = slot;
-			final int ptr = getPointer(slot);
+			final int ptr = getPointer(slot) + fileNum * CSPLUS_SECTION_LENGTH;
 			setId(ByteUtils.readInt(data, ptr));
 			setLocation(ByteUtils.readInt(data, ptr + Integer.BYTES));
 		}
@@ -569,6 +577,10 @@ public class Profile {
 	 * The profile file.
 	 */
 	private static File file = null;
+	/**
+	 * The current profile loaded. Only used if the currently loaded profile is a CS+ profile.
+	 */
+	private static int fileNum = 0;
 	/**
 	 * The byte array the file is loaded into. Contains raw data.
 	 * <p>
@@ -794,6 +806,10 @@ public class Profile {
 	 * Flags.
 	 */
 	private static boolean[] flags = null;
+	/**
+	 * Curly Story flag. Only present in CS+ profiles.
+	 */
+	private static boolean isCurly = false;
 
 	/**
 	 * A list of {@link ProfileChangeListener}s.
@@ -863,21 +879,24 @@ public class Profile {
 	public static void pullFromData() {
 		if (data == null)
 			return;
-		setMap(ByteUtils.readInt(data, 0x008));
-		setSong(ByteUtils.readInt(data, 0x00C));
-		setX(ByteUtils.readShort(data, 0x011));
-		setY(ByteUtils.readShort(data, 0x015));
-		setDirection(ByteUtils.readInt(data, 0x018));
-		setMaxHealth(ByteUtils.readShort(data, 0x01C));
-		setStarCount(ByteUtils.readShort(data, 0x01E));
-		setCurHealth(ByteUtils.readShort(data, 0x020));
-		setCurWeapon(ByteUtils.readInt(data, 0x024));
+		int offset = fileNum * CSPLUS_SECTION_LENGTH;
+		// TODO CS+ support: figure out where the Curly Story flag is
+		isCurly = false;
+		setMap(ByteUtils.readInt(data, offset + 0x008));
+		setSong(ByteUtils.readInt(data, offset + 0x00C));
+		setX(ByteUtils.readShort(data, offset + 0x011));
+		setY(ByteUtils.readShort(data, offset + 0x015));
+		setDirection(ByteUtils.readInt(data, offset + 0x018));
+		setMaxHealth(ByteUtils.readShort(data, offset + 0x01C));
+		setStarCount(ByteUtils.readShort(data, offset + 0x01E));
+		setCurHealth(ByteUtils.readShort(data, offset + 0x020));
+		setCurWeapon(ByteUtils.readInt(data, offset + 0x024));
 		if (equips == null)
 			equips = new boolean[16];
 		boolean[] equips = new boolean[16];
-		ByteUtils.readFlags(data, 0x02C, equips);
+		ByteUtils.readFlags(data, offset + 0x02C, equips);
 		setEquips(equips);
-		setTime(ByteUtils.readInt(data, 0x034));
+		setTime(ByteUtils.readInt(data, offset + 0x034));
 		weapons = new Weapon[7];
 		for (int i = 0; i < weapons.length; i++) {
 			weapons[i] = new Weapon(data, i);
@@ -885,7 +904,7 @@ public class Profile {
 		if (items == null)
 			items = new int[30];
 		int[] items = new int[30];
-		ByteUtils.readInts(data, 0x0D8, items);
+		ByteUtils.readInts(data, offset + 0x0D8, items);
 		setItems(items);
 		warps = new Warp[7];
 		for (int i = 0; i < warps.length; i++) {
@@ -894,7 +913,7 @@ public class Profile {
 		if (flags == null)
 			flags = new boolean[8000];
 		boolean[] flags = new boolean[8000];
-		ByteUtils.readFlags(data, 0x21C, flags);
+		ByteUtils.readFlags(data, offset + 0x21C, flags);
 		setFlags(flags);
 	}
 
@@ -905,6 +924,7 @@ public class Profile {
 	public static void pushToData() {
 		if (data == null)
 			data = new byte[FILE_LENGTH];
+		// TODO CS+ support: figure out where the Curly Story flag is
 		ByteUtils.writeString(data, 0, header);
 		ByteUtils.writeInt(data, 0x008, map);
 		ByteUtils.writeInt(data, 0x00C, song);
@@ -937,21 +957,29 @@ public class Profile {
 	 *             if an I/O error occurs.
 	 */
 	public static void read(File file) throws IOException {
-		if (ExeData.isPlusMode())
-			throw new IOException("CS+ profiles are currently not supported!");
+		int expectedSize = FILE_LENGTH;
+		int offset = 0;
+		// TODO CS+ support
+		if (ExeData.isPlusMode()) {
+			// throw new IOException("CS+ profiles are currently not supported!");
+			expectedSize = CSPLUS_FILE_LENGTH;
+			offset = fileNum * CSPLUS_SECTION_LENGTH;
+		} else {
+			fileNum = 0;
+		}
 		Profile.file = file;
 		// read data
-		data = new byte[FILE_LENGTH];
+		data = new byte[expectedSize];
 		try (FileInputStream fis = new FileInputStream(file)) {
-			if (fis.read(data) != data.length)
+			if (fis.read(data) < data.length)
 				throw new IOException("file is too small");
 		}
 		// check header
-		String profHeader = ByteUtils.readString(data, 0, header.length());
+		String profHeader = ByteUtils.readString(data, offset, header.length());
 		if (!header.equals(profHeader))
 			throw new IOException("Invalid file header!");
 		// check flag header
-		String profFlagH = ByteUtils.readString(data, 0x218, flagH.length());
+		String profFlagH = ByteUtils.readString(data, offset + 0x218, flagH.length());
 		if (!flagH.equals(profFlagH))
 			throw new IOException("Flag header is missing!");
 		// pull values from data
@@ -1139,18 +1167,21 @@ public class Profile {
 			notifyListeners(FIELD_SONG, -1, Profile.song, song);
 		Profile.song = song;
 	}
-	
+
 	/**
 	 * Gets the player's current position.
+	 * 
 	 * @return position array, index 0 is X, index 1 is Y
 	 */
 	public static short[] getPosition() {
 		return new short[] { x, y };
 	}
-	
+
 	/**
 	 * Sets the player's current position.
-	 * @param value new position array, index 0 is X, index 1 is Y
+	 * 
+	 * @param value
+	 *            new position array, index 0 is X, index 1 is Y
 	 */
 	public static void setPosition(short[] value) {
 		if (value.length < 2)
@@ -1160,19 +1191,24 @@ public class Profile {
 		Profile.x = value[0];
 		Profile.y = value[1];
 	}
-	
+
 	/**
 	 * Sets the player's current position.
-	 * @param x new X position
-	 * @param y new Y position
+	 * 
+	 * @param x
+	 *            new X position
+	 * @param y
+	 *            new Y position
 	 */
 	public static void setPosition(short x, short y) {
 		setPosition(new short[] { x, y });
 	}
-	
+
 	/**
 	 * Sets the player's current position.
-	 * @param value position array, index 0 is X, index 1 is Y
+	 * 
+	 * @param value
+	 *            position array, index 0 is X, index 1 is Y
 	 */
 	public static void setPosition(Short[] value) {
 		if (value.length < 2)
@@ -1585,6 +1621,25 @@ public class Profile {
 		if (flags[id] != set)
 			notifyListeners(FIELD_FLAGS, id, flags[id], set);
 		flags[id] = set;
+	}
+
+	/**
+	 * Checks if the profile is a Curly Story profile.
+	 * 
+	 * @return <code>true</code> if Curly Story, <code>false</code> otherwise.
+	 */
+	public static boolean isCurly() {
+		return isCurly;
+	}
+
+	/**
+	 * Sets Curly Story flag.
+	 * 
+	 * @param isCurly
+	 *            new Curly Story flag
+	 */
+	public static void setCurly(boolean isCurly) {
+		Profile.isCurly = isCurly;
 	}
 
 	/// ------------------------
