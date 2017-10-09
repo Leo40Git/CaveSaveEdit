@@ -578,7 +578,8 @@ public class Profile {
 	 */
 	private static File file = null;
 	/**
-	 * The current profile loaded. Only used if the currently loaded profile is a CS+ profile.
+	 * The current profile loaded. Only used if the currently loaded profile is a
+	 * CS+ profile.
 	 */
 	private static int fileNum = 0;
 	/**
@@ -1080,12 +1081,31 @@ public class Profile {
 	}
 
 	/**
+	 * Gets the current profile loaded.
+	 * 
+	 * @return current profile
+	 */
+	public static int getFileNum() {
+		return fileNum;
+	}
+
+	/**
+	 * Checks if the current profile is a Curly Story profile.
+	 * 
+	 * @return <code>true</code> if Curly Story profile, <code>false</code>
+	 *         otherwise
+	 */
+	public static boolean isCurlyFile() {
+		return fileNum > 2;
+	}
+
+	/**
 	 * Gets the raw data array.
 	 * 
 	 * @return data array
 	 */
 	public static byte[] getData() {
-		return data;
+		return data.clone();
 	}
 
 	/**

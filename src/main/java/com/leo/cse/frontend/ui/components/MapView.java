@@ -243,8 +243,12 @@ public class MapView extends Component implements IDraggable, ProfileChangeListe
 			costume = Profile.getVariable(6);
 		if (MCI.getSpecial("MimHack"))
 			costume = Profile.getMimCostume();
-		else
+		else {
 			costume = (Profile.getEquip(6) ? 1 : 0);
+			if (ExeData.isPlusMode())
+				if (Profile.isCurlyFile())
+					costume += 2;
+		}
 		int xPixel = playerX - 16;
 		xPixel /= snap;
 		xPixel *= 2;

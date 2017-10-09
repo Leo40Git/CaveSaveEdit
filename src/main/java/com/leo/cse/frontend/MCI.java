@@ -20,6 +20,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.Scriptable;
 
+import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo.PxeEntry;
 
 public class MCI {
@@ -176,6 +177,13 @@ public class MCI {
 		defaultCx = cx;
 		defaultScope = scope;
 	}
+	
+	public static void readPlus() throws Exception {
+		read0(MCI.class.getResourceAsStream("plus.mci"), new File("plus.mci"));
+		validate();
+		defaultCx = cx;
+		defaultScope = scope;
+	}
 
 	public static void read(File file) throws Exception {
 		read0(new FileInputStream(file), file);
@@ -265,6 +273,8 @@ public class MCI {
 	}
 
 	public static boolean getSpecial(String value) {
+		if (ExeData.isPlusMode())
+			return false;
 		return Boolean.parseBoolean(mci.getProperty("Special." + value, "false"));
 	}
 

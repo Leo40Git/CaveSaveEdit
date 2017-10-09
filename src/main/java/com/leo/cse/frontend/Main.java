@@ -449,12 +449,10 @@ public class Main extends JFrame implements ProfileChangeListener, ExeLoadListen
 	public void preLoad(boolean plusMode) {
 		if (plusMode) {
 			try {
-				MCI.readDefault();
+				MCI.readPlus();
 			} catch (Exception e) {
 				resourceError(e);
 			}
-			// CS+ is always 2x res
-			MCI.set("Game.GraphicsResolution", 2);
 		}
 	}
 
