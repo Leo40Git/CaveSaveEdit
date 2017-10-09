@@ -51,6 +51,8 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 			scrollbarY -= amount;
 		else if (y > this.y + height - width)
 			scrollbarY += amount;
+		else if (y > this.y + width && y < this.y + height - width)
+			onDrag(x, y + 17);
 		limitScroll();
 	}
 
@@ -76,7 +78,6 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 
 	@Override
 	public void onDragEnd(int px, int py) {
-		onDrag(x, y);
 		scrolling = false;
 	}
 
