@@ -22,7 +22,8 @@ import javax.imageio.ImageIO;
 
 import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.StrTools;
-import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code
@@ -582,7 +583,7 @@ public class ExeData {
 	public static void load(File file) throws IOException {
 		File base = file;
 		if (base == null)
-			base = new File(Profile.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
+			base = new File(ProfileManager.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 		if (!base.exists())
 			return;
 		load0(base);
@@ -620,8 +621,8 @@ public class ExeData {
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
 			loadExeStrings();
-			Profile.header = getExeString(STRING_PROFILE_HEADER);
-			Profile.flagH = getExeString(STRING_PROFILE_FLAGH);
+			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
+			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
 			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
 			entityList = new Vector<EntityData>();
 			mapdata = new Vector<Mapdata>();
@@ -654,8 +655,8 @@ public class ExeData {
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
 			initExeStringsPlus();
-			Profile.header = getExeString(STRING_PROFILE_HEADER);
-			Profile.flagH = getExeString(STRING_PROFILE_FLAGH);
+			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
+			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
 			dataDir = ResUtils.getBaseFolder(base);
 			entityList = new Vector<EntityData>();
 			mapdata = new Vector<Mapdata>();
@@ -694,8 +695,8 @@ public class ExeData {
 		stageImage = null;
 		npcRegu = null;
 		npcSym = null;
-		Profile.header = Profile.DEFAULT_HEADER;
-		Profile.flagH = Profile.DEFAULT_FLAGH;
+		ProfileManager.setHeader(NormalProfile.DEFAULT_HEADER);
+		ProfileManager.setFlagHeader(NormalProfile.DEFAULT_FLAGH);
 		System.gc();
 		notifyListeners(NOTIFY_UNLOAD);
 	}
@@ -758,8 +759,8 @@ public class ExeData {
 		exeStrings[STRING_DATA_FOLDER] = ""; // not needed
 		exeStrings[STRING_LOADING] = "Loading";
 		exeStrings[STRING_PXM_TAG] = "PXM";
-		exeStrings[STRING_PROFILE_HEADER] = Profile.DEFAULT_HEADER;
-		exeStrings[STRING_PROFILE_FLAGH] = Profile.DEFAULT_FLAGH;
+		exeStrings[STRING_PROFILE_HEADER] = NormalProfile.DEFAULT_HEADER;
+		exeStrings[STRING_PROFILE_FLAGH] = NormalProfile.DEFAULT_FLAGH;
 		exeStrings[STRING_STAGESELECT] = "StageSelect.tsc";
 		exeStrings[STRING_STAGE_FOLDER] = "Stage";
 		exeStrings[STRING_PRT_PREFIX] = "%s/Prt%s";
