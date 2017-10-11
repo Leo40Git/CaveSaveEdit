@@ -22,5 +22,15 @@ public abstract class Profile {
 	public abstract Object getField(String field);
 
 	public abstract void setField(String field, Object value);
+	
+	public abstract boolean hasFunction(String func);
+	
+	public abstract int getFunctionArgNum(String func);
+	
+	public abstract Class<?>[] getFunctionArgType(String func);
+	
+	public abstract Class<?> getFunctionRetType(String func);
+	
+	public abstract void doFunction(String func, Object[] args);
 
 }

@@ -72,4 +72,34 @@ public class PlusProfile extends Profile {
 
 	}
 
+	@Override
+	public boolean hasFunction(String func) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getFunctionArgNum(String func) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Class<?>[] getFunctionArgType(String func) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void doFunction(String func, Object[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Class<?> getFunctionRetType(String func) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
