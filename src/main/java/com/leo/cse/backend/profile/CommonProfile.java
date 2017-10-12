@@ -3,7 +3,7 @@ package com.leo.cse.backend.profile;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonProfile extends Profile {
+public abstract class CommonProfile extends Profile {
 
 	public interface ProfileField {
 
