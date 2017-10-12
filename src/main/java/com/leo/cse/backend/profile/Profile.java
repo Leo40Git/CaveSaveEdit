@@ -18,19 +18,21 @@ public abstract class Profile {
 	public abstract boolean hasField(String field);
 
 	public abstract Class<?> getFieldType(String field);
+	
+	public abstract boolean fieldAcceptsValue(String field, Object value);
 
 	public abstract Object getField(String field);
 
 	public abstract void setField(String field, Object value);
 	
-	public abstract boolean hasFunction(String func);
+	public abstract boolean hasMethod(String method);
 	
-	public abstract int getFunctionArgNum(String func);
+	public abstract int getMethodArgNum(String method);
 	
-	public abstract Class<?>[] getFunctionArgType(String func);
+	public abstract Class<?>[] getMethodArgType(String method);
 	
-	public abstract Class<?> getFunctionRetType(String func);
+	public abstract Class<?> getMethodRetType(String method);
 	
-	public abstract void doFunction(String func, Object[] args);
+	public abstract Object callMethod(String method, Object... args);
 
 }
