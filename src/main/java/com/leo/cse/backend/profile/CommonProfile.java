@@ -9,11 +9,11 @@ public class CommonProfile extends Profile {
 
 		public Class<?> getType();
 
-		public abstract boolean acceptsValue(Object value);
+		public boolean acceptsValue(Object value);
 
-		public abstract Object getValue();
+		public Object getValue(int index);
 
-		public abstract void setValue(Object value);
+		public void setValue(int index, Object value);
 
 	}
 
@@ -25,7 +25,7 @@ public class CommonProfile extends Profile {
 
 		public Class<?> getRetType();
 
-		public abstract Object call(Object... args);
+		public Object call(Object... args);
 
 	}
 
@@ -112,15 +112,15 @@ public class CommonProfile extends Profile {
 	}
 
 	@Override
-	public Object getField(String field) throws ProfileFieldException {
+	public Object getField(String field, int index) throws ProfileFieldException {
 		assertHasField(field);
-		return fields.get(field).getValue();
+		return fields.get(field).getValue(index);
 	}
 
 	@Override
-	public void setField(String field, Object value) throws ProfileFieldException {
+	public void setField(String field, int index, Object value) throws ProfileFieldException {
 		assertHasField(field);
-		fields.get(field).setValue(value);
+		fields.get(field).setValue(index, value);
 	}
 
 	@Override

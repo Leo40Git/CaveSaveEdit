@@ -65,10 +65,18 @@ public class ProfileManager {
 		return impl.fieldAcceptsValue(field, value);
 	}
 
+	public static Object getField(String field, int index) throws ProfileFieldException {
+		return impl.getField(field, index);
+	}
+	
 	public static Object getField(String field) throws ProfileFieldException {
 		return impl.getField(field);
 	}
 
+	public static void setField(String field, int index, Object value) throws ProfileFieldException {
+		impl.setField(field, index, value);
+	}
+	
 	public static void setField(String field, Object value) throws ProfileFieldException {
 		impl.setField(field, value);
 	}

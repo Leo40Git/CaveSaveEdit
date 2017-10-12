@@ -41,9 +41,17 @@ public abstract class Profile {
 	
 	public abstract boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException;
 
-	public abstract Object getField(String field) throws ProfileFieldException;
+	public abstract Object getField(String field, int index) throws ProfileFieldException;
+	
+	public Object getField(String field) throws ProfileFieldException {
+		return getField(field, 0);
+	}
 
-	public abstract void setField(String field, Object value) throws ProfileFieldException;
+	public abstract void setField(String field, int index, Object value) throws ProfileFieldException;
+	
+	public void setField(String field, Object value) throws ProfileFieldException {
+		setField(field, 0, value);
+	}
 	
 	public abstract boolean hasMethod(String method) throws ProfileMethodException;
 	
