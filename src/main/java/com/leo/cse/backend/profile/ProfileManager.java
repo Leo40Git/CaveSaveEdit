@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.profile.Profile.ProfileFieldException;
 
 public class ProfileManager {
 
@@ -52,28 +53,23 @@ public class ProfileManager {
 		impl.setFlagHeader(flagH);
 	}
 
-	public static boolean hasField(String field) {
+	public static boolean hasField(String field) throws ProfileFieldException {
 		return impl.hasField(field);
 	}
 
-	public static Class<?> getFieldType(String field) {
+	public static Class<?> getFieldType(String field) throws ProfileFieldException {
 		return impl.getFieldType(field);
 	}
 
-	public static boolean fieldAcceptsValue(String field, Object value) {
-		if (!impl.hasField(field))
-			return false;
-		Class<?> type = impl.getFieldType(field);
-		if (type == null)
-			return false;
-		return type.isInstance(value);
+	public static boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException {
+		return impl.fieldAcceptsValue(field, value);
 	}
 
-	public static Object getField(String field) {
+	public static Object getField(String field) throws ProfileFieldException {
 		return impl.getField(field);
 	}
 
-	public static void setField(String field, Object value) {
+	public static void setField(String field, Object value) throws ProfileFieldException {
 		impl.setField(field, value);
 	}
 

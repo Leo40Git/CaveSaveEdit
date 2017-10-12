@@ -54,114 +54,118 @@ public class CommonProfile extends Profile {
 
 	protected Map<String, ProfileField> fields;
 	protected Map<String, ProfileMethod> methods;
-	
+
 	protected CommonProfile() {
 		fields = new HashMap<>();
 		methods = new HashMap<>();
 	}
-	
-	protected void addField(String fieldName, ProfileField field) {
+
+	protected void addField(String fieldName, ProfileField field) throws ProfileFieldException {
 		if (fieldName == null)
-			return;
+			throw new ProfileFieldException("fieldName == null!");
 		if (fields.containsKey(fieldName))
-			return;
+			throw new ProfileFieldException("Field " + fieldName + " is already defined!");
 		if (field == null)
-			return;
+			throw new ProfileFieldException("field == null!");
 		if (field.getType() == null)
-			return;
+			throw new ProfileFieldException("field.getType() == null!");
 		fields.put(fieldName, field);
 	}
-	
-	protected void addMethod(String methodName, ProfileMethod method) {
+
+	protected void addMethod(String methodName, ProfileMethod method) throws ProfileMethodException {
 		if (methodName == null)
-			return;
+			throw new ProfileMethodException("methodName == null!");
 		if (methods.containsKey(methodName))
-			return;
+			throw new ProfileMethodException("Method " + methodName + " is already defined!");
 		if (method == null)
-			return;
+			throw new ProfileMethodException("method == null!");
 		if (method.getArgType() == null)
-			return;
+			throw new ProfileMethodException("method.getArgType() == null!");
 		methods.put(methodName, method);
 	}
 
 	@Override
-	public boolean hasField(String field) {
+	public boolean hasField(String field) throws ProfileFieldException {
 		return fields.containsKey(field);
 	}
 
-	@Override
-	public Class<?> getFieldType(String field) {
+	protected void assertHasField(String field) throws ProfileFieldException {
 		if (!hasField(field))
-			return null;
+			throw new ProfileFieldException("Field " + field + " is not defined!");
+	}
+
+	@Override
+	public Class<?> getFieldType(String field) throws ProfileFieldException {
+		assertHasField(field);
 		return fields.get(field).getType();
 	}
 
 	@Override
-	public boolean fieldAcceptsValue(String field, Object value) {
-		if (!hasField(field))
-			return false;
+	public boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException {
+		assertHasField(field);
 		Class<?> fieldType = getFieldType(field);
 		if (fieldType == null)
-			return false;
+			throw new ProfileFieldException("Field does not have value type!");
 		if (!fieldType.isInstance(value))
 			return false;
 		return fields.get(field).acceptsValue(value);
 	}
 
 	@Override
-	public Object getField(String field) {
-		if (!hasField(field))
-			return null;
+	public Object getField(String field) throws ProfileFieldException {
+		assertHasField(field);
 		return fields.get(field).getValue();
 	}
 
 	@Override
-	public void setField(String field, Object value) {
-		if (!hasField(field))
-			return;
+	public void setField(String field, Object value) throws ProfileFieldException {
+		assertHasField(field);
 		fields.get(field).setValue(value);
 	}
 
 	@Override
-	public boolean hasMethod(String method) {
+	public boolean hasMethod(String method) throws ProfileMethodException {
 		return methods.containsKey(method);
 	}
 
-	@Override
-	public int getMethodArgNum(String method) {
+	protected void assertHasMethod(String method) throws ProfileMethodException {
 		if (!hasMethod(method))
-			return 0;
+			throw new ProfileMethodException("Method " + method + " is not defined!");
+	}
+
+	@Override
+	public int getMethodArgNum(String method) throws ProfileMethodException {
+		assertHasMethod(method);
 		return methods.get(method).getArgNum();
 	}
 
 	@Override
-	public Class<?>[] getMethodArgType(String method) {
-		if (!hasMethod(method))
-			return null;
+	public Class<?>[] getMethodArgType(String method) throws ProfileMethodException {
+		assertHasMethod(method);
 		return methods.get(method).getArgType();
 	}
 
 	@Override
-	public Class<?> getMethodRetType(String method) {
-		if (!hasMethod(method))
-			return null;
+	public Class<?> getMethodRetType(String method) throws ProfileMethodException {
+		assertHasMethod(method);
 		return methods.get(method).getRetType();
 	}
 
 	@Override
-	public Object callMethod(String method, Object... args) {
-		if (!hasMethod(method))
-			return null;
-		if (args.length != getMethodArgNum(method))
-			return null;
+	public Object callMethod(String method, Object... args) throws ProfileMethodException {
+		assertHasMethod(method);
+		if (args.length < getMethodArgNum(method))
+			throw new ProfileMethodException("Amount of arguments is incorrect, is " + args.length + " but should be "
+					+ getMethodArgNum(method) + "!");
 		Class<?>[] argTypes = getMethodArgType(method);
-		if (argTypes == null)
-			return null;
-		if (argTypes.length != args.length)
-			return null;
+		if (argTypes == null && getMethodArgNum(method) != 0)
+			throw new ProfileMethodException("Method does not have argument type array!");
+		if (argTypes.length < args.length)
+			throw new ProfileMethodException("Method does not have enough argument types, is " + argTypes.length
+					+ " but should be " + args.length + "!");
 		for (int i = 0; i < args.length; i++)
 			if (!argTypes[i].isInstance(args[i]))
-				return null;
+				throw new ProfileMethodException("Argument " + i + " has bad type!");
 		return methods.get(method).call(args);
 	}
 
