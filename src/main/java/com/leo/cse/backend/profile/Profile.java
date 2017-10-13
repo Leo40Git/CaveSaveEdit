@@ -1,5 +1,8 @@
 package com.leo.cse.backend.profile;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * 
  * @author Leo
@@ -26,6 +29,8 @@ public abstract class Profile {
 	    }
 		
 	}
+	
+	public abstract void load(File file) throws IOException;
 
 	public abstract String getHeader();
 
