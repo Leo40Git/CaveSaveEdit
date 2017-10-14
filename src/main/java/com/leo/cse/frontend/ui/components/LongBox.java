@@ -43,7 +43,7 @@ public class LongBox extends InputBox {
 			return;
 		try {
 			update.apply(Long.parseUnsignedLong(nVal));
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(Main.window, "Input was not a valid number!", "Error while parsing input!",
 					JOptionPane.ERROR_MESSAGE);
 		}

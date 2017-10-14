@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
@@ -68,7 +70,7 @@ public class FlagList extends Component {
 		if (shownFlags == null)
 			shownFlags = new ArrayList<Integer>();
 		shownFlags.clear();
-		for (int i = 0; i < Profile.getFlags().length; i++)
+		for (int i = 0; i < 8000; i++)
 			if ((!huSup.get() || !DESC_NONE.equals(getFlagDesc(i))) && (!hsSup.get() || isFlagValid(i)))
 				shownFlags.add(i);
 	}
@@ -90,7 +92,12 @@ public class FlagList extends Component {
 		for (int id : shownFlags) {
 			BufferedImage chkImage = Resources.checkboxDisabled;
 			if (isFlagValid(id))
-				chkImage = (Profile.getFlag(id) ? Resources.checkboxOn : Resources.checkboxOff);
+				try {
+					chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id) ? Resources.checkboxOn
+							: Resources.checkboxOff);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 			g.drawImage(chkImage, x, y, null);
 			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 4), x + 18, y - 2);
 			FrontUtils.drawString(g, getFlagDesc(id), x + 46, y - 2);
@@ -108,7 +115,12 @@ public class FlagList extends Component {
 			if (!isFlagValid(id))
 				continue;
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
-				Profile.setFlag(id, !Profile.getFlag(id));
+				try {
+					boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id);
+					ProfileManager.setField(NormalProfile.FIELD_FLAGS, id, !value);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 				break;
 			}
 			fy += 17;

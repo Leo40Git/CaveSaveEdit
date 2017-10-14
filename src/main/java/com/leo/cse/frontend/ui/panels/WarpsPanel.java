@@ -3,7 +3,9 @@ package com.leo.cse.frontend.ui.panels;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.components.DefineBox;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.WarpBox;
@@ -21,18 +23,27 @@ public class WarpsPanel extends Panel {
 			compList.add(new DefineBox(xx + 238, yy + 17, 120, 16, new Supplier<Integer>() {
 				@Override
 				public Integer get() {
-					return Profile.getWarp(i2).getLocation();
+					try {
+						return (Integer) ProfileManager.getField(NormalProfile.FIELD_WARP_LOCATION);
+					} catch (ProfileFieldException e) {
+						e.printStackTrace();
+					}
+					return 0;
 				}
 			}, new Function<Integer, Integer>() {
 				@Override
 				public Integer apply(Integer t) {
-					Profile.getWarp(i2).setLocation(t);
-					return t;
+					try {
+						ProfileManager.setField(NormalProfile.FIELD_WARP_LOCATION, t);
+						return t;
+					} catch (ProfileFieldException e) {
+						e.printStackTrace();
+					}
+					return -1;
 				}
 			}, "WarpLoc", "warp " + (i + 1) + " location", new Supplier<Boolean>() {
 				@Override
 				public Boolean get() {
-					// return Profile.getWarp(i2).getId() != 0;
 					return true;
 				}
 			}));

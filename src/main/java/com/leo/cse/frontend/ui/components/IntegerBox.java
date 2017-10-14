@@ -49,7 +49,7 @@ public class IntegerBox extends InputBox {
 			return;
 		try {
 			update.apply(Integer.parseUnsignedInt(nVal));
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
 					"Error while parsing input!", JOptionPane.ERROR_MESSAGE);
 		}

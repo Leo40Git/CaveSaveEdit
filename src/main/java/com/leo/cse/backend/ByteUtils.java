@@ -150,13 +150,15 @@ public class ByteUtils {
 	 *            byte array
 	 * @param ptr
 	 *            starting position
+	 * @param off
+	 *            byte offset between each integer
 	 * @param dest
 	 *            destination array
 	 */
-	public static void readShorts(byte[] data, int ptr, short[] dest) {
+	public static void readShorts(byte[] data, int ptr, int off, short[] dest) {
 		for (int i = 0; i < dest.length; i++) {
 			dest[i] = readShort(data, ptr);
-			ptr += Short.BYTES;
+			ptr += Short.BYTES + off;
 		}
 	}
 
@@ -181,13 +183,15 @@ public class ByteUtils {
 	 *            byte array
 	 * @param ptr
 	 *            starting position
+	 * @param off
+	 *            byte offset between each integer
 	 * @param dest
 	 *            destination array
 	 */
-	public static void readInts(byte[] data, int ptr, int[] dest) {
+	public static void readInts(byte[] data, int ptr, int off, int[] dest) {
 		for (int i = 0; i < dest.length; i++) {
 			dest[i] = readInt(data, ptr);
-			ptr += Integer.BYTES;
+			ptr += Integer.BYTES + off;
 		}
 	}
 
@@ -212,18 +216,20 @@ public class ByteUtils {
 	 *            byte array
 	 * @param ptr
 	 *            starting position
+	 * @param off
+	 *            byte offset between each integer
 	 * @param dest
 	 *            destination array
 	 */
-	public static void readLongs(byte[] data, int ptr, long[] dest) {
+	public static void readLongs(byte[] data, int ptr, int off, long[] dest) {
 		for (int i = 0; i < dest.length; i++) {
 			dest[i] = readLong(data, ptr);
-			ptr += Long.BYTES;
+			ptr += Long.BYTES + off;
 		}
 	}
 
 	/**
-	 * Reads an array of <code>boolean</code> from a byte array.
+	 * Reads an array of <code>boolean</code>s from a byte array.
 	 * 
 	 * @param data
 	 *            byte array
@@ -298,13 +304,15 @@ public class ByteUtils {
 	 *            byte array
 	 * @param ptr
 	 *            starting position
+	 * @param off
+	 *            byte offset between each integer
 	 * @param value
 	 *            shorts to write
 	 */
-	public static void writeShorts(byte[] data, int ptr, short[] value) {
+	public static void writeShorts(byte[] data, int ptr, int off, short[] value) {
 		for (int i = 0; i < value.length; i++) {
 			writeShort(data, ptr, value[i]);
-			ptr += Short.BYTES;
+			ptr += Short.BYTES + off;
 		}
 	}
 
@@ -331,13 +339,15 @@ public class ByteUtils {
 	 *            byte array
 	 * @param ptr
 	 *            starting position
+	 * @param off
+	 *            byte offset between each integer
 	 * @param value
 	 *            integers to write
 	 */
-	public static void writeInts(byte[] data, int ptr, int[] value) {
+	public static void writeInts(byte[] data, int ptr, int off, int[] value) {
 		for (int i = 0; i < value.length; i++) {
 			writeInt(data, ptr, value[i]);
-			ptr += Integer.BYTES;
+			ptr += Integer.BYTES + off;
 		}
 	}
 
@@ -364,18 +374,20 @@ public class ByteUtils {
 	 *            byte array
 	 * @param ptr
 	 *            starting position
+	 * @param off
+	 *            byte offset between each integer
 	 * @param value
 	 *            integers to write
 	 */
-	public static void writeLongs(byte[] data, int ptr, long[] value) {
+	public static void writeLongs(byte[] data, int ptr, int off, long[] value) {
 		for (int i = 0; i < value.length; i++) {
 			writeLong(data, ptr, value[i]);
-			ptr += Long.BYTES;
+			ptr += Long.BYTES + off;
 		}
 	}
 
 	/**
-	 * Writes an array of <code>boolean</code> to a byte array.
+	 * Writes an array of <code>boolean</code>s to a byte array.
 	 * 
 	 * @param data
 	 *            byte array

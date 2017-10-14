@@ -1,12 +1,6 @@
 package com.leo.cse.backend.profile;
 
-/**
- * Listens to changes to the currently loaded {@link Profile}.
- * 
- * @author Leo
- *
- */
-public interface ProfileChangeListener {
+public interface ProfileListener {
 
 	/**
 	 * Gets called every time a field in the profile is changed.

@@ -5,7 +5,9 @@ import java.awt.Image;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
@@ -46,7 +48,12 @@ public class FlagDialog extends BaseDialog {
 		FrontUtils.drawString(g, "State: ", x + 76, y + 2);
 		Image chkImage = Resources.checkboxDisabled;
 		if (FlagList.isFlagValid(flag))
-			chkImage = (Profile.getFlag(flag) ? Resources.checkboxOn : Resources.checkboxOff);
+			try {
+				chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flag) ? Resources.checkboxOn
+						: Resources.checkboxOff);
+			} catch (ProfileFieldException e) {
+				e.printStackTrace();
+			}
 		g.drawImage(chkImage, x + 106, y + 4, null);
 		FrontUtils.drawString(g, "Description:\n" + FlagList.getFlagDesc(flag), x + 4, y + 18);
 	}
@@ -60,8 +67,12 @@ public class FlagDialog extends BaseDialog {
 			sbox.onClick(x, y, false, false);
 		if (FrontUtils.pointInRectangle(x, y, wx + 106, wy + 4, 16, 16))
 			if (FlagList.isFlagValid(flag)) {
-				Profile.setFlag(flag, !Profile.getFlag(flag));
-				Main.setTitle(Main.window);
+				try {
+					boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flag);
+					ProfileManager.setField(NormalProfile.FIELD_FLAGS, flag, !value);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 			}
 		return false;
 	}

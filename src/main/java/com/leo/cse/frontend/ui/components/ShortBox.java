@@ -52,7 +52,7 @@ public class ShortBox extends InputBox {
 			return;
 		try {
 			update.apply(Short.parseShort(nVal));
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(Main.window, "Input was not a valid number!", "Error while parsing input!",
 					JOptionPane.ERROR_MESSAGE);
 		}
