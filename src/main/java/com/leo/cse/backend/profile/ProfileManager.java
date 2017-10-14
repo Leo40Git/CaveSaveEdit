@@ -322,6 +322,7 @@ public class ProfileManager {
 		if (impl == null)
 			return;
 		Class<?> type = getFieldType(field);
+		System.out.println("setting field " + field + "[" + index + "] to " + type.cast(value));
 		Object oldValue = impl.getField(field, index);
 		if (type.cast(oldValue) != type.cast(value)) {
 			modified = true;

@@ -348,8 +348,6 @@ public class NormalProfile extends CommonProfile {
 	protected void makeFieldShorts(String name, int length, int off, int ptr) {
 		try {
 			addField(name, new ProfileField() {
-				private final int totalLength = ptr + (Short.BYTES + off) * length;
-
 				@Override
 				public Class<?> getType() {
 					return Short.class;
@@ -360,32 +358,19 @@ public class NormalProfile extends CommonProfile {
 					return value instanceof Short;
 				}
 
-				private short[] read() {
-					short[] ret = new short[length];
-					int i = 0;
-					for (int a = ptr; a < totalLength; a += Integer.BYTES + off) {
-						ret[i++] = ByteUtils.readShort(data, a);
-					}
-					return ret;
-				}
-
-				private void write(short[] value) {
-					int i = 0;
-					for (int a = ptr; a < totalLength; a += Integer.BYTES + off)
-						ByteUtils.writeShort(data, ptr, value[i++]);
-				}
-
 				@Override
 				public Object getValue(int index) {
-					short[] vals = read();
-					return vals[index];
+					short[] ret = new short[length];
+					ByteUtils.readShorts(data, ptr, off, ret);
+					return ret[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					short[] vals = read();
+					short[] vals = new short[length];
+					ByteUtils.readShorts(data, ptr, off, vals);
 					vals[index] = (Short) value;
-					write(vals);
+					ByteUtils.writeShorts(data, ptr, off, vals);
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -424,8 +409,6 @@ public class NormalProfile extends CommonProfile {
 	protected void makeFieldInts(String name, int length, int off, int ptr) {
 		try {
 			addField(name, new ProfileField() {
-				private final int totalLength = ptr + (Integer.BYTES + off) * length;
-
 				@Override
 				public Class<?> getType() {
 					return Integer.class;
@@ -436,32 +419,19 @@ public class NormalProfile extends CommonProfile {
 					return value instanceof Integer;
 				}
 
-				private int[] read() {
-					int[] ret = new int[length];
-					int i = 0;
-					for (int a = ptr; a < totalLength; a += Integer.BYTES + off) {
-						ret[i++] = ByteUtils.readInt(data, a);
-					}
-					return ret;
-				}
-
-				private void write(int[] value) {
-					int i = 0;
-					for (int a = ptr; a < totalLength; a += Integer.BYTES + off)
-						ByteUtils.writeInt(data, ptr, value[i++]);
-				}
-
 				@Override
 				public Object getValue(int index) {
-					int[] vals = read();
-					return vals[index];
+					int[] ret = new int[length];
+					ByteUtils.readInts(data, ptr, off, ret);
+					return ret[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					int[] vals = read();
+					int[] vals = new int[length];
+					ByteUtils.readInts(data, ptr, off, vals);
 					vals[index] = (Integer) value;
-					write(vals);
+					ByteUtils.writeInts(data, ptr, off, vals);
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -529,7 +499,7 @@ public class NormalProfile extends CommonProfile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void makeFieldPosition(int xPtr, int yPtr) {
 		try {
 			addField(FIELD_POSITION, new ProfileField() {
