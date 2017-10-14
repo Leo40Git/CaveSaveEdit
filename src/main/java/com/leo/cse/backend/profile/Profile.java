@@ -30,7 +30,13 @@ public abstract class Profile {
 		
 	}
 	
-	public abstract void load(File file) throws IOException;
+	public abstract void read(File file) throws IOException;
+	
+	public abstract void write(File file) throws IOException;
+	
+	public abstract File getLoadedFile();
+	
+	public abstract boolean isModified();
 
 	public abstract String getHeader();
 

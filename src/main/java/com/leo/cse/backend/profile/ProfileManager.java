@@ -25,16 +25,49 @@ public class ProfileManager {
 		return file;
 	}
 
-	public static void load(File file) throws IOException {
+	public static void read(File file) throws IOException {
 		if (ExeData.isPlusMode()) {
 			// load CS+ profile
 		} else {
-			// load normal profile
+			impl = new NormalProfile();
 		}
+		impl.read(file);
 	}
 
-	public static void load(String path) throws IOException {
-		load(new File(path));
+	public static void read(String path) throws IOException {
+		read(new File(path));
+	}
+
+	public static void write(File file) throws IOException {
+		if (impl == null)
+			return;
+		impl.write(file);
+	}
+	
+	public static void write(String path) throws IOException {
+		write(new File(path));
+	}
+	
+	public static void write() throws IOException {
+		if (impl == null)
+			return;
+		write(impl.getLoadedFile());
+	}
+	
+	public static File getLoadedFile() {
+		if (impl == null)
+			return null;
+		return impl.getLoadedFile();
+	}
+	
+	public static boolean isLoaded() {
+		return getLoadedFile() != null;
+	}
+	
+	public static boolean isModified() {
+		if (impl == null)
+			return false;
+		return impl.isModified();
 	}
 
 	public static String getHeader() {
@@ -68,7 +101,7 @@ public class ProfileManager {
 	public static Object getField(String field, int index) throws ProfileFieldException {
 		return impl.getField(field, index);
 	}
-	
+
 	public static Object getField(String field) throws ProfileFieldException {
 		return impl.getField(field);
 	}
@@ -76,7 +109,7 @@ public class ProfileManager {
 	public static void setField(String field, int index, Object value) throws ProfileFieldException {
 		impl.setField(field, index, value);
 	}
-	
+
 	public static void setField(String field, Object value) throws ProfileFieldException {
 		impl.setField(field, value);
 	}

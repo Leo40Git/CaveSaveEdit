@@ -38,11 +38,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
-import com.leo.cse.backend.profile.Profile;
-import com.leo.cse.backend.profile.ProfileChangeListener;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
-public class Main extends JFrame implements ProfileChangeListener, ExeLoadListener {
+public class Main extends JFrame implements ExeLoadListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
@@ -74,12 +73,12 @@ public class Main extends JFrame implements ProfileChangeListener, ExeLoadListen
 	}
 
 	public static void close() {
-		if (Profile.isLoaded() && Profile.isModified()) {
+		if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
 			int sel = JOptionPane.showConfirmDialog(window, "Save profile?", "Unsaved changes detected",
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (sel == JOptionPane.YES_OPTION)
 				try {
-					Profile.write();
+					ProfileManager.write();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -98,7 +97,7 @@ public class Main extends JFrame implements ProfileChangeListener, ExeLoadListen
 	}
 
 	public Main() {
-		Profile.addListener(this);
+		// Profile.addListener(this);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
@@ -150,7 +149,7 @@ public class Main extends JFrame implements ProfileChangeListener, ExeLoadListen
 				System.err.println("EXE loading failed.");
 			}
 			try {
-				Profile.read(file);
+				ProfileManager.read(file);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window,
@@ -171,9 +170,9 @@ public class Main extends JFrame implements ProfileChangeListener, ExeLoadListen
 	public static void setTitle(Main window) {
 		if (window == null)
 			window = Main.window;
-		if (Profile.isLoaded() && Profile.getFile() != null)
-			window.setTitle(
-					"CaveSaveEdit - " + Profile.getFile().getAbsolutePath() + (Profile.isModified() ? "*" : ""));
+		if (ProfileManager.isLoaded())
+			window.setTitle("CaveSaveEdit - " + ProfileManager.getLoadedFile().getAbsolutePath()
+					+ (ProfileManager.isModified() ? "*" : ""));
 		else
 			window.setTitle("CaveSaveEdit");
 	}
@@ -418,7 +417,7 @@ public class Main extends JFrame implements ProfileChangeListener, ExeLoadListen
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		ExeData.setEncoding(Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING));
 		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
-		Profile.setNoUndo(false);
+		// Profile.setNoUndo(false);
 		try {
 			Resources.loadUI();
 			Resources.colorImages(lineColor);

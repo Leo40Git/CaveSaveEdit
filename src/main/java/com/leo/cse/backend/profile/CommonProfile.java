@@ -1,5 +1,6 @@
 package com.leo.cse.backend.profile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +30,20 @@ public abstract class CommonProfile extends Profile {
 
 	}
 
+	protected File loadedFile;
 	protected String header;
 	protected String flagH;
+
+	@Override
+	public File getLoadedFile() {
+		return loadedFile;
+	}
+	
+	@Override
+	public boolean isModified() {
+		// TODO undo/redo system
+		return false;
+	}
 
 	@Override
 	public String getHeader() {

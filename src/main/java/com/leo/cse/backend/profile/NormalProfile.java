@@ -2,6 +2,7 @@ package com.leo.cse.backend.profile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.leo.cse.backend.ByteUtils;
@@ -73,7 +74,7 @@ public class NormalProfile extends CommonProfile {
 	 * 
 	 * @see #equips
 	 */
-	public static final String FIELD_EQUIPS = "equips[%d]";
+	public static final String FIELD_EQUIPS = "equips";
 	/**
 	 * Time played field.
 	 * 
@@ -85,55 +86,55 @@ public class NormalProfile extends CommonProfile {
 	 * 
 	 * @see Weapon#id
 	 */
-	public static final String FIELD_WEAPON_ID = "weapons[%d].id";
+	public static final String FIELD_WEAPON_ID = "weapons.id";
 	/**
 	 * Weapon level field.
 	 * 
 	 * @see Weapon#level
 	 */
-	public static final String FIELD_WEAPON_LEVEL = "weapons[%d].level";
+	public static final String FIELD_WEAPON_LEVEL = "weapons.level";
 	/**
 	 * Weapon EXP field.
 	 * 
 	 * @see Weapon#exp
 	 */
-	public static final String FIELD_WEAPON_EXP = "weapons[%d].exp";
+	public static final String FIELD_WEAPON_EXP = "weapons.exp";
 	/**
 	 * Weapon maximum ammo field.
 	 * 
 	 * @see Weapon#maxAmmo
 	 */
-	public static final String FIELD_WEAPON_MAXIMUM_AMMO = "weapons[%d].maxAmmo";
+	public static final String FIELD_WEAPON_MAXIMUM_AMMO = "weapons.maxAmmo";
 	/**
 	 * Weapon current ammo field.
 	 * 
 	 * @see Weapon#curAmmo
 	 */
-	public static final String FIELD_WEAPON_CURRENT_AMMO = "weapons[%d].curAmmo";
+	public static final String FIELD_WEAPON_CURRENT_AMMO = "weapons.curAmmo";
 	/**
 	 * Items field.
 	 * 
 	 * @see #items
 	 */
-	public static final String FIELD_ITEMS = "items[%d]";
+	public static final String FIELD_ITEMS = "items";
 	/**
 	 * Warp ID field.
 	 * 
 	 * @see Warp#id
 	 */
-	public static final String FIELD_WARP_ID = "warps[%d].id";
+	public static final String FIELD_WARP_ID = "warps.id";
 	/**
 	 * Warp location field.
 	 * 
 	 * @see Warp#location
 	 */
-	public static final String FIELD_WARP_LOCATION = "warps[%d].location";
+	public static final String FIELD_WARP_LOCATION = "warps.location";
 	/**
 	 * Flags field.
 	 * 
 	 * @see #flags
 	 */
-	public static final String FIELD_FLAGS = "flags[%d]";
+	public static final String FIELD_FLAGS = "flags";
 	/**
 	 * <MIM costume "field". A field for this doesn't actually exist.
 	 * 
@@ -145,13 +146,13 @@ public class NormalProfile extends CommonProfile {
 	 * 
 	 * @see #getVariable(int)
 	 */
-	public static final String FIELD_VARIABLES = "variables[%d]";
+	public static final String FIELD_VARIABLES = "variables";
 	/**
 	 * Physics variables "field". A field for this doesn't actually exist.
 	 * 
 	 * @see #getPhysVariable(int)
 	 */
-	public static final String FIELD_PHYSICS_VARIABLES = "physVars[%d]";
+	public static final String FIELD_PHYSICS_VARIABLES = "physVars";
 	/**
 	 * Amount of cash "field". A field for this doesn't actually exist.
 	 * 
@@ -187,7 +188,7 @@ public class NormalProfile extends CommonProfile {
 	protected byte[] data;
 
 	@Override
-	public void load(File file) throws IOException {
+	public void read(File file) throws IOException {
 		// read data
 		data = new byte[FILE_LENGTH];
 		try (FileInputStream fis = new FileInputStream(file)) {
@@ -202,6 +203,47 @@ public class NormalProfile extends CommonProfile {
 		String profFlagH = ByteUtils.readString(data, 0x218, flagH.length());
 		if (!flagH.equals(profFlagH))
 			throw new IOException("Flag header is missing!");
+		// set loaded file
+		loadedFile = file;
+	}
+
+	@Override
+	public void write(File file) throws IOException {
+		if (data == null)
+			return;
+		// back up file just in case
+		File backup = null;
+		if (file.exists()) {
+			backup = new File(file.getAbsolutePath() + ".bkp");
+			if (backup.exists()) {
+				backup.delete();
+			}
+			backup.createNewFile();
+			try (FileOutputStream fos = new FileOutputStream(backup); FileInputStream fis = new FileInputStream(file)) {
+				byte[] data = new byte[FILE_LENGTH];
+				fis.read(data);
+				fos.write(data);
+			}
+		} else {
+			file.createNewFile();
+		}
+		// start writing
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			fos.write(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (backup != null) {
+				System.err.println("Error while saving profile! Recovering backup.");
+				try (FileOutputStream fos = new FileOutputStream(file);
+						FileInputStream fis = new FileInputStream(backup)) {
+					byte[] data = new byte[FILE_LENGTH];
+					fis.read(data);
+					fos.write(data);
+				}
+			}
+		}
+		// set loaded file
+		loadedFile = file;
 	}
 
 	protected void setupFields() {
@@ -209,7 +251,7 @@ public class NormalProfile extends CommonProfile {
 		makeFieldInt(FIELD_SONG, 0x00C);
 		makeFieldShort(FIELD_X_POSITION, 0x011);
 		makeFieldShort(FIELD_Y_POSITION, 0x015);
-		makeFieldPosition();
+		makeFieldShorts(FIELD_POSITION, 2, 0, 0x011);
 		makeFieldInt(FIELD_DIRECTION, 0x018);
 		makeFieldShort(FIELD_MAXIMUM_HEALTH, 0x01C);
 		makeFieldShort(FIELD_STAR_COUNT, 0x01E);
@@ -217,14 +259,60 @@ public class NormalProfile extends CommonProfile {
 		makeFieldInt(FIELD_CURRENT_WEAPON, 0x024);
 		makeFieldFlags(FIELD_EQUIPS, 16, 0x02C);
 		makeFieldInt(FIELD_TIME_PLAYED, 0x034);
-		// TODO weapons
-		makeFieldInts(FIELD_ITEMS, 30, 0x0D8);
-		// TODO warps
+		makeFieldInts(FIELD_WEAPON_ID, 7, Integer.BYTES * 5, 0x038);
+		makeFieldInts(FIELD_WEAPON_LEVEL, 7, Integer.BYTES * 5, 0x03C);
+		makeFieldInts(FIELD_WEAPON_EXP, 7, Integer.BYTES * 5, 0x040);
+		makeFieldInts(FIELD_WEAPON_MAXIMUM_AMMO, 7, Integer.BYTES * 5, 0x044);
+		makeFieldInts(FIELD_WEAPON_CURRENT_AMMO, 7, Integer.BYTES * 5, 0x048);
+		makeFieldInts(FIELD_ITEMS, 30, 0, 0x0D8);
+		makeFieldInts(FIELD_WARP_ID, 7, Integer.BYTES * 2, 0x158);
+		makeFieldInts(FIELD_WARP_LOCATION, 7, Integer.BYTES * 2, 0x15C);
 		makeFieldFlags(FIELD_FLAGS, 8000, 0x21C);
 	}
 
 	protected void setupFieldsExt() {
+		try {
+			addField(FIELD_MIM_COSTUME, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Long.TYPE;
+				}
 
+				@Override
+				public boolean acceptsValue(Object value) {
+					return value instanceof Long;
+				}
+
+				@Override
+				public Object getValue(int index) {
+					long ret = 0;
+					for (int i = 7968; i < 7995; i++)
+						try {
+							if ((boolean) getField(FIELD_FLAGS, i))
+								ret |= (long) Math.pow(2, i - 7968);
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+					return ret;
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					long v = (Long) value;
+					for (int i = 7968; i < 7995; i++)
+						try {
+							setField(FIELD_FLAGS, i, (v & (long) Math.pow(2, i - 7968)) != 0);
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+		makeFieldShorts(FIELD_VARIABLES, 123, 0, 0x50A);
+		makeFieldShorts(FIELD_PHYSICS_VARIABLES, 16, 0, 0x4DC);
+		makeFieldLong(FIELD_CASH, 0x600);
 	}
 
 	protected void makeFieldShort(String name, int ptr) {
@@ -255,43 +343,48 @@ public class NormalProfile extends CommonProfile {
 		}
 	}
 
-	protected void makeFieldPosition() {
+	protected void makeFieldShorts(String name, int length, int off, int ptr) {
 		try {
-			addField(FIELD_POSITION, new ProfileField() {
+			addField(name, new ProfileField() {
+				private final int totalLength = ptr + (Short.BYTES + off) * length;
 
 				@Override
 				public Class<?> getType() {
-					return Short[].class;
+					return Short.class;
 				}
 
 				@Override
 				public boolean acceptsValue(Object value) {
-					return value instanceof Short[];
+					return value instanceof Short;
+				}
+
+				private short[] read() {
+					short[] ret = new short[length];
+					int i = 0;
+					for (int a = ptr; a < totalLength; a += Integer.BYTES + off) {
+						ret[i++] = ByteUtils.readShort(data, a);
+					}
+					return ret;
+				}
+
+				private void write(short[] value) {
+					int i = 0;
+					for (int a = ptr; a < totalLength; a += Integer.BYTES + off)
+						ByteUtils.writeShort(data, ptr, value[i++]);
 				}
 
 				@Override
 				public Object getValue(int index) {
-					try {
-						Short x = (Short) getField(FIELD_X_POSITION);
-						Short y = (Short) getField(FIELD_Y_POSITION);
-						return new Short[] { x, y };
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return null;
+					short[] vals = read();
+					return vals[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					try {
-						Short[] pos = (Short[]) value;
-						setField(FIELD_X_POSITION, pos[0]);
-						setField(FIELD_Y_POSITION, pos[1]);
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
+					short[] vals = read();
+					vals[index] = (Short) value;
+					write(vals);
 				}
-
 			});
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();
@@ -326,32 +419,47 @@ public class NormalProfile extends CommonProfile {
 		}
 	}
 
-	protected void makeFieldInts(String name, int length, int ptr) {
+	protected void makeFieldInts(String name, int length, int off, int ptr) {
 		try {
 			addField(name, new ProfileField() {
+				private final int totalLength = ptr + (Integer.BYTES + off) * length;
+
 				@Override
 				public Class<?> getType() {
-					return Integer[].class;
+					return Integer.class;
 				}
 
 				@Override
 				public boolean acceptsValue(Object value) {
-					return value instanceof Integer[];
+					return value instanceof Integer;
+				}
+
+				private int[] read() {
+					int[] ret = new int[length];
+					int i = 0;
+					for (int a = ptr; a < totalLength; a += Integer.BYTES + off) {
+						ret[i++] = ByteUtils.readInt(data, a);
+					}
+					return ret;
+				}
+
+				private void write(int[] value) {
+					int i = 0;
+					for (int a = ptr; a < totalLength; a += Integer.BYTES + off)
+						ByteUtils.writeInt(data, ptr, value[i++]);
 				}
 
 				@Override
 				public Object getValue(int index) {
-					int[] vals = new int[length];
-					ByteUtils.readInts(data, ptr, vals);
+					int[] vals = read();
 					return vals[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					int[] vals = new int[length];
-					ByteUtils.readInts(data, ptr, vals);
+					int[] vals = read();
 					vals[index] = (Integer) value;
-					ByteUtils.writeInts(data, ptr, vals);
+					write(vals);
 				}
 			});
 		} catch (ProfileFieldException e) {

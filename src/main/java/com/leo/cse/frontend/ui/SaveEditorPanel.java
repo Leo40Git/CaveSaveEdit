@@ -27,7 +27,10 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
@@ -201,7 +204,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				c = !c;
 			}
 		} else {
-			if (Profile.isLoaded()) {
+			if (ProfileManager.isLoaded()) {
 				for (Component comp : tabMap.get(currentTab).getComponents())
 					comp.render(g2d);
 			} else {
@@ -225,7 +228,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		int ti = 0;
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 			final EditorTab t = tv[ti];
-			if (Profile.isLoaded() && t == currentTab) {
+			if (ProfileManager.isLoaded() && t == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
 				g2d.fillRect(xx + 1, winSize2.height - 18, winSize2.width / tn + 1, 17);
 				g2d.setColor(Main.lineColor);
@@ -251,7 +254,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	private void loadProfile() {
-		if (Profile.isLoaded() && Profile.isModified()) {
+		if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
 			int sel = JOptionPane.showConfirmDialog(Main.window,
 					"Are you sure you want to load a new profile?\nUnsaved changes will be lost!",
 					"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -270,7 +273,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	private void loadExe() {
-		if (!Profile.isLoaded()) {
+		if (!ProfileManager.isLoaded()) {
 			JOptionPane.showMessageDialog(Main.window, "Please load a profile before loading an executable.",
 					"Can't load executable", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -311,7 +314,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	private boolean canSave() {
-		if (!Profile.isLoaded()) {
+		if (!ProfileManager.isLoaded()) {
 			JOptionPane.showMessageDialog(Main.window, "There is no profile to save!\nPlease load a profile.",
 					"No profile to save", JOptionPane.ERROR_MESSAGE);
 			return false;
@@ -323,9 +326,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!canSave())
 			return;
 		// force save flag to be on
-		Profile.setFlag(MCI.getInteger("Flag.SaveID", 431), true);
 		try {
-			Profile.write();
+			ProfileManager.setField(NormalProfile.FIELD_FLAGS, 431, true);
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+		try {
+			ProfileManager.write();
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(Main.window,
 					"An error occured while saving the profile file:\n" + e1.getMessage(),
@@ -348,9 +355,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 					return;
 			}
 			// force save flag to be on
-			Profile.setFlag(MCI.getInteger("Flag.SaveID", 431), true);
 			try {
-				Profile.write(file);
+				ProfileManager.setField(NormalProfile.FIELD_FLAGS, 431, true);
+			} catch (ProfileFieldException e) {
+				e.printStackTrace();
+			}
+			try {
+				ProfileManager.write(file);
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(Main.window,
 						"An error occured while saving the profile file:\n" + e1.getMessage(),
@@ -438,7 +449,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				bi++;
 			}
-		} else if (py >= winSize2.height - 18 && Profile.isLoaded()) {
+		} else if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
 			// editor tabs
 			final EditorTab[] tv = EditorTab.values();
 			int tn = tv.length;
@@ -454,7 +465,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				ti++;
 			}
-		} else if (Profile.isLoaded()) {
+		} else if (ProfileManager.isLoaded()) {
 			// components
 			Component newFocus = null;
 			for (Component comp : tabMap.get(currentTab).getComponents()) {
@@ -618,7 +629,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	@Override
 	public void mouseMoved(MouseEvent e) {
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 	}

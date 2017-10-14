@@ -5,7 +5,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.exe.ExeData;
-import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
@@ -16,13 +18,23 @@ public class WarpBox extends DefineBox {
 		super(x, y, width, height, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
-				return Profile.getWarp(warpId).getId();
+				try {
+					return (Integer) ProfileManager.getField(NormalProfile.FIELD_WARP_ID, warpId);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				return 0;
 			}
 		}, new Function<Integer, Integer>() {
 			@Override
 			public Integer apply(Integer t) {
-				Profile.getWarp(warpId).setId(t);
-				return t;
+				try {
+					ProfileManager.setField(NormalProfile.FIELD_WARP_ID, warpId, t);
+					return t;
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				return -1;
 			}
 		}, "Warp", "warp " + warpId);
 	}
