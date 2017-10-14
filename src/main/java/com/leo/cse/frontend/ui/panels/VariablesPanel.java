@@ -4,7 +4,9 @@ import java.awt.Dimension;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.leo.cse.backend.profile.Profile;
+import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
@@ -35,13 +37,23 @@ public class VariablesPanel extends Panel {
 				compList.add(new ShortBox(j * width + 40, 24 + i * 17, width - 44, 16, new Supplier<Short>() {
 					@Override
 					public Short get() {
-						return Profile.getVariable(vi2);
+						try {
+							return (Short) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, vi2);
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+						return 0;
 					}
 				}, new Function<Short, Short>() {
 					@Override
 					public Short apply(Short t) {
-						Profile.setVariable(vi2, t);
-						return t;
+						try {
+							ProfileManager.setField(NormalProfile.FIELD_VARIABLES, vi2, t);
+							return t;
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+						return -1;
 					}
 				}, "variable " + varId));
 				varId++;
@@ -62,16 +74,25 @@ public class VariablesPanel extends Panel {
 				final int vi2 = varId;
 				compList.add(new Label(pvl[label] + (labelWater ? " (W):" : ":"), j * width + 2, 300 + i * 16));
 				compList.add(new ShortBox(j * width + 2, 316 + i * 16, width - 6, 16, new Supplier<Short>() {
-
 					@Override
 					public Short get() {
-						return Profile.getPhysVariable(vi2);
+						try {
+							return (Short) ProfileManager.getField(NormalProfile.FIELD_PHYSICS_VARIABLES, vi2);
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+						return 0;
 					}
 				}, new Function<Short, Short>() {
 					@Override
 					public Short apply(Short t) {
-						Profile.setPhysVariable(vi2, t);
-						return t;
+						try {
+							ProfileManager.setField(NormalProfile.FIELD_PHYSICS_VARIABLES, vi2, t);
+							return t;
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+						return -1;
 					}
 				}, (labelWater ? "underwater " : "") + pvl[label].toLowerCase()));
 				varId++;
@@ -88,13 +109,25 @@ public class VariablesPanel extends Panel {
 
 					@Override
 					public Boolean get() {
-						return (Profile.getPhysVariable(16) == 1 ? true : false);
+						try {
+							Short val = (Short) ProfileManager.getField(NormalProfile.FIELD_PHYSICS_VARIABLES, 16);
+							return (val == 1 ? true : false);
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+						return false;
+						
 					}
 				}, new Function<Boolean, Boolean>() {
 					@Override
 					public Boolean apply(Boolean t) {
-						Profile.setPhysVariable(16, (short) (t ? 1 : 0));
-						return t;
+						try {
+							ProfileManager.setField(NormalProfile.FIELD_PHYSICS_VARIABLES, 16, (t ? 1 : 0));
+							return t;
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+						return false;
 					}
 				}));
 	}

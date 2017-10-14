@@ -28,7 +28,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.backend.profile.Profile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.Config;
@@ -361,7 +360,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				e.printStackTrace();
 			}
 			try {
-				ProfileManager.write(file);
+				ProfileManager.write(file, ProfileManager.getLoadedSection());
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(Main.window,
 						"An error occured while saving the profile file:\n" + e1.getMessage(),
@@ -596,14 +595,14 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			case KeyEvent.VK_Z:
 				if (ctrl) {
 					if (shift)
-						Profile.redo();
+						ProfileManager.redo();
 					else
-						Profile.undo();
+						ProfileManager.undo();
 				}
 				break;
 			case KeyEvent.VK_Y:
 				if (ctrl) {
-					Profile.redo();
+					ProfileManager.redo();
 				}
 				break;
 			default:

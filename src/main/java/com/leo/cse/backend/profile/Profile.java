@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author Leo
  *
  */
-public abstract class Profile {
+public interface Profile {
 	
 	public class ProfileFieldException extends Exception {
 
@@ -30,48 +30,40 @@ public abstract class Profile {
 		
 	}
 	
-	public abstract void read(File file) throws IOException;
+	public void read(File file, int section) throws IOException;
 	
-	public abstract void write(File file) throws IOException;
+	public void write(File file, int section) throws IOException;
 	
-	public abstract File getLoadedFile();
+	public File getLoadedFile();
 	
-	public abstract boolean isModified();
+	public int getLoadedSection();
 
-	public abstract String getHeader();
+	public String getHeader();
 
-	public abstract void setHeader(String header);
+	public void setHeader(String header);
 
-	public abstract String getFlagHeader();
+	public String getFlagHeader();
 
-	public abstract void setFlagHeader(String flagH);
+	public void setFlagHeader(String flagH);
 
-	public abstract boolean hasField(String field) throws ProfileFieldException;
+	public boolean hasField(String field) throws ProfileFieldException;
 
-	public abstract Class<?> getFieldType(String field) throws ProfileFieldException;
+	public Class<?> getFieldType(String field) throws ProfileFieldException;
 	
-	public abstract boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException;
+	public boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException;
 
-	public abstract Object getField(String field, int index) throws ProfileFieldException;
-	
-	public Object getField(String field) throws ProfileFieldException {
-		return getField(field, 0);
-	}
+	public Object getField(String field, int index) throws ProfileFieldException;
 
-	public abstract void setField(String field, int index, Object value) throws ProfileFieldException;
+	public void setField(String field, int index, Object value) throws ProfileFieldException;
 	
-	public void setField(String field, Object value) throws ProfileFieldException {
-		setField(field, 0, value);
-	}
+	public boolean hasMethod(String method) throws ProfileMethodException;
 	
-	public abstract boolean hasMethod(String method) throws ProfileMethodException;
+	public int getMethodArgNum(String method) throws ProfileMethodException;
 	
-	public abstract int getMethodArgNum(String method) throws ProfileMethodException;
+	public Class<?>[] getMethodArgType(String method) throws ProfileMethodException;
 	
-	public abstract Class<?>[] getMethodArgType(String method) throws ProfileMethodException;
+	public Class<?> getMethodRetType(String method) throws ProfileMethodException;
 	
-	public abstract Class<?> getMethodRetType(String method) throws ProfileMethodException;
-	
-	public abstract Object callMethod(String method, Object... args) throws ProfileMethodException;
+	public Object callMethod(String method, Object... args) throws ProfileMethodException;
 
 }

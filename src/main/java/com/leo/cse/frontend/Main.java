@@ -38,10 +38,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
+import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 
-public class Main extends JFrame implements ExeLoadListener {
+public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
@@ -97,7 +98,7 @@ public class Main extends JFrame implements ExeLoadListener {
 	}
 
 	public Main() {
-		// Profile.addListener(this);
+		ProfileManager.addListener(this);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
@@ -149,7 +150,7 @@ public class Main extends JFrame implements ExeLoadListener {
 				System.err.println("EXE loading failed.");
 			}
 			try {
-				ProfileManager.read(file);
+				ProfileManager.read(file, 0);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window,
@@ -157,6 +158,7 @@ public class Main extends JFrame implements ExeLoadListener {
 						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
+				System.out.println("loaded profile " + ProfileManager.getLoadedFile());
 				Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
 				SwingUtilities.invokeLater(() -> {
 					if (SaveEditorPanel.panel != null)

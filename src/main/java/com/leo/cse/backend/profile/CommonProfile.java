@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class CommonProfile extends Profile {
+public abstract class CommonProfile implements Profile {
 
 	public interface ProfileField {
 
@@ -31,6 +31,7 @@ public abstract class CommonProfile extends Profile {
 	}
 
 	protected File loadedFile;
+	protected int loadedSection;
 	protected String header;
 	protected String flagH;
 
@@ -38,11 +39,10 @@ public abstract class CommonProfile extends Profile {
 	public File getLoadedFile() {
 		return loadedFile;
 	}
-	
+
 	@Override
-	public boolean isModified() {
-		// TODO undo/redo system
-		return false;
+	public int getLoadedSection() {
+		return loadedSection;
 	}
 
 	@Override

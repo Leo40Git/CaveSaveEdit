@@ -6,9 +6,8 @@ import java.util.function.Supplier;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.Profile;
-import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
@@ -87,7 +86,7 @@ public class GeneralPanel extends Panel {
 			@Override
 			public Short apply(Short t) {
 				try {
-					ProfileManager.setField(NormalProfile.FIELD_X_POSITION, t * 32);
+					ProfileManager.setField(NormalProfile.FIELD_X_POSITION, (short) (t * 32));
 					return t;
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
@@ -111,7 +110,7 @@ public class GeneralPanel extends Panel {
 			@Override
 			public Short apply(Short t) {
 				try {
-					ProfileManager.setField(NormalProfile.FIELD_Y_POSITION, t * 32);
+					ProfileManager.setField(NormalProfile.FIELD_Y_POSITION, (short) (t * 32));
 					return t;
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
@@ -137,7 +136,7 @@ public class GeneralPanel extends Panel {
 			public Short apply(Short t) {
 				try {
 					ProfileManager.setField(NormalProfile.FIELD_X_POSITION,
-							t * (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)));
+							(short) (t * (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1))));
 					return t;
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
@@ -162,7 +161,7 @@ public class GeneralPanel extends Panel {
 			public Short apply(Short t) {
 				try {
 					ProfileManager.setField(NormalProfile.FIELD_Y_POSITION,
-							t * (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)));
+							(short) (t * (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1))));
 					return t;
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
@@ -275,7 +274,7 @@ public class GeneralPanel extends Panel {
 				return SaveEditorPanel.showMapGrid;
 			}
 		}));
-		Profile.addListener(mp);
+		ProfileManager.addListener(mp);
 		compList.add(new BooleanBox("Show Grid?", 756, 406, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {

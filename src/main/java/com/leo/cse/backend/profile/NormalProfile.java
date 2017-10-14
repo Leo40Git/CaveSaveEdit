@@ -176,6 +176,8 @@ public class NormalProfile extends CommonProfile {
 
 	public NormalProfile(boolean extFields) {
 		super();
+		header = DEFAULT_HEADER;
+		flagH = DEFAULT_FLAGH;
 		setupFields();
 		if (extFields)
 			setupFieldsExt();
@@ -188,7 +190,7 @@ public class NormalProfile extends CommonProfile {
 	protected byte[] data;
 
 	@Override
-	public void read(File file) throws IOException {
+	public void read(File file, int section) throws IOException {
 		// read data
 		data = new byte[FILE_LENGTH];
 		try (FileInputStream fis = new FileInputStream(file)) {
@@ -208,7 +210,7 @@ public class NormalProfile extends CommonProfile {
 	}
 
 	@Override
-	public void write(File file) throws IOException {
+	public void write(File file, int section) throws IOException {
 		if (data == null)
 			return;
 		// back up file just in case
@@ -251,7 +253,7 @@ public class NormalProfile extends CommonProfile {
 		makeFieldInt(FIELD_SONG, 0x00C);
 		makeFieldShort(FIELD_X_POSITION, 0x011);
 		makeFieldShort(FIELD_Y_POSITION, 0x015);
-		makeFieldShorts(FIELD_POSITION, 2, 0, 0x011);
+		makeFieldPosition(0x011, 0x015);
 		makeFieldInt(FIELD_DIRECTION, 0x018);
 		makeFieldShort(FIELD_MAXIMUM_HEALTH, 0x01C);
 		makeFieldShort(FIELD_STAR_COUNT, 0x01E);
@@ -521,6 +523,39 @@ public class NormalProfile extends CommonProfile {
 					ByteUtils.readFlags(data, ptr, vals);
 					vals[index] = (Boolean) value;
 					ByteUtils.writeFlags(data, ptr, vals);
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void makeFieldPosition(int xPtr, int yPtr) {
+		try {
+			addField(FIELD_POSITION, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Short[].class;
+				}
+
+				@Override
+				public boolean acceptsValue(Object value) {
+					return value instanceof Short[];
+				}
+
+				@Override
+				public Object getValue(int index) {
+					Short[] ret = new Short[2];
+					ret[0] = ByteUtils.readShort(data, xPtr);
+					ret[1] = ByteUtils.readShort(data, yPtr);
+					return ret;
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					Short[] vals = (Short[]) value;
+					ByteUtils.writeShort(data, xPtr, vals[0]);
+					ByteUtils.writeShort(data, yPtr, vals[1]);
 				}
 			});
 		} catch (ProfileFieldException e) {
