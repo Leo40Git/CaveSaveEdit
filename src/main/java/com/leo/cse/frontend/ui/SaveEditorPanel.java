@@ -264,7 +264,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!dir.exists())
 			dir = new File(System.getProperty("user.dir"));
 		int returnVal = FrontUtils.openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
-				dir, true, false);
+				dir, false, false);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			Main.loadProfile(FrontUtils.getSelectedFile());
 			addComponents();
