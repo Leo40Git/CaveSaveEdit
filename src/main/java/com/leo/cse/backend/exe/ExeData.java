@@ -140,130 +140,136 @@ public class ExeData {
 		ExeData.encoding = encoding;
 	}
 
+	/**
+	 * Base pointer for the ".rdata" segment in the executable.
+	 */
+	private static int rdataPtr;
+
 	// --------
 	// Pointers
 	// --------
 	// ...well, technically not actual pointers, but file positions
+	// Relative to rdataPtr!
 	/**
 	 * Pointer to file name for "ArmsItem.tsc".
 	 */
-	private static final int ARMSITEM_PTR = 0x8C270;
+	private static final int ARMSITEM_PTR = 0x270;
 	/**
 	 * Pointer to image file extension.
 	 */
-	private static final int IMG_EXT_PTR = 0x8C280;
+	private static final int IMG_EXT_PTR = 0x280;
 	/**
 	 * Pointer to name for the "npc.tbl" file.
 	 */
-	private static final int NPC_TBL_PTR = 0x8C3AB;
+	private static final int NPC_TBL_PTR = 0x3AB;
 	/**
 	 * Pointer to name for the "MyChar" graphics file.
 	 */
-	private static final int MYCHAR_PTR = 0x8C4F0;
+	private static final int MYCHAR_PTR = 0x4F0;
 	/**
 	 * Pointer to name for the "Title" graphics file.
 	 */
-	private static final int TITLE_PTR = 0x8C4F8;
+	private static final int TITLE_PTR = 0x4F8;
 	/**
 	 * Pointer to name for the "ArmsImage" graphics file.
 	 */
-	private static final int ARMSIMAGE_PTR = 0x8C500;
+	private static final int ARMSIMAGE_PTR = 0x500;
 	/**
 	 * Pointer to name for the "Arms" graphics file.
 	 */
-	private static final int ARMS_PTR = 0x8C50C;
+	private static final int ARMS_PTR = 0x50C;
 	/**
 	 * Pointer to name for the "ItemImage" graphics file.
 	 */
-	private static final int ITEMIMAGE_PTR = 0x8C514;
+	private static final int ITEMIMAGE_PTR = 0x514;
 	/**
 	 * Pointer to name for the "data" folder.
 	 */
-	private static final int DATA_FOLDER_PTR = 0x8C5BC;
+	private static final int DATA_FOLDER_PTR = 0x5BC;
 	/**
 	 * Pointer to name for the "StageImage" graphics file.
 	 */
-	private static final int STAGEIMAGE_PTR = 0x8C520;
+	private static final int STAGEIMAGE_PTR = 0x520;
 	/**
 	 * Pointer to name for the "NpcSym" graphics file.
 	 */
-	private static final int NPCSYM_PTR = 0x8C52C;
+	private static final int NPCSYM_PTR = 0x52C;
 	/**
 	 * Pointer to name for the "NpcRegu" graphics file.
 	 */
-	private static final int NPCREGU_PTR = 0x8C538;
+	private static final int NPCREGU_PTR = 0x538;
 	/**
 	 * Pointer to name for the "TextBox" graphics file.
 	 */
-	private static final int TEXTBOX_PTR = 0x8C544;
+	private static final int TEXTBOX_PTR = 0x544;
 	/**
 	 * Pointer to name for the "Caret" graphics file.
 	 */
-	private static final int CARET_PTR = 0x8C54C;
+	private static final int CARET_PTR = 0x54C;
 	/**
 	 * Pointer to name for the "Bullet" graphics file.
 	 */
-	private static final int BULLET_PTR = 0x8C554;
+	private static final int BULLET_PTR = 0x554;
 	/**
 	 * Pointer to name for the "Face" graphics file.
 	 */
-	private static final int FACE_PTR = 0x8C55C;
+	private static final int FACE_PTR = 0x55C;
 	/**
 	 * Pointer to name for the "Fade" graphics file.
 	 */
-	private static final int FADE_PTR = 0x8C564;
+	private static final int FADE_PTR = 0x564;
 	/**
 	 * Pointer to name for the "Loading" graphics file.
 	 */
-	private static final int LOADING_PTR = 0x8C5FC;
+	private static final int LOADING_PTR = 0x5FC;
 	/**
 	 * Pointer to the PXM file tag.
 	 */
-	private static final int PXM_TAG_PTR = 0x8C67C;
+	private static final int PXM_TAG_PTR = 0x67C;
 	/**
 	 * Pointer to the profile header.
 	 */
-	private static final int PROFILE_HEADER_PTR = 0x8C70C;
+	private static final int PROFILE_HEADER_PTR = 0x70C;
 	/**
 	 * Pointer to the profile flag section header.
 	 */
-	private static final int PROFILE_FLAGH_PTR = 0x8C720;
+	private static final int PROFILE_FLAGH_PTR = 0x720;
 	/**
 	 * Pointer to name for the "StageSelect.tsc" file.
 	 */
-	private static final int STAGESELECT_PTR = 0x8C770;
+	private static final int STAGESELECT_PTR = 0x770;
 	/**
 	 * Pointer to name for the "Stage" folder.
 	 */
-	private static final int STAGE_FOLDER_PTR = 0x8C7D4;
+	private static final int STAGE_FOLDER_PTR = 0x7D4;
 	/**
 	 * Pointer to prefix for tileset graphics files.
 	 */
-	private static final int PRT_PREFIX_PTR = 0x8C7DC;
+	private static final int PRT_PREFIX_PTR = 0x7DC;
 	/**
 	 * Pointer to PXA (tile attributes) file extension.
 	 */
-	private static final int PXA_EXT_PTR = 0x8C7E8;
+	private static final int PXA_EXT_PTR = 0x7E8;
 	/**
 	 * Pointer to PXM (map) file extension.
 	 */
-	private static final int PXM_EXT_PTR = 0x8C7F4;
+	private static final int PXM_EXT_PTR = 0x7F4;
 	/**
 	 * Pointer to PXE (entities) file extension.
 	 */
-	private static final int PXE_EXT_PTR = 0x8C800;
+	private static final int PXE_EXT_PTR = 0x800;
 	/**
 	 * Pointer to TSC file extension.
 	 */
-	private static final int TSC_EXT_PTR = 0x8C80C;
+	private static final int TSC_EXT_PTR = 0x80C;
 	/**
 	 * Pointer to name for the "Npc" folder.
 	 */
-	private static final int NPC_FOLDER_PTR = 0x8C81C;
+	private static final int NPC_FOLDER_PTR = 0x81C;
 	/**
 	 * Pointer to prefix for NPC sheet graphics files.
 	 */
-	private static final int NPC_PREFIX_PTR = 0x8C820;
+	private static final int NPC_PREFIX_PTR = 0x820;
 
 	/**
 	 * Array of pointers which point to string values.
@@ -583,7 +589,8 @@ public class ExeData {
 	public static void load(File file) throws IOException {
 		File base = file;
 		if (base == null)
-			base = new File(ProfileManager.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
+			base = new File(
+					ProfileManager.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 		if (!base.exists())
 			return;
 		load0(base);
@@ -702,35 +709,200 @@ public class ExeData {
 	}
 
 	/**
+	 * PE segment descriptor
+	 * <p>
+	 * 0-7 tag<br>
+	 * 8-B virtual size<br>
+	 * C-F virtual address<br>
+	 * 10-13 size of raw data<br>
+	 * 14-17 raw data pointer<br>
+	 * 18-1B relocations pointer<br>
+	 * 1C-1F line numbers pointer<br>
+	 * 20-21 # of relocations<br>
+	 * 22-23 # of line #s<br>
+	 * 24-27 characteristics<br>
+	 */
+	static class ExeSec {
+		private String tag;
+		private int vSize;
+		private int vAddr;
+		private int rSize;
+		private int rAddr;
+		private int pReloc;
+		private int pLine;
+		private short numReloc;
+		private short numLine;
+		private int attrib;
+
+		private ByteBuffer data;
+
+		public String getTag() {
+			return tag;
+		}
+
+		public void setTag(String t) {
+			tag = t;
+		}
+
+		public int getPos() {
+			return rAddr;
+		}
+
+		public int getLen() {
+			return rSize;
+		}
+
+		public int getPosV() {
+			return vAddr;
+		}
+
+		public ByteBuffer getData() {
+			return data;
+		}
+
+		public int getLenV() {
+			return vSize;
+		}
+
+		ExeSec(ByteBuffer in, FileChannel f) {
+			in.position(0);
+			byte[] tagArray = new byte[8];
+			in.get(tagArray);
+			tag = new String(tagArray);
+			tag = tag.replaceAll("\0", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			vSize = in.getInt();
+			vAddr = in.getInt();
+			rSize = in.getInt();
+			rAddr = in.getInt();
+			pReloc = in.getInt();
+			pLine = in.getInt();
+			numReloc = in.getShort();
+			numLine = in.getShort();
+			attrib = in.getInt();
+
+			data = ByteBuffer.allocate(rSize);
+			data.order(ByteOrder.nativeOrder());
+			try {
+				if (tag.equals(".swdata")) {
+					attrib = 0xC0000040;
+					f.position(rAddr + 0x10);
+					f.read(data);
+					data.flip();
+					// count the maps
+					int size = 0;
+					while (true) {
+						if (data.getInt(size) != -1) {
+							size += 200;
+						} else {
+							break;
+						}
+					}
+					rSize = size;
+					vSize = size;
+					data = ByteBuffer.allocate(rSize);
+					data.order(ByteOrder.nativeOrder());
+					f.position(rAddr + 0x10);
+					f.read(data);
+					data.flip();
+				} else {
+					f.position(rAddr);
+					f.read(data);
+					data.flip();
+				}
+			} catch (IOException err) {
+				err.printStackTrace();
+			}
+		}
+
+		public ByteBuffer toBuf() {
+			ByteBuffer retVal = ByteBuffer.allocate(0x28);
+			retVal.order(ByteOrder.nativeOrder());
+
+			byte[] tagDat = java.util.Arrays.copyOf(tag.getBytes(), 8);
+			retVal.put(tagDat);
+			retVal.putInt(vSize);
+			retVal.putInt(vAddr);
+			retVal.putInt(rSize);
+			retVal.putInt(rAddr);
+			retVal.putInt(pReloc);
+			retVal.putInt(pLine);
+			retVal.putShort(numReloc);
+			retVal.putShort(numLine);
+			retVal.putInt(attrib);
+			retVal.flip();
+			return retVal;
+		}
+	}
+
+	/**
 	 * Loads strings from the executable.
 	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
 	private static void loadExeStrings() throws IOException {
-		String name = ExeData.base.getName();
+		String name = base.getName();
 		String ext = name.substring(name.length() - 3, name.length());
 		if (!"exe".equals(ext))
 			throw new IOException("Base file is not an executable!");
+		// locate .rdata segment
+		FileInputStream inStream;
+		FileChannel inChan;
+		inStream = new FileInputStream(base);
+		inChan = inStream.getChannel();
+		// read PE header
+		ByteBuffer peHead = ByteBuffer.allocate(0x208);
+		peHead.order(ByteOrder.nativeOrder());
+		inChan.read(peHead);
+		peHead.flip();
+		ByteBuffer uBuf = ByteBuffer.allocate(2);
+		uBuf.order(ByteOrder.LITTLE_ENDIAN);
+		// find how many sections
+		inChan.position(0x116);
+		inChan.read(uBuf);
+		uBuf.flip();
+		int numSection = uBuf.getShort();
+		// read each segment
+		// find the .rdata segment
+		Vector<ByteBuffer> sections = new Vector<>();
+		inChan.position(0x208);
+		int rdataSec = -1;
+		for (int i = 0; i < numSection; i++) {
+			ByteBuffer nuBuf = ByteBuffer.allocate(0x28);
+			nuBuf.order(ByteOrder.nativeOrder());
+			inChan.read(nuBuf);
+			nuBuf.flip();
+			sections.add(nuBuf);
+			String segStr = new String(nuBuf.array());
+			if (segStr.contains(".rdata"))
+				rdataSec = i;
+		}
+		ExeSec[] headers = new ExeSec[sections.size()];
+		for (int i = 0; i < sections.size(); i++) {
+			headers[i] = new ExeSec(sections.get(i), inChan);
+		}
+		if (rdataSec == -1) {
+			inStream.close();
+			throw new IOException("Could not find .rdata segment!");
+		}
+		rdataPtr = headers[rdataSec].getPos();
+		System.out.println(headers[rdataSec].getTag());
+		System.out.println("rdataPtr=0x" + Integer.toHexString(rdataPtr).toUpperCase());
+		// read the text
 		exeStrings = new String[STRING_POINTERS.length];
 		byte[] buffer = new byte[0x10];
-		FileChannel inChan;
-		FileInputStream inStream;
-		inStream = new FileInputStream(ExeData.base);
-		inChan = inStream.getChannel();
-		ByteBuffer uBuf = ByteBuffer.allocate(0x10);
+		uBuf = ByteBuffer.allocate(0x10);
 		uBuf.order(ByteOrder.LITTLE_ENDIAN);
 		for (int i = 0; i < STRING_POINTERS.length; i++) {
-			inChan.position(STRING_POINTERS[i]);
+			inChan.position(rdataPtr + STRING_POINTERS[i]);
 			inChan.read(uBuf);
 			uBuf.flip();
 			uBuf.get(buffer);
 			String str = StrTools.CString(buffer, encoding);
-			// Backslashes are Windows-only, so replace them with forward slashes
+			// backslashes are Windows-only, so replace them with forward slashes
 			str = str.replaceAll("\\\\", "/");
 			exeStrings[i] = str;
 			uBuf.clear();
-			// System.out.println("exeStrings[" + i + "] = " + str);
 		}
 		inStream.close();
 	}
