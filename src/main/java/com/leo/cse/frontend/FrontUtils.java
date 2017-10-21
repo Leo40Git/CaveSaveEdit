@@ -28,11 +28,14 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -364,14 +367,20 @@ public class FrontUtils {
 
 	private static JFileChooser fc;
 
-	public static int openFileChooser(String title, FileFilter filter, File currentDirectory,
+	public static int openFileChooser(String title, Set<FileFilter> filters, File currentDirectory,
 			boolean allowAllFilesFilter, boolean openOrSave) {
 		if (fc == null)
 			fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(false);
-		fc.setAcceptAllFileFilterUsed(allowAllFilesFilter);
+		boolean noFilters = false;
+		if (filters == null || filters.isEmpty())
+			noFilters = true;
+		fc.setAcceptAllFileFilterUsed(allowAllFilesFilter || noFilters);
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		Iterator<FileFilter> it = filters.iterator();
+		while (it.hasNext())
+			fc.addChoosableFileFilter(it.next());
 		fc.setDialogTitle(title);
-		fc.setFileFilter(filter);
 		fc.setCurrentDirectory(currentDirectory);
 		int ret = 0;
 		if (openOrSave)
@@ -379,6 +388,13 @@ public class FrontUtils {
 		else
 			ret = fc.showOpenDialog(Main.window);
 		return ret;
+	}
+
+	public static int openFileChooser(String title, FileFilter filter, File currentDirectory,
+			boolean allowAllFilesFilter, boolean openOrSave) {
+		Set<FileFilter> filters = new HashSet<>();
+		filters.add(filter);
+		return openFileChooser(title, filters, currentDirectory, allowAllFilesFilter, openOrSave);
 	}
 
 	public static File getSelectedFile() {

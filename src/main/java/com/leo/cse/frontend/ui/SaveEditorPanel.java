@@ -16,14 +16,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.exe.ExeData;
@@ -271,6 +274,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 	}
 
+	private static final Set<FileFilter> MOD_FILE_FILTERS = new HashSet<>();
+
+	static {
+		MOD_FILE_FILTERS.add(new FileNameExtensionFilter("Executables", "exe"));
+		// MOD_FILE_FILTERS.add(new FileNameExtensionFilter("CS+ stage.tbl", "tbl"));
+	}
+
 	private void loadExe() {
 		if (!ProfileManager.isLoaded()) {
 			JOptionPane.showMessageDialog(Main.window, "Please load a profile before loading an executable.",
@@ -279,8 +289,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 		File base = null;
 		while (base == null || !base.exists()) {
-			int returnVal = FrontUtils.openFileChooser("Open executable",
-					new FileNameExtensionFilter("Applications", "exe"),
+			int returnVal = FrontUtils.openFileChooser("Open executable", MOD_FILE_FILTERS,
 					(base == null ? new File(System.getProperty("user.dir")) : base), false, false);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 				base = FrontUtils.getSelectedFile();
