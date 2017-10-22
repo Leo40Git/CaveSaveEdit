@@ -783,32 +783,9 @@ public class ExeData {
 			data = ByteBuffer.allocate(rSize);
 			data.order(ByteOrder.nativeOrder());
 			try {
-				if (tag.equals(".swdata")) {
-					attrib = 0xC0000040;
-					f.position(rAddr + 0x10);
-					f.read(data);
-					data.flip();
-					// count the maps
-					int size = 0;
-					while (true) {
-						if (data.getInt(size) != -1) {
-							size += 200;
-						} else {
-							break;
-						}
-					}
-					rSize = size;
-					vSize = size;
-					data = ByteBuffer.allocate(rSize);
-					data.order(ByteOrder.nativeOrder());
-					f.position(rAddr + 0x10);
-					f.read(data);
-					data.flip();
-				} else {
-					f.position(rAddr);
-					f.read(data);
-					data.flip();
-				}
+				f.position(rAddr);
+				f.read(data);
+				data.flip();
 			} catch (IOException err) {
 				err.printStackTrace();
 			}
