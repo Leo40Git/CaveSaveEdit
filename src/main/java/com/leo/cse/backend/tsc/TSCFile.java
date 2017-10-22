@@ -40,6 +40,10 @@ public class TSCFile {
 			script = StrTools.CString(datArray, ExeData.getEncoding());
 	}
 	
+	public TSCFile(String inName) throws IOException {
+		this(new File(inName));
+	}
+	
 	public String getScript() {
 		return script;
 	}

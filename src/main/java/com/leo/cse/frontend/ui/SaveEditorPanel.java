@@ -232,7 +232,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			final EditorTab t = tv[ti];
 			if (ProfileManager.isLoaded() && t == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
-				g2d.fillRect(xx + 1, winSize2.height - 18, winSize2.width / tn + 1, 17);
+				g2d.drawLine(xx + 1, winSize2.height - 18, xx + winSize2.width / tn, winSize2.height - 18);
 				g2d.setColor(Main.lineColor);
 			}
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);

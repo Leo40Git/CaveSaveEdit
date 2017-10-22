@@ -476,6 +476,16 @@ public class ExeData {
 	public static void setLoadNpc(boolean loadNpc) {
 		ExeData.loadNpc = loadNpc;
 	}
+	
+	private static boolean loadTSC = true;
+	
+	public static boolean doLoadTSC() {
+		return loadTSC;
+	}
+	
+	public static void setLoadTSC(boolean loadTSC) {
+		ExeData.loadTSC = loadTSC;
+	}
 
 	/**
 	 * Array of strings loaded from the executable.

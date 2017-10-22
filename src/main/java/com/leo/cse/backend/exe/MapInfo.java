@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.leo.cse.backend.ResUtils;
+import com.leo.cse.backend.tsc.TSCFile;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code
 // from it
@@ -88,6 +89,7 @@ public class MapInfo {
 	 * @see PxeEntry
 	 */
 	private LinkedList<PxeEntry> pxeList;
+	private TSCFile tscFile;
 
 	/**
 	 * Loads a map and it's resources.
@@ -108,6 +110,15 @@ public class MapInfo {
 		loadMap(d);
 		if (ExeData.doLoadNpc())
 			getEntities(d);
+		if (ExeData.doLoadTSC()) {
+			try {
+				tscFile = new TSCFile(
+						String.format(ExeData.getExeString(ExeData.STRING_TSC_EXT), directory + "/" + stage, fileName));
+			} catch (IOException e) {
+				System.err.println("Failed to load PXM:\n" + fileName);
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -515,6 +526,10 @@ public class MapInfo {
 		if (pxeList == null)
 			return null;
 		return pxeList.iterator();
+	}
+
+	public TSCFile getTSCFile() {
+		return tscFile;
 	}
 
 	/**
