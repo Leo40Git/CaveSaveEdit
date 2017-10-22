@@ -49,7 +49,6 @@ public class StrTools {
 				break;
 			if (i > 0)
 				radix *= 10;
-
 			result += (str.charAt(str.length() - i - 1) - '0') * radix;
 		}
 		return result;

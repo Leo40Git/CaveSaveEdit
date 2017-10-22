@@ -318,7 +318,7 @@ public class ProfileManager {
 		return getField(field, 0);
 	}
 	
-	private static void setField(String field, int index, Object value, boolean addUndo) throws ProfileFieldException {
+	public static void setField(String field, int index, Object value, boolean addUndo) throws ProfileFieldException {
 		if (impl == null)
 			return;
 		Class<?> type = getFieldType(field);

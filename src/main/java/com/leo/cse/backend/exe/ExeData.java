@@ -769,7 +769,7 @@ public class ExeData {
 			byte[] tagArray = new byte[8];
 			in.get(tagArray);
 			tag = new String(tagArray);
-			tag = tag.replaceAll("\0", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			tag = tag.replaceAll("\0", "");
 			vSize = in.getInt();
 			vAddr = in.getInt();
 			rSize = in.getInt();
