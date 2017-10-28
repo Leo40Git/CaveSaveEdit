@@ -36,6 +36,8 @@ public interface Profile {
 	
 	public File getLoadedFile();
 	
+	public boolean supportsSections();
+	
 	public int getLoadedSection();
 
 	public String getHeader();
