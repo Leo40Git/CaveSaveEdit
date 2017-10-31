@@ -23,6 +23,7 @@ import javax.imageio.ImageIO;
 import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 
@@ -159,6 +160,10 @@ public class ExeData {
 	 */
 	private static final int IMG_EXT_PTR = 0x280;
 	/**
+	 * Pointer to name for the "Credit.tsc" file.
+	 */
+	private static final int CREDIT_PTR = 0x368;
+	/**
 	 * Pointer to name for the "npc.tbl" file.
 	 */
 	private static final int NPC_TBL_PTR = 0x3AB;
@@ -270,15 +275,19 @@ public class ExeData {
 	 * Pointer to prefix for NPC sheet graphics files.
 	 */
 	private static final int NPC_PREFIX_PTR = 0x820;
+	/**
+	 * Pointer to name for the "Head.tsc" file.
+	 */
+	private static final int HEAD_PTR = 0x9A8;
 
 	/**
 	 * Array of pointers which point to string values.
 	 */
-	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, NPC_TBL_PTR, MYCHAR_PTR,
-			TITLE_PTR, ARMSIMAGE_PTR, ARMS_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR, NPCREGU_PTR,
-			TEXTBOX_PTR, CARET_PTR, BULLET_PTR, FACE_PTR, FADE_PTR, LOADING_PTR, PXM_TAG_PTR, PROFILE_HEADER_PTR,
-			PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR, PXM_EXT_PTR, PXE_EXT_PTR,
-			TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR };
+	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, CREDIT_PTR, NPC_TBL_PTR,
+			MYCHAR_PTR, TITLE_PTR, ARMSIMAGE_PTR, ARMS_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR,
+			NPCREGU_PTR, TEXTBOX_PTR, CARET_PTR, BULLET_PTR, FACE_PTR, FADE_PTR, LOADING_PTR, PXM_TAG_PTR,
+			PROFILE_HEADER_PTR, PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR,
+			PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR, HEAD_PTR };
 
 	/**
 	 * Name for "ArmsItem.tsc".
@@ -288,6 +297,10 @@ public class ExeData {
 	 * Image file extension.
 	 */
 	public static final int STRING_IMG_EXT;
+	/**
+	 * Name for "Credit.tsc".
+	 */
+	public static final int STRING_CREDIT;
 	/**
 	 * Name for the "npc.tbl" file.
 	 */
@@ -400,12 +413,17 @@ public class ExeData {
 	 * Prefix for NPC sheet graphics files.
 	 */
 	public static final int STRING_NPC_PREFIX;
+	/**
+	 * Name for "Head.tsc".
+	 */
+	public static final int STRING_HEAD;
 
 	// Set string indexes
 	static {
 		Arrays.sort(STRING_POINTERS);
 		STRING_ARMSITEM = Arrays.binarySearch(STRING_POINTERS, ARMSITEM_PTR);
 		STRING_IMG_EXT = Arrays.binarySearch(STRING_POINTERS, IMG_EXT_PTR);
+		STRING_CREDIT = Arrays.binarySearch(STRING_POINTERS, CREDIT_PTR);
 		STRING_NPC_TBL = Arrays.binarySearch(STRING_POINTERS, NPC_TBL_PTR);
 		STRING_MYCHAR = Arrays.binarySearch(STRING_POINTERS, MYCHAR_PTR);
 		STRING_TITLE = Arrays.binarySearch(STRING_POINTERS, TITLE_PTR);
@@ -434,6 +452,7 @@ public class ExeData {
 		STRING_TSC_EXT = Arrays.binarySearch(STRING_POINTERS, TSC_EXT_PTR);
 		STRING_NPC_FOLDER = Arrays.binarySearch(STRING_POINTERS, NPC_FOLDER_PTR);
 		STRING_NPC_PREFIX = Arrays.binarySearch(STRING_POINTERS, NPC_PREFIX_PTR);
+		STRING_HEAD = Arrays.binarySearch(STRING_POINTERS, HEAD_PTR);
 	}
 
 	// TODO CS+ support
@@ -476,13 +495,28 @@ public class ExeData {
 	public static void setLoadNpc(boolean loadNpc) {
 		ExeData.loadNpc = loadNpc;
 	}
-	
-	private static boolean loadTSC = true;
-	
+
+	/**
+	 * If <code>true</code>, TSC files will be loaded,
+	 * otherwise they will be ignored.
+	 */
+	private static boolean loadTSC = false;
+
+	/**
+	 * Checks if TSC files will be loaded.
+	 * 
+	 * @return <code>true</code> if will be loaded, <code>false</code> otherwise.
+	 */
 	public static boolean doLoadTSC() {
 		return loadTSC;
 	}
-	
+
+	/**
+	 * Enables or disables TSC file loading.
+	 * 
+	 * @param loadNpc
+	 *            <code>true</code> to enable, <code>false</code> to disable.
+	 */
 	public static void setLoadTSC(boolean loadTSC) {
 		ExeData.loadTSC = loadTSC;
 	}
@@ -901,6 +935,7 @@ public class ExeData {
 		exeStrings = new String[STRING_POINTERS.length];
 		exeStrings[STRING_ARMSITEM] = "ArmsItem.tsc";
 		exeStrings[STRING_IMG_EXT] = "%s/%s.png"; // CS+ uses PNGs, not BMPs
+		exeStrings[STRING_CREDIT] = "Credit.tsc";
 		exeStrings[STRING_NPC_TBL] = "npc.tbl";
 		exeStrings[STRING_MYCHAR] = "MyChar";
 		exeStrings[STRING_TITLE] = "Title";
@@ -918,8 +953,8 @@ public class ExeData {
 		exeStrings[STRING_DATA_FOLDER] = ""; // not needed
 		exeStrings[STRING_LOADING] = "Loading";
 		exeStrings[STRING_PXM_TAG] = "PXM";
-		exeStrings[STRING_PROFILE_HEADER] = NormalProfile.DEFAULT_HEADER;
-		exeStrings[STRING_PROFILE_FLAGH] = NormalProfile.DEFAULT_FLAGH;
+		exeStrings[STRING_PROFILE_HEADER] = PlusProfile.DEFAULT_HEADER;
+		exeStrings[STRING_PROFILE_FLAGH] = PlusProfile.DEFAULT_FLAGH;
 		exeStrings[STRING_STAGESELECT] = "StageSelect.tsc";
 		exeStrings[STRING_STAGE_FOLDER] = "Stage";
 		exeStrings[STRING_PRT_PREFIX] = "%s/Prt%s";
@@ -929,6 +964,7 @@ public class ExeData {
 		exeStrings[STRING_TSC_EXT] = "%s/%s.tsc";
 		exeStrings[STRING_NPC_FOLDER] = "Npc";
 		exeStrings[STRING_NPC_PREFIX] = "%s/Npc%s";
+		exeStrings[STRING_HEAD] = "Head.tsc";
 	}
 
 	/**
