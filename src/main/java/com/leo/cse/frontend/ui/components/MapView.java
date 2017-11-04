@@ -40,6 +40,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	private int lastMap;
 	private Supplier<Boolean> gSup;
 	private Short[] playerPos;
+	private short playerHoverX, playerHoverY;
 
 	private int getMap() {
 		try {
@@ -115,6 +116,8 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		drawMyChar(sg, false);
 		drawTiles(sg, 2);
 		drawMyChar(sg, true);
+		if (hover && ignoreClick != 2)
+			drawMyCharHover(sg);
 		if (gSup.get())
 			drawGrid(sg);
 		sg.translate(camX, camY);
@@ -304,7 +307,58 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			sourceY2 = pf.height;
 			xPixel += po.x;
 			yPixel += po.y;
+		}
+		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + Math.abs(sourceX2 - sourceX1),
+				yPixel + Math.abs(sourceY2 - sourceY1), sourceX1, sourceY1, sourceX2, sourceY2, null);
+		g.setComposite(oc);
+	}
 
+	private void drawMyCharHover(Graphics2D g) {
+		double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
+		int dir = 0;
+		long costume = 0;
+		try {
+			dir = ((Integer) ProfileManager.getField(NormalProfile.FIELD_DIRECTION) == 2 ? 1 : 0);
+			if (MCI.getSpecial("VarHack"))
+				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, 6);
+			if (MCI.getSpecial("MimHack"))
+				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
+			else {
+				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
+				if (ProfileManager.getType() == ProfileType.CSPLUS)
+					if (ProfileManager.getLoadedSection() > 2)
+						costume += 2;
+			}
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+		int xPixel = playerHoverX - 16;
+		xPixel /= snap;
+		xPixel *= 2;
+		int yPixel = playerHoverY - 32;
+		yPixel /= snap;
+		yPixel *= 2;
+		int sourceX1 = 0;
+		int sourceY1 = (int) (64 * costume + 32 * dir);
+		Composite oc = g.getComposite();
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f);
+		g.setComposite(ac);
+		EntityExtras pe = null;
+		try {
+			pe = MCI.getPlayerExtras(xPixel, yPixel, (dir == 1 ? true : false), costume);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		int sourceX2 = 32, sourceY2 = sourceY1 + 32;
+		if (pe != null) {
+			Rectangle pf = pe.getFrameRect();
+			Point po = pe.getOffset();
+			sourceX1 = pf.x;
+			sourceY1 = pf.y;
+			sourceX2 = pf.width;
+			sourceY2 = pf.height;
+			xPixel += po.x;
+			yPixel += po.y;
 		}
 		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + Math.abs(sourceX2 - sourceX1),
 				yPixel + Math.abs(sourceY2 - sourceY1), sourceX1, sourceY1, sourceX2, sourceY2, null);
@@ -445,6 +499,14 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		}
 		updateCamCoords();
 		ignoreClick = 1;
+		updateHover(px, py, true);
+	}
+
+	@Override
+	public void updateHover(int x, int y, boolean hover) {
+		super.updateHover(x, y, hover);
+		playerHoverX = (short) (x - this.x + camX);
+		playerHoverY = (short) (y - this.y + camY);
 	}
 
 	@Override

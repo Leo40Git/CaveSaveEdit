@@ -39,16 +39,14 @@ public class MCIDialog extends BaseDialog {
 	}
 
 	@Override
-	public boolean onClick(int x, int y) {
-		if (super.onClick(x, y))
-			return true;
+	public void onClick(int x, int y) {
+		super.onClick(x, y);
 		final int wx = getWindowX(), wy = getWindowY(false);
 		if (FrontUtils.pointInRectangle(x, y, wx, wy + height - 18, 150, 16)) {
 			if (loadMCI()) {
 				SaveEditorPanel.panel.addComponents();
 				Main.window.repaint();
 			}
-			return false;
 		} else if (FrontUtils.pointInRectangle(x, y, wx + width - 150, wy + height - 18, 150, 16)) {
 			try {
 				MCI.readDefault();
@@ -58,7 +56,6 @@ public class MCIDialog extends BaseDialog {
 						"Could not load default MCI file!", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		return false;
 	}
 
 	private boolean ret;

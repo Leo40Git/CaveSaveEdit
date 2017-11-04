@@ -17,7 +17,8 @@ import com.leo.cse.frontend.ui.dialogs.FlagDialog;
 
 public class FlagsPanel extends Panel {
 
-	private ScrollWrapper flagList;
+	private FlagList flagList;
+	private ScrollWrapper flagListWrap;
 
 	public FlagsPanel() {
 		super();
@@ -33,14 +34,16 @@ public class FlagsPanel extends Panel {
 				return SaveEditorPanel.hideSystemFlags;
 			}
 		};
-		flagList = new ScrollWrapper(new FlagList(huSup, hsSup), 0, 0, winSize.width - 21, winSize.height - 55);
-		compList.add(flagList);
+		flagList = new FlagList(huSup, hsSup);
+		flagListWrap = new ScrollWrapper(flagList, 0, 0, winSize.width - 21, winSize.height - 55);
+		compList.add(flagListWrap);
 		compList.add(new Line(0, winSize.height - 54, winSize.width - 21, 0));
 		compList.add(new BooleanBox("Hide undefined flags?", 2, winSize.height - 52, huSup,
 				new Function<Boolean, Boolean>() {
 					@Override
 					public Boolean apply(Boolean t) {
 						SaveEditorPanel.hideUndefinedFlags = t;
+						flagList.calculateShownFlags();
 						return t;
 					}
 				}));
@@ -49,6 +52,7 @@ public class FlagsPanel extends Panel {
 					@Override
 					public Boolean apply(Boolean t) {
 						SaveEditorPanel.hideSystemFlags = t;
+						flagList.calculateShownFlags();
 						return t;
 					}
 				}));
@@ -61,7 +65,7 @@ public class FlagsPanel extends Panel {
 
 	@Override
 	public ScrollBar getGlobalScrollbar() {
-		return flagList.getScrollbar();
+		return flagListWrap.getScrollbar();
 	}
 
 }

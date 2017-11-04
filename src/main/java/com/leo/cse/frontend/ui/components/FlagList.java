@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -64,32 +65,67 @@ public class FlagList extends Component {
 	protected Supplier<Boolean> huSup;
 	protected Supplier<Boolean> hsSup;
 
-	protected List<Integer> shownFlags;
+	private static class Flag {
+		private int id;
+		private boolean hover;
 
-	protected void calculateShownFlags() {
+		public Flag(int id, boolean hover) {
+			this.id = id;
+			this.hover = hover;
+		}
+		
+		public Flag(int id) {
+			this(id, false);
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public boolean isHover() {
+			return hover;
+		}
+
+		public void setHover(boolean hover) {
+			this.hover = hover;
+		}
+	}
+
+	protected List<Flag> shownFlags;
+	
+	protected void createShownFlags() {
 		if (shownFlags == null)
-			shownFlags = new ArrayList<Integer>();
+			shownFlags = new ArrayList<>();
+	}
+
+	public void calculateShownFlags() {
+		createShownFlags();
 		shownFlags.clear();
 		for (int i = 0; i < 8000; i++)
 			if ((!huSup.get() || !DESC_NONE.equals(getFlagDesc(i))) && (!hsSup.get() || isFlagValid(i)))
-				shownFlags.add(i);
+				shownFlags.add(new Flag(i));
 	}
 
 	public FlagList(Supplier<Boolean> huSup, Supplier<Boolean> hsSup) {
 		super(0, 0, Main.WINDOW_SIZE.width, 0);
 		this.huSup = huSup;
 		this.hsSup = hsSup;
+		calculateShownFlags();
 	}
 
 	@Override
 	public void render(Graphics g) {
-		calculateShownFlags();
 		height = shownFlags.size() * 17 + 1;
 		final int x = 4;
 		int y = 1;
 		g.setFont(Resources.font);
-		g.setColor(Main.lineColor);
-		for (int id : shownFlags) {
+		for (Flag flag : shownFlags) {
+			int id = flag.getId();
+			if (flag.isHover())
+				g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+			else
+				g.setColor(Main.COLOR_BG);
+			g.fillRect(x, y, 16, 16);
 			BufferedImage chkImage = Resources.checkboxDisabled;
 			if (isFlagValid(id))
 				try {
@@ -99,6 +135,7 @@ public class FlagList extends Component {
 					e.printStackTrace();
 				}
 			g.drawImage(chkImage, x, y, null);
+			g.setColor(Main.lineColor);
 			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 4), x + 18, y - 2);
 			FrontUtils.drawString(g, getFlagDesc(id), x + 46, y - 2);
 			y += 17;
@@ -111,7 +148,8 @@ public class FlagList extends Component {
 		height = shownFlags.size() * 17 + 1;
 		final int fx = 4;
 		int fy = 1;
-		for (int id : shownFlags) {
+		for (Flag flag : shownFlags) {
+			int id = flag.getId();
 			if (!isFlagValid(id))
 				continue;
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
@@ -123,6 +161,22 @@ public class FlagList extends Component {
 				}
 				break;
 			}
+			fy += 17;
+		}
+	}
+
+	@Override
+	public void updateHover(int x, int y, boolean hover) {
+		super.updateHover(x, y, hover);
+		calculateShownFlags();
+		height = shownFlags.size() * 17 + 1;
+		final int fx = 4;
+		int fy = 1;
+		for (Flag flag : shownFlags) {
+			boolean fHover = false;
+			if (FrontUtils.pointInRectangle(x, y - 17, fx, fy, 16, 16))
+				fHover = true;
+			flag.setHover(fHover);
 			fy += 17;
 		}
 	}

@@ -16,7 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,16 +90,6 @@ public class FrontUtils {
 				FileOutputStream out = new FileOutputStream(dest)) {
 			out.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
-	}
-
-	public static File getJarFile() throws FileNotFoundException {
-		String path = Main.class.getResource(Main.class.getSimpleName() + ".class").getFile();
-		if (path.startsWith("/")) {
-			throw new FileNotFoundException("This is not a jar file: \n" + path);
-		}
-		path = ClassLoader.getSystemClassLoader().getResource(path).getFile();
-
-		return new File(path.substring(0, path.lastIndexOf('!')));
 	}
 
 	private static void drawString0(Graphics g, String str, int x, int y) {

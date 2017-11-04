@@ -73,7 +73,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		}
 	}
 
-	public static void close() {
+	public static void close(boolean reboot) {
 		if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
 			int sel = JOptionPane.showConfirmDialog(window, "Save profile?", "Unsaved changes detected",
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -85,16 +85,29 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				}
 			else if (sel == JOptionPane.CANCEL_OPTION)
 				return;
-		} else {
+		} else if (!reboot) {
 			int sel = JOptionPane.showConfirmDialog(window, "Are you sure you want to close the editor?",
 					"Quit CaveSaveEditor?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (sel != JOptionPane.YES_OPTION)
 				return;
 		}
-		Config.setColor(Config.KEY_LINE_COLOR, lineColor);
-		Config.set(Config.KEY_ENCODING, ExeData.getEncoding());
-		SaveEditorPanel.panel.saveSettings();
-		System.exit(0);
+		if (reboot) {
+			System.out.println("REBOOTING!");
+			window.dispose();
+			window = null;
+			SaveEditorPanel.panel = null;
+			System.gc();
+			Main.main(new String[0]);
+		} else {
+			Config.setColor(Config.KEY_LINE_COLOR, lineColor);
+			Config.set(Config.KEY_ENCODING, ExeData.getEncoding());
+			SaveEditorPanel.panel.saveSettings();
+			System.exit(0);
+		}
+	}
+	
+	public static void close() {
+		close(false);
 	}
 
 	public Main() {

@@ -6,6 +6,10 @@ public abstract class Dialog {
 
 	public abstract void render(Graphics g);
 
-	public abstract boolean onClick(int x, int y);
+	public abstract void onClick(int x, int y);
+	
+	public abstract boolean wantsToClose();
+	
+	public abstract void updateHover(int x, int y);
 
 }

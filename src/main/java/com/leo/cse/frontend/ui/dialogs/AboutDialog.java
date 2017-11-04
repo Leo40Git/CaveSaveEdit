@@ -27,13 +27,11 @@ public class AboutDialog extends BaseDialog {
 	}
 
 	@Override
-	public boolean onClick(int x, int y) {
-		if (super.onClick(x, y))
-			return true;
+	public void onClick(int x, int y) {
+		super.onClick(x, y);
 		final int wx = getWindowX(), wy = getWindowY();
 		if (FrontUtils.pointInRectangle(x, y, wx + 136, wy + 64, 192, 17))
 			Main.updateCheck(true, true);
-		return false;
 	}
 
 }

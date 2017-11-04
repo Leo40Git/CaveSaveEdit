@@ -46,9 +46,8 @@ public class SettingsDialog extends BaseDialog {
 	}
 
 	@Override
-	public boolean onClick(int x, int y) {
-		if (super.onClick(x, y))
-			return true;
+	public void onClick(int x, int y) {
+		super.onClick(x, y);
 		final int wx = getWindowX(), wy = getWindowY();
 		if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 4, 292, 17)) {
 			SaveEditorPanel.panel.addDialogBox(new MCIDialog());
@@ -83,8 +82,7 @@ public class SettingsDialog extends BaseDialog {
 								"Unsupported encoding", JOptionPane.ERROR_MESSAGE);
 						e = null;
 					}
-				} else
-					return false;
+				}
 			}
 			ExeData.setEncoding(e);
 			try {
@@ -96,20 +94,11 @@ public class SettingsDialog extends BaseDialog {
 					"Are you sure you want to wipe all settings?\nThis will restart the editor WITHOUT saving changes!",
 					"Wipe Settings?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (sel != JOptionPane.YES_OPTION)
-				return false;
+				return;
 			Config.wipe();
 			Config.init();
-			try {
-				final String jar = FrontUtils.getJarFile().getName();
-				System.out.println("Attemping to run " + jar);
-				Config.setBoolean(Config.KEY_SKIP_UPDATE_CHECK, true);
-				Runtime.getRuntime().exec("java -jar " + jar);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			System.exit(0);
+			Main.close(true);
 		}
-		return false;
 	}
 
 	private void setLineColor() {

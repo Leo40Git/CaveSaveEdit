@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -41,7 +42,10 @@ public class ItemBox extends DefineBox {
 
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Main.COLOR_BG);
+		if (hover)
+			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+		else
+			g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);

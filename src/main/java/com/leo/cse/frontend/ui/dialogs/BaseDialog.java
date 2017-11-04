@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.dialogs;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
@@ -11,6 +12,8 @@ public class BaseDialog extends Dialog {
 
 	protected String title, message;
 	protected int width, height;
+	protected boolean wantsToClose;
+	private boolean quitHover;
 
 	public BaseDialog(String title, String message, int width, int height) {
 		this.title = title;
@@ -47,17 +50,34 @@ public class BaseDialog extends Dialog {
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, title, x + 4, y);
 		g.drawLine(x, y + 18, x + width, y + 18);
+		if (quitHover)
+			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+		else
+			g.setColor(Main.COLOR_BG);
+		g.fillRect(x + width - 16, y + 2, 14, 14);
 		g.drawImage(Resources.dialogClose, x + width - 16, y + 2, null);
 		if (message != null)
 			FrontUtils.drawString(g, message, x + 4, y + 22);
 	}
 
 	@Override
-	public boolean onClick(int x, int y) {
+	public void onClick(int x, int y) {
 		final int wx = getWindowX(), wy = getWindowY(false);
 		if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14))
-			return true;
-		return false;
+			wantsToClose = true;
+	}
+
+	@Override
+	public boolean wantsToClose() {
+		return wantsToClose;
+	}
+
+	@Override
+	public void updateHover(int x, int y) {
+		final int wx = getWindowX(), wy = getWindowY(false);
+		quitHover = false;
+		if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14))
+			quitHover = true;
 	}
 
 }

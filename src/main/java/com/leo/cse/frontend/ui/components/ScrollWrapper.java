@@ -76,6 +76,17 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 			wrapped.onClick(x, y - yo, shiftDown, ctrlDown);
 		}
 	}
+	
+	@Override
+	public void updateHover(int x, int y, boolean hover) {
+		super.updateHover(x, y, hover);
+		if (x > width - ScrollBar.WIDTH)
+			scrollbar.updateHover(x, y, hover);
+		else {
+			int yo = (int) ((height - wrapped.getHeight()) * scrollbar.getValue());
+			wrapped.updateHover(x, y - yo, hover);
+		}
+	}
 
 	public ScrollBar getScrollbar() {
 		return scrollbar;

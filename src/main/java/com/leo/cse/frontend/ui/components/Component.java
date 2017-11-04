@@ -9,6 +9,7 @@ public abstract class Component {
 
 	protected int x, y, width, height;
 	protected Supplier<Boolean> enabled;
+	protected boolean hover;
 
 	public Component(int x, int y, int width, int height, Supplier<Boolean> enabled) {
 		this.x = x;
@@ -25,7 +26,10 @@ public abstract class Component {
 	public abstract void render(Graphics g);
 
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		return;
+	}
+	
+	public void updateHover(int x, int y, boolean hover) {
+		this.hover = hover;
 	}
 
 	public void onKey(int code, boolean shiftDown, boolean ctrlDown) {

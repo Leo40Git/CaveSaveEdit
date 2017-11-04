@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -43,9 +42,7 @@ import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.IDraggable;
 import com.leo.cse.frontend.ui.components.IScrollable;
 import com.leo.cse.frontend.ui.components.ScrollBar;
-import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
-import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
@@ -79,9 +76,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private static final MenuBar[] MENU_BARS;
 
 	static {
-		MENU_BARS = new MenuBar[2];
-		MENU_BARS[0] = new MenuBar("Test 1");
-		MENU_BARS[1] = new MenuBar("Test 2");
+		MENU_BARS = new MenuBar[3];
+		MENU_BARS[0] = new MenuBar("File");
+		MENU_BARS[1] = new MenuBar("Edit");
+		MENU_BARS[2] = new MenuBar("Tools");
 	}
 
 	public static SaveEditorPanel panel;
@@ -102,7 +100,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	private EditorTab currentTab;
 	private Map<EditorTab, Panel> tabMap;
-	
+
+	private boolean quitHover;
+	private int menubarHover = -1;
+	private int tabHover = -1;
 	private int currentMenubar = -1;
 	private Component lastFocus;
 	private List<Dialog> dBoxes;
@@ -172,6 +173,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g.setFont(Resources.font);
 		FrontUtils.drawString(g, Main.window.getTitle(), 18, 16);
 		g.drawLine(getWidth() - 33, 17, getWidth() - 33, 32);
+		if (quitHover)
+			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+		else
+			g.setColor(Main.COLOR_BG);
+		g.fillRect(getWidth() - 32, 17, 16, 16);
 		g.drawImage(Resources.toolbarIcons[6], getWidth() - 32, 17, this);
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
@@ -226,9 +232,16 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		for (int i = 0; i < MENU_BARS.length; i++) {
 			MenuBar mb = MENU_BARS[i];
 			String mbName = mb.getName();
-			FrontUtils.drawString(g, mbName, nextX, 0);
-			nextX += g.getFontMetrics().stringWidth(mbName) + 2;
-			g.drawLine(nextX, 1, nextX, 17);
+			int width = g2d.getFontMetrics().stringWidth(mbName) + 2;
+			if (i == menubarHover) {
+				g2d.setColor(
+						new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+				g2d.fillRect(nextX - 3, 0, width + 3, 17);
+			}
+			g2d.setColor(Main.lineColor);
+			FrontUtils.drawString(g2d, mbName, nextX, 0);
+			nextX += width;
+			g2d.drawLine(nextX, 1, nextX, 17);
 			nextX += 3;
 		}
 		// components
@@ -280,6 +293,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				g2d.drawLine(xx + 1, winSize2.height - 18, xx + winSize2.width / tn, winSize2.height - 18);
 				g2d.setColor(Main.lineColor);
 			}
+			if (ti == tabHover) {
+				g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+				g2d.fillRect(xx + 1, winSize2.height - 18, winSize2.width / tn, 17);
+			}
+			g2d.setColor(Main.lineColor);
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
 			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 17, null);
 			String label = "";
@@ -469,7 +487,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!dBoxes.isEmpty()) {
 			// dialog box
 			Dialog dBox = dBoxes.get(0);
-			if (dBox.onClick(px, py))
+			dBox.onClick(px, py);
+			if (dBox.wantsToClose())
 				dBoxes.remove(0);
 			repaint();
 		} else if (py <= 17) {
@@ -513,7 +532,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			// menu bar
 			Graphics g = surf.getGraphics();
 			g.setFont(Resources.font);
-			int nextX = 3;
+			int nextX = 0;
 			for (int j = 0; j < MENU_BARS.length; j++) {
 				MenuBar mb = MENU_BARS[j];
 				String mbName = mb.getName();
@@ -580,7 +599,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		ScrollBar scroll = tabMap.get(currentTab).getGlobalScrollbar();
 		if (scroll != null)
 			scroll.onScroll(e.getWheelRotation(), shift, ctrl);
-		else
+		else if (ProfileManager.isLoaded())
 			for (Component comp : tabMap.get(currentTab).getComponents()) {
 				if (!(comp instanceof IScrollable))
 					continue;
@@ -598,7 +617,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	public void mouseDragged(MouseEvent e) {
 		boolean isFDE = firstDragEvent;
 		firstDragEvent = false;
-		if (loading)
+		if (loading || !ProfileManager.isLoaded())
 			return;
 		if (!dragLeftMouse)
 			return;
@@ -638,6 +657,64 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 		}
 		lastFocus = newFocus;
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		if (loading)
+			return;
+		int px = e.getX(), py = e.getY();
+		quitHover = false;
+		if (py < OFFSET_Y && px >= getWidth() - 33 && px < getWidth() - 17)
+			quitHover = true;
+		final Insets i = Main.window.getInsets();
+		px -= i.left + OFFSET_X;
+		py -= i.top + OFFSET_Y;
+		final Dimension winSize = Main.window.getActualSize();
+		final Dimension winSize2 = Main.window.getActualSize(false);
+		menubarHover = -1;
+		tabHover = -1;
+		if (!dBoxes.isEmpty()) {
+			dBoxes.get(0).updateHover(px, py);
+		} else if (py <= 17) {
+			Graphics g = surf.getGraphics();
+			g.setFont(Resources.font);
+			int nextX = 0;
+			for (int j = 0; j < MENU_BARS.length; j++) {
+				MenuBar mb = MENU_BARS[j];
+				String mbName = mb.getName();
+				int width = g.getFontMetrics().stringWidth(mbName) + 2;
+				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
+					menubarHover = j;
+					System.out.println("Hovering over menu bar " + mbName);
+					break;
+				}
+				nextX += width;
+			}
+		} else if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
+			// editor tabs
+			final EditorTab[] tv = EditorTab.values();
+			int tn = tv.length;
+			if (!MCI.getSpecial("VarHack"))
+				tn--;
+			int ti = 0;
+			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
+				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
+					tabHover = ti;
+				}
+				ti++;
+			}
+		} else if (ProfileManager.isLoaded()) {
+			for (Component comp : tabMap.get(currentTab).getComponents()) {
+				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
+				boolean hover = false;
+				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
+					hover = true;
+				comp.updateHover(px, py, hover);
+			}
+		}
+		repaint();
+
 	}
 
 	@Override
@@ -706,10 +783,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
 	}
 
 	@Override

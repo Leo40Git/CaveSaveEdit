@@ -59,9 +59,8 @@ public class FlagDialog extends BaseDialog {
 	}
 
 	@Override
-	public boolean onClick(int x, int y) {
-		if (super.onClick(x, y))
-			return true;
+	public void onClick(int x, int y) {
+		super.onClick(x, y);
 		final int wx = getWindowX(), wy = getWindowY();
 		if (FrontUtils.pointInRectangle(x, y, wx + sbox.getX(), wy + sbox.getY(), sbox.getWidth(), sbox.getHeight()))
 			sbox.onClick(x, y, false, false);
@@ -74,7 +73,6 @@ public class FlagDialog extends BaseDialog {
 					e.printStackTrace();
 				}
 			}
-		return false;
 	}
 
 }

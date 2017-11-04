@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.function.Function;
@@ -26,6 +27,11 @@ public class BooleanBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
+		if (hover)
+			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+		else
+			g.setColor(Main.COLOR_BG);
+		g.fillRect(x, y, getWidth(), getHeight());
 		String t = label;
 		if (t.contains(".")) {
 			t = MCI.get(t);

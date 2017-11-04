@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.function.Function;
 
@@ -26,6 +27,11 @@ class RadioBox extends Component {
 
 	@Override
 	public void render(Graphics g) {
+		if (hover)
+			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+		else
+			g.setColor(Main.COLOR_BG);
+		g.fillOval(x, y, getWidth() - 1, getHeight() - 1);
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		boolean enabled = check.apply(id);
