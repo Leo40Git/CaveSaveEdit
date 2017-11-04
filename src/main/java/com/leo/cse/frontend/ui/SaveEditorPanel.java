@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -58,8 +59,30 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	public static final int OFFSET_X = 16, OFFSET_Y = 32;
 
+	/*
 	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
 			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };
+	*/
+
+	private static class MenuBar {
+		private String name;
+
+		public MenuBar(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+
+	private static final MenuBar[] MENU_BARS;
+
+	static {
+		MENU_BARS = new MenuBar[2];
+		MENU_BARS[0] = new MenuBar("Test 1");
+		MENU_BARS[1] = new MenuBar("Test 2");
+	}
 
 	public static SaveEditorPanel panel;
 
@@ -79,7 +102,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	private EditorTab currentTab;
 	private Map<EditorTab, Panel> tabMap;
-
+	
+	private int currentMenubar = -1;
 	private Component lastFocus;
 	private List<Dialog> dBoxes;
 	private boolean loading;
@@ -133,11 +157,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		// window shadow
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setBackground(new Color(0, 0, 0, 0));
 		g2d.clearRect(0, 0, getWidth(), getHeight());
 		FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
+		// window title
 		for (int xx = 16; xx < getWidth() - 16; xx += 3) {
 			g.drawImage(Resources.drag, xx, 16, null);
 			g.drawImage(Resources.drag, xx, 24, null);
@@ -145,6 +171,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g.setColor(Color.white);
 		g.setFont(Resources.font);
 		FrontUtils.drawString(g, Main.window.getTitle(), 18, 16);
+		g.drawLine(getWidth() - 33, 17, getWidth() - 33, 32);
+		g.drawImage(Resources.toolbarIcons[6], getWidth() - 32, 17, this);
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		if (surf == null)
@@ -158,6 +186,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
 		g2d.setColor(Main.lineColor);
 		g2d.setFont(Resources.font);
+		/*
 		// toolbar
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, 17);
@@ -185,6 +214,22 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			g2d.setColor(oc);
 			g2d.setFont(Resources.font);
 			bi++;
+		}
+		*/
+		// menu bar
+		g2d.setColor(Main.COLOR_BG);
+		g2d.fillRect(0, 0, winSize2.width, 17);
+		g2d.setColor(Main.lineColor);
+		g2d.drawLine(0, 0, winSize.width, 0);
+		g2d.drawLine(0, 17, winSize.width, 17);
+		int nextX = 3;
+		for (int i = 0; i < MENU_BARS.length; i++) {
+			MenuBar mb = MENU_BARS[i];
+			String mbName = mb.getName();
+			FrontUtils.drawString(g, mbName, nextX, 0);
+			nextX += g.getFontMetrics().stringWidth(mbName) + 2;
+			g.drawLine(nextX, 1, nextX, 17);
+			nextX += 3;
 		}
 		// components
 		g2d.translate(0, 17);
@@ -406,7 +451,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			return;
 		dragLeftMouse = false;
 		draggingWindow = false;
+		firstDragEvent = true;
+		onQuit = false;
 		int px = e.getX(), py = e.getY();
+		if (py < OFFSET_Y && px >= getWidth() - 33 && px < getWidth() - 17) {
+			Main.close();
+			return;
+		}
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
@@ -422,6 +473,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				dBoxes.remove(0);
 			repaint();
 		} else if (py <= 17) {
+			/*
 			// toolbar
 			int bi = 0;
 			for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
@@ -456,6 +508,22 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 					break;
 				}
 				bi++;
+			}
+			*/
+			// menu bar
+			Graphics g = surf.getGraphics();
+			g.setFont(Resources.font);
+			int nextX = 3;
+			for (int j = 0; j < MENU_BARS.length; j++) {
+				MenuBar mb = MENU_BARS[j];
+				String mbName = mb.getName();
+				int width = g.getFontMetrics().stringWidth(mbName) + 2;
+				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
+					currentMenubar = j;
+					System.out.println("Selected menu bar " + mbName);
+					break;
+				}
+				nextX += width;
 			}
 		} else if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
 			// editor tabs
@@ -524,10 +592,12 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	private Map<IDraggable, Boolean> lastDragged;
-	private boolean draggingWindow = false;
+	private boolean draggingWindow = false, firstDragEvent = false, onQuit = false;
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		boolean isFDE = firstDragEvent;
+		firstDragEvent = false;
 		if (loading)
 			return;
 		if (!dragLeftMouse)
@@ -537,8 +607,12 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
 		int px = e.getX(), py = e.getY();
-		if (lastDragged.isEmpty()) {
-			if (py < OFFSET_Y || draggingWindow) {
+		if (px >= getWidth() - 33 && !draggingWindow)
+			onQuit = true;
+		else
+			onQuit = false;
+		if (lastDragged.isEmpty() && !onQuit && (isFDE || draggingWindow)) {
+			if (px > 14 && px < getWidth() - 14 && py > 14 && py < OFFSET_Y) {
 				draggingWindow = true;
 				int wx = Main.window.getX(), wy = Main.window.getY();
 				int moveX = px - dragInitialX;
