@@ -174,7 +174,7 @@ public class FlagList extends Component {
 		int fy = 1;
 		for (Flag flag : shownFlags) {
 			boolean fHover = false;
-			if (FrontUtils.pointInRectangle(x, y - 17, fx, fy, 16, 16))
+			if (hover && FrontUtils.pointInRectangle(x, y - 17, fx, fy, 16, 16))
 				fHover = true;
 			flag.setHover(fHover);
 			fy += 17;

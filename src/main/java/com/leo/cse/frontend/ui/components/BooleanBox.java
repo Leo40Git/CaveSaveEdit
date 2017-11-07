@@ -44,10 +44,11 @@ public class BooleanBox extends Component {
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		BufferedImage chkImage = (vSup.get() ? Resources.checkboxOn : Resources.checkboxOff);
-		if (!enabled.get() || missingMCI)
+		boolean bEnabled = enabled.get();
+		if (!bEnabled || missingMCI)
 			chkImage = Resources.checkboxDisabled;
 		g.drawImage(chkImage, x, y, null);
-		FrontUtils.drawString(g, t, x + 18, y - 2);
+		FrontUtils.drawString(g, t, x + 18, y - 2, !bEnabled || missingMCI);
 	}
 
 	@Override

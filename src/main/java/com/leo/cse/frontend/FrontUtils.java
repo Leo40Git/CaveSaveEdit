@@ -98,7 +98,7 @@ public class FrontUtils {
 		g.setColor(sc);
 		g.drawString(str, x + 1, y + 1);
 		g.setColor(oc);
-		if (shadowOnly)
+		if (!shadowOnly)
 			g.drawString(str, x, y);
 	}
 
@@ -161,6 +161,12 @@ public class FrontUtils {
 		g.drawImage(img, x + sw, y + (h - sh), x + (w - sw), y + h, sw, sh * 2, sw * 2, sh * 3, null);
 		// bottom right
 		g.drawImage(img, x + (w - sw), y + (h - sh), x + w, y + h, sw * 2, sh * 2, sw * 3, sh * 3, null);
+	}
+	
+	public static void drawCheckeredGrid(Graphics g, int x, int y, int w, int h) {
+		for (int px = x; px < w; px += 2)
+			for (int py = y; py < h; py += 2)
+				g.drawLine(px, py, px, py);
 	}
 
 	public static String intsToString(int... nums) {

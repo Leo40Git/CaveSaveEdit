@@ -1,37 +1,22 @@
 package com.leo.cse.frontend.ui.dialogs;
 
-import java.awt.Graphics;
-
-import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.ui.components.Button;
+import com.leo.cse.frontend.ui.components.Icon;
+import com.leo.cse.frontend.ui.components.Label;
 
 public class AboutDialog extends BaseDialog {
 
 	public AboutDialog() {
 		super("About CaveSaveEdit v" + Main.VERSION, 422, 106);
-	}
-
-	@Override
-	public void render(Graphics g) {
-		super.render(g);
-		final int x = getWindowX(), y = getWindowY();
-		g.drawImage(Resources.icon, x + 4, y + 4, null);
-		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g,
-				"CaveSaveEdit version " + Main.VERSION
-						+ "\nWritten by Leo40Story\nBased on Kapow's profile specs (http://www.cavestory.org/guides/profile.txt)\nUI sprites by zxin\nEarly testers: zxin and gamemanj/20kdc",
-				x + 38, y);
-		g.drawRect(x + 136, y + 80, 192, 17);
-		FrontUtils.drawStringCentered(g, "Check for Updates", x + 232, y + 80, false);
-	}
-
-	@Override
-	public void onClick(int x, int y) {
-		super.onClick(x, y);
-		final int wx = getWindowX(), wy = getWindowY();
-		if (FrontUtils.pointInRectangle(x, y, wx + 136, wy + 64, 192, 17))
+		addComponent(new Icon(Resources.icon, 4, 4));
+		addComponent(new Label("CaveSaveEdit version " + Main.VERSION + "\nWritten by Leo40Story"
+				+ "\nBased on Kapow's profile specs (http://www.cavestory.org/guides/profile.txt)"
+				+ "\nUI sprites by zxin" + "\nEarly testers: zxin and gamemanj/20kdc", 38, 0));
+		addComponent(new Button("Check for Updates", 130, 80, 192, 17, () -> {
 			Main.updateCheck(true, true);
+		}));
 	}
 
 }

@@ -94,6 +94,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		if (reboot) {
 			System.out.println("REBOOTING!");
 			window.dispose();
+			ProfileManager.dispose();
+			ExeData.unload();
 			window = null;
 			SaveEditorPanel.panel = null;
 			System.gc();
@@ -253,7 +255,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				g2d.setColor(Color.white);
 				g2d.drawRect(16, 16, size.width - 32, size.height - 32);
 				g2d.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
-				FrontUtils.drawStringCentered(g2d, loadString, size.width / 2, size.height / 2, true);
+				FrontUtils.drawStringCentered(g2d, loadString, size.width / 2, size.height / 2, true, false);
 			}
 		}
 

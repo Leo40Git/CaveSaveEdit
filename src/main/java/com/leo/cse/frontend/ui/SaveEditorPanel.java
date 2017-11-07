@@ -2,7 +2,6 @@ package com.leo.cse.frontend.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -45,6 +44,7 @@ import com.leo.cse.frontend.ui.components.IScrollable;
 import com.leo.cse.frontend.ui.components.ScrollBar;
 import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
+import com.leo.cse.frontend.ui.dialogs.NikuEditDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
@@ -289,11 +289,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}));
 		menuBars.add(new MenuBar("Edit", mbiEdit));
 		List<MenuBarItem> mbiTools = new ArrayList<>();
-		mbiTools.add(new MenuBarItem("Testing!", () -> {
-			System.out.println("test");
-		}));
-		mbiTools.add(new MenuBarItem("ABCDEFGHIJK", () -> {
-			System.out.println("test");
+		mbiTools.add(new MenuBarItem("Edit 290.rec", () -> {
+			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
 		tabMap = new HashMap<EditorTab, Panel>();
@@ -363,8 +360,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				mX = nextX;
 			MenuBar mb = menuBars.get(i);
 			String mbName = mb.getName();
-			FontMetrics fm = g2d.getFontMetrics();
-			int width = fm.stringWidth(mbName) + 2;
+			int width = 62;
 			if (i == menubarHover) {
 				g2d.setColor(
 						new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
@@ -409,12 +405,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		// menu bar items
 		if (currentMenubar > -1) {
 			g2d.setFont(Resources.font);
-			FontMetrics fm = g2d.getFontMetrics();
 			MenuBar mb = menuBars.get(currentMenubar);
 			List<MenuBarItem> items = mb.getItems();
 			mX -= 3;
 			if (items != null) {
-				int mWidth = fm.stringWidth(mb.getLongestItemLabel()) + 80;
+				final int mWidth = 280;
 				int mHeight = items.size() * 22;
 				int mY = 17;
 				g2d.setColor(Main.COLOR_BG);
@@ -651,7 +646,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
-		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		final int mod = e.getModifiersEx();
 		final boolean shift = (mod & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK,
@@ -668,12 +662,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			g.setFont(Resources.font);
 			int nextX = 0;
 			for (int j = 0; j < menuBars.size(); j++) {
-				MenuBar mb = menuBars.get(j);
-				String mbName = mb.getName();
-				int width = g.getFontMetrics().stringWidth(mbName) + 5;
+				int width = 65;
 				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
 					currentMenubar = j;
-					System.out.println("Selected menu bar " + mbName);
 					break;
 				}
 				nextX += width;
@@ -691,7 +682,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				mX += g.getFontMetrics().stringWidth(mb.getName()) + 5;
 			}
 			List<MenuBarItem> items = mb.getItems();
-			int mWidth = g.getFontMetrics().stringWidth(mb.getLongestItemLabel()) + 80;
+			final int mWidth = 280;
 			int mY = 17;
 			for (MenuBarItem item : items) {
 				if (FrontUtils.pointInRectangle(px, py, mX, mY, mWidth, 21)) {
@@ -826,7 +817,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
-		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		menubarHover = -1;
 		tabHover = -1;
@@ -841,12 +831,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			g.setFont(Resources.font);
 			int nextX = 0;
 			for (int j = 0; j < menuBars.size(); j++) {
-				MenuBar mb = menuBars.get(j);
-				String mbName = mb.getName();
-				int width = g.getFontMetrics().stringWidth(mbName) + 5;
+				int width = 65;
 				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
 					menubarHover = j;
-					System.out.println("Hovering over menu bar " + mbName);
 					break;
 				}
 				nextX += width;
@@ -866,7 +853,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				mX += g.getFontMetrics().stringWidth(mb.getName()) + 5;
 			}
 			List<MenuBarItem> items = mb.getItems();
-			int mWidth = g.getFontMetrics().stringWidth(mb.getLongestItemLabel()) + 80;
+			final int mWidth = 280;
 			int mY = 17;
 			for (MenuBarItem item : items) {
 				if (FrontUtils.pointInRectangle(px, py, mX, mY, mWidth, 21))

@@ -34,13 +34,11 @@ public class ShortBox extends InputBox {
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
-		if (!enabled.get())
-			return;
 		String str = Short.toString(vSup.get());
 		if (padLength > 0)
 			str = FrontUtils.padLeft(str, "0", padLength);
 		g.setFont(Resources.font);
-		FrontUtils.drawString(g, str, x + 3, y - 1);
+		FrontUtils.drawString(g, str, x + 3, y - 1, !enabled.get());
 	}
 
 	@Override

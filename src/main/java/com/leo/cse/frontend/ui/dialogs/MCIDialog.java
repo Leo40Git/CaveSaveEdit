@@ -1,6 +1,5 @@
 package com.leo.cse.frontend.ui.dialogs;
 
-import java.awt.Graphics;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,39 +14,24 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
+import com.leo.cse.frontend.ui.components.Button;
+import com.leo.cse.frontend.ui.components.DynamicLabel;
 
 public class MCIDialog extends BaseDialog {
 
 	public MCIDialog() {
-		super("MCI Settings", 360, 114);
-	}
-
-	@Override
-	public void render(Graphics g) {
-		super.render(g);
-		final int x = getWindowX(), y = getWindowY();
-		g.setColor(Main.lineColor);
-		FrontUtils.drawString(g, "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n" + MCI.get("Meta.Author")
-				+ "\nSpecial support:\n" + MCI.getSpecials(), x + 4, y);
-		g.setColor(Main.COLOR_BG);
-		g.fillRect(x + 1, y + height - 34, 299, 16);
-		g.setColor(Main.lineColor);
-		g.drawRect(x, y + height - 35, width, 17);
-		g.drawLine(x + width - 150, y + height - 18, x + width - 150, y + height - 34);
-		FrontUtils.drawStringCentered(g, "Load MCI file", x + width / 4, y + height - 36, false);
-		FrontUtils.drawStringCentered(g, "Load default MCI file", x + width - 150 + width / 4, y + height - 36, false);
-	}
-
-	@Override
-	public void onClick(int x, int y) {
-		super.onClick(x, y);
-		final int wx = getWindowX(), wy = getWindowY(false);
-		if (FrontUtils.pointInRectangle(x, y, wx, wy + height - 18, 150, 16)) {
+		super("MCI Settings", 380, 134);
+		addComponent(new DynamicLabel(() -> {
+			return "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n" + MCI.get("Meta.Author")
+					+ "\nSpecial support:\n" + MCI.getSpecials();
+		}, 4, 0));
+		addComponent(new Button("Load MCI file", 14, 94, 356, 17, () -> {
 			if (loadMCI()) {
 				SaveEditorPanel.panel.addComponents();
 				Main.window.repaint();
 			}
-		} else if (FrontUtils.pointInRectangle(x, y, wx + width - 150, wy + height - 18, 150, 16)) {
+		}));
+		addComponent(new Button("Load default MCI file", 14, 114, 356, 17, () -> {
 			try {
 				MCI.readDefault();
 			} catch (Exception e) {
@@ -55,10 +39,10 @@ public class MCIDialog extends BaseDialog {
 						"An error occured while loading the default MCI file:\n" + e.getMessage(),
 						"Could not load default MCI file!", JOptionPane.ERROR_MESSAGE);
 			}
-		}
+		}));
 	}
 
-	private boolean ret;
+	private boolean ret = false;
 
 	private boolean loadMCI() {
 		int returnVal = FrontUtils.openFileChooser("Open MCI file", new FileNameExtensionFilter("MCI Files", "mci"),

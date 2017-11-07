@@ -1,8 +1,6 @@
 package com.leo.cse.frontend.ui.dialogs;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -15,6 +13,10 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
+import com.leo.cse.frontend.ui.components.BooleanBox;
+import com.leo.cse.frontend.ui.components.Button;
+import com.leo.cse.frontend.ui.components.Label;
+import com.leo.cse.frontend.ui.components.StringBox;
 
 public class SettingsDialog extends BaseDialog {
 
@@ -22,39 +24,16 @@ public class SettingsDialog extends BaseDialog {
 
 	public SettingsDialog() {
 		super("Settings", 300, 104);
-	}
-
-	@Override
-	public void render(Graphics g) {
-		super.render(g);
-		final int x = getWindowX(), y = getWindowY();
-		g.setColor(Main.lineColor);
-		g.drawRect(x + 4, y + 4, 292, 17);
-		FrontUtils.drawStringCentered(g, "MCI Settings", x + 150, y + 4, false);
-		g.drawImage(Resources.miscIcons[0], x + 5, y + 5, null);
-		g.drawRect(x + 4, y + 23, 292, 17);
-		FrontUtils.drawStringCentered(g, "Change Line Color", x + 150, y + 23, false);
-		g.drawImage(Resources.miscIcons[1], x + 5, y + 24, null);
-		Image chkImage = (ExeData.doLoadNpc() ? Resources.checkboxOn : Resources.checkboxOff);
-		g.drawImage(chkImage, x + 4, y + 43, null);
-		FrontUtils.drawString(g, "Load NPCs?", x + 22, y + 41);
-		FrontUtils.drawString(g, "Encoding:", x + 4, y + 62);
-		g.drawRect(x + 54, y + 63, 242, 17);
-		FrontUtils.drawString(g, ExeData.getEncoding(), x + 56, y + 62);
-		g.drawRect(x + 4, y + 83, 292, 17);
-		FrontUtils.drawStringCentered(g, "Wipe Settings", x + 150, y + 83, false);
-	}
-
-	@Override
-	public void onClick(int x, int y) {
-		super.onClick(x, y);
-		final int wx = getWindowX(), wy = getWindowY();
-		if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 4, 292, 17)) {
+		addComponent(new Button("MCI Settings", Resources.miscIcons[0], 4, 4, 292, 17, () -> {
 			SaveEditorPanel.panel.addDialogBox(new MCIDialog());
-		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 23, 292, 17)) {
+		}));
+		addComponent(new Button("Change Line Color", Resources.miscIcons[1], 4, 23, 292, 17, () -> {
 			setLineColor();
-		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 43, 16, 16)) {
-			ExeData.setLoadNpc(!ExeData.doLoadNpc());
+		}));
+		addComponent(new BooleanBox("Load NPCs?", 4, 43, () -> {
+			return ExeData.doLoadNpc();
+		}, (Boolean newVal) -> {
+			ExeData.setLoadNpc(newVal);
 			SaveEditorPanel.panel.setLoading(true);
 			Main.window.repaint();
 			SwingUtilities.invokeLater(() -> {
@@ -70,26 +49,27 @@ public class SettingsDialog extends BaseDialog {
 					});
 				}
 			});
-		} else if (FrontUtils.pointInRectangle(x, y, wx + 54, wy + 63, 242, 17)) {
-			String e = null;
-			while (e == null) {
-				e = JOptionPane.showInputDialog(SaveEditorPanel.panel, "Enter new encoding:", ExeData.getEncoding());
-				if (e != null) {
-					try {
-						new String(TEST_STRING, e);
-					} catch (UnsupportedEncodingException e1) {
-						JOptionPane.showMessageDialog(SaveEditorPanel.panel, "Encoding \"" + e + "\" is unsupported!",
-								"Unsupported encoding", JOptionPane.ERROR_MESSAGE);
-						e = null;
-					}
-				}
+			return newVal;
+		}));
+		addComponent(new Label("Encoding:", 4, 62));
+		addComponent(new StringBox(54, 63, 242, 17, () -> {
+			return ExeData.getEncoding();
+		}, (String newVal) -> {
+			try {
+				new String(TEST_STRING, newVal);
+			} catch (UnsupportedEncodingException e1) {
+				JOptionPane.showMessageDialog(SaveEditorPanel.panel, "Encoding \"" + newVal + "\" is unsupported!",
+						"Unsupported encoding", JOptionPane.ERROR_MESSAGE);
+				return newVal;
 			}
-			ExeData.setEncoding(e);
+			ExeData.setEncoding(newVal);
 			try {
 				ExeData.reload();
 			} catch (IOException ignore) {
 			}
-		} else if (FrontUtils.pointInRectangle(x, y, wx + 4, wy + 83, 292, 17)) {
+			return newVal;
+		}, "encoding"));
+		addComponent(new Button("Wipe Settings", 4, 83, 292, 17, () -> {
 			int sel = JOptionPane.showConfirmDialog(Main.window,
 					"Are you sure you want to wipe all settings?\nThis will restart the editor WITHOUT saving changes!",
 					"Wipe Settings?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -98,7 +78,7 @@ public class SettingsDialog extends BaseDialog {
 			Config.wipe();
 			Config.init();
 			Main.close(true);
-		}
+		}));
 	}
 
 	private void setLineColor() {

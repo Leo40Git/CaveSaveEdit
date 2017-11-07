@@ -243,6 +243,10 @@ public class ProfileManager {
 			return;
 		write(impl.getLoadedFile(), impl.getLoadedSection());
 	}
+	
+	public static void dispose() {
+		impl = null;
+	}
 
 	public static File getLoadedFile() {
 		if (impl == null)

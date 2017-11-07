@@ -26,11 +26,9 @@ public class LongBox extends InputBox {
 
 	@Override
 	public void render(Graphics g) {
-		if (!enabled.get())
-			return;
 		super.render(g);
 		g.setFont(Resources.font);
-		FrontUtils.drawString(g, Long.toString(vSup.get()), x + 3, y - 1);
+		FrontUtils.drawString(g, Long.toString(vSup.get()), x + 3, y - 1, !enabled.get());
 	}
 
 	@Override

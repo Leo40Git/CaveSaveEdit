@@ -42,15 +42,22 @@ public class WeaponBox extends DefineBox {
 
 	@Override
 	public void render(Graphics g) {
-		if (hover)
+		boolean bEnabled = enabled.get();
+		if (hover && bEnabled)
 			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
 		else
 			g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);
+		if (!bEnabled) {
+			Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31);
+			g.setColor(lc2);
+			FrontUtils.drawCheckeredGrid(g, x + 1, y + 1, width - 1, height - 2);
+		}
+		g.setColor(Main.lineColor);
 		int wep = vSup.get();
-		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 31, false);
+		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 31, false, !bEnabled);
 		if (wep == 0)
 			return;
 		if (!ExeData.isLoaded())

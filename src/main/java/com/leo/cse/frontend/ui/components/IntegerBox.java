@@ -33,10 +33,8 @@ public class IntegerBox extends InputBox {
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
-		if (!enabled.get())
-			return;
 		g.setFont(Resources.font);
-		FrontUtils.drawString(g, Integer.toUnsignedString(vSup.get()), x + 3, y - 1);
+		FrontUtils.drawString(g, Integer.toUnsignedString(vSup.get()), x + 3, y - 1, !enabled.get());
 	}
 
 	@Override

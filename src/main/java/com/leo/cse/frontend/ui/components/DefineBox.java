@@ -42,14 +42,21 @@ public class DefineBox extends IntegerBox {
 
 	@Override
 	public void render(Graphics g) {
-		if (hover)
+		boolean bEnabled = enabled.get();
+		if (hover && bEnabled)
 			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
 		else
-			g.setColor(Main.COLOR_BG);
+			g.setColor(Main.COLOR_BG);;
 		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);
-		FrontUtils.drawString(g, vSup.get() + " - " + MCI.get(type, vSup.get()), x + 3, y - 1);
+		if (!bEnabled) {
+			Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31);
+			g.setColor(lc2);
+			FrontUtils.drawCheckeredGrid(g, x + 1, y + 1, width - 1, height - 2);
+		}
+		g.setColor(Main.lineColor);
+		FrontUtils.drawString(g, vSup.get() + " - " + MCI.get(type, vSup.get()), x + 3, y - 1, !bEnabled);
 	}
 
 	@Override
