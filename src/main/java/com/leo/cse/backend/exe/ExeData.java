@@ -898,7 +898,6 @@ public class ExeData {
 			if (segStr.contains(".rdata"))
 				rdataSec = i;
 		}
-		inStream.close();
 		ExeSec[] headers = new ExeSec[sections.size()];
 		for (int i = 0; i < sections.size(); i++) {
 			headers[i] = new ExeSec(sections.get(i), inChan);
