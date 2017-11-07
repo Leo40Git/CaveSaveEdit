@@ -902,7 +902,6 @@ public class ExeData {
 		for (int i = 0; i < sections.size(); i++) {
 			headers[i] = new ExeSec(sections.get(i), inChan);
 		}
-		inStream.close();
 		if (rdataSec == -1)
 			throw new IOException("Could not find .rdata segment!");
 		rdataPtr = headers[rdataSec].getPos();
