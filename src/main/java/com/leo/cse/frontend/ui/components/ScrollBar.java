@@ -99,8 +99,12 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 			return;
 		}
 		x -= this.x;
-		y -= this.y;
-		if (x > 2 && x <= 18 && y > scrollbarY + 16 && y <= scrollbarY + 32)
+		y -= this.y + 17;
+		if (y <= width)
+			this.hover = 0;
+		else if (y > height - width)
+			this.hover = 1;
+		else if (x > 2 && x <= 18 && y > scrollbarY && y <= scrollbarY + 16)
 			this.hover = 2;
 		else
 			this.hover = -1;

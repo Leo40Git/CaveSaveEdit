@@ -734,7 +734,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (!dBoxes.isEmpty() || currentMenubar == -1)
+		if (!dBoxes.isEmpty() || currentMenubar != -1)
 			return;
 		final Insets i = Main.window.getInsets();
 		int px = e.getX(), py = e.getY();

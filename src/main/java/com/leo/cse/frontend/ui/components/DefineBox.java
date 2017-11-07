@@ -46,7 +46,7 @@ public class DefineBox extends IntegerBox {
 		if (hover && bEnabled)
 			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
 		else
-			g.setColor(Main.COLOR_BG);;
+			g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height - 1);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);

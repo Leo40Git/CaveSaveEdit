@@ -36,7 +36,8 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 
 	@Override
 	public void onDragEnd(int px, int py) {
-		scrollbar.onDragEnd(px, py);
+		if (scrolling)
+			scrollbar.onDragEnd(px, py);
 		if (wrappedD != null)
 			wrappedD.onDragEnd(px, py);
 		scrolling = false;
@@ -44,9 +45,14 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 
 	@Override
 	public void onScroll(int rotations, boolean shiftDown, boolean ctrlDown) {
-		scrollbar.onScroll(rotations, shiftDown, ctrlDown);
-		if (wrappedS != null)
-			wrappedS.onScroll(rotations, shiftDown, ctrlDown);
+		if (wrappedS == null)
+			scrollbar.onScroll(rotations, shiftDown, ctrlDown);
+		else {
+			if (x > width - ScrollBar.WIDTH)
+				scrollbar.onScroll(rotations, shiftDown, ctrlDown);
+			else
+				wrappedS.onScroll(rotations, shiftDown, ctrlDown);
+		}
 	}
 
 	protected BufferedImage wrapSurf;
