@@ -92,35 +92,52 @@ public class FrontUtils {
 		}
 	}
 
-	private static void drawString0(Graphics g, String str, int x, int y) {
+	private static void drawString0(Graphics g, String str, int x, int y, boolean shadowOnly) {
 		Color oc = g.getColor();
 		Color sc = oc.darker().darker().darker().darker();
 		g.setColor(sc);
 		g.drawString(str, x + 1, y + 1);
 		g.setColor(oc);
-		g.drawString(str, x, y);
+		if (shadowOnly)
+			g.drawString(str, x, y);
 	}
 
-	public static void drawString(Graphics g, String str, int x, int y) {
+	public static void drawString(Graphics g, String str, int x, int y, boolean shadowOnly) {
 		final int lineSpace = g.getFontMetrics().getHeight();
 		for (String line : str.split("\n")) {
 			y += lineSpace;
-			drawString0(g, line, x, y - 1);
+			drawString0(g, line, x, y - 1, shadowOnly);
 		}
 	}
+	
+	public static void drawString(Graphics g, String str, int x, int y) {
+		drawString(g, str, x, y, false);
+	}
 
-	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean vert) {
+	public static void drawStringRight(Graphics g, String str, int x, int y, boolean shadowOnly) {
+		final int lineSpace = g.getFontMetrics().getHeight();
+		for (String line : str.split("\n")) {
+			y += lineSpace;
+			drawString0(g, line, x - g.getFontMetrics().stringWidth(line), y - 1, shadowOnly);
+		}
+	}
+	
+	public static void drawStringRight(Graphics g, String str, int x, int y) {
+		drawStringRight(g, str, x, y, false);
+	}
+
+	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean vert, boolean shadowOnly) {
 		if (vert)
 			y -= (g.getFontMetrics().getHeight() / 4) * 3;
 		final int lineSpace = g.getFontMetrics().getHeight();
 		for (String line : str.split("\n")) {
 			y += lineSpace;
-			drawString0(g, line, x - g.getFontMetrics().stringWidth(line) / 2, y - 1);
+			drawString0(g, line, x - g.getFontMetrics().stringWidth(line) / 2, y - 1, shadowOnly);
 		}
 	}
 
-	public static void drawStringCentered(Graphics g, String str, int x, int y) {
-		drawStringCentered(g, str, x, y, false);
+	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean shadowOnly) {
+		drawStringCentered(g, str, x, y, false, shadowOnly);
 	}
 
 	public static void drawNineSlice(Graphics g, Image img, int x, int y, int w, int h) {

@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -42,7 +43,9 @@ import com.leo.cse.frontend.ui.components.Component;
 import com.leo.cse.frontend.ui.components.IDraggable;
 import com.leo.cse.frontend.ui.components.IScrollable;
 import com.leo.cse.frontend.ui.components.ScrollBar;
+import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
+import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
@@ -56,30 +59,108 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	public static final int OFFSET_X = 16, OFFSET_Y = 32;
 
-	/*
-	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
-			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };
-	*/
+	static class MenuBarItem {
+		private String label;
+		private String hotkey;
+		private BufferedImage icon;
+		private Runnable onClick;
+		private boolean hover;
 
-	private static class MenuBar {
+		public MenuBarItem(String label, String hotkey, BufferedImage icon, Runnable onClick) {
+			this.label = label;
+			this.hotkey = hotkey;
+			this.icon = icon;
+			this.onClick = onClick;
+		}
+
+		public MenuBarItem(String label, String hotkey, Runnable onClick) {
+			this(label, hotkey, null, onClick);
+		}
+
+		public MenuBarItem(String label, BufferedImage icon, Runnable onClick) {
+			this(label, null, icon, onClick);
+		}
+
+		public MenuBarItem(String label, Runnable onClick) {
+			this(label, null, null, onClick);
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public void setLabel(String label) {
+			this.label = label;
+		}
+
+		public String getHotkey() {
+			return hotkey;
+		}
+
+		public void setHotkey(String hotkey) {
+			this.hotkey = hotkey;
+		}
+
+		public BufferedImage getIcon() {
+			return icon;
+		}
+
+		public void setIcon(BufferedImage icon) {
+			this.icon = icon;
+		}
+
+		public boolean isHover() {
+			return hover;
+		}
+
+		public void setHover(boolean hover) {
+			this.hover = hover;
+		}
+
+		public void onClick() {
+			onClick.run();
+		}
+	}
+
+	static class MenuBar {
 		private String name;
+		private List<MenuBarItem> items;
+		private String longestItemLabelCache;
 
-		public MenuBar(String name) {
+		public MenuBar(String name, List<MenuBarItem> items) {
 			this.name = name;
+			this.items = items;
 		}
 
 		public String getName() {
 			return name;
 		}
-	}
 
-	private static final MenuBar[] MENU_BARS;
+		public List<MenuBarItem> getItems() {
+			return items;
+		}
 
-	static {
-		MENU_BARS = new MenuBar[3];
-		MENU_BARS[0] = new MenuBar("File");
-		MENU_BARS[1] = new MenuBar("Edit");
-		MENU_BARS[2] = new MenuBar("Tools");
+		public String getLongestItemLabel() {
+			if (items == null || items.isEmpty())
+				return null;
+			if (longestItemLabelCache != null)
+				return longestItemLabelCache;
+			List<String> labels = new ArrayList<>();
+			for (MenuBarItem item : items)
+				labels.add(item.getLabel());
+			labels.sort((String o1, String o2) -> {
+				int length1 = o1.length(), length2 = o2.length();
+				if (length1 == length2)
+					return 0;
+				if (length1 < length2)
+					return 1;
+				if (length1 > length2)
+					return -1;
+				return 0;
+			});
+			longestItemLabelCache = labels.get(0);
+			return longestItemLabelCache;
+		}
 	}
 
 	public static SaveEditorPanel panel;
@@ -100,6 +181,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	private EditorTab currentTab;
 	private Map<EditorTab, Panel> tabMap;
+	private List<MenuBar> menuBars;
 
 	private boolean quitHover;
 	private int menubarHover = -1;
@@ -133,7 +215,87 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		addComponents();
 	}
 
+	/*
+	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
+			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };
+	// toolbar
+	int bi = 0;
+	for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
+		if (FrontUtils.pointInRectangle(px, py, xx, 0, winSize.width / TOOLBAR.length + 1, 17)) {
+			switch (bi) {
+			case 0: // load profile
+				loadProfile();
+				break;
+			case 1: // load exe
+				loadExe();
+				break;
+			case 2: // save
+				saveProfile();
+				break;
+			case 3: // save as
+				saveProfileAs();
+				break;
+			case 4: // settings
+				addDialogBox(new SettingsDialog());
+				break;
+			case 5: // about
+				addDialogBox(new AboutDialog());
+				break;
+			case 6: // quit
+				Main.close();
+				break;
+			default:
+				System.out.println("no defined behavior for toolbar item " + bi);
+				break;
+			}
+			repaint();
+			break;
+		}
+		bi++;
+	}
+	*/
+
 	public void addComponents() {
+		menuBars = new ArrayList<>();
+		List<MenuBarItem> mbiFile = new ArrayList<>();
+		mbiFile.add(new MenuBarItem("Load Profile", "Ctrl+O", Resources.toolbarIcons[0], () -> {
+			loadProfile();
+		}));
+		mbiFile.add(new MenuBarItem("Load Game/Mod", "Ctrl+Shift+O", Resources.toolbarIcons[1], () -> {
+			loadExe();
+		}));
+		mbiFile.add(new MenuBarItem("Save", "Ctrl+S", Resources.toolbarIcons[2], () -> {
+			saveProfile();
+		}));
+		mbiFile.add(new MenuBarItem("Save As", "Ctrl+Shift+S", Resources.toolbarIcons[3], () -> {
+			saveProfileAs();
+		}));
+		mbiFile.add(new MenuBarItem("Settings", Resources.toolbarIcons[4], () -> {
+			addDialogBox(new SettingsDialog());
+		}));
+		mbiFile.add(new MenuBarItem("About", Resources.toolbarIcons[5], () -> {
+			addDialogBox(new AboutDialog());
+		}));
+		mbiFile.add(new MenuBarItem("Quit", Resources.toolbarIcons[6], () -> {
+			Main.close();
+		}));
+		menuBars.add(new MenuBar("File", mbiFile));
+		List<MenuBarItem> mbiEdit = new ArrayList<>();
+		mbiEdit.add(new MenuBarItem("Undo", "Ctrl+Z", () -> {
+			ProfileManager.undo();
+		}));
+		mbiEdit.add(new MenuBarItem("Redo", "Ctrl+Y", () -> {
+			ProfileManager.redo();
+		}));
+		menuBars.add(new MenuBar("Edit", mbiEdit));
+		List<MenuBarItem> mbiTools = new ArrayList<>();
+		mbiTools.add(new MenuBarItem("Testing!", () -> {
+			System.out.println("test");
+		}));
+		mbiTools.add(new MenuBarItem("ABCDEFGHIJK", () -> {
+			System.out.println("test");
+		}));
+		menuBars.add(new MenuBar("Tools", mbiTools));
 		tabMap = new HashMap<EditorTab, Panel>();
 		tabMap.put(EditorTab.GENERAL, new GeneralPanel());
 		tabMap.put(EditorTab.INVENTORY, new InventoryPanel());
@@ -190,49 +352,19 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setColor(Main.COLOR_BG);
 		g2d.fillRect(0, 0, winSize2.width, winSize2.height);
-		g2d.setColor(Main.lineColor);
-		g2d.setFont(Resources.font);
-		/*
-		// toolbar
-		g2d.setColor(Main.COLOR_BG);
-		g2d.fillRect(0, 0, winSize2.width, 17);
-		g2d.setColor(Main.lineColor);
-		g2d.drawLine(0, 0, winSize.width, 0);
-		g2d.drawLine(0, 17, winSize.width, 17);
-		int bi = 0;
-		for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
-			g2d.drawLine(xx, 1, xx, 17);
-			g2d.drawImage(Resources.toolbarIcons[bi], xx + 1, 1, null);
-			String ts = TOOLBAR[bi];
-			if (!ts.contains(":")) {
-				FrontUtils.drawString(g2d, ts, xx + 18, 0);
-				bi++;
-				continue;
-			}
-			String[] tsp = ts.split(":");
-			FrontUtils.drawString(g2d, tsp[0], xx + 18, 0);
-			Color oc = g2d.getColor();
-			Color faded = new Color(oc.getRed(), oc.getGreen(), oc.getBlue(), 127);
-			g2d.setColor(faded);
-			g2d.setFont(Resources.fontS);
-			FrontUtils.drawString(g2d, tsp[1],
-					xx + winSize.width / TOOLBAR.length + 1 - g2d.getFontMetrics().stringWidth(tsp[1]), 3);
-			g2d.setColor(oc);
-			g2d.setFont(Resources.font);
-			bi++;
-		}
-		*/
 		// menu bar
-		g2d.setColor(Main.COLOR_BG);
-		g2d.fillRect(0, 0, winSize2.width, 17);
 		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, 0, winSize.width, 0);
 		g2d.drawLine(0, 17, winSize.width, 17);
-		int nextX = 3;
-		for (int i = 0; i < MENU_BARS.length; i++) {
-			MenuBar mb = MENU_BARS[i];
+		int nextX = 3, mX = 0;
+		g2d.setFont(Resources.font);
+		for (int i = 0; i < menuBars.size(); i++) {
+			if (i == currentMenubar)
+				mX = nextX;
+			MenuBar mb = menuBars.get(i);
 			String mbName = mb.getName();
-			int width = g2d.getFontMetrics().stringWidth(mbName) + 2;
+			FontMetrics fm = g2d.getFontMetrics();
+			int width = fm.stringWidth(mbName) + 2;
 			if (i == menubarHover) {
 				g2d.setColor(
 						new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
@@ -274,6 +406,46 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 		}
 		g2d.translate(0, -17);
+		// menu bar items
+		if (currentMenubar > -1) {
+			g2d.setFont(Resources.font);
+			FontMetrics fm = g2d.getFontMetrics();
+			MenuBar mb = menuBars.get(currentMenubar);
+			List<MenuBarItem> items = mb.getItems();
+			mX -= 3;
+			if (items != null) {
+				int mWidth = fm.stringWidth(mb.getLongestItemLabel()) + 80;
+				int mHeight = items.size() * 22;
+				int mY = 17;
+				g2d.setColor(Main.COLOR_BG);
+				g2d.fillRect(mX, mY, mWidth, mHeight);
+				g2d.setColor(Main.lineColor);
+				g2d.drawRect(mX, mY, mWidth, mHeight);
+				for (MenuBarItem item : items) {
+					if (item.isHover()) {
+						g2d.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(),
+								Main.lineColor.getBlue(), 31));
+						g2d.fillRect(mX, mY, mWidth, 22);
+						g2d.setColor(Main.lineColor);
+					}
+					BufferedImage icon = item.getIcon();
+					if (icon != null)
+						g2d.drawImage(icon, mX + 2, mY + 3, this);
+					FrontUtils.drawString(g2d, item.getLabel(), mX + 20, mY + 2);
+					String hotkey = item.getHotkey();
+					if (hotkey != null) {
+						g2d.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(),
+								Main.lineColor.getBlue(), 127));
+						g2d.setFont(Resources.fontS);
+						FrontUtils.drawStringRight(g2d, hotkey, mX + mWidth - 2, mY + 4);
+						g2d.setColor(Main.lineColor);
+						g2d.setFont(Resources.font);
+					}
+					mY += 22;
+					g2d.drawLine(mX, mY, mX + mWidth, mY);
+				}
+			}
+		}
 		// editor tabs
 		g2d.setFont(Resources.font);
 		g2d.setColor(Main.COLOR_BG);
@@ -490,53 +662,15 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			dBox.onClick(px, py);
 			if (dBox.wantsToClose())
 				dBoxes.remove(0);
-			repaint();
 		} else if (py <= 17) {
-			/*
-			// toolbar
-			int bi = 0;
-			for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
-				if (FrontUtils.pointInRectangle(px, py, xx, 0, winSize.width / TOOLBAR.length + 1, 17)) {
-					switch (bi) {
-					case 0: // load profile
-						loadProfile();
-						break;
-					case 1: // load exe
-						loadExe();
-						break;
-					case 2: // save
-						saveProfile();
-						break;
-					case 3: // save as
-						saveProfileAs();
-						break;
-					case 4: // settings
-						addDialogBox(new SettingsDialog());
-						break;
-					case 5: // about
-						addDialogBox(new AboutDialog());
-						break;
-					case 6: // quit
-						Main.close();
-						break;
-					default:
-						System.out.println("no defined behavior for toolbar item " + bi);
-						break;
-					}
-					repaint();
-					break;
-				}
-				bi++;
-			}
-			*/
 			// menu bar
 			Graphics g = surf.getGraphics();
 			g.setFont(Resources.font);
 			int nextX = 0;
-			for (int j = 0; j < MENU_BARS.length; j++) {
-				MenuBar mb = MENU_BARS[j];
+			for (int j = 0; j < menuBars.size(); j++) {
+				MenuBar mb = menuBars.get(j);
 				String mbName = mb.getName();
-				int width = g.getFontMetrics().stringWidth(mbName) + 2;
+				int width = g.getFontMetrics().stringWidth(mbName) + 5;
 				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
 					currentMenubar = j;
 					System.out.println("Selected menu bar " + mbName);
@@ -544,6 +678,29 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				nextX += width;
 			}
+		} else if (currentMenubar != -1) {
+			// menu bar items
+			Graphics g = surf.getGraphics();
+			g.setFont(Resources.font);
+			MenuBar mb = null;
+			int mX = 0;
+			for (int j = 0; j < menuBars.size(); j++) {
+				mb = menuBars.get(j);
+				if (j == currentMenubar)
+					break;
+				mX += g.getFontMetrics().stringWidth(mb.getName()) + 5;
+			}
+			List<MenuBarItem> items = mb.getItems();
+			int mWidth = g.getFontMetrics().stringWidth(mb.getLongestItemLabel()) + 80;
+			int mY = 17;
+			for (MenuBarItem item : items) {
+				if (FrontUtils.pointInRectangle(px, py, mX, mY, mWidth, 21)) {
+					item.onClick();
+					break;
+				}
+				mY += 22;
+			}
+			currentMenubar = -1;
 		} else if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
 			// editor tabs
 			final EditorTab[] tv = EditorTab.values();
@@ -555,7 +712,6 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
 					currentTab = tv[ti];
 					lastFocus = null;
-					repaint();
 					break;
 				}
 				ti++;
@@ -581,13 +737,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 			}
 			lastFocus = newFocus;
-			repaint();
 		}
+		repaint();
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (!dBoxes.isEmpty())
+		if (!dBoxes.isEmpty() || currentMenubar == -1)
 			return;
 		final Insets i = Main.window.getInsets();
 		int px = e.getX(), py = e.getY();
@@ -621,7 +777,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			return;
 		if (!dragLeftMouse)
 			return;
-		if (!dBoxes.isEmpty())
+		if (!dBoxes.isEmpty() || currentMenubar != -1)
 			return;
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
@@ -674,16 +830,20 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		menubarHover = -1;
 		tabHover = -1;
+		boolean somethingInFront = false;
 		if (!dBoxes.isEmpty()) {
+			somethingInFront = true;
 			dBoxes.get(0).updateHover(px, py);
-		} else if (py <= 17) {
+		}
+		if (py <= 17) {
+			// menu bar
 			Graphics g = surf.getGraphics();
 			g.setFont(Resources.font);
 			int nextX = 0;
-			for (int j = 0; j < MENU_BARS.length; j++) {
-				MenuBar mb = MENU_BARS[j];
+			for (int j = 0; j < menuBars.size(); j++) {
+				MenuBar mb = menuBars.get(j);
 				String mbName = mb.getName();
-				int width = g.getFontMetrics().stringWidth(mbName) + 2;
+				int width = g.getFontMetrics().stringWidth(mbName) + 5;
 				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
 					menubarHover = j;
 					System.out.println("Hovering over menu bar " + mbName);
@@ -691,26 +851,54 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				nextX += width;
 			}
-		} else if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
-			// editor tabs
-			final EditorTab[] tv = EditorTab.values();
-			int tn = tv.length;
-			if (!MCI.getSpecial("VarHack"))
-				tn--;
-			int ti = 0;
-			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
-				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
-					tabHover = ti;
-				}
-				ti++;
+		}
+		if (currentMenubar != -1) {
+			// menu bar items
+			somethingInFront = true;
+			Graphics g = surf.getGraphics();
+			g.setFont(Resources.font);
+			MenuBar mb = null;
+			int mX = 0;
+			for (int j = 0; j < menuBars.size(); j++) {
+				mb = menuBars.get(j);
+				if (j == currentMenubar)
+					break;
+				mX += g.getFontMetrics().stringWidth(mb.getName()) + 5;
 			}
-		} else if (ProfileManager.isLoaded()) {
-			for (Component comp : tabMap.get(currentTab).getComponents()) {
-				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
-				boolean hover = false;
-				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
-					hover = true;
-				comp.updateHover(px, py, hover);
+			List<MenuBarItem> items = mb.getItems();
+			int mWidth = g.getFontMetrics().stringWidth(mb.getLongestItemLabel()) + 80;
+			int mY = 17;
+			for (MenuBarItem item : items) {
+				if (FrontUtils.pointInRectangle(px, py, mX, mY, mWidth, 21))
+					item.setHover(true);
+				else
+					item.setHover(false);
+				mY += 22;
+			}
+		}
+		if (!somethingInFront) {
+			if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
+				// editor tabs
+				final EditorTab[] tv = EditorTab.values();
+				int tn = tv.length;
+				if (!MCI.getSpecial("VarHack"))
+					tn--;
+				int ti = 0;
+				for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
+					if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
+						tabHover = ti;
+					}
+					ti++;
+				}
+			}
+			if (ProfileManager.isLoaded()) {
+				for (Component comp : tabMap.get(currentTab).getComponents()) {
+					final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
+					boolean hover = false;
+					if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
+						hover = true;
+					comp.updateHover(px, py, hover);
+				}
 			}
 		}
 		repaint();

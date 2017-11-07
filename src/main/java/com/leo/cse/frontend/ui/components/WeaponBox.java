@@ -50,7 +50,7 @@ public class WeaponBox extends DefineBox {
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height - 1);
 		int wep = vSup.get();
-		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 31);
+		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 31, false);
 		if (wep == 0)
 			return;
 		if (!ExeData.isLoaded())

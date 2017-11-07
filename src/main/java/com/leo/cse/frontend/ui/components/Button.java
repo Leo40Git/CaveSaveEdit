@@ -26,8 +26,9 @@ public class Button extends InputBox {
 			g.setColor(lc2);
 			g.fillRect(x, y, width, height - 1);
 		}
+		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
-		FrontUtils.drawStringCentered(g, label, x + width / 2, y - (20 - height) / 2);
+		FrontUtils.drawStringCentered(g, label, x + width / 2, y - (20 - height) / 2, false);
 	}
 
 	@Override

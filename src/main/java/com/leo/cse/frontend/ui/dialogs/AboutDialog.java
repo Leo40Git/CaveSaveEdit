@@ -23,7 +23,7 @@ public class AboutDialog extends BaseDialog {
 						+ "\nWritten by Leo40Story\nBased on Kapow's profile specs (http://www.cavestory.org/guides/profile.txt)\nUI sprites by zxin\nEarly testers: zxin and gamemanj/20kdc",
 				x + 38, y);
 		g.drawRect(x + 136, y + 80, 192, 17);
-		FrontUtils.drawStringCentered(g, "Check for Updates", x + 232, y + 80);
+		FrontUtils.drawStringCentered(g, "Check for Updates", x + 232, y + 80, false);
 	}
 
 	@Override

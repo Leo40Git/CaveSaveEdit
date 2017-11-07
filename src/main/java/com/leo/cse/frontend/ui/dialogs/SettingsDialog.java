@@ -30,10 +30,10 @@ public class SettingsDialog extends BaseDialog {
 		final int x = getWindowX(), y = getWindowY();
 		g.setColor(Main.lineColor);
 		g.drawRect(x + 4, y + 4, 292, 17);
-		FrontUtils.drawStringCentered(g, "MCI Settings", x + 150, y + 4);
+		FrontUtils.drawStringCentered(g, "MCI Settings", x + 150, y + 4, false);
 		g.drawImage(Resources.miscIcons[0], x + 5, y + 5, null);
 		g.drawRect(x + 4, y + 23, 292, 17);
-		FrontUtils.drawStringCentered(g, "Change Line Color", x + 150, y + 23);
+		FrontUtils.drawStringCentered(g, "Change Line Color", x + 150, y + 23, false);
 		g.drawImage(Resources.miscIcons[1], x + 5, y + 24, null);
 		Image chkImage = (ExeData.doLoadNpc() ? Resources.checkboxOn : Resources.checkboxOff);
 		g.drawImage(chkImage, x + 4, y + 43, null);
@@ -42,7 +42,7 @@ public class SettingsDialog extends BaseDialog {
 		g.drawRect(x + 54, y + 63, 242, 17);
 		FrontUtils.drawString(g, ExeData.getEncoding(), x + 56, y + 62);
 		g.drawRect(x + 4, y + 83, 292, 17);
-		FrontUtils.drawStringCentered(g, "Wipe Settings", x + 150, y + 83);
+		FrontUtils.drawStringCentered(g, "Wipe Settings", x + 150, y + 83, false);
 	}
 
 	@Override

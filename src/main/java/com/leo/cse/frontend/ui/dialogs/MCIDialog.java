@@ -34,8 +34,8 @@ public class MCIDialog extends BaseDialog {
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y + height - 35, width, 17);
 		g.drawLine(x + width - 150, y + height - 18, x + width - 150, y + height - 34);
-		FrontUtils.drawStringCentered(g, "Load MCI file", x + width / 4, y + height - 36);
-		FrontUtils.drawStringCentered(g, "Load default MCI file", x + width - 150 + width / 4, y + height - 36);
+		FrontUtils.drawStringCentered(g, "Load MCI file", x + width / 4, y + height - 36, false);
+		FrontUtils.drawStringCentered(g, "Load default MCI file", x + width - 150 + width / 4, y + height - 36, false);
 	}
 
 	@Override
