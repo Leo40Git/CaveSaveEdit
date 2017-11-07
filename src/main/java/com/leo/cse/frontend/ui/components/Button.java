@@ -31,7 +31,7 @@ public class Button extends InputBox {
 			g.drawImage(icon, x + 1, y + 1, null);
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
-		FrontUtils.drawStringCentered(g, label, x + width / 2, y - (20 - height) / 2, !enabled.get());
+		FrontUtils.drawStringCentered(g, label, x + width / 2, y - (20 - height) / 2, false, !enabled.get());
 	}
 
 	@Override

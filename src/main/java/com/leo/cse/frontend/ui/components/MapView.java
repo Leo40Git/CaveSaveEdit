@@ -68,7 +68,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			g.fillRect(x, y, width, height);
 			g.setColor(Color.white);
 			g.setFont(Resources.fontL);
-			FrontUtils.drawStringCentered(g, "NO MOD LOADED!", x + width / 2, y + height / 2, true);
+			FrontUtils.drawStringCentered(g, "NO MOD LOADED!", x + width / 2, y + height / 2, true, false);
 			notLoaded = true;
 		}
 		final String camCoords = "CameraPos:\n(" + camX / 32 + "," + camY / 32 + ")\nExactCPos:\n("
@@ -91,10 +91,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			g.fillRect(x, y, width, height);
 			g.setColor(Color.white);
 			g.setFont(Resources.fontL);
-			FrontUtils.drawStringCentered(g, "MISSING ASSETS!", x + width / 2, y + height / 2, true);
+			FrontUtils.drawStringCentered(g, "MISSING ASSETS!", x + width / 2, y + height / 2, true, false);
 			g.setFont(Resources.font);
 			FrontUtils.drawStringCentered(g, "The following assets failed to load:\n" + mapInfo.getMissingAssets(),
-					x + width / 2, y + height / 2 + 30, true);
+					x + width / 2, y + height / 2 + 30, true, false);
 			return;
 		}
 		map = mapInfo.getMap();

@@ -57,7 +57,7 @@ public class ItemBox extends DefineBox {
 		}
 		g.setColor(Main.lineColor);
 		int item = vSup.get();
-		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 31, !bEnabled);
+		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 31, false, !bEnabled);
 		if (item == 0)
 			return;
 		if (!ExeData.isLoaded())

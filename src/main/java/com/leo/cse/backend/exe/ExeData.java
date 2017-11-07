@@ -898,16 +898,15 @@ public class ExeData {
 			if (segStr.contains(".rdata"))
 				rdataSec = i;
 		}
+		inStream.close();
 		ExeSec[] headers = new ExeSec[sections.size()];
 		for (int i = 0; i < sections.size(); i++) {
 			headers[i] = new ExeSec(sections.get(i), inChan);
 		}
-		if (rdataSec == -1) {
-			inStream.close();
+		inStream.close();
+		if (rdataSec == -1)
 			throw new IOException("Could not find .rdata segment!");
-		}
 		rdataPtr = headers[rdataSec].getPos();
-		System.out.println(headers[rdataSec].getTag());
 		System.out.println("rdataPtr=0x" + Integer.toHexString(rdataPtr).toUpperCase());
 		// read the text
 		exeStrings = new String[STRING_POINTERS.length];

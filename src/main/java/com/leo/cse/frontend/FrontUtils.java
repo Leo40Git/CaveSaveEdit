@@ -136,10 +136,6 @@ public class FrontUtils {
 		}
 	}
 
-	public static void drawStringCentered(Graphics g, String str, int x, int y, boolean shadowOnly) {
-		drawStringCentered(g, str, x, y, false, shadowOnly);
-	}
-
 	public static void drawNineSlice(Graphics g, Image img, int x, int y, int w, int h) {
 		final int iw = img.getWidth(null), ih = img.getHeight(null);
 		final int sw = iw / 3, sh = ih / 3;

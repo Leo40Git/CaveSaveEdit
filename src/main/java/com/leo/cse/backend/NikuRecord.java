@@ -59,4 +59,16 @@ public class NikuRecord {
 		fos.close();
 	}
 
+	public static int getValue() {
+		return value;
+	}
+
+	public static void setValue(int value) {
+		NikuRecord.value = value;
+	}
+
+	public static File getFile() {
+		return file;
+	}
+
 }

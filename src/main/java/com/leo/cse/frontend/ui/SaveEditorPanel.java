@@ -398,7 +398,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			} else {
 				g2d.setFont(Resources.fontL);
 				g2d.setColor(Main.lineColor);
-				FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true);
+				FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true, false);
 			}
 		}
 		g2d.translate(0, -17);
@@ -519,14 +519,14 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 		File base = null;
 		while (base == null || !base.exists()) {
-			int returnVal = FrontUtils.openFileChooser("Open executable", MOD_FILE_FILTERS,
+			int returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS,
 					(base == null ? new File(System.getProperty("user.dir")) : base), false, false);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 				base = FrontUtils.getSelectedFile();
 			else
 				return;
 			if (!base.exists())
-				JOptionPane.showMessageDialog(Main.window, "Executable \"" + base.getName() + "\" does not exist!",
+				JOptionPane.showMessageDialog(Main.window, "Game/mod base file \"" + base.getName() + "\" does not exist!",
 						"Executable does not exist", JOptionPane.ERROR_MESSAGE);
 		}
 		loading = true;
