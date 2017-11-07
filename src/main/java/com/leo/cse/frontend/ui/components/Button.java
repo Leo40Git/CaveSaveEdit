@@ -27,7 +27,8 @@ public class Button extends InputBox {
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
-		g.drawImage(icon, x + 1, y + 1, null);
+		if (icon != null)
+			g.drawImage(icon, x + 1, y + 1, null);
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		FrontUtils.drawStringCentered(g, label, x + width / 2, y - (20 - height) / 2, !enabled.get());
