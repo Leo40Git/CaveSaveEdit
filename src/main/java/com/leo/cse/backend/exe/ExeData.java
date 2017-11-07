@@ -902,8 +902,10 @@ public class ExeData {
 		for (int i = 0; i < sections.size(); i++) {
 			headers[i] = new ExeSec(sections.get(i), inChan);
 		}
-		if (rdataSec == -1)
+		if (rdataSec == -1) {
+			inStream.close();
 			throw new IOException("Could not find .rdata segment!");
+		}
 		rdataPtr = headers[rdataSec].getPos();
 		System.out.println("rdataPtr=0x" + Integer.toHexString(rdataPtr).toUpperCase());
 		// read the text
