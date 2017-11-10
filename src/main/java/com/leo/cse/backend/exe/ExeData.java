@@ -662,12 +662,14 @@ public class ExeData {
 	 */
 	private static void load0(File base) throws IOException {
 		ExeData.base = base;
+		/*
 		if (base.getName().endsWith(".tbl")) {
 			// assume stage.tbl
 			plusMode = true;
 			loadPlus();
 			return;
 		} else
+		*/
 			plusMode = false;
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
@@ -701,6 +703,7 @@ public class ExeData {
 	 *             executables.
 	 */
 	// TODO CS+ support
+	@SuppressWarnings("unused")
 	private static void loadPlus() throws IOException {
 		System.out.println("Attempting to load CS+ stuff, errors may occur!");
 		try {
