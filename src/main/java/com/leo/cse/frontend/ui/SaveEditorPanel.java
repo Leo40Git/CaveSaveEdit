@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -340,6 +341,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g.drawImage(Resources.toolbarIcons[6], getWidth() - 32, 17, this);
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
+		final Rectangle compViewport = new Rectangle(0, 0, winSize2.width, winSize2.height);
 		if (surf == null)
 			surf = new BufferedImage(winSize2.width, winSize2.height, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics og = g;
@@ -394,7 +396,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		} else {
 			if (ProfileManager.isLoaded()) {
 				for (Component comp : tabMap.get(currentTab).getComponents())
-					comp.render(g2d, null);
+					comp.render(g2d, compViewport);
 			} else {
 				g2d.setFont(Resources.fontL);
 				g2d.setColor(Main.lineColor);
