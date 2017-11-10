@@ -1,3 +1,8 @@
-1.1
-Version 1.1:
-- First official release!
+2.0
+Version 2.0 - The Quite Big Update:
+- Replaced toolbar with menu bar
+- Added 290.rec editor
+- Components now react to the mouse hovering over them
+- Added quit button to window title
+- Smarter EXE data loading
+- Tons and tons of internal refactoring
