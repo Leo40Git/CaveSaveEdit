@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
@@ -13,7 +14,7 @@ public abstract class InputBox extends Component {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		boolean bEnabled = enabled.get();
 		if (hover && bEnabled)
 			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));

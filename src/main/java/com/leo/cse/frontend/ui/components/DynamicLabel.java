@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.function.Supplier;
 
 import com.leo.cse.frontend.FrontUtils;
@@ -23,7 +24,7 @@ public class DynamicLabel extends Component {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		String text = textSup.get();

@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
@@ -33,7 +34,7 @@ public class NikuEdit extends Component implements IScrollable {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		if (ExeData.isLoaded())
 			getSpritesFromTextBox();
 		else

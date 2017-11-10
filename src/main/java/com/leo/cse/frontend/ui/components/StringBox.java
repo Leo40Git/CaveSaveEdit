@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -23,8 +24,8 @@ public class StringBox extends InputBox {
 	}
 	
 	@Override
-	public void render(Graphics g) {
-		super.render(g);
+	public void render(Graphics g, Rectangle viewport) {
+		super.render(g, viewport);
 		FrontUtils.drawString(g, vSup.get(), x + 3, y - 1, !enabled.get());
 	}
 	

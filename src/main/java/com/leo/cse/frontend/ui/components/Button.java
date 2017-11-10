@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import com.leo.cse.frontend.FrontUtils;
@@ -25,8 +26,8 @@ public class Button extends InputBox {
 	}
 
 	@Override
-	public void render(Graphics g) {
-		super.render(g);
+	public void render(Graphics g, Rectangle viewport) {
+		super.render(g, viewport);
 		if (icon != null)
 			g.drawImage(icon, x + 1, y + 1, null);
 		g.setColor(Main.lineColor);

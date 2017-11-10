@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import com.leo.cse.frontend.FrontUtils;
@@ -111,7 +112,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31);
 		g.setColor(Main.lineColor);
 		g.drawRect(x, y, width, height);

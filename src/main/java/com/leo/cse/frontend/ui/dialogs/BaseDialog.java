@@ -3,6 +3,7 @@ package com.leo.cse.frontend.ui.dialogs;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class BaseDialog extends Dialog {
 	@Override
 	public void render(Graphics g) {
 		final int x = getWindowX(), y = getWindowY(false);
+		final Rectangle viewport = new Rectangle(x, y, width, height);
 		FrontUtils.drawNineSlice(g, Resources.shadow, x - 16, y - 16, width + 32, height + 32);
 		g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, width, height);
@@ -73,7 +75,7 @@ public class BaseDialog extends Dialog {
 		final int yOff = y + 18;
 		g.translate(x, yOff);
 		for (Component comp : comps)
-			comp.render(g);
+			comp.render(g, viewport);
 		g.translate(-x, -yOff);
 	}
 

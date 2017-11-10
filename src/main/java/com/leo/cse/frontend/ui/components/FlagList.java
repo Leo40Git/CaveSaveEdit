@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,12 +115,16 @@ public class FlagList extends Component {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		height = shownFlags.size() * 17 + 1;
 		final int x = 4;
 		int y = 1;
 		g.setFont(Resources.font);
 		for (Flag flag : shownFlags) {
+			if (y + 16 < viewport.getY()) {
+				y += 17;
+				continue;
+			}
 			int id = flag.getId();
 			if (flag.isHover())
 				g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
@@ -139,6 +144,8 @@ public class FlagList extends Component {
 			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 4), x + 18, y - 2);
 			FrontUtils.drawString(g, getFlagDesc(id), x + 46, y - 2);
 			y += 17;
+			if (y > viewport.getY() + viewport.getHeight())
+				break;
 		}
 	}
 

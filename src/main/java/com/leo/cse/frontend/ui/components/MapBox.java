@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -48,7 +49,7 @@ public class MapBox extends DefineBox {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		loadMap();
 		boolean bEnabled = enabled.get();
 		if (hover && bEnabled)

@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -32,8 +33,8 @@ public class IntegerBox extends InputBox {
 	}
 
 	@Override
-	public void render(Graphics g) {
-		super.render(g);
+	public void render(Graphics g, Rectangle viewport) {
+		super.render(g, viewport);
 		String str = Integer.toUnsignedString(vSup.get());
 		if (padLength > 0)
 			str = FrontUtils.padLeft(str, "0", padLength);

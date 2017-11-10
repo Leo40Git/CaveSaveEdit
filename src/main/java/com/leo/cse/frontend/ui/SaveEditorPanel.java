@@ -394,7 +394,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		} else {
 			if (ProfileManager.isLoaded()) {
 				for (Component comp : tabMap.get(currentTab).getComponents())
-					comp.render(g2d);
+					comp.render(g2d, null);
 			} else {
 				g2d.setFont(Resources.fontL);
 				g2d.setColor(Main.lineColor);

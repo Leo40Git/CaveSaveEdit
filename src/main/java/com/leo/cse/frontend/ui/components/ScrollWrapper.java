@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
@@ -58,19 +59,21 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 	protected BufferedImage wrapSurf;
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		final int wsWidth = wrapped.getWidth(), wsHeight = wrapped.getHeight();
+		final int scrollOff = (int) ((height - wsHeight) * scrollbar.getValue());
+		final Rectangle wViewport = new Rectangle(wrapped.getX(), wrapped.getY() - scrollOff, width, height);
 		if (wrapSurf == null)
-			wrapSurf = new BufferedImage(wsWidth, height, BufferedImage.TYPE_4BYTE_ABGR);
+			wrapSurf = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D wg = (Graphics2D) wrapSurf.getGraphics();
 		wg.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		wg.setColor(Main.COLOR_BG);
 		wg.fillRect(0, 0, wsWidth, height);
-		wg.translate(-wrapped.getX(), -wrapped.getY() + (int) ((height - wsHeight) * scrollbar.getValue()));
-		wrapped.render(wg);
+		wg.translate(-wrapped.getX(), -wrapped.getY() + scrollOff);
+		wrapped.render(wg, wViewport);
 		wg.dispose();
 		g.drawImage(wrapSurf, x, y + 1, null);
-		scrollbar.render(g);
+		scrollbar.render(g, viewport);
 	}
 
 	@Override

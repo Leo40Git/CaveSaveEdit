@@ -61,7 +61,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		boolean notLoaded = false;
 		if (!ExeData.isLoaded()) {
 			g.setColor(COLOR_NULL);

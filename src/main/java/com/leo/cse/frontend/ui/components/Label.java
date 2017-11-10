@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
@@ -22,7 +23,7 @@ public class Label extends Component {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		if (center)

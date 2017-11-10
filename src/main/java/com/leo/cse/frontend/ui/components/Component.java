@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.function.Supplier;
 
 import com.leo.cse.frontend.Main;
@@ -23,7 +24,7 @@ public abstract class Component {
 		this(x, y, width, height, Main.TRUE_SUPPLIER);
 	}
 
-	public abstract void render(Graphics g);
+	public abstract void render(Graphics g, Rectangle viewport);
 
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 	}

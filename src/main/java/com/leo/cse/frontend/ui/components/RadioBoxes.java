@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui.components;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -39,9 +40,9 @@ public class RadioBoxes extends Component {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g, Rectangle viewport) {
 		for (RadioBox comp : radioBoxes)
-			comp.render(g);
+			comp.render(g, viewport);
 	}
 
 	@Override
