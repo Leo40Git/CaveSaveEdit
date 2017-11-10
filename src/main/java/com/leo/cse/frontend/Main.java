@@ -165,7 +165,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				e.printStackTrace();
 				System.err.println("EXE loading failed.");
 				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the executable:\n" + e.getMessage(),
+						"An error occured while loading the executable:\n" + e,
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 			}
 			try {
@@ -173,7 +173,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the profile file:\n" + e.getMessage(),
+						"An error occured while loading the profile file:\n" + e,
 						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {

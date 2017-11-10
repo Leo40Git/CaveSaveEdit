@@ -537,7 +537,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				ExeData.load(base2);
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the executable:\n" + e.getMessage(),
+						"An error occured while loading the executable:\n" + e,
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
@@ -573,7 +573,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			ProfileManager.write();
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(Main.window,
-					"An error occured while saving the profile file:\n" + e1.getMessage(),
+					"An error occured while saving the profile file:\n" + e1,
 					"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -602,7 +602,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				ProfileManager.write(file, ProfileManager.getLoadedSection());
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while saving the profile file:\n" + e1.getMessage(),
+						"An error occured while saving the profile file:\n" + e1,
 						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {

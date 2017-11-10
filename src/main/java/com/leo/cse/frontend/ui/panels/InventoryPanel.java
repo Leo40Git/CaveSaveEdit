@@ -53,7 +53,6 @@ public class InventoryPanel extends Panel {
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
 			compList.add(new WeaponBox(xx, 22, i));
-			Supplier<Boolean> enabled = Main.TRUE_SUPPLIER;
 			compList.add(new Label("Level:", xx, 72));
 			compList.add(new IntegerBox(xx, 90, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -76,7 +75,7 @@ public class InventoryPanel extends Panel {
 					}
 					return -1;
 				}
-			}, "weapon " + (i + 1) + " level", enabled));
+			}, "weapon " + (i + 1) + " level"));
 			compList.add(new Label("Extra EXP:", xx, 108));
 			compList.add(new IntegerBox(xx, 126, 120, 16, new Supplier<Integer>() {
 				@Override
@@ -99,7 +98,7 @@ public class InventoryPanel extends Panel {
 					}
 					return -1;
 				}
-			}, "weapon " + (i + 1) + " extra EXP", enabled));
+			}, "weapon " + (i + 1) + " extra EXP"));
 			compList.add(new Label("Ammo:", xx + 10, 144));
 			compList.add(new IntegerBox(xx + 10, 162, 110, 16, new Supplier<Integer>() {
 				@Override
@@ -122,7 +121,7 @@ public class InventoryPanel extends Panel {
 					}
 					return -1;
 				}
-			}, "weapon " + (i + 1) + " current ammo", enabled));
+			}, "weapon " + (i + 1) + " current ammo"));
 			compList.add(new Label("/", xx + 2, 180));
 			compList.add(new IntegerBox(xx + 10, 180, 110, 16, new Supplier<Integer>() {
 				@Override
@@ -145,7 +144,7 @@ public class InventoryPanel extends Panel {
 					}
 					return -1;
 				}
-			}, "weapon " + (i + 1) + " maximum ammo", enabled));
+			}, "weapon " + (i + 1) + " maximum ammo"));
 			xx += 122;
 		}
 		int itemId = 0;

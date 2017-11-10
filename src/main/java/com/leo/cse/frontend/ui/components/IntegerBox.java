@@ -15,26 +15,30 @@ public class IntegerBox extends InputBox {
 	protected Supplier<Integer> vSup;
 	protected Function<Integer, Integer> update;
 	protected String description;
+	protected int padLength;
 
 	public IntegerBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
-			String description, Supplier<Boolean> enabled) {
+			String description, int padLength) {
 		super(x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
 		this.description = description;
-		this.enabled = enabled;
+		this.padLength = padLength;
 	}
 
 	public IntegerBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
 			String description) {
-		this(x, y, width, height, vSup, update, description, Main.TRUE_SUPPLIER);
+		this(x, y, width, height, vSup, update, description, -1);
 	}
 
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
+		String str = Integer.toUnsignedString(vSup.get());
+		if (padLength > 0)
+			str = FrontUtils.padLeft(str, "0", padLength);
 		g.setFont(Resources.font);
-		FrontUtils.drawString(g, Integer.toUnsignedString(vSup.get()), x + 3, y - 1, !enabled.get());
+		FrontUtils.drawString(g, str, x + 3, y - 1, !enabled.get());
 	}
 
 	@Override
