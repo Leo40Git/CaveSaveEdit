@@ -33,6 +33,10 @@ public class Resources {
 	public static BufferedImage drag;
 	public static BufferedImage[] editorTabIcons, toolbarIcons, miscIcons;
 	
+	// niku counter
+	public static BufferedImage[] nikuNumbers;
+	public static BufferedImage nikuIcon, nikuPunc;
+	
 	public static void loadWindow() throws IOException {
 		icon = ImageIO.read(Resources.class.getResourceAsStream("icon.png"));
 		shadow = ImageIO.read(Resources.class.getResource("shadow.png"));
@@ -57,12 +61,17 @@ public class Resources {
 		editorTabIcons = new BufferedImage[5];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
-		toolbarIcons = new BufferedImage[7];
+		toolbarIcons = new BufferedImage[8];
 		for (int i = 0; i < toolbarIcons.length; i++)
 			toolbarIcons[i] = ui.getSubimage(i * 16, 32, 16, 16);
 		miscIcons = new BufferedImage[2];
 		for (int i = 0; i < miscIcons.length; i++)
 			miscIcons[i] = ui.getSubimage(i * 16, 48, 16, 16);
+		nikuNumbers = new BufferedImage[10];
+		for (int i = 0; i < nikuNumbers.length; i++)
+			nikuNumbers[i] = ui.getSubimage(i * 16, 64, 16, 16);
+		nikuIcon = ui.getSubimage(0, 80, 14, 14);
+		nikuPunc = ui.getSubimage(14, 80, 62, 14);
 	}
 
 	private static void reloadColorImages() {

@@ -10,12 +10,14 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.components.Component;
+import com.leo.cse.frontend.ui.components.IScrollable;
 
 public class BaseDialog extends Dialog {
 
 	protected String title, message;
 	protected int width, height;
 	protected boolean wantsToClose;
+	protected IScrollable scrollable;
 	private boolean quitHover;
 	private List<Component> comps;
 
@@ -76,7 +78,7 @@ public class BaseDialog extends Dialog {
 	}
 
 	@Override
-	public void onClick(int x, int y) {
+	public void onClick(int x, int y, boolean shift, boolean ctrl) {
 		final int wx = getWindowX(), wy = getWindowY(false);
 		if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14)) {
 			wantsToClose = true;
@@ -89,7 +91,8 @@ public class BaseDialog extends Dialog {
 		for (Component comp : comps) {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			if (FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh)) {
-				comp.onClick(x, y, false, false);
+				comp.onClick(x, y, shift, ctrl);
+				comp.updateHover(x, y, true);
 				break;
 			}
 		}
@@ -117,6 +120,12 @@ public class BaseDialog extends Dialog {
 			boolean hover = FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh);
 			comp.updateHover(x, y, hover);
 		}
+	}
+	
+	@Override
+	public void onScroll(int rotations, boolean shift, boolean ctrl) {
+		if (scrollable != null)
+			scrollable.onScroll(rotations, shift, ctrl);
 	}
 
 }

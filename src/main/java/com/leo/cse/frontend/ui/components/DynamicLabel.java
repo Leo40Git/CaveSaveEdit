@@ -8,19 +8,29 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class DynamicLabel extends Component {
-	
-	protected Supplier<String> textSup;
 
-	public DynamicLabel(Supplier<String> textSup, int x, int y) {
+	protected Supplier<String> textSup;
+	private boolean center;
+
+	public DynamicLabel(Supplier<String> textSup, int x, int y, boolean center) {
 		super(x, y, 0, 0);
 		this.textSup = textSup;
+		this.center = center;
 	}
-	
+
+	public DynamicLabel(Supplier<String> textSup, int x, int y) {
+		this(textSup, x, y, false);
+	}
+
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
-		FrontUtils.drawString(g, textSup.get(), x, y);
+		String text = textSup.get();
+		if (center)
+			FrontUtils.drawStringCentered(g, text, x, y, false, false);
+		else
+			FrontUtils.drawString(g, text, x, y);
 	}
 
 }

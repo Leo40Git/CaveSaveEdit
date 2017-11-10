@@ -289,7 +289,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}));
 		menuBars.add(new MenuBar("Edit", mbiEdit));
 		List<MenuBarItem> mbiTools = new ArrayList<>();
-		mbiTools.add(new MenuBarItem("Edit 290.rec", () -> {
+		mbiTools.add(new MenuBarItem("Edit 290.rec", Resources.toolbarIcons[7], () -> {
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
@@ -398,7 +398,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			} else {
 				g2d.setFont(Resources.fontL);
 				g2d.setColor(Main.lineColor);
-				FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true, false);
+				FrontUtils.drawStringCentered(g2d, "NO PROFILE LOADED!", winSize2.width / 2, winSize2.height / 2, true,
+						false);
 			}
 		}
 		g2d.translate(0, -17);
@@ -526,8 +527,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			else
 				return;
 			if (!base.exists())
-				JOptionPane.showMessageDialog(Main.window, "Game/mod base file \"" + base.getName() + "\" does not exist!",
-						"Executable does not exist", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(Main.window,
+						"Game/mod base file \"" + base.getName() + "\" does not exist!", "Executable does not exist",
+						JOptionPane.ERROR_MESSAGE);
 		}
 		loading = true;
 		Main.window.repaint();
@@ -536,8 +538,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			try {
 				ExeData.load(base2);
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the executable:\n" + e,
+				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
@@ -572,8 +573,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		try {
 			ProfileManager.write();
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(Main.window,
-					"An error occured while saving the profile file:\n" + e1,
+			JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 					"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -601,8 +601,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			try {
 				ProfileManager.write(file, ProfileManager.getLoadedSection());
 			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while saving the profile file:\n" + e1,
+				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
@@ -653,7 +652,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!dBoxes.isEmpty()) {
 			// dialog box
 			Dialog dBox = dBoxes.get(0);
-			dBox.onClick(px, py);
+			dBox.onClick(px, py, shift, ctrl);
 			if (dBox.wantsToClose())
 				dBoxes.remove(0);
 		} else if (py <= 17) {
@@ -665,6 +664,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				int width = 65;
 				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
 					currentMenubar = j;
+					menubarHover = j;
 					break;
 				}
 				nextX += width;
@@ -686,6 +686,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			int mY = 17;
 			for (MenuBarItem item : items) {
 				if (FrontUtils.pointInRectangle(px, py, mX, mY, mWidth, 21)) {
+					item.setHover(true);
 					item.onClick();
 					break;
 				}
@@ -702,6 +703,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
 					currentTab = tv[ti];
+					tabHover = ti;
 					lastFocus = null;
 					break;
 				}
@@ -723,6 +725,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 					comp.onClick(px, py - 17, shift, ctrl);
+					comp.updateHover(px, py, true);
 					newFocus = comp;
 					break;
 				}
@@ -734,7 +737,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (!dBoxes.isEmpty() || currentMenubar != -1)
+		if (currentMenubar != -1)
 			return;
 		final Insets i = Main.window.getInsets();
 		int px = e.getX(), py = e.getY();
@@ -743,17 +746,21 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final int mod = e.getModifiersEx();
 		final boolean shift = (mod & MouseWheelEvent.SHIFT_DOWN_MASK) != 0,
 				ctrl = (mod & MouseWheelEvent.CTRL_DOWN_MASK) != 0;
-		ScrollBar scroll = tabMap.get(currentTab).getGlobalScrollbar();
-		if (scroll != null)
-			scroll.onScroll(e.getWheelRotation(), shift, ctrl);
-		else if (ProfileManager.isLoaded())
-			for (Component comp : tabMap.get(currentTab).getComponents()) {
-				if (!(comp instanceof IScrollable))
-					continue;
-				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
-				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
-					((IScrollable) comp).onScroll(e.getWheelRotation(), shift, ctrl);
-			}
+		if (!dBoxes.isEmpty()) {
+			dBoxes.get(0).onScroll(e.getWheelRotation(), shift, ctrl);
+		} else {
+			ScrollBar scroll = tabMap.get(currentTab).getGlobalScrollbar();
+			if (scroll != null)
+				scroll.onScroll(e.getWheelRotation(), shift, ctrl);
+			else if (ProfileManager.isLoaded())
+				for (Component comp : tabMap.get(currentTab).getComponents()) {
+					if (!(comp instanceof IScrollable))
+						continue;
+					final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
+					if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
+						((IScrollable) comp).onScroll(e.getWheelRotation(), shift, ctrl);
+				}
+		}
 		repaint();
 	}
 
@@ -882,8 +889,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				for (Component comp : tabMap.get(currentTab).getComponents()) {
 					final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 					boolean hover = false;
-					if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh))
+					if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 						hover = true;
+					}
 					comp.updateHover(px, py, hover);
 				}
 			}
