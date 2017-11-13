@@ -15,6 +15,9 @@ Every MCI file should contain the following functions. *Note: CSE always uses do
 - `getArmsImageSize:Number` - Gets the size of weapon icons in ArmsImage.
 - `getFPS:Number` - Gets the FPS. Used for calculating the "Seconds Played" field.
 - `getGraphicsResolution:Number` - Gets the game's resolution.
+- `getProfileClass:String` - Gets the profile class to use to load profiles. Valid classes are:
+`com.leo.cse.backend.profile.NormalProfile` - For vanilla CS profiles,
+`com.leo.cse.backend.profile.PlusProfile` - For Cave Story+ profiles.
 
 ## Information arrays
 To add an empty space to any of these arrays, add a `null`.

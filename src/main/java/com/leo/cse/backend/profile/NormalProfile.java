@@ -11,152 +11,102 @@ public class NormalProfile extends CommonProfile {
 
 	/**
 	 * Map field.
-	 * 
-	 * @see #map
 	 */
 	public static final String FIELD_MAP = "map";
 	/**
 	 * Song field.
-	 * 
-	 * @see #song
 	 */
 	public static final String FIELD_SONG = "song";
 	/**
 	 * Position "field". A field for this doesn't actually exist.
-	 * 
-	 * @see #getPosition()
 	 */
 	public static final String FIELD_POSITION = "position";
 	/**
 	 * X position field.
-	 * 
-	 * @see #x
 	 */
 	public static final String FIELD_X_POSITION = "position_x";
 	/**
 	 * Y position field.
-	 * 
-	 * @see #y
 	 */
 	public static final String FIELD_Y_POSITION = "position_y";
 	/**
 	 * Direction field.
-	 * 
-	 * @see #direction
 	 */
 	public static final String FIELD_DIRECTION = "direction";
 	/**
 	 * Maximum health field.
-	 * 
-	 * @see #maxHealth
 	 */
 	public static final String FIELD_MAXIMUM_HEALTH = "maxHealth";
 	/**
 	 * Whimsical Star count field.
-	 * 
-	 * @see #starCount
 	 */
 	public static final String FIELD_STAR_COUNT = "starCount";
 	/**
 	 * Current health field.
-	 * 
-	 * @see #curHealth
 	 */
 	public static final String FIELD_CURRENT_HEALTH = "curHealth";
 	/**
 	 * Current weapon slot field.
-	 * 
-	 * @see #curWeapon
 	 */
 	public static final String FIELD_CURRENT_WEAPON = "curWeapon";
 	/**
 	 * Equipment flags field.
-	 * 
-	 * @see #equips
 	 */
 	public static final String FIELD_EQUIPS = "equips";
 	/**
 	 * Time played field.
-	 * 
-	 * @see #time
 	 */
 	public static final String FIELD_TIME_PLAYED = "time";
 	/**
 	 * Weapon ID field.
-	 * 
-	 * @see Weapon#id
 	 */
 	public static final String FIELD_WEAPON_ID = "weapons.id";
 	/**
 	 * Weapon level field.
-	 * 
-	 * @see Weapon#level
 	 */
 	public static final String FIELD_WEAPON_LEVEL = "weapons.level";
 	/**
 	 * Weapon EXP field.
-	 * 
-	 * @see Weapon#exp
 	 */
 	public static final String FIELD_WEAPON_EXP = "weapons.exp";
 	/**
 	 * Weapon maximum ammo field.
-	 * 
-	 * @see Weapon#maxAmmo
 	 */
 	public static final String FIELD_WEAPON_MAXIMUM_AMMO = "weapons.maxAmmo";
 	/**
 	 * Weapon current ammo field.
-	 * 
-	 * @see Weapon#curAmmo
 	 */
 	public static final String FIELD_WEAPON_CURRENT_AMMO = "weapons.curAmmo";
 	/**
 	 * Items field.
-	 * 
-	 * @see #items
 	 */
 	public static final String FIELD_ITEMS = "items";
 	/**
 	 * Warp ID field.
-	 * 
-	 * @see Warp#id
 	 */
 	public static final String FIELD_WARP_ID = "warps.id";
 	/**
 	 * Warp location field.
-	 * 
-	 * @see Warp#location
 	 */
 	public static final String FIELD_WARP_LOCATION = "warps.location";
 	/**
 	 * Flags field.
-	 * 
-	 * @see #flags
 	 */
 	public static final String FIELD_FLAGS = "flags";
 	/**
 	 * <MIM costume "field". A field for this doesn't actually exist.
-	 * 
-	 * @see #getMimCostume()
 	 */
 	public static final String FIELD_MIM_COSTUME = "mimCostume";
 	/**
 	 * Variables "field". A field for this doesn't actually exist.
-	 * 
-	 * @see #getVariable(int)
 	 */
 	public static final String FIELD_VARIABLES = "variables";
 	/**
 	 * Physics variables "field". A field for this doesn't actually exist.
-	 * 
-	 * @see #getPhysVariable(int)
 	 */
 	public static final String FIELD_PHYSICS_VARIABLES = "physVars";
 	/**
 	 * Amount of cash "field". A field for this doesn't actually exist.
-	 * 
-	 * @see #getCash()
 	 */
 	public static final String FIELD_CASH = "cash";
 

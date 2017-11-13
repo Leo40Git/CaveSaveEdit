@@ -10,8 +10,8 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
-import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.frontend.MCI;
 
 public class ProfileManager {
 
@@ -208,10 +208,34 @@ public class ProfileManager {
 	}
 
 	public static void read(File file, int section) throws IOException {
-		if (ExeData.isPlusMode()) {
-			impl = new PlusProfile();
-		} else {
+		String profileClass = MCI.getNullable("Game.ProfileClass");
+		if (profileClass == null)
 			impl = new NormalProfile();
+		else {
+			Class<?> implClass;
+			try {
+				implClass = Class.forName(profileClass);
+			} catch (ClassNotFoundException e) {
+				System.err.println(
+						"Profile class not found: " + profileClass + "\nUsing default NormalProfile class instead");
+				e.printStackTrace();
+				implClass = NormalProfile.class;
+			}
+			if (!Profile.class.isAssignableFrom(implClass)) {
+				System.err.println("Profile class does not implement Profile interface: " + profileClass
+						+ "\nUsing default NormalProfile class instead");
+				implClass = NormalProfile.class;
+			}
+			Object implObj;
+			try {
+				implObj = implClass.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				System.err.println("Profile class could not be initialized: " + profileClass
+						+ "\nUsing default NormalProfile class instead");
+				e.printStackTrace();
+				implObj = new NormalProfile();
+			}
+			impl = (Profile) implObj;
 		}
 		impl.read(file, section);
 		undoMan = new UndoManager();
@@ -243,7 +267,7 @@ public class ProfileManager {
 			return;
 		write(impl.getLoadedFile(), impl.getLoadedSection());
 	}
-	
+
 	public static void dispose() {
 		impl = null;
 	}
@@ -321,7 +345,7 @@ public class ProfileManager {
 	public static Object getField(String field) throws ProfileFieldException {
 		return getField(field, 0);
 	}
-	
+
 	public static void setField(String field, int index, Object value, boolean addUndo) throws ProfileFieldException {
 		if (impl == null)
 			return;

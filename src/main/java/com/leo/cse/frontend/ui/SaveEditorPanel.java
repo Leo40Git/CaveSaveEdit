@@ -262,8 +262,14 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		mbiFile.add(new MenuBarItem("Load Profile", "Ctrl+O", Resources.toolbarIcons[0], () -> {
 			loadProfile();
 		}));
+		mbiFile.add(new MenuBarItem("Unload Profile", () -> {
+			ProfileManager.dispose();
+		}));
 		mbiFile.add(new MenuBarItem("Load Game/Mod", "Ctrl+Shift+O", Resources.toolbarIcons[1], () -> {
 			loadExe();
+		}));
+		mbiFile.add(new MenuBarItem("Unload Game/Mod", () -> {
+			ExeData.unload();
 		}));
 		mbiFile.add(new MenuBarItem("Save", "Ctrl+S", Resources.toolbarIcons[2], () -> {
 			saveProfile();

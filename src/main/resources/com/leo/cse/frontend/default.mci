@@ -21,6 +21,9 @@ function getFPS() {
 function getGraphicsResolution() {
     return 1;
 }
+function getProfileClass() {
+    return "com.leo.cse.backend.profile.NormalProfile";
+}
 // Special support
 function getSpecials() {
     return [];

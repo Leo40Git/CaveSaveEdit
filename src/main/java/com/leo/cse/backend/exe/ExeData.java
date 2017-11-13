@@ -1328,17 +1328,11 @@ public class ExeData {
 			if (trans)
 				img = ResUtils.black2Trans(img);
 			int res = MCI.getInteger("Game.GraphicsResolution", 1);
-			System.out.println("Considering resizing image:\n" + srcFile + "\nMCI says graphics resolution is " + res);
-			if (res == 2) {
-				System.out.println("Skipping resizing image:\n" + srcFile + "\nMCI says we're in 2x res");
+			if (res == 2)
 				return img;
-			}
 			double scale = 2 / (double) res;
-			if (scale == 1) {
-				System.out.println("Skipping resizing image:\n" + srcFile + "\nScale factor is 1");
+			if (scale == 1)
 				return img;
-			}
-			System.out.println("Resizing image:\n" + srcFile + "\nWith scale factor of " + scale);
 			int w = img.getWidth(), h = img.getHeight();
 			BufferedImage after = new BufferedImage((int) (w * scale), (int) (h * scale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();

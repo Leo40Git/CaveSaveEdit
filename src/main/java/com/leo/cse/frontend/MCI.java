@@ -77,7 +77,6 @@ public class MCI {
 			throws NoSuchMethodException {
 		Object fObj = scope.get(name, scope);
 		if (!(fObj instanceof Function)) {
-			System.out.println("Called function " + name + " in default scope");
 			try {
 				invokeFunction(defaultCx, defaultScope, name, args);
 			} catch (NoSuchMethodException e) {
@@ -88,7 +87,6 @@ public class MCI {
 		ContextFactory.getGlobal().enterContext(cx);
 		Object result = f.call(cx, scope, scope, args);
 		Context.exit();
-		System.out.println("Called function " + name + ", result is " + result);
 		return result;
 	}
 
@@ -125,6 +123,7 @@ public class MCI {
 			tmp.put("Game.ArmsImageSize", invokeFunction(tcx, tscope, "getArmsImageSize"));
 			tmp.put("Game.FPS", invokeFunction(tcx, tscope, "getFPS"));
 			tmp.put("Game.GraphicsResolution", invokeFunction(tcx, tscope, "getGraphicsResolution"));
+			tmp.put("Game.ProfileClass", invokeFunction(tcx, tscope, "getProfileClass"));
 			// Special support
 			Object oss = invokeFunction(tcx, tscope, "getSpecials");
 			if (oss instanceof NativeArray) {

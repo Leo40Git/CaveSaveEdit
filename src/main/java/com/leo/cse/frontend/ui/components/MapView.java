@@ -386,9 +386,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 
 	public void updatePlayerPos() {
 		try {
-			Short playerX = (Short) ProfileManager.getField(NormalProfile.FIELD_X_POSITION);
-			Short playerY = (Short) ProfileManager.getField(NormalProfile.FIELD_Y_POSITION);
-			playerPos = new Short[] { playerX, playerY };
+			playerPos = (Short[]) ProfileManager.getField(NormalProfile.FIELD_POSITION);
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();
 		}
