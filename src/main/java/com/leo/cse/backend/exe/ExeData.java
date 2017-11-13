@@ -662,15 +662,12 @@ public class ExeData {
 	 */
 	private static void load0(File base) throws IOException {
 		ExeData.base = base;
-		/*
 		if (base.getName().endsWith(".tbl")) {
 			// assume stage.tbl
-			plusMode = true;
 			loadPlus();
 			return;
-		} else
-		*/
-			plusMode = false;
+		}
+		plusMode = false;
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
 			loadExeStrings();
@@ -703,15 +700,15 @@ public class ExeData {
 	 *             executables.
 	 */
 	// TODO CS+ support
-	@SuppressWarnings("unused")
 	private static void loadPlus() throws IOException {
+		plusMode = true;
 		System.out.println("Attempting to load CS+ stuff, errors may occur!");
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
 			initExeStringsPlus();
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
-			dataDir = ResUtils.getBaseFolder(base);
+			dataDir = base.getParentFile();
 			entityList = new Vector<EntityData>();
 			mapdata = new Vector<Mapdata>();
 			mapInfo = new Vector<MapInfo>();
@@ -936,7 +933,7 @@ public class ExeData {
 	private static void initExeStringsPlus() {
 		exeStrings = new String[STRING_POINTERS.length];
 		exeStrings[STRING_ARMSITEM] = "ArmsItem.tsc";
-		exeStrings[STRING_IMG_EXT] = "%s/%s.png"; // CS+ uses PNGs, not BMPs
+		exeStrings[STRING_IMG_EXT] = "%s/%s.bmp";
 		exeStrings[STRING_CREDIT] = "Credit.tsc";
 		exeStrings[STRING_NPC_TBL] = "npc.tbl";
 		exeStrings[STRING_MYCHAR] = "MyChar";
@@ -1292,6 +1289,7 @@ public class ExeData {
 			dBuf.get(buf32);
 			newMap.setNpcSheet2(StrTools.CString(buf32, encoding));
 			// newMap.setBoss(dBuf.get()); // not needed
+			dBuf.get();
 			dBuf.get(buf32);
 			// newMap.setJpName(buf32); // not needed
 			dBuf.get(buf32);
@@ -1330,11 +1328,17 @@ public class ExeData {
 			if (trans)
 				img = ResUtils.black2Trans(img);
 			int res = MCI.getInteger("Game.GraphicsResolution", 1);
-			if (res == 2)
+			System.out.println("Considering resizing image:\n" + srcFile + "\nMCI says graphics resolution is " + res);
+			if (res == 2) {
+				System.out.println("Skipping resizing image:\n" + srcFile + "\nMCI says we're in 2x res");
 				return img;
+			}
 			double scale = 2 / (double) res;
-			if (scale == 1)
+			if (scale == 1) {
+				System.out.println("Skipping resizing image:\n" + srcFile + "\nScale factor is 1");
 				return img;
+			}
+			System.out.println("Resizing image:\n" + srcFile + "\nWith scale factor of " + scale);
 			int w = img.getWidth(), h = img.getHeight();
 			BufferedImage after = new BufferedImage((int) (w * scale), (int) (h * scale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
@@ -1594,6 +1598,7 @@ public class ExeData {
 			pxaMap.put(srcFile, pxaArray);
 			succ = true;
 		} catch (Exception e) {
+			System.err.print("Failed to load PXA:\n" + srcFile);
 			e.printStackTrace();
 		} finally {
 			if (inChan != null)

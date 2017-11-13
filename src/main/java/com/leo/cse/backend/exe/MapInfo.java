@@ -115,7 +115,7 @@ public class MapInfo {
 				tscFile = new TSCFile(
 						String.format(ExeData.getExeString(ExeData.STRING_TSC_EXT), directory + "/" + stage, fileName));
 			} catch (IOException e) {
-				System.err.println("Failed to load PXM:\n" + fileName);
+				System.err.println("Failed to load TSC:\n" + fileName);
 				e.printStackTrace();
 			}
 		}

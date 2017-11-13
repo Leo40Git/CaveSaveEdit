@@ -109,7 +109,7 @@ public class FrontUtils {
 			drawString0(g, line, x, y - 1, shadowOnly);
 		}
 	}
-	
+
 	public static void drawString(Graphics g, String str, int x, int y) {
 		drawString(g, str, x, y, false);
 	}
@@ -121,7 +121,7 @@ public class FrontUtils {
 			drawString0(g, line, x - g.getFontMetrics().stringWidth(line), y - 1, shadowOnly);
 		}
 	}
-	
+
 	public static void drawStringRight(Graphics g, String str, int x, int y) {
 		drawStringRight(g, str, x, y, false);
 	}
@@ -158,7 +158,7 @@ public class FrontUtils {
 		// bottom right
 		g.drawImage(img, x + (w - sw), y + (h - sh), x + w, y + h, sw * 2, sh * 2, sw * 3, sh * 3, null);
 	}
-	
+
 	public static void drawCheckeredGrid(Graphics g, int x, int y, int w, int h) {
 		for (int px = x; px < w; px += 2)
 			for (int py = y; py < h; py += 2)
@@ -377,8 +377,7 @@ public class FrontUtils {
 
 	public static int openFileChooser(String title, Set<FileFilter> filters, File currentDirectory,
 			boolean allowAllFilesFilter, boolean openOrSave) {
-		if (fc == null)
-			fc = new JFileChooser();
+		fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(false);
 		boolean noFilters = false;
 		if (filters == null || filters.isEmpty())

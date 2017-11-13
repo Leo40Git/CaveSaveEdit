@@ -282,10 +282,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		}
 		int xPixel = playerPos[0] - 16;
 		xPixel /= snap;
-		xPixel *= 2;
+		xPixel *= snap;
 		int yPixel = playerPos[1] - 16;
 		yPixel /= snap;
-		yPixel *= 2;
+		yPixel *= snap;
 		int sourceX1 = 0;
 		int sourceY1 = (int) (64 * costume + 32 * dir);
 		Composite oc = g.getComposite();
@@ -334,10 +334,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		}
 		int xPixel = playerHoverX - 16;
 		xPixel /= snap;
-		xPixel *= 2;
+		xPixel *= snap;
 		int yPixel = playerHoverY - 32;
 		yPixel /= snap;
-		yPixel *= 2;
+		yPixel *= snap;
 		int sourceX1 = 0;
 		int sourceY1 = (int) (64 * costume + 32 * dir);
 		Composite oc = g.getComposite();

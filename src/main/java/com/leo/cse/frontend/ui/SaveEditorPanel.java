@@ -511,19 +511,24 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	static {
 		MOD_FILE_FILTERS.add(new FileNameExtensionFilter("Executables", "exe"));
-		// MOD_FILE_FILTERS.add(new FileNameExtensionFilter("CS+ stage.tbl", "tbl"));
+		MOD_FILE_FILTERS.add(new FileNameExtensionFilter("CS+ stage.tbl", "tbl"));
 	}
 
 	private void loadExe() {
+		/*
 		if (!ProfileManager.isLoaded()) {
 			JOptionPane.showMessageDialog(Main.window, "Please load a profile before loading an executable.",
 					"Can't load executable", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+		*/
+		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir")));
+		if (!dir.exists())
+			dir = new File(System.getProperty("user.dir"));
 		File base = null;
 		while (base == null || !base.exists()) {
-			int returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS,
-					(base == null ? new File(System.getProperty("user.dir")) : base), false, false);
+			int returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS, (base == null ? dir : base),
+					false, false);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 				base = FrontUtils.getSelectedFile();
 			else
@@ -540,11 +545,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			try {
 				ExeData.load(base2);
 			} catch (IOException e) {
+				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
-				addComponents();
+				if (ProfileManager.isLoaded())
+					addComponents();
 				SwingUtilities.invokeLater(() -> {
 					loading = false;
 					Main.window.repaint();
@@ -843,6 +850,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				int width = 65;
 				if (FrontUtils.pointInRectangle(px, py, nextX, 0, width, 18)) {
 					menubarHover = j;
+					if (currentMenubar != -1)
+						currentMenubar = j;
 					break;
 				}
 				nextX += width;

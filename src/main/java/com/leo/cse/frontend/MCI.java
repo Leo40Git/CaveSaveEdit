@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
@@ -36,9 +36,10 @@ public class MCI {
 	private MCI() {
 	}
 
-	private static Properties mci = new Properties();
+	private static Hashtable<String, Object> mci = new Hashtable<>();
+	private static boolean plus = false;
 
-	private static void readList(Properties p, String group, Object obj) {
+	private static void readList(Hashtable<String, Object> p, String group, Object obj) {
 		if (obj instanceof NativeArray) {
 			NativeArray na = (NativeArray) obj;
 			for (int d = 0; d < na.size(); d++) {
@@ -67,7 +68,7 @@ public class MCI {
 			throw new RuntimeException("Unsupported list type: " + obj.getClass().getName());
 	}
 
-	private static <K, V> void readMap(Properties p, String group, Map<K, V> map) {
+	private static <K, V> void readMap(Hashtable<String, Object> p, String group, Map<K, V> map) {
 		for (Map.Entry<K, V> entry : map.entrySet())
 			p.put(group + "." + entry.getKey(), entry.getValue());
 	}
@@ -76,6 +77,7 @@ public class MCI {
 			throws NoSuchMethodException {
 		Object fObj = scope.get(name, scope);
 		if (!(fObj instanceof Function)) {
+			System.out.println("Called function " + name + " in default scope");
 			try {
 				invokeFunction(defaultCx, defaultScope, name, args);
 			} catch (NoSuchMethodException e) {
@@ -86,6 +88,7 @@ public class MCI {
 		ContextFactory.getGlobal().enterContext(cx);
 		Object result = f.call(cx, scope, scope, args);
 		Context.exit();
+		System.out.println("Called function " + name + ", result is " + result);
 		return result;
 	}
 
@@ -99,6 +102,7 @@ public class MCI {
 	}
 
 	private static void read0(InputStream is, File src) throws Exception {
+		plus = false;
 		Context tcx = Context.enter();
 		Scriptable tscope = tcx.initStandardObjects();
 		try (InputStreamReader isr = new InputStreamReader(is);) {
@@ -110,7 +114,7 @@ public class MCI {
 					"Error while parsing MCI file", JOptionPane.ERROR_MESSAGE);
 			throw e;
 		}
-		Properties tmp = new Properties();
+		Hashtable<String, Object> tmp = new Hashtable<>();
 		try {
 			// Metadata
 			tmp.put("Meta.Name", invokeFunction(tcx, tscope, "getName"));
@@ -180,6 +184,7 @@ public class MCI {
 	
 	public static void readPlus() throws Exception {
 		read0(MCI.class.getResourceAsStream("plus.mci"), new File("plus.mci"));
+		plus = true;
 		validate();
 		defaultCx = cx;
 		defaultScope = scope;
@@ -189,6 +194,10 @@ public class MCI {
 		read0(new FileInputStream(file), file);
 		validate();
 	}
+	
+	public static boolean isPlus() {
+		return plus;
+	}
 
 	private static void validate() throws MCIException {
 		int fps = getInteger("Game.FPS", 50);
@@ -197,42 +206,55 @@ public class MCI {
 	}
 
 	public static boolean contains(String key) {
-		return mci.containsKey(key);
+		return mci.contains(key);
 	}
-
-	public static String get(String key) {
-		return mci.getProperty(key, key);
-	}
-
-	public static String get(String type, String value) {
-		final String key = type + "." + value;
-		return mci.getProperty(key, mci.getProperty(type + ".None", key));
-	}
-
-	public static String get(String type, int id) {
-		return get(type, Integer.toString(id));
-	}
-
+	
 	public static String getNullable(String key) {
-		return mci.getProperty(key);
+		Object obj = mci.get(key);
+		if (obj == null)
+			return null;
+		return obj.toString();
 	}
 
 	public static String getNullable(String type, String value) {
-		return mci.getProperty(type + "." + value);
+		return (String) mci.get(type + "." + value);
 	}
 
 	public static String getNullable(String type, int id) {
 		return getNullable(type, Integer.toString(id));
 	}
 
+	public static String get(String key) {
+		String ret = getNullable(key);
+		if (ret == null)
+			return key;
+		return ret;
+	}
+
+	public static String get(String type, String value) {
+		final String key = type + "." + value;
+		String ret = getNullable(key);
+		if (ret == null)
+			return key;
+		return ret;
+	}
+
+	public static String get(String type, int id) {
+		return get(type, Integer.toString(id));
+	}
+
 	public static int getInteger(String key, int def) {
 		String val = getNullable(key);
 		if (val == null)
 			return def;
+		if (val.contains("."))
+			val = val.substring(0, val.indexOf('.'));
 		Integer ret;
 		try {
 			ret = Integer.parseUnsignedInt(val);
 		} catch (NumberFormatException ignore) {
+			System.err.println("MCI: " + key + " is not an integer!");
+			ignore.printStackTrace();
 			return def;
 		}
 		return ret;
@@ -252,8 +274,8 @@ public class MCI {
 
 	public static Map<Integer, String> getAll(String type) {
 		Map<Integer, String> ret = new HashMap<Integer, String>();
-		for (Map.Entry<Object, Object> entry : mci.entrySet())
-			if (((String) entry.getKey()).startsWith(type + ".")) {
+		for (Map.Entry<String, Object> entry : mci.entrySet())
+			if (entry.getKey().startsWith(type + ".")) {
 				String key = (String) entry.getKey();
 				String id = key.substring(key.lastIndexOf('.') + 1);
 				try {
@@ -275,7 +297,10 @@ public class MCI {
 	public static boolean getSpecial(String value) {
 		if (ExeData.isPlusMode())
 			return false;
-		return Boolean.parseBoolean(mci.getProperty("Special." + value, "false"));
+		String specVal = getNullable("Special." + value);
+		if (specVal == null)
+			return false;
+		return Boolean.parseBoolean(specVal);
 	}
 
 	public static String getSpecials() {

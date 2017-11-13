@@ -145,12 +145,14 @@ public class ResUtils {
 		String place = "/";
 		if (currentLoc == null) {
 			// System.out.println(res);
+			System.out.println("getBaseFolder: currentLoc == null");
 			return null;
 		}
 
 		while (!currentLoc.getName().equals("mod")) {
 			place = "/" + currentLoc.getName() + place;
 			if (currentLoc.getParentFile() == null) {
+				System.out.println("getBaseFolder: heirarchy crisis");
 				return null; // heirarchy crisis
 			}
 			currentLoc = currentLoc.getParentFile();

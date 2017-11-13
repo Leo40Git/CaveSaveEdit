@@ -108,13 +108,14 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			System.exit(0);
 		}
 	}
-	
+
 	public static void close() {
 		close(false);
 	}
 
 	public Main() {
 		ProfileManager.addListener(this);
+		ExeData.addListener(this);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
@@ -156,24 +157,25 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			SaveEditorPanel.panel.setLoading(true);
 		window.repaint();
 		SwingUtilities.invokeLater(() -> {
-			// unload existing exe
-			ExeData.unload();
-			// try to load exe
-			try {
-				ExeData.load(new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.err.println("EXE loading failed.");
-				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the executable:\n" + e,
-						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+			File newExe = new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
+			if (newExe.exists()) {
+				// unload existing exe
+				ExeData.unload();
+				// try to load exe
+				try {
+					ExeData.load(new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe"));
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.err.println("EXE loading failed.");
+					JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
+							"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 			try {
 				ProfileManager.read(file, 0);
 			} catch (Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(Main.window,
-						"An error occured while loading the profile file:\n" + e,
+				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
 						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
@@ -280,7 +282,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		}
 	}
 
-	private static void resourceError(Throwable e) {
+	public static void resourceError(Throwable e) {
 		e.printStackTrace();
 		JOptionPane.showMessageDialog(null,
 				"Could not load resources!\nPlease report this error to the programmer.\nAn exception has occured:\n"
@@ -467,9 +469,18 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	@Override
 	public void preLoad(boolean plusMode) {
+		System.out.println("Main.preLoad");
 		if (plusMode) {
+			System.out.println("Loading CS+ MCI");
 			try {
 				MCI.readPlus();
+			} catch (Exception e) {
+				resourceError(e);
+			}
+		} else if (MCI.isPlus()) {
+			System.out.println("Loading default MCI");
+			try {
+				MCI.readDefault();
 			} catch (Exception e) {
 				resourceError(e);
 			}
