@@ -286,14 +286,12 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		if (drawType == DRAWTYPE_HOVER)
 			xPixel = playerHoverX;
 		xPixel -= 16;
-		xPixel /= snap;
-		xPixel *= snap;
+		xPixel -= (xPixel % snap);
 		int yPixel = playerPos[1];
 		if (drawType == DRAWTYPE_HOVER)
 			yPixel = playerHoverY;
 		yPixel -= (drawType == DRAWTYPE_HOVER ? 32 : 16);
-		yPixel /= snap;
-		yPixel *= snap;
+		yPixel -= (yPixel % snap);
 		int sourceX1 = 0;
 		int sourceY1 = (int) (64 * costume + 32 * dir);
 		Composite oc = g.getComposite();
