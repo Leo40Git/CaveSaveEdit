@@ -28,7 +28,7 @@ public class PlusProfile extends NormalProfile {
 	}
 	
 	@Override
-	public void read(File file, int section) throws IOException {
+	public void load(File file, int section) throws IOException {
 		// read data
 		data = new byte[FILE_LENGTH];
 		try (FileInputStream fis = new FileInputStream(file)) {
@@ -50,7 +50,7 @@ public class PlusProfile extends NormalProfile {
 	}
 
 	@Override
-	public void write(File file, int section) throws IOException {
+	public void save(File file, int section) throws IOException {
 		if (data == null)
 			return;
 		// back up file just in case

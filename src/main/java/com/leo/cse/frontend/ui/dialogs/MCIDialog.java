@@ -2,6 +2,7 @@ package com.leo.cse.frontend.ui.dialogs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -25,13 +26,18 @@ public class MCIDialog extends BaseDialog {
 			return "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n" + MCI.get("Meta.Author")
 					+ "\nSpecial support:\n" + MCI.getSpecials();
 		}, 4, 0));
-		addComponent(new Button("Load MCI file", 14, 94, 356, 17, () -> {
+		Supplier<Boolean> enabled = () -> {
+			return !ExeData.isPlusMode();
+		};
+		Button btnLoadMCI = new Button("Load MCI file", 14, 94, 356, 17, () -> {
 			if (loadMCI()) {
 				SaveEditorPanel.panel.addComponents();
 				Main.window.repaint();
 			}
-		}));
-		addComponent(new Button("Load default MCI file", 14, 114, 356, 17, () -> {
+		});
+		btnLoadMCI.setEnabled(enabled);
+		addComponent(btnLoadMCI);
+		Button btnLoadDefaultMCI = new Button("Load default MCI file", 14, 114, 356, 17, () -> {
 			try {
 				MCI.readDefault();
 			} catch (Exception e) {
@@ -39,7 +45,9 @@ public class MCIDialog extends BaseDialog {
 						"An error occured while loading the default MCI file:\n" + e.getMessage(),
 						"Could not load default MCI file!", JOptionPane.ERROR_MESSAGE);
 			}
-		}));
+		});
+		btnLoadDefaultMCI.setEnabled(enabled);
+		addComponent(btnLoadDefaultMCI);
 	}
 
 	private boolean ret = false;

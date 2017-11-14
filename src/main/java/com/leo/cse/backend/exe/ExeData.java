@@ -520,6 +520,16 @@ public class ExeData {
 	public static void setLoadTSC(boolean loadTSC) {
 		ExeData.loadTSC = loadTSC;
 	}
+	
+	private static int graphicsResolution = 1;
+
+	public static int getGraphicsResolution() {
+		return graphicsResolution;
+	}
+
+	public static void setGraphicsResolution(int graphicsResolution) {
+		ExeData.graphicsResolution = graphicsResolution;
+	}
 
 	/**
 	 * Array of strings loaded from the executable.
@@ -1327,10 +1337,9 @@ public class ExeData {
 			BufferedImage img = ImageIO.read(is);
 			if (trans)
 				img = ResUtils.black2Trans(img);
-			int res = MCI.getInteger("Game.GraphicsResolution", 1);
-			if (res == 2)
+			if (graphicsResolution == 2)
 				return img;
-			double scale = 2 / (double) res;
+			double scale = 2 / (double) graphicsResolution;
 			if (scale == 1)
 				return img;
 			int w = img.getWidth(), h = img.getHeight();
@@ -1379,6 +1388,8 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadGraphics() throws IOException {
+		if (graphicsResolution < 0)
+			graphicsResolution = 1;
 		title = loadGraphic(STRING_TITLE);
 		myChar = loadGraphic(STRING_MYCHAR);
 		armsImage = loadGraphic(STRING_ARMSIMAGE);

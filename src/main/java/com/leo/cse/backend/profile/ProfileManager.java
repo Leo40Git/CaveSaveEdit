@@ -24,18 +24,17 @@ public class ProfileManager {
 	 * Used to notify {@link ProfileListener}s of a new profile being loaded.
 	 */
 	public static final String EVENT_LOAD = "event.load";
-
-	public enum ProfileType {
-		NORMAL, CSPLUS;
-	}
-
-	private static ProfileType implType;
-
-	public static ProfileType getType() {
-		return implType;
-	}
+	
+	public static final String EVENT_UNLOAD = "event.unload";
 
 	private static Profile impl;
+	
+	public static Class<? extends Profile> getType() {
+		if (impl == null)
+			return null;
+		return impl.getClass();
+	}
+	
 	private static File file;
 
 	public static File getFile() {
@@ -188,26 +187,42 @@ public class ProfileManager {
 		}
 
 	}
+	
+	private static boolean undoManExists() {
+		return impl != null && impl.getLoadedFile() != null && undoMan != null;
+	}
+	
+	public static boolean canUndo() {
+		if (!undoManExists())
+			return false;
+		return undoMan.canUndo();
+	}
 
 	/**
 	 * Undoes an edit.
 	 */
 	public static void undo() {
-		if (impl == null || impl.getLoadedFile() == null || undoMan == null || !undoMan.canUndo())
+		if (!canUndo())
 			return;
 		undoMan.undo();
+	}
+	
+	public static boolean canRedo() {
+		if (!undoManExists())
+			return false;
+		return undoMan.canRedo();
 	}
 
 	/**
 	 * Redoes an edit.
 	 */
 	public static void redo() {
-		if (impl == null || impl.getLoadedFile() == null || undoMan == null || !undoMan.canRedo())
+		if (!canRedo())
 			return;
 		undoMan.redo();
 	}
 
-	public static void read(File file, int section) throws IOException {
+	public static void load(File file, int section) throws IOException {
 		String profileClass = MCI.getNullable("Game.ProfileClass");
 		if (profileClass == null)
 			impl = new NormalProfile();
@@ -237,39 +252,43 @@ public class ProfileManager {
 			}
 			impl = (Profile) implObj;
 		}
-		impl.read(file, section);
+		unload();
+		impl.load(file, section);
 		undoMan = new UndoManager();
 		modified = false;
 		// notify listeners
 		notifyListeners(EVENT_LOAD, 0, null, null);
 	}
 
-	public static void read(String path, int section) throws IOException {
-		read(new File(path), section);
+	public static void load(String path, int section) throws IOException {
+		load(new File(path), section);
 	}
 
-	public static void write(File file, int section) throws IOException {
+	public static void save(File file, int section) throws IOException {
 		if (impl == null)
 			return;
-		impl.write(file, section);
+		impl.save(file, section);
 		modified = false;
 		// notify listeners
 		notifyListeners(EVENT_SAVE, 0, null, null);
-		modified = false;
 	}
 
-	public static void write(String path, int section) throws IOException {
-		write(new File(path), section);
+	public static void save(String path, int section) throws IOException {
+		save(new File(path), section);
 	}
 
-	public static void write() throws IOException {
+	public static void save() throws IOException {
 		if (impl == null)
 			return;
-		write(impl.getLoadedFile(), impl.getLoadedSection());
+		save(impl.getLoadedFile(), impl.getLoadedSection());
 	}
 
-	public static void dispose() {
+	public static void unload() {
 		impl = null;
+		file = null;
+		modified = false;
+		undoMan = null;
+		notifyListeners(EVENT_UNLOAD, 0, null, null);
 	}
 
 	public static File getLoadedFile() {
@@ -350,7 +369,11 @@ public class ProfileManager {
 		if (impl == null)
 			return;
 		Class<?> type = getFieldType(field);
-		System.out.println("setting field " + field + "[" + index + "] to " + type.cast(value));
+		Class<?> compType = type.getComponentType();
+		String valueStr = type.cast(value).toString();
+		if (compType != null)
+			valueStr = compType.getName() + "[" + "]";
+		System.out.println("setting field " + field + "[" + index + "] to " + valueStr);
 		Object oldValue = impl.getField(field, index);
 		if (type.cast(oldValue) != type.cast(value)) {
 			modified = true;

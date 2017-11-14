@@ -17,10 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -66,24 +65,43 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		private BufferedImage icon;
 		private Runnable onClick;
 		private boolean hover;
+		private Supplier<Boolean> enabled;
 
-		public MenuBarItem(String label, String hotkey, BufferedImage icon, Runnable onClick) {
+		public MenuBarItem(String label, String hotkey, BufferedImage icon, Runnable onClick,
+				Supplier<Boolean> enabled) {
 			this.label = label;
 			this.hotkey = hotkey;
 			this.icon = icon;
 			this.onClick = onClick;
+			this.enabled = enabled;
+		}
+
+		public MenuBarItem(String label, String hotkey, BufferedImage icon, Runnable onClick) {
+			this(label, hotkey, icon, onClick, Main.TRUE_SUPPLIER);
+		}
+
+		public MenuBarItem(String label, String hotkey, Runnable onClick, Supplier<Boolean> enabled) {
+			this(label, hotkey, null, onClick, enabled);
 		}
 
 		public MenuBarItem(String label, String hotkey, Runnable onClick) {
-			this(label, hotkey, null, onClick);
+			this(label, hotkey, onClick, Main.TRUE_SUPPLIER);
+		}
+
+		public MenuBarItem(String label, BufferedImage icon, Runnable onClick, Supplier<Boolean> enabled) {
+			this(label, null, icon, onClick, Main.TRUE_SUPPLIER);
 		}
 
 		public MenuBarItem(String label, BufferedImage icon, Runnable onClick) {
-			this(label, null, icon, onClick);
+			this(label, icon, onClick, Main.TRUE_SUPPLIER);
+		}
+
+		public MenuBarItem(String label, Runnable onClick, Supplier<Boolean> enabled) {
+			this(label, null, null, onClick, enabled);
 		}
 
 		public MenuBarItem(String label, Runnable onClick) {
-			this(label, null, null, onClick);
+			this(label, onClick, Main.TRUE_SUPPLIER);
 		}
 
 		public String getLabel() {
@@ -120,6 +138,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 		public void onClick() {
 			onClick.run();
+		}
+
+		public boolean isEnabled() {
+			return enabled.get();
 		}
 	}
 
@@ -263,20 +285,27 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			loadProfile();
 		}));
 		mbiFile.add(new MenuBarItem("Unload Profile", () -> {
-			ProfileManager.dispose();
+			ProfileManager.unload();
+		}, () -> {
+			return ProfileManager.isLoaded();
 		}));
 		mbiFile.add(new MenuBarItem("Load Game/Mod", "Ctrl+Shift+O", Resources.toolbarIcons[1], () -> {
 			loadExe();
 		}));
 		mbiFile.add(new MenuBarItem("Unload Game/Mod", () -> {
 			ExeData.unload();
+		}, () -> {
+			return ExeData.isLoaded();
 		}));
+		Supplier<Boolean> saveEnabled = () -> {
+			return ProfileManager.isLoaded();
+		};
 		mbiFile.add(new MenuBarItem("Save", "Ctrl+S", Resources.toolbarIcons[2], () -> {
 			saveProfile();
-		}));
+		}, saveEnabled));
 		mbiFile.add(new MenuBarItem("Save As", "Ctrl+Shift+S", Resources.toolbarIcons[3], () -> {
 			saveProfileAs();
-		}));
+		}, saveEnabled));
 		mbiFile.add(new MenuBarItem("Settings", Resources.toolbarIcons[4], () -> {
 			addDialogBox(new SettingsDialog());
 		}));
@@ -290,9 +319,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		List<MenuBarItem> mbiEdit = new ArrayList<>();
 		mbiEdit.add(new MenuBarItem("Undo", "Ctrl+Z", () -> {
 			ProfileManager.undo();
+		}, () -> {
+			return ProfileManager.canUndo();
 		}));
 		mbiEdit.add(new MenuBarItem("Redo", "Ctrl+Y", () -> {
 			ProfileManager.redo();
+		}, () -> {
+			return ProfileManager.canRedo();
 		}));
 		menuBars.add(new MenuBar("Edit", mbiEdit));
 		List<MenuBarItem> mbiTools = new ArrayList<>();
@@ -426,22 +459,29 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				g2d.setColor(Main.lineColor);
 				g2d.drawRect(mX, mY, mWidth, mHeight);
 				for (MenuBarItem item : items) {
-					if (item.isHover()) {
-						g2d.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(),
-								Main.lineColor.getBlue(), 31));
+					Color lc2 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(),
+							31);
+					boolean enabled = item.isEnabled();
+					if (item.isHover() && enabled) {
+						g2d.setColor(lc2);
 						g2d.fillRect(mX, mY, mWidth, 22);
+						g2d.setColor(Main.lineColor);
+					}
+					if (!enabled) {
+						g2d.setColor(lc2);
+						FrontUtils.drawCheckeredGrid(g, mX + 1, mY + 1, mWidth - 1, 21);
 						g2d.setColor(Main.lineColor);
 					}
 					BufferedImage icon = item.getIcon();
 					if (icon != null)
 						g2d.drawImage(icon, mX + 2, mY + 3, this);
-					FrontUtils.drawString(g2d, item.getLabel(), mX + 20, mY + 2);
+					FrontUtils.drawString(g2d, item.getLabel(), mX + 20, mY + 2, !enabled);
 					String hotkey = item.getHotkey();
 					if (hotkey != null) {
 						g2d.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(),
 								Main.lineColor.getBlue(), 127));
 						g2d.setFont(Resources.fontS);
-						FrontUtils.drawStringRight(g2d, hotkey, mX + mWidth - 2, mY + 4);
+						FrontUtils.drawStringRight(g2d, hotkey, mX + mWidth - 2, mY + 4, !enabled);
 						g2d.setColor(Main.lineColor);
 						g2d.setFont(Resources.font);
 					}
@@ -513,21 +553,15 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}
 	}
 
-	private static final Set<FileFilter> MOD_FILE_FILTERS = new HashSet<>();
+	private static final FileFilter[] MOD_FILE_FILTERS;
 
 	static {
-		MOD_FILE_FILTERS.add(new FileNameExtensionFilter("Executables", "exe"));
-		MOD_FILE_FILTERS.add(new FileNameExtensionFilter("CS+ stage.tbl", "tbl"));
+		MOD_FILE_FILTERS = new FileFilter[2];
+		MOD_FILE_FILTERS[0] = new FileNameExtensionFilter("Executables", "exe");
+		MOD_FILE_FILTERS[1] = new FileNameExtensionFilter("CS+ stage.tbl", "tbl");
 	}
 
 	private void loadExe() {
-		/*
-		if (!ProfileManager.isLoaded()) {
-			JOptionPane.showMessageDialog(Main.window, "Please load a profile before loading an executable.",
-					"Can't load executable", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		*/
 		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir")));
 		if (!dir.exists())
 			dir = new File(System.getProperty("user.dir"));
@@ -586,7 +620,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			e.printStackTrace();
 		}
 		try {
-			ProfileManager.write();
+			ProfileManager.save();
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 					"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
@@ -614,7 +648,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				e.printStackTrace();
 			}
 			try {
-				ProfileManager.write(file, ProfileManager.getLoadedSection());
+				ProfileManager.save(file, ProfileManager.getLoadedSection());
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
@@ -652,6 +686,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		draggingWindow = false;
 		firstDragEvent = true;
 		onQuit = false;
+		notDraggingComps = false;
 		int px = e.getX(), py = e.getY();
 		if (py < OFFSET_Y && px >= getWidth() - 33 && px < getWidth() - 17) {
 			Main.close();
@@ -702,7 +737,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			for (MenuBarItem item : items) {
 				if (FrontUtils.pointInRectangle(px, py, mX, mY, mWidth, 21)) {
 					item.setHover(true);
-					item.onClick();
+					if (item.isEnabled())
+						item.onClick();
 					break;
 				}
 				mY += 22;
@@ -780,25 +816,21 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	private Map<IDraggable, Boolean> lastDragged;
-	private boolean draggingWindow = false, firstDragEvent = false, onQuit = false;
+	private boolean draggingWindow = false, notDraggingComps = false, firstDragEvent = false, onQuit = false;
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		boolean isFDE = firstDragEvent;
 		firstDragEvent = false;
-		if (loading || !ProfileManager.isLoaded())
-			return;
 		if (!dragLeftMouse)
 			return;
-		if (!dBoxes.isEmpty() || currentMenubar != -1)
-			return;
-		if (lastDragged == null)
-			lastDragged = new HashMap<IDraggable, Boolean>();
 		int px = e.getX(), py = e.getY();
 		if (px >= getWidth() - 33 && !draggingWindow)
 			onQuit = true;
 		else
 			onQuit = false;
+		if (lastDragged == null)
+			lastDragged = new HashMap<IDraggable, Boolean>();
 		if (lastDragged.isEmpty() && !onQuit && (isFDE || draggingWindow)) {
 			if (px > 14 && px < getWidth() - 14 && py > 14 && py < OFFSET_Y) {
 				draggingWindow = true;
@@ -812,6 +844,19 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
+		if (!dBoxes.isEmpty()) {
+			notDraggingComps = true;
+			mouseMoved(px, py + OFFSET_Y);
+			return;
+		}
+		final Dimension winSize2 = Main.window.getActualSize(false);
+		if (py <= 17 || currentMenubar != -1 || py >= winSize2.height - 18) {
+			notDraggingComps = true;
+			mouseMoved(px, py + OFFSET_Y);
+			return;
+		}
+		if (loading || !ProfileManager.isLoaded() || notDraggingComps)
+			return;
 		Component newFocus = null;
 		for (Component comp : tabMap.get(currentTab).getComponents()) {
 			if (!(comp instanceof IDraggable))
@@ -830,9 +875,12 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		mouseMoved(e.getX(), e.getY());
+	}
+
+	private void mouseMoved(int px, int py) {
 		if (loading)
 			return;
-		int px = e.getX(), py = e.getY();
 		quitHover = false;
 		if (py < OFFSET_Y && px >= getWidth() - 33 && px < getWidth() - 17)
 			quitHover = true;

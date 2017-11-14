@@ -79,7 +79,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (sel == JOptionPane.YES_OPTION)
 				try {
-					ProfileManager.write();
+					ProfileManager.save();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -95,7 +95,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			System.out.println("REBOOTING!");
 			window.dispose();
 			ProfileManager.removeListener(window);
-			ProfileManager.dispose();
+			ProfileManager.unload();
 			ExeData.unload();
 			window = null;
 			SaveEditorPanel.panel = null;
@@ -172,7 +172,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				}
 			}
 			try {
-				ProfileManager.read(file, 0);
+				ProfileManager.load(file, 0);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,

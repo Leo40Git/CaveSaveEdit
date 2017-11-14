@@ -200,8 +200,12 @@ public class MCI {
 
 	private static void validate() throws MCIException {
 		int fps = getInteger("Game.FPS", 50);
-		if (fps == 0)
-			throw new MCIException("Game.FPS cannot be equal to 0!");
+		if (fps < 0)
+			throw new MCIException("Game.FPS cannot be negative!");
+		int res = getInteger("Game.GraphicsResolution", 1);
+		if (res < 0)
+			throw new MCIException("Game.GraphicsResolution cannot be negative!");
+		ExeData.setGraphicsResolution(res);
 	}
 
 	public static boolean contains(String key) {

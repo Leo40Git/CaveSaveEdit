@@ -27,14 +27,11 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -160,9 +157,9 @@ public class FrontUtils {
 	}
 
 	public static void drawCheckeredGrid(Graphics g, int x, int y, int w, int h) {
-		for (int px = x; px < w; px += 2)
-			for (int py = y; py < h; py += 2)
-				g.drawLine(px, py, px, py);
+		for (int py = 0; py < h; py += 2)
+			for (int px = 0; px < w; px += 2)
+				g.drawImage(Resources.grid, x + px, y + py, null);
 	}
 
 	public static String intsToString(int... nums) {
@@ -375,18 +372,17 @@ public class FrontUtils {
 
 	private static JFileChooser fc;
 
-	public static int openFileChooser(String title, Set<FileFilter> filters, File currentDirectory,
+	public static int openFileChooser(String title, FileFilter[] filters, File currentDirectory,
 			boolean allowAllFilesFilter, boolean openOrSave) {
 		fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(false);
 		boolean noFilters = false;
-		if (filters == null || filters.isEmpty())
+		if (filters == null || filters.length == 0)
 			noFilters = true;
 		fc.setAcceptAllFileFilterUsed(allowAllFilesFilter || noFilters);
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		Iterator<FileFilter> it = filters.iterator();
-		while (it.hasNext())
-			fc.addChoosableFileFilter(it.next());
+		for (FileFilter filter : filters)
+			fc.addChoosableFileFilter(filter);
 		fc.setDialogTitle(title);
 		fc.setCurrentDirectory(currentDirectory);
 		int ret = 0;
@@ -399,8 +395,8 @@ public class FrontUtils {
 
 	public static int openFileChooser(String title, FileFilter filter, File currentDirectory,
 			boolean allowAllFilesFilter, boolean openOrSave) {
-		Set<FileFilter> filters = new HashSet<>();
-		filters.add(filter);
+		FileFilter[] filters = new FileFilter[1];
+		filters[0] = filter;
 		return openFileChooser(title, filters, currentDirectory, allowAllFilesFilter, openOrSave);
 	}
 

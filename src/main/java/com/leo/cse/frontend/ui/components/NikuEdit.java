@@ -72,21 +72,24 @@ public class NikuEdit extends Component implements IScrollable {
 		for (int i = 0; i < numbers.length; i++)
 			numbers[i] = textBox.getSubimage(i * 16, 112, 16, 16);
 	}
-	
+
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		int elem = getElement(x);
 		if (elem < 0)
 			return;
 		String nVal;
-		switch(elem) {
+		switch (elem) {
 		case 0:
 			nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for minutes:",
 					Integer.toUnsignedString(NikuRecord.getMinutes()));
 			if (nVal == null)
 				return;
+			int min = Integer.parseUnsignedInt(nVal);
+			if (min > 99)
+				min = 99;
 			try {
-				NikuRecord.setMinutes(Integer.parseUnsignedInt(nVal));
+				NikuRecord.setMinutes(min);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
 						"Error while parsing input!", JOptionPane.ERROR_MESSAGE);
@@ -97,8 +100,11 @@ public class NikuEdit extends Component implements IScrollable {
 					Integer.toUnsignedString(NikuRecord.getSeconds()));
 			if (nVal == null)
 				return;
+			int sec = Integer.parseUnsignedInt(nVal);
+			if (sec > 59)
+				sec = 59;
 			try {
-				NikuRecord.setSeconds(Integer.parseUnsignedInt(nVal));
+				NikuRecord.setSeconds(sec);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
 						"Error while parsing input!", JOptionPane.ERROR_MESSAGE);
@@ -109,8 +115,11 @@ public class NikuEdit extends Component implements IScrollable {
 					Integer.toUnsignedString(NikuRecord.getTenths()));
 			if (nVal == null)
 				return;
+			int ten = Integer.parseUnsignedInt(nVal);
+			if (ten > 9)
+				ten = 9;
 			try {
-				NikuRecord.setTenths(Integer.parseUnsignedInt(nVal));
+				NikuRecord.setTenths(ten);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
 						"Error while parsing input!", JOptionPane.ERROR_MESSAGE);
@@ -124,11 +133,28 @@ public class NikuEdit extends Component implements IScrollable {
 
 	@Override
 	public void onScroll(int rotations, boolean shiftDown, boolean ctrlDown) {
-		if (shiftDown)
-			rotations *= 600;
-		else if (!ctrlDown)
-			rotations *= 10;
-		NikuRecord.setTenths(NikuRecord.getTenths() - rotations);
+		if (shiftDown) {
+			int newMin = NikuRecord.getMinutes() - rotations;
+			if (newMin < 0)
+				newMin = 0;
+			if (newMin > 99)
+				newMin = 99;
+			NikuRecord.setMinutes(newMin);
+		} else if (ctrlDown) {
+			int newTen = NikuRecord.getTenths() - rotations;
+			if (newTen < 0 && NikuRecord.getSeconds() == 0 && NikuRecord.getMinutes() == 0)
+				newTen = 0;
+			if (newTen > 9 && NikuRecord.getSeconds() == 59 && NikuRecord.getMinutes() == 99)
+				newTen = 9;
+			NikuRecord.setTenths(newTen);
+		} else {
+			int newSec = NikuRecord.getSeconds() - rotations;
+			if (newSec < 0 && NikuRecord.getMinutes() == 0)
+				newSec = 0;
+			if (newSec > 59 && NikuRecord.getMinutes() == 99)
+				newSec = 59;
+			NikuRecord.setSeconds(newSec);
+		}
 	}
 
 	@Override

@@ -16,10 +16,10 @@ import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo;
 import com.leo.cse.backend.exe.MapInfo.PxeEntry;
 import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.Profile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
-import com.leo.cse.backend.profile.ProfileManager.ProfileType;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.MCI.EntityExtras;
@@ -113,11 +113,11 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		sg.translate(-camX, -camY);
 		drawTiles(sg, 1);
 		drawEntities(sg);
-		drawMyChar(sg, false);
+		drawMyChar(sg, DRAWTYPE_NORMAL);
 		drawTiles(sg, 2);
-		drawMyChar(sg, true);
+		drawMyChar(sg, DRAWTYPE_TRANS);
 		if (hover && ignoreClick != 2)
-			drawMyCharHover(sg);
+			drawMyChar(sg, DRAWTYPE_HOVER);
 		if (gSup.get())
 			drawGrid(sg);
 		sg.translate(camX, camY);
@@ -261,59 +261,9 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		}
 	}
 
-	private void drawMyChar(Graphics2D g, boolean trans) {
-		double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
-		int dir = 0;
-		long costume = 0;
-		try {
-			dir = ((Integer) ProfileManager.getField(NormalProfile.FIELD_DIRECTION) == 2 ? 1 : 0);
-			if (MCI.getSpecial("VarHack"))
-				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, 6);
-			if (MCI.getSpecial("MimHack"))
-				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
-			else {
-				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
-				if (ProfileManager.getType() == ProfileType.CSPLUS)
-					if (ProfileManager.getLoadedSection() > 2)
-						costume += 2;
-			}
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
-		int xPixel = playerPos[0] - 16;
-		xPixel /= snap;
-		xPixel *= snap;
-		int yPixel = playerPos[1] - 16;
-		yPixel /= snap;
-		yPixel *= snap;
-		int sourceX1 = 0;
-		int sourceY1 = (int) (64 * costume + 32 * dir);
-		Composite oc = g.getComposite();
-		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (trans ? 0.5f : 1));
-		g.setComposite(ac);
-		EntityExtras pe = null;
-		try {
-			pe = MCI.getPlayerExtras(xPixel, yPixel, (dir == 1 ? true : false), costume);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		int sourceX2 = 32, sourceY2 = sourceY1 + 32;
-		if (pe != null) {
-			Rectangle pf = pe.getFrameRect();
-			Point po = pe.getOffset();
-			sourceX1 = pf.x;
-			sourceY1 = pf.y;
-			sourceX2 = pf.width;
-			sourceY2 = pf.height;
-			xPixel += po.x;
-			yPixel += po.y;
-		}
-		g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + Math.abs(sourceX2 - sourceX1),
-				yPixel + Math.abs(sourceY2 - sourceY1), sourceX1, sourceY1, sourceX2, sourceY2, null);
-		g.setComposite(oc);
-	}
+	private static final int DRAWTYPE_NORMAL = 0, DRAWTYPE_TRANS = 1, DRAWTYPE_HOVER = 2;
 
-	private void drawMyCharHover(Graphics2D g) {
+	private void drawMyChar(Graphics2D g, int drawType) {
 		double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
 		int dir = 0;
 		long costume = 0;
@@ -325,23 +275,41 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
 			else {
 				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
-				if (ProfileManager.getType() == ProfileType.CSPLUS)
+				if (ProfileManager.getType() == PlusProfile.class)
 					if (ProfileManager.getLoadedSection() > 2)
-						costume += 2;
+						costume += 10;
 			}
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();
 		}
-		int xPixel = playerHoverX - 16;
+		int xPixel = playerPos[0];
+		if (drawType == DRAWTYPE_HOVER)
+			xPixel = playerHoverX;
+		xPixel -= 16;
 		xPixel /= snap;
 		xPixel *= snap;
-		int yPixel = playerHoverY - 32;
+		int yPixel = playerPos[1];
+		if (drawType == DRAWTYPE_HOVER)
+			yPixel = playerHoverY;
+		yPixel -= (drawType == DRAWTYPE_HOVER ? 32 : 16);
 		yPixel /= snap;
 		yPixel *= snap;
 		int sourceX1 = 0;
 		int sourceY1 = (int) (64 * costume + 32 * dir);
 		Composite oc = g.getComposite();
-		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f);
+		float alpha = 1;
+		switch (drawType) {
+		case DRAWTYPE_TRANS:
+			alpha = 0.5f;
+			break;
+		case DRAWTYPE_HOVER:
+			alpha = 0.25f;
+			break;
+		default:
+			alpha = 1;
+			break;
+		}
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
 		g.setComposite(ac);
 		EntityExtras pe = null;
 		try {
@@ -428,17 +396,13 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			return;
 		if (mapInfo.hasMissingAssets())
 			return;
-		int px = 0, py = 0;
-		try {
-			px = (Short) ProfileManager.getField(NormalProfile.FIELD_X_POSITION);
-			py = (Short) ProfileManager.getField(NormalProfile.FIELD_Y_POSITION);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
+		System.out.println("MapView.onKey");
+		updateCamCoords();
+		int px = playerPos[0], py = playerPos[1];
 		int amount = 32;
 		if (shiftDown) {
 			if (ctrlDown)
-				amount = Math.max(1, (int) (2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)));
+				amount = Math.max(1, (int) (2 / (double) ExeData.getGraphicsResolution()));
 			else
 				amount = 16;
 		} else if (ctrlDown)
@@ -456,8 +420,8 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		px = Math.max(0, Math.min(map[0][0].length * 32, px));
 		py = Math.max(0, Math.min(map[0].length * 32, py));
 		Short[] pos = new Short[2];
-		pos[0] = (short) (x - this.x + camX);
-		pos[1] = (short) (y - this.y + camY);
+		pos[0] = (short) px;
+		pos[1] = (short) py;
 		try {
 			ProfileManager.setField(NormalProfile.FIELD_POSITION, pos);
 		} catch (ProfileFieldException e) {

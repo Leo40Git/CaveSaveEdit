@@ -28,6 +28,7 @@ public class Resources {
 	public static BufferedImage radioOffS, radioOnS, radioDisabledS;
 	public static BufferedImage dialogClose;
 	public static BufferedImage arrowDown, arrowUp;
+	public static BufferedImage grid;
 	
 	// uncolored images
 	public static BufferedImage drag;
@@ -87,6 +88,7 @@ public class Resources {
 		dialogClose = ui.getSubimage(48, 0, 14, 14);
 		arrowDown = ui.getSubimage(80, 0, 8, 8);
 		arrowUp = ui.getSubimage(80, 8, 8, 8);
+		grid = ui.getSubimage(120, 20, 2, 2);
 	}
 
 	public static void colorImages(Color tint) {
@@ -103,6 +105,7 @@ public class Resources {
 		dialogClose = generateMask(dialogClose, tint, 1f);
 		arrowDown = generateMask(arrowDown, tint, 1f);
 		arrowUp = generateMask(arrowUp, tint, 1f);
+		grid = generateMask(grid, tint, 1f);
 	}
 
 }
