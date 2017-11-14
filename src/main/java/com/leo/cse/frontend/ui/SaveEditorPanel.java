@@ -285,6 +285,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			loadProfile();
 		}));
 		mbiFile.add(new MenuBarItem("Unload Profile", () -> {
+			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
+				int sel = JOptionPane.showConfirmDialog(Main.window,
+						"Are you sure you want to unload the profile?\nUnsaved changes will be lost!",
+						"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (sel == JOptionPane.CANCEL_OPTION)
+					return;
+			}
 			ProfileManager.unload();
 		}, () -> {
 			return ProfileManager.isLoaded();

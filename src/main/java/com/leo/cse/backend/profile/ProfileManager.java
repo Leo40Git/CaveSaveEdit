@@ -223,6 +223,7 @@ public class ProfileManager {
 	}
 
 	public static void load(File file, int section) throws IOException {
+		unload();
 		String profileClass = MCI.getNullable("Game.ProfileClass");
 		if (profileClass == null)
 			impl = new NormalProfile();
@@ -252,7 +253,6 @@ public class ProfileManager {
 			}
 			impl = (Profile) implObj;
 		}
-		unload();
 		impl.load(file, section);
 		undoMan = new UndoManager();
 		modified = false;
