@@ -12,6 +12,10 @@ public class NikuRecord {
 
 	private static int value;
 	private static File file;
+	
+	private static byte unsigned(byte b) {
+		return (byte) (b & 0xFF);
+	}
 
 	public static void read(File src) throws IOException {
 		int[] result = new int[4];
@@ -20,7 +24,7 @@ public class NikuRecord {
 		fis.read(buf);
 		fis.close();
 		for (int i = 0; i < 4; i++) {
-			byte key = (byte) (buf[i + 16] & 0xFF);
+			byte key = unsigned(buf[i + 16]);
 			System.out.println("result " + i + ": key=" + key);
 			int j = i * 4;
 			buf[j] = (byte) (buf[j] - key);
@@ -29,7 +33,7 @@ public class NikuRecord {
 			System.out.println("buf[" + (j + 1) + "]=" + buf[j + 1]);
 			buf[j + 2] = (byte) (buf[j + 2] - key);
 			System.out.println("buf[" + (j + 2) + "]=" + buf[j + 2]);
-			buf[j + 3] = (byte) (buf[j + 3] - (byte) ((key & 0xFF) / 2));
+			buf[j + 3] = (byte) (buf[j + 3] - (byte) (unsigned(key) / 2));
 			System.out.println("buf[" + (j + 3) + "]=" + buf[j + 3]);
 			result[i] = ByteUtils.readInt(buf, j);
 		}
@@ -40,7 +44,6 @@ public class NikuRecord {
 		if (result[0] != result[1] || result[0] != result[2] || result[0] != result[3])
 			throw new IOException("290.rec file is corrupt");
 		value = result[0];
-		System.out.println("loaded 290.rec with value " + value);
 		file = src;
 	}
 
@@ -55,17 +58,17 @@ public class NikuRecord {
 		bufInt[3] = value;
 		ByteUtils.writeInts(bufByte, 0, 0, bufInt);
 		Random r = new Random();
-		bufByte[16] = (byte) r.nextInt(255);
-		bufByte[17] = (byte) r.nextInt(255);
-		bufByte[18] = (byte) r.nextInt(255);
-		bufByte[19] = (byte) r.nextInt(255);
+		bufByte[16] = (byte) r.nextInt(0xFF);
+		bufByte[17] = (byte) r.nextInt(0xFF);
+		bufByte[18] = (byte) r.nextInt(0xFF);
+		bufByte[19] = (byte) r.nextInt(0xFF);
 		for (int i = 0; i < 4; i++) {
-			byte key = (byte) (bufByte[i + 16] & 0xFF);
+			byte key = unsigned(bufByte[i + 16]);
 			int j = i * 4;
 			bufByte[j] = (byte) (bufByte[j] + key);
 			bufByte[j + 1] = (byte) (bufByte[j + 1] + key);
 			bufByte[j + 2] = (byte) (bufByte[j + 2] + key);
-			bufByte[j + 3] = (byte) (bufByte[j + 3] + (byte) ((key & 0xFF) / 2));
+			bufByte[j + 3] = (byte) (bufByte[j + 3] + (byte) (unsigned(key) / 2));
 		}
 		FileOutputStream fos = new FileOutputStream(dest);
 		fos.write(bufByte);

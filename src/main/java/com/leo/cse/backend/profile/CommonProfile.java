@@ -20,9 +20,7 @@ public abstract class CommonProfile implements Profile {
 
 	public interface ProfileMethod {
 
-		public int getArgNum();
-
-		public Class<?>[] getArgType();
+		public Class<?>[] getArgTypes();
 
 		public Class<?> getRetType();
 
@@ -92,8 +90,8 @@ public abstract class CommonProfile implements Profile {
 			throw new ProfileMethodException("Method " + methodName + " is already defined!");
 		if (method == null)
 			throw new ProfileMethodException("method == null!");
-		if (method.getArgType() == null)
-			throw new ProfileMethodException("method.getArgType() == null!");
+		if (method.getArgTypes() == null)
+			throw new ProfileMethodException("method.getArgTypes() == null!");
 		methods.put(methodName, method);
 	}
 
@@ -149,13 +147,13 @@ public abstract class CommonProfile implements Profile {
 	@Override
 	public int getMethodArgNum(String method) throws ProfileMethodException {
 		assertHasMethod(method);
-		return methods.get(method).getArgNum();
+		return methods.get(method).getArgTypes().length;
 	}
 
 	@Override
-	public Class<?>[] getMethodArgType(String method) throws ProfileMethodException {
+	public Class<?>[] getMethodArgTypes(String method) throws ProfileMethodException {
 		assertHasMethod(method);
-		return methods.get(method).getArgType();
+		return methods.get(method).getArgTypes();
 	}
 
 	@Override
@@ -167,18 +165,15 @@ public abstract class CommonProfile implements Profile {
 	@Override
 	public Object callMethod(String method, Object... args) throws ProfileMethodException {
 		assertHasMethod(method);
-		if (args.length < getMethodArgNum(method))
-			throw new ProfileMethodException("Amount of arguments is incorrect, is " + args.length + " but should be "
-					+ getMethodArgNum(method) + "!");
-		Class<?>[] argTypes = getMethodArgType(method);
-		if (argTypes == null && getMethodArgNum(method) != 0)
-			throw new ProfileMethodException("Method does not have argument type array!");
-		if (argTypes.length < args.length)
-			throw new ProfileMethodException("Method does not have enough argument types, is " + argTypes.length
-					+ " but should be " + args.length + "!");
-		for (int i = 0; i < args.length; i++)
+		int argNum = getMethodArgNum(method);
+		if (args.length < argNum)
+			throw new ProfileMethodException(
+					"Amount of arguments is insufficent, is " + args.length + " but should be " + argNum + "!");
+		Class<?>[] argTypes = getMethodArgTypes(method);
+		for (int i = 0; i < argTypes.length; i++)
 			if (!argTypes[i].isInstance(args[i]))
-				throw new ProfileMethodException("Argument " + i + " has bad type!");
+				throw new ProfileMethodException("Argument " + i + " has bad type: " + argTypes[i].getName()
+						+ " was expected, but " + args[i].getClass().getName() + " was received instead!");
 		return methods.get(method).call(args);
 	}
 

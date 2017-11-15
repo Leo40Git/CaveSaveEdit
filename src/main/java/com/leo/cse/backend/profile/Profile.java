@@ -62,7 +62,7 @@ public interface Profile {
 	
 	public int getMethodArgNum(String method) throws ProfileMethodException;
 	
-	public Class<?>[] getMethodArgType(String method) throws ProfileMethodException;
+	public Class<?>[] getMethodArgTypes(String method) throws ProfileMethodException;
 	
 	public Class<?> getMethodRetType(String method) throws ProfileMethodException;
 	

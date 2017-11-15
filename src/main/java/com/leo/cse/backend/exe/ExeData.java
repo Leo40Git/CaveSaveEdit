@@ -60,6 +60,12 @@ public class ExeData {
 			listeners = new LinkedList<>();
 		listeners.add(l);
 	}
+	
+	public static void removeListener(ExeLoadListener l) {
+		if (listeners == null)
+			return;
+		listeners.remove(l);
+	}
 
 	/**
 	 * Pre-load event.

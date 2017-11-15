@@ -35,7 +35,6 @@ public class TSCFile {
 			}
 		}
 		// now read the input as text
-		script = StrTools.ENCODING_ERROR;
 		if (datArray != null)
 			script = StrTools.CString(datArray, ExeData.getEncoding());
 	}

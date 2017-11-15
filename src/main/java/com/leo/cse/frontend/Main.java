@@ -92,10 +92,10 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				return;
 		}
 		if (reboot) {
-			System.out.println("REBOOTING!");
 			window.dispose();
 			ProfileManager.removeListener(window);
 			ProfileManager.unload();
+			ExeData.removeListener(window);
 			ExeData.unload();
 			window = null;
 			SaveEditorPanel.panel = null;

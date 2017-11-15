@@ -151,7 +151,7 @@ public class ByteUtils {
 	 * @param ptr
 	 *            starting position
 	 * @param off
-	 *            byte offset between each integer
+	 *            byte offset between each short
 	 * @param dest
 	 *            destination array
 	 */
@@ -217,7 +217,7 @@ public class ByteUtils {
 	 * @param ptr
 	 *            starting position
 	 * @param off
-	 *            byte offset between each integer
+	 *            byte offset between each long
 	 * @param dest
 	 *            destination array
 	 */
@@ -305,7 +305,7 @@ public class ByteUtils {
 	 * @param ptr
 	 *            starting position
 	 * @param off
-	 *            byte offset between each integer
+	 *            byte offset between each short
 	 * @param value
 	 *            shorts to write
 	 */
@@ -375,7 +375,7 @@ public class ByteUtils {
 	 * @param ptr
 	 *            starting position
 	 * @param off
-	 *            byte offset between each integer
+	 *            byte offset between each long
 	 * @param value
 	 *            integers to write
 	 */
