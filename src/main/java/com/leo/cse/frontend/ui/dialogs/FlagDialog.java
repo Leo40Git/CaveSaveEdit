@@ -7,7 +7,6 @@ import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.Profile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.DynamicLabel;
 import com.leo.cse.frontend.ui.components.FlagList;
 import com.leo.cse.frontend.ui.components.Label;
 import com.leo.cse.frontend.ui.components.ShortBox;
@@ -55,7 +54,7 @@ public class FlagDialog extends BaseDialog {
 			return FlagList.isFlagValid(flag);
 		});
 		addComponent(flagBox);
-		addComponent(new DynamicLabel(() -> {
+		addComponent(new Label(() -> {
 			return "Description:\n" + FlagList.getFlagDesc(flag);
 		}, 4, 18));
 	}

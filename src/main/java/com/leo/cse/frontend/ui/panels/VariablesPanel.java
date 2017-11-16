@@ -116,7 +116,7 @@ public class VariablesPanel extends Panel {
 							e.printStackTrace();
 						}
 						return false;
-						
+
 					}
 				}, new Function<Boolean, Boolean>() {
 					@Override

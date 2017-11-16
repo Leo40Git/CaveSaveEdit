@@ -59,7 +59,7 @@ public class Resources {
 	private static void loadImages() {
 		reloadColorImages();
 		drag = ui.getSubimage(40, 8, 3, 8);
-		editorTabIcons = new BufferedImage[5];
+		editorTabIcons = new BufferedImage[6];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
 		toolbarIcons = new BufferedImage[8];
@@ -79,16 +79,16 @@ public class Resources {
 		checkboxOff = ui.getSubimage(0, 0, 16, 16);
 		checkboxOn = ui.getSubimage(16, 0, 16, 16);
 		checkboxDisabled = ui.getSubimage(64, 0, 16, 16);
-		radioOff = ui.getSubimage(88, 0, 16, 16);
+		radioOff = ui.getSubimage(96, 0, 16, 16);
 		radioOffS = ui.getSubimage(32, 0, 8, 8);
-		radioOn = ui.getSubimage(88, 16, 16, 16);
+		radioOn = ui.getSubimage(96, 16, 16, 16);
 		radioOnS = ui.getSubimage(40, 0, 8, 8);
-		radioDisabled = ui.getSubimage(104, 16, 16, 16);
+		radioDisabled = ui.getSubimage(112, 16, 16, 16);
 		radioDisabledS = ui.getSubimage(32, 8, 8, 8);
 		dialogClose = ui.getSubimage(48, 0, 14, 14);
 		arrowDown = ui.getSubimage(80, 0, 8, 8);
 		arrowUp = ui.getSubimage(80, 8, 8, 8);
-		grid = ui.getSubimage(120, 20, 2, 2);
+		grid = ui.getSubimage(112, 14, 2, 2);
 	}
 
 	public static void colorImages(Color tint) {

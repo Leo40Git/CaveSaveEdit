@@ -50,6 +50,7 @@ import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
 import com.leo.cse.frontend.ui.panels.Panel;
+import com.leo.cse.frontend.ui.panels.PlusPanel;
 import com.leo.cse.frontend.ui.panels.VariablesPanel;
 import com.leo.cse.frontend.ui.panels.WarpsPanel;
 
@@ -189,21 +190,50 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	public static SaveEditorPanel panel;
 
 	public enum EditorTab {
-		GENERAL("General"), INVENTORY("Inventory"), WARPS("Warps"), FLAGS("Flags"), VARIABLES("Variables");
+		GENERAL("General", 0),
+		INVENTORY("Inventory", 1),
+		WARPS("Warps", 2),
+		FLAGS("Flags", 3),
+		VARIABLES("Variables", 4),
+		PLUS_EXCLUSIVE("Cave Story+ Exclusive", 5);
 
 		String label;
+		int icon;
 
-		EditorTab(String label) {
+		EditorTab(String label, int icon) {
 			this.label = label;
+			this.icon = icon;
 		}
 
 		public String label() {
 			return label;
 		}
+
+		public int icon() {
+			return icon;
+		}
 	}
 
-	private EditorTab currentTab;
-	private Map<EditorTab, Panel> tabMap;
+	static class EditorPanel {
+		private EditorTab tab;
+		private Panel panel;
+
+		public EditorPanel(EditorTab tab, Panel panel) {
+			this.tab = tab;
+			this.panel = panel;
+		}
+
+		public EditorTab getTab() {
+			return tab;
+		}
+
+		public Panel getPanel() {
+			return panel;
+		}
+	}
+
+	private int currentTab;
+	private EditorPanel[] tabs;
 	private List<MenuBar> menuBars;
 
 	private boolean quitHover;
@@ -233,50 +263,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 
 	public SaveEditorPanel() {
 		panel = this;
-		currentTab = EditorTab.GENERAL;
+		currentTab = 0;
 		dBoxes = new ArrayList<>();
 		addComponents();
 	}
-
-	/*
-	private static final String[] TOOLBAR = new String[] { "Load Profile:Ctrl+O", "Load .exe:Ctrl+Shft+O",
-			"Save:Ctrl+S", "Save As:Ctrl+Shft+S", "Settings", "About", "Quit" };
-	// toolbar
-	int bi = 0;
-	for (int xx = -1; xx < winSize.width; xx += winSize.width / TOOLBAR.length + 1) {
-		if (FrontUtils.pointInRectangle(px, py, xx, 0, winSize.width / TOOLBAR.length + 1, 17)) {
-			switch (bi) {
-			case 0: // load profile
-				loadProfile();
-				break;
-			case 1: // load exe
-				loadExe();
-				break;
-			case 2: // save
-				saveProfile();
-				break;
-			case 3: // save as
-				saveProfileAs();
-				break;
-			case 4: // settings
-				addDialogBox(new SettingsDialog());
-				break;
-			case 5: // about
-				addDialogBox(new AboutDialog());
-				break;
-			case 6: // quit
-				Main.close();
-				break;
-			default:
-				System.out.println("no defined behavior for toolbar item " + bi);
-				break;
-			}
-			repaint();
-			break;
-		}
-		bi++;
-	}
-	*/
 
 	public void addComponents() {
 		menuBars = new ArrayList<>();
@@ -340,13 +330,16 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		tabMap = new HashMap<EditorTab, Panel>();
-		tabMap.put(EditorTab.GENERAL, new GeneralPanel());
-		tabMap.put(EditorTab.INVENTORY, new InventoryPanel());
-		tabMap.put(EditorTab.WARPS, new WarpsPanel());
-		tabMap.put(EditorTab.FLAGS, new FlagsPanel());
-		if (MCI.getSpecial("VarHack"))
-			tabMap.put(EditorTab.VARIABLES, new VariablesPanel());
+		boolean var = MCI.getSpecial("VarHack"), plus = ExeData.isPlusMode();
+		tabs = new EditorPanel[(var || plus ? 5 : 4)];
+		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
+		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
+		tabs[2] = new EditorPanel(EditorTab.WARPS, new WarpsPanel());
+		tabs[3] = new EditorPanel(EditorTab.FLAGS, new FlagsPanel());
+		if (var)
+			tabs[4] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
+		if (plus)
+			tabs[4] = new EditorPanel(EditorTab.PLUS_EXCLUSIVE, new PlusPanel());
 	}
 
 	public void saveSettings() {
@@ -441,7 +434,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 		} else {
 			if (ProfileManager.isLoaded()) {
-				for (Component comp : tabMap.get(currentTab).getComponents())
+				for (Component comp : tabs[currentTab].getPanel().getComponents())
 					comp.render(g2d, compViewport);
 			} else {
 				g2d.setFont(Resources.fontL);
@@ -504,14 +497,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		g2d.setColor(Main.lineColor);
 		g2d.drawLine(0, winSize2.height - 18, winSize2.width, winSize2.height - 18);
 		g2d.drawLine(0, winSize2.height - 1, winSize2.width, winSize2.height - 1);
-		final EditorTab[] tv = EditorTab.values();
-		int tn = tv.length;
-		if (!MCI.getSpecial("VarHack"))
-			tn--;
+		int tn = tabs.length;
 		int ti = 0;
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
-			final EditorTab t = tv[ti];
-			if (ProfileManager.isLoaded() && t == currentTab) {
+			final EditorTab t = tabs[ti].getTab();
+			if (ProfileManager.isLoaded() && ti == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
 				g2d.drawLine(xx + 1, winSize2.height - 18, xx + winSize2.width / tn, winSize2.height - 18);
 				g2d.setColor(Main.lineColor);
@@ -522,10 +512,8 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			}
 			g2d.setColor(Main.lineColor);
 			g2d.drawLine(xx, winSize2.height - 17, xx, winSize2.height - 1);
-			g2d.drawImage(Resources.editorTabIcons[ti], xx + 1, winSize2.height - 17, null);
-			String label = "";
-			if (tabMap.get(t) != null)
-				label = t.label();
+			g2d.drawImage(Resources.editorTabIcons[t.icon()], xx + 1, winSize2.height - 17, null);
+			String label = t.label();
 			FrontUtils.drawString(g2d, label, xx + 18, winSize2.height - 19);
 			ti++;
 		}
@@ -597,8 +585,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
-				if (ProfileManager.isLoaded())
-					addComponents();
+				addComponents();
 				SwingUtilities.invokeLater(() -> {
 					loading = false;
 					Main.window.repaint();
@@ -753,14 +740,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			currentMenubar = -1;
 		} else if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
 			// editor tabs
-			final EditorTab[] tv = EditorTab.values();
-			int tn = tv.length;
-			if (!MCI.getSpecial("VarHack"))
-				tn--;
+			int tn = tabs.length;
 			int ti = 0;
 			for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 				if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
-					currentTab = tv[ti];
+					currentTab = ti;
 					tabHover = ti;
 					lastFocus = null;
 					break;
@@ -770,7 +754,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		} else if (ProfileManager.isLoaded()) {
 			// components
 			Component newFocus = null;
-			for (Component comp : tabMap.get(currentTab).getComponents()) {
+			for (Component comp : tabs[currentTab].getPanel().getComponents()) {
 				final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 				if (lastDragged != null) {
 					if (comp instanceof IDraggable) {
@@ -807,11 +791,11 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!dBoxes.isEmpty()) {
 			dBoxes.get(0).onScroll(e.getWheelRotation(), shift, ctrl);
 		} else {
-			ScrollBar scroll = tabMap.get(currentTab).getGlobalScrollbar();
+			ScrollBar scroll = tabs[currentTab].getPanel().getGlobalScrollbar();
 			if (scroll != null)
 				scroll.onScroll(e.getWheelRotation(), shift, ctrl);
 			else if (ProfileManager.isLoaded())
-				for (Component comp : tabMap.get(currentTab).getComponents()) {
+				for (Component comp : tabs[currentTab].getPanel().getComponents()) {
 					if (!(comp instanceof IScrollable))
 						continue;
 					final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
@@ -865,7 +849,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (loading || !ProfileManager.isLoaded() || notDraggingComps)
 			return;
 		Component newFocus = null;
-		for (Component comp : tabMap.get(currentTab).getComponents()) {
+		for (Component comp : tabs[currentTab].getPanel().getComponents()) {
 			if (!(comp instanceof IDraggable))
 				continue;
 			IDraggable drag = (IDraggable) comp;
@@ -945,10 +929,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (!somethingInFront) {
 			if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
 				// editor tabs
-				final EditorTab[] tv = EditorTab.values();
-				int tn = tv.length;
-				if (!MCI.getSpecial("VarHack"))
-					tn--;
+				int tn = tabs.length;
 				int ti = 0;
 				for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
 					if (FrontUtils.pointInRectangle(px, py, xx, winSize2.height - 18, winSize2.width / tn + 1, 17)) {
@@ -958,7 +939,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				}
 			}
 			if (ProfileManager.isLoaded()) {
-				for (Component comp : tabMap.get(currentTab).getComponents()) {
+				for (Component comp : tabs[currentTab].getPanel().getComponents()) {
 					final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 					boolean hover = false;
 					if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
@@ -983,7 +964,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		if (code == KeyEvent.VK_ESCAPE) {
 			Main.close();
 		}
-		ScrollBar scroll = tabMap.get(currentTab).getGlobalScrollbar();
+		ScrollBar scroll = tabs[currentTab].getPanel().getGlobalScrollbar();
 		if (scroll != null && (code == KeyEvent.VK_HOME || code == KeyEvent.VK_END)) {
 			scroll.onKey(code, shift, ctrl);
 			repaint();

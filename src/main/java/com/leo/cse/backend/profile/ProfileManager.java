@@ -11,7 +11,6 @@ import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
 import com.leo.cse.backend.profile.Profile.ProfileFieldException;
-import com.leo.cse.frontend.MCI;
 
 public class ProfileManager {
 
@@ -24,17 +23,37 @@ public class ProfileManager {
 	 * Used to notify {@link ProfileListener}s of a new profile being loaded.
 	 */
 	public static final String EVENT_LOAD = "event.load";
-	
+
 	public static final String EVENT_UNLOAD = "event.unload";
 
+	private static Class<? extends Profile> implClass = NormalProfile.class;
+
+	@SuppressWarnings("unchecked")
+	public static void setClass(String className) {
+		Class<?> tmpClass;
+		try {
+			tmpClass = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			System.err.println("Profile class not found: " + className + "\nUsing default NormalProfile class instead");
+			e.printStackTrace();
+			tmpClass = NormalProfile.class;
+		}
+		if (!Profile.class.isAssignableFrom(tmpClass)) {
+			System.err.println("Profile class does not implement Profile interface: " + className
+					+ "\nUsing default NormalProfile class instead");
+			tmpClass = NormalProfile.class;
+		}
+		implClass = (Class<? extends Profile>) tmpClass;
+	}
+
 	private static Profile impl;
-	
+
 	public static Class<? extends Profile> getType() {
 		if (impl == null)
 			return null;
 		return impl.getClass();
 	}
-	
+
 	private static File file;
 
 	public static File getFile() {
@@ -187,11 +206,11 @@ public class ProfileManager {
 		}
 
 	}
-	
+
 	private static boolean undoManExists() {
 		return impl != null && impl.getLoadedFile() != null && undoMan != null;
 	}
-	
+
 	public static boolean canUndo() {
 		if (!undoManExists())
 			return false;
@@ -206,7 +225,7 @@ public class ProfileManager {
 			return;
 		undoMan.undo();
 	}
-	
+
 	public static boolean canRedo() {
 		if (!undoManExists())
 			return false;
@@ -224,44 +243,39 @@ public class ProfileManager {
 
 	public static void load(File file, int section) throws IOException {
 		unload();
-		String profileClass = MCI.getNullable("Game.ProfileClass");
-		if (profileClass == null)
-			impl = new NormalProfile();
-		else {
-			Class<?> implClass;
-			try {
-				implClass = Class.forName(profileClass);
-			} catch (ClassNotFoundException e) {
-				System.err.println(
-						"Profile class not found: " + profileClass + "\nUsing default NormalProfile class instead");
-				e.printStackTrace();
-				implClass = NormalProfile.class;
-			}
-			if (!Profile.class.isAssignableFrom(implClass)) {
-				System.err.println("Profile class does not implement Profile interface: " + profileClass
-						+ "\nUsing default NormalProfile class instead");
-				implClass = NormalProfile.class;
-			}
-			Object implObj;
-			try {
-				implObj = implClass.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
-				System.err.println("Profile class could not be initialized: " + profileClass
-						+ "\nUsing default NormalProfile class instead");
-				e.printStackTrace();
-				implObj = new NormalProfile();
-			}
-			impl = (Profile) implObj;
+		if (implClass == null)
+			implClass = NormalProfile.class;
+		Object implObj;
+		try {
+			implObj = implClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			System.err.println("Profile class could not be initialized: " + implClass.getName()
+					+ "\nUsing default NormalProfile class instead");
+			e.printStackTrace();
+			implObj = new NormalProfile();
 		}
+		impl = (Profile) implObj;
 		impl.load(file, section);
 		undoMan = new UndoManager();
 		modified = false;
 		// notify listeners
-		notifyListeners(EVENT_LOAD, 0, null, null);
+		notifyListeners(EVENT_LOAD, section, null, null);
 	}
 
 	public static void load(String path, int section) throws IOException {
 		load(new File(path), section);
+	}
+
+	public static void loadSection(int section) throws IOException {
+		if (impl == null)
+			return;
+		if (impl.getLoadedFile() == null)
+			return;
+		impl.loadSection(section);
+		undoMan = new UndoManager();
+		modified = false;
+		// notify listeners
+		notifyListeners(EVENT_LOAD, section, null, null);
 	}
 
 	public static void save(File file, int section) throws IOException {
@@ -270,7 +284,7 @@ public class ProfileManager {
 		impl.save(file, section);
 		modified = false;
 		// notify listeners
-		notifyListeners(EVENT_SAVE, 0, null, null);
+		notifyListeners(EVENT_SAVE, section, null, null);
 	}
 
 	public static void save(String path, int section) throws IOException {

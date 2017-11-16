@@ -22,6 +22,7 @@ import org.mozilla.javascript.Scriptable;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo.PxeEntry;
+import com.leo.cse.backend.profile.ProfileManager;
 
 public class MCI {
 
@@ -206,6 +207,7 @@ public class MCI {
 		if (res < 0)
 			throw new MCIException("Game.GraphicsResolution cannot be negative!");
 		ExeData.setGraphicsResolution(res);
+		ProfileManager.setClass(getNullable("Game.ProfileClass"));
 	}
 
 	public static boolean contains(String key) {

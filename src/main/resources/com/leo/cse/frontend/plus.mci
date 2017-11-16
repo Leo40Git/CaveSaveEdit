@@ -79,7 +79,7 @@ function getSongNames() {
 function getEquipNames() {
     return [ "Booster v0.8", "Map System", "Arms Barrier", "Turbocharge",
 	    "Curly's Air Tank", "Booster v2.0", "Mimiga Mask",
-	    "Whimsical Star", "Nikumaru Counter" ];
+	    "Whimsical Star", "290 Counter" ];
 }
 // Array of weapon names
 function getWeaponNames() {
@@ -94,7 +94,7 @@ function getItemNames() {
 	    "Jellyfish Juice", "Rusty Key", "Gum Key", "Gum Base", "Charcoal",
 	    "Explosive", "Puppy", "Life Pot", "Cure-All", "Clinic Key",
 	    "Booster v0.8", "Arms Barrier", "Turbocharge", "Curly's Air Tank",
-	    "Nikumaru Counter", "Booster v2.0", "Mimiga Mask",
+	    "290 Counter", "Booster v2.0", "Mimiga Mask",
 	    "Teleporter Room Key", "Sue's Letter", "Controller",
 	    "Broken Sprinkler", "Sprinkler", "Tow Rope", "Clay Figure Medal",
 	    "Little Man", "Mushroom Badge", "Ma Pignon", "Curly's Underwear",

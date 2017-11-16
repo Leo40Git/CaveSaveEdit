@@ -469,16 +469,13 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	@Override
 	public void preLoad(boolean plusMode) {
-		System.out.println("Main.preLoad");
 		if (plusMode) {
-			System.out.println("Loading CS+ MCI");
 			try {
 				MCI.readPlus();
 			} catch (Exception e) {
 				resourceError(e);
 			}
 		} else if (MCI.isPlus()) {
-			System.out.println("Loading default MCI");
 			try {
 				MCI.readDefault();
 			} catch (Exception e) {

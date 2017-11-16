@@ -8,7 +8,7 @@ import java.io.IOException;
 import com.leo.cse.backend.ByteUtils;
 
 public class PlusProfile extends NormalProfile {
-	
+
 	/**
 	 * The expected CS+ file section length.
 	 */
@@ -17,16 +17,16 @@ public class PlusProfile extends NormalProfile {
 	 * The expected CS+ file length.
 	 */
 	public static final int FILE_LENGTH = 0x20020;
-	
+
 	public PlusProfile() {
 		super(false);
 	}
-	
+
 	@Override
 	public boolean supportsSections() {
 		return true;
 	}
-	
+
 	@Override
 	public void load(File file, int section) throws IOException {
 		// read data
@@ -47,6 +47,13 @@ public class PlusProfile extends NormalProfile {
 		// set loaded file & section
 		loadedFile = file;
 		loadedSection = section;
+	}
+
+	@Override
+	public void loadSection(int section) throws IOException {
+		if (loadedFile == null)
+			return;
+		load(loadedFile, section);
 	}
 
 	@Override
@@ -87,7 +94,7 @@ public class PlusProfile extends NormalProfile {
 		// set loaded file
 		loadedFile = file;
 	}
-	
+
 	@Override
 	protected int correctPointer(int ptr) {
 		return SECTION_LENGTH * loadedSection + ptr;

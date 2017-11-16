@@ -163,6 +163,10 @@ public class NormalProfile extends CommonProfile {
 		// set loaded file
 		loadedFile = file;
 	}
+	
+	@Override
+	public void loadSection(int section) throws IOException {
+	}
 
 	@Override
 	public void save(File file, int section) throws IOException {

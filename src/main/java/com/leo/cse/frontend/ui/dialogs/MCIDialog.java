@@ -16,13 +16,13 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.ui.components.Button;
-import com.leo.cse.frontend.ui.components.DynamicLabel;
+import com.leo.cse.frontend.ui.components.Label;
 
 public class MCIDialog extends BaseDialog {
 
 	public MCIDialog() {
 		super("MCI Settings", 380, 134);
-		addComponent(new DynamicLabel(() -> {
+		addComponent(new Label(() -> {
 			return "Current MCI for:\n" + MCI.get("Meta.Name") + "\nBy:\n" + MCI.get("Meta.Author")
 					+ "\nSpecial support:\n" + MCI.getSpecials();
 		}, 4, 0));

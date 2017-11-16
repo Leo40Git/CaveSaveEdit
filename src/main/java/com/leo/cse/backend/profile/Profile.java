@@ -32,6 +32,8 @@ public interface Profile {
 	
 	public void load(File file, int section) throws IOException;
 	
+	public void loadSection(int section) throws IOException;
+	
 	public void save(File file, int section) throws IOException;
 	
 	public File getLoadedFile();
