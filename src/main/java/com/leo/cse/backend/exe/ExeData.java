@@ -1382,7 +1382,7 @@ public class ExeData {
 	 * @return file that was loaded
 	 */
 	private static File loadGraphic(int strid) {
-		File ret = ResUtils.getGraphicsFile(dataDir.toString(), exeStrings[strid]);
+		File ret = ResUtils.getGraphicsFile(dataDir.toString(), getExeString(strid));
 		addImage(ret);
 		return ret;
 	}
