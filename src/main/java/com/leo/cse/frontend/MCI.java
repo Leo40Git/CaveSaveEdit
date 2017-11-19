@@ -201,11 +201,11 @@ public class MCI {
 
 	private static void validate() throws MCIException {
 		int fps = getInteger("Game.FPS", 50);
-		if (fps < 0)
-			throw new MCIException("Game.FPS cannot be negative!");
+		if (fps <= 0)
+			throw new MCIException("Game.FPS cannot be less than or equal to 0!");
 		int res = getInteger("Game.GraphicsResolution", 1);
-		if (res < 0)
-			throw new MCIException("Game.GraphicsResolution cannot be negative!");
+		if (res <= 0)
+			throw new MCIException("Game.GraphicsResolution cannot be less than or equal to 0!");
 		ExeData.setGraphicsResolution(res);
 		ProfileManager.setClass(getNullable("Game.ProfileClass"));
 	}
