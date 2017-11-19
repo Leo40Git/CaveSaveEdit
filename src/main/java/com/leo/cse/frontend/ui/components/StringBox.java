@@ -17,7 +17,7 @@ public class StringBox extends InputBox {
 	protected String description;
 
 	public StringBox(int x, int y, int width, int height, Supplier<String> vSup, Function<String, String> update, String description) {
-		super(x, y, width, height);
+		super(description, x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
 		this.description = description;

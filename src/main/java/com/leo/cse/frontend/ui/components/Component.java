@@ -7,12 +7,14 @@ import java.util.function.Supplier;
 import com.leo.cse.frontend.Main;
 
 public abstract class Component {
-
+	
+	protected String name;
 	protected int x, y, width, height;
 	protected Supplier<Boolean> enabled;
 	protected boolean hover;
 
-	public Component(int x, int y, int width, int height, Supplier<Boolean> enabled) {
+	public Component(String name, int x, int y, int width, int height, Supplier<Boolean> enabled) {
+		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -20,8 +22,8 @@ public abstract class Component {
 		this.enabled = enabled;
 	}
 	
-	public Component(int x, int y, int width, int height) {
-		this(x, y, width, height, Main.TRUE_SUPPLIER);
+	public Component(String name, int x, int y, int width, int height) {
+		this(name, x, y, width, height, Main.TRUE_SUPPLIER);
 	}
 
 	public abstract void render(Graphics g, Rectangle viewport);
@@ -71,6 +73,11 @@ public abstract class Component {
 	public Component setEnabled(Supplier<Boolean> enabled) {
 		this.enabled = enabled;
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return name + ":" + getClass().getSimpleName();
 	}
 
 }

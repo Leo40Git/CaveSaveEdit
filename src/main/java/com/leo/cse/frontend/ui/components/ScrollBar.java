@@ -18,7 +18,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 	protected int hover;
 
 	public ScrollBar(int x, int y, int height) {
-		super(x, y, WIDTH, height);
+		super("ScrollBar", x, y, WIDTH, height);
 		limitScroll();
 	}
 

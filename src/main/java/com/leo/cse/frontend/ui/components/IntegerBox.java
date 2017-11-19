@@ -20,7 +20,7 @@ public class IntegerBox extends InputBox {
 
 	public IntegerBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
 			String description, int padLength) {
-		super(x, y, width, height);
+		super(description, x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
 		this.description = description;

@@ -17,7 +17,7 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 	protected boolean scrolling;
 
 	public ScrollWrapper(Component wrapped, int x, int y, int width, int height) {
-		super(x, y, width + ScrollBar.WIDTH, height);
+		super("ScrollWrapper[wrapped=" + wrapped.toString() + "]", x, y, width + ScrollBar.WIDTH, height);
 		this.wrapped = wrapped;
 		if (wrapped instanceof IScrollable)
 			wrappedS = (IScrollable) wrapped;

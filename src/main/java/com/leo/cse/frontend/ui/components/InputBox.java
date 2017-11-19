@@ -9,8 +9,8 @@ import com.leo.cse.frontend.Main;
 
 public abstract class InputBox extends Component {
 
-	public InputBox(int x, int y, int width, int height) {
-		super(x, y, width, height);
+	public InputBox(String name, int x, int y, int width, int height) {
+		super(name, x, y, width, height);
 	}
 
 	@Override

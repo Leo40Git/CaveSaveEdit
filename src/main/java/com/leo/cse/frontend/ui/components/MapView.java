@@ -55,7 +55,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	}
 
 	public MapView(int x, int y, Supplier<Boolean> gSup) {
-		super(x, y, 640, 480);
+		super("MapView", x, y, 640, 480);
 		lastMap = getMap();
 		this.gSup = gSup;
 	}

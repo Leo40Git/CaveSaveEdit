@@ -19,7 +19,7 @@ public class RadioBoxes extends Component {
 
 	public RadioBoxes(int x, int y, int width, int number, String[] labels, Supplier<Integer> sSup,
 			Function<Integer, Integer> update, boolean small, Function<Integer, Boolean> check) {
-		super(x, y, width, (small ? 8 : 16));
+		super("RadioBoxes", x, y, width, (small ? 8 : 16));
 		this.number = number;
 		this.labels = labels;
 		this.sSup = sSup;

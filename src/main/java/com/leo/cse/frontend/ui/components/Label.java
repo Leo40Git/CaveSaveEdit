@@ -15,13 +15,13 @@ public class Label extends Component {
 	private boolean center;
 
 	public Label(String text, int x, int y, boolean center) {
-		super(x, y, 0, 0);
+		super(text, x, y, 0, 0);
 		this.text = text;
 		this.center = center;
 	}
 	
 	public Label(Supplier<String> textSup, int x, int y, boolean center) {
-		super(x, y, 0, 0);
+		super(textSup.get(), x, y, 0, 0);
 		this.textSup = textSup;
 		this.center = center;
 	}

@@ -10,7 +10,7 @@ public class Icon extends Component {
 	protected Image image;
 
 	public Icon(BufferedImage image, int x, int y) {
-		super(x, y, 0, 0);
+		super(image.toString(), x, y, 0, 0);
 		this.image = image;
 	}
 	

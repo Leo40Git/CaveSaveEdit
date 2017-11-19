@@ -19,7 +19,7 @@ public class LongBox extends InputBox {
 
 	public LongBox(int x, int y, int width, int height, Supplier<Long> vSup, Function<Long, Long> update,
 			String description) {
-		super(x, y, width, height);
+		super(description, x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
 		this.description = description;

@@ -850,18 +850,23 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			return;
 		Component newFocus = null;
 		for (Component comp : tabs[currentTab].getPanel().getComponents()) {
+			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
+			boolean hover = false;
+			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
+				hover = true;
+			}
+			comp.updateHover(px, py, hover);
 			if (!(comp instanceof IDraggable))
 				continue;
 			IDraggable drag = (IDraggable) comp;
-			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh) || lastDragged.get(drag) != null) {
 				drag.onDrag(px, py);
 				lastDragged.put(drag, true);
 				newFocus = comp;
-				repaint();
 			}
 		}
 		lastFocus = newFocus;
+		repaint();
 	}
 
 	@Override

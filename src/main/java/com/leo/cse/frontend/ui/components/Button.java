@@ -15,7 +15,7 @@ public class Button extends InputBox {
 	private Runnable onClick;
 
 	public Button(String label, BufferedImage icon, int x, int y, int width, int height, Runnable onClick) {
-		super(x, y, width, height);
+		super(label, x, y, width, height);
 		this.label = label;
 		this.icon = icon;
 		this.onClick = onClick;

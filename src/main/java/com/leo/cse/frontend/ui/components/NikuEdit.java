@@ -30,7 +30,7 @@ public class NikuEdit extends Component implements IScrollable {
 	}
 
 	public NikuEdit(int x, int y) {
-		super(x, y, 128, 16);
+		super("NikuEdit", x, y, 128, 16);
 	}
 
 	@Override

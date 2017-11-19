@@ -108,7 +108,7 @@ public class FlagList extends Component {
 	}
 
 	public FlagList(Supplier<Boolean> huSup, Supplier<Boolean> hsSup) {
-		super(0, 0, Main.WINDOW_SIZE.width, 0);
+		super("FlagList", 0, 0, Main.WINDOW_SIZE.width, 0);
 		this.huSup = huSup;
 		this.hsSup = hsSup;
 		calculateShownFlags();

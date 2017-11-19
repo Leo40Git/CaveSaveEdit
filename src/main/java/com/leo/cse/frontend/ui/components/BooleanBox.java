@@ -20,7 +20,7 @@ public class BooleanBox extends Component {
 	private Function<Boolean, Boolean> update;
 
 	public BooleanBox(String label, int x, int y, Supplier<Boolean> vSup, Function<Boolean, Boolean> update) {
-		super(x, y, 15, 15);
+		super(label, x, y, 15, 15);
 		this.label = label;
 		this.vSup = vSup;
 		this.update = update;

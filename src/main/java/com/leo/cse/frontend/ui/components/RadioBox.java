@@ -18,7 +18,7 @@ class RadioBox extends Component {
 	private Function<Integer, Boolean> check;
 
 	public RadioBox(String label, int x, int y, RadioBoxes parent, int id, boolean small, Function<Integer, Boolean> check) {
-		super(x, y, (small ? 8 : 16), (small ? 8 : 16));
+		super(label, x, y, (small ? 8 : 16), (small ? 8 : 16));
 		this.label = label;
 		this.parent = parent;
 		this.id = id;

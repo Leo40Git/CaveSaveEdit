@@ -20,7 +20,7 @@ public class ShortBox extends InputBox {
 
 	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update,
 			String description, int padLength) {
-		super(x, y, width, height);
+		super(description, x, y, width, height);
 		this.vSup = vSup;
 		this.update = update;
 		this.description = description;
