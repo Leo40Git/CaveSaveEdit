@@ -10,7 +10,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
-import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 
 public class ProfileManager {
 
@@ -26,7 +26,7 @@ public class ProfileManager {
 
 	public static final String EVENT_UNLOAD = "event.unload";
 
-	private static Class<? extends Profile> implClass = NormalProfile.class;
+	private static Class<? extends IProfile> implClass = NormalProfile.class;
 
 	@SuppressWarnings("unchecked")
 	public static void setClass(String className) {
@@ -38,17 +38,17 @@ public class ProfileManager {
 			e.printStackTrace();
 			tmpClass = NormalProfile.class;
 		}
-		if (!Profile.class.isAssignableFrom(tmpClass)) {
+		if (!IProfile.class.isAssignableFrom(tmpClass)) {
 			System.err.println("Profile class does not implement Profile interface: " + className
 					+ "\nUsing default NormalProfile class instead");
 			tmpClass = NormalProfile.class;
 		}
-		implClass = (Class<? extends Profile>) tmpClass;
+		implClass = (Class<? extends IProfile>) tmpClass;
 	}
 
-	private static Profile impl;
+	private static IProfile impl;
 
-	public static Class<? extends Profile> getType() {
+	public static Class<? extends IProfile> getType() {
 		if (impl == null)
 			return null;
 		return impl.getClass();
@@ -254,7 +254,7 @@ public class ProfileManager {
 			e.printStackTrace();
 			implObj = new NormalProfile();
 		}
-		impl = (Profile) implObj;
+		impl = (IProfile) implObj;
 		impl.load(file, section);
 		undoMan = new UndoManager();
 		modified = false;

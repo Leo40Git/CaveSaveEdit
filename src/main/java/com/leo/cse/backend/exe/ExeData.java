@@ -60,7 +60,7 @@ public class ExeData {
 			listeners = new LinkedList<>();
 		listeners.add(l);
 	}
-	
+
 	public static void removeListener(ExeLoadListener l) {
 		if (listeners == null)
 			return;
@@ -123,9 +123,14 @@ public class ExeData {
 			case NOTIFY_UNLOAD:
 				l.unload();
 				break;
+			default:
+				throw new RuntimeException("Unknown event type " + notifyType);
 			}
 	}
 
+	/**
+	 * The encoding to use to read strings from the executable.
+	 */
 	private static String encoding = StrTools.DEFAULT_ENCODING;
 
 	/**
@@ -148,7 +153,8 @@ public class ExeData {
 	}
 
 	/**
-	 * Base pointer for the ".rdata" segment in the executable.
+	 * Base pointer for the ".rdata" segment in the executable. Used to read
+	 * {@linkplain #exeStrings the executable strings}.
 	 */
 	private static int rdataPtr;
 
@@ -526,13 +532,27 @@ public class ExeData {
 	public static void setLoadTSC(boolean loadTSC) {
 		ExeData.loadTSC = loadTSC;
 	}
-	
+
+	/**
+	 * Graphics resolution.
+	 */
 	private static int graphicsResolution = 1;
 
+	/**
+	 * Gets the graphics resolution.
+	 * 
+	 * @return graphics resolution
+	 */
 	public static int getGraphicsResolution() {
 		return graphicsResolution;
 	}
 
+	/**
+	 * Sets the graphics resolution.
+	 * 
+	 * @param graphicsResolution
+	 *            new graphics resolution
+	 */
 	public static void setGraphicsResolution(int graphicsResolution) {
 		ExeData.graphicsResolution = graphicsResolution;
 	}

@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import com.leo.cse.backend.ByteUtils;
 
-public class NormalProfile extends CommonProfile {
+public class NormalProfile extends Profile {
 
 	/**
 	 * Map field.
@@ -336,6 +336,21 @@ public class NormalProfile extends CommonProfile {
 					vals[index] = (Short) value;
 					ByteUtils.writeShorts(data, cptr, off, vals);
 				}
+				
+				@Override
+				public boolean hasIndexes() {
+					return true;
+				}
+				
+				@Override
+				public int getMinumumIndex() {
+					return 0;
+				}
+				
+				@Override
+				public int getMaximumIndex() {
+					return length;
+				}
 			});
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();
@@ -398,6 +413,21 @@ public class NormalProfile extends CommonProfile {
 					vals[index] = (Integer) value;
 					ByteUtils.writeInts(data, cptr, off, vals);
 				}
+				
+				@Override
+				public boolean hasIndexes() {
+					return true;
+				}
+				
+				@Override
+				public int getMinumumIndex() {
+					return 0;
+				}
+				
+				@Override
+				public int getMaximumIndex() {
+					return length;
+				}
 			});
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();
@@ -459,6 +489,21 @@ public class NormalProfile extends CommonProfile {
 					ByteUtils.readFlags(data, cptr, vals);
 					vals[index] = (Boolean) value;
 					ByteUtils.writeFlags(data, cptr, vals);
+				}
+				
+				@Override
+				public boolean hasIndexes() {
+					return true;
+				}
+				
+				@Override
+				public int getMinumumIndex() {
+					return 0;
+				}
+				
+				@Override
+				public int getMaximumIndex() {
+					return length;
 				}
 			});
 		} catch (ProfileFieldException e) {

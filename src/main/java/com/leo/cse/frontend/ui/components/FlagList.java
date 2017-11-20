@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.Profile.ProfileFieldException;
+import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
