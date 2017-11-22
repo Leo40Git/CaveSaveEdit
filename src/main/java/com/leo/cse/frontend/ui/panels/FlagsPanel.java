@@ -38,7 +38,7 @@ public class FlagsPanel extends Panel {
 		flagListWrap = new ScrollWrapper(flagList, 0, 0, winSize.width - 21, winSize.height - 55);
 		compList.add(flagListWrap);
 		compList.add(new Line(0, winSize.height - 54, winSize.width - 21, 0));
-		compList.add(new BooleanBox("Hide undefined flags?", 2, winSize.height - 52, huSup,
+		compList.add(new BooleanBox("Hide undefined flags?", false, 2, winSize.height - 52, huSup,
 				new Function<Boolean, Boolean>() {
 					@Override
 					public Boolean apply(Boolean t) {
@@ -48,7 +48,7 @@ public class FlagsPanel extends Panel {
 					}
 				}));
 		compList.add(
-				new BooleanBox("Hide system flags?", 132, winSize.height - 52, hsSup, new Function<Boolean, Boolean>() {
+				new BooleanBox("Hide system flags?", false, 132, winSize.height - 52, hsSup, new Function<Boolean, Boolean>() {
 					@Override
 					public Boolean apply(Boolean t) {
 						SaveEditorPanel.hideSystemFlags = t;

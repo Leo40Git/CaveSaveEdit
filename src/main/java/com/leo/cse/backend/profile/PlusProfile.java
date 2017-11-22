@@ -22,8 +22,10 @@ public class PlusProfile extends NormalProfile {
 	 * "Last modified" date in Unix time.
 	 */
 	public static final String FIELD_MODIFY_DATE = "modify_date";
-	
+
 	public static final String FIELD_DIFFICULTY = "difficulty";
+
+	public static final String FIELD_BEAT_HELL = "beat_hell";
 
 	/**
 	 * Clones one file to another.<br/>
@@ -60,6 +62,33 @@ public class PlusProfile extends NormalProfile {
 	protected void setupFieldsPlus() {
 		makeFieldLong(FIELD_MODIFY_DATE, 0x608);
 		makeFieldShort(FIELD_DIFFICULTY, 0x610);
+		try {
+			addField(FIELD_BEAT_HELL, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Boolean.class;
+				}
+
+				@Override
+				public boolean acceptsValue(Object value) {
+					return value instanceof Short;
+				}
+
+				@Override
+				public Object getValue(int index) {
+					byte flag = data[0x1F04D];
+					return (flag == 0 ? false : true);
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					byte flag = (byte) ((Boolean) value ? 1 : 0);
+					data[0x1F04D] = flag;
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void setupMethodsPlus() {

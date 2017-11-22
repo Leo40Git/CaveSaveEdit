@@ -3,6 +3,7 @@ package com.leo.cse.frontend.ui.panels;
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -39,7 +40,7 @@ public class GeneralPanel extends Panel {
 				return SaveEditorPanel.sortMapsAlphabetically;
 			}
 		}));
-		compList.add(new BooleanBox("Sort alphabetically", 280, 4, new Supplier<Boolean>() {
+		compList.add(new BooleanBox("Sort alphabetically", false, 280, 4, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
 				return SaveEditorPanel.sortMapsAlphabetically;
@@ -298,6 +299,22 @@ public class GeneralPanel extends Panel {
 			}, false, (Integer id) -> {
 				return true;
 			}));
+			// beat hell
+			compList.add(new BooleanBox("Beaten Bloodstained Sanctuary?", false, 234, 144, () -> {
+				try {
+					return (Boolean) ProfileManager.getField(PlusProfile.FIELD_BEAT_HELL);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				return false;
+			}, (Boolean t) -> {
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_BEAT_HELL, t);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				return t;
+			}));
 			// modify date
 			long unix = 0;
 			try {
@@ -315,6 +332,11 @@ public class GeneralPanel extends Panel {
 				if (t > 12)
 					t = 12;
 				cal.set(Calendar.MONTH, t - 1);
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 				return t;
 			}, "month", 2));
 			compList.add(new Label("/", dateLoc + 19, 24));
@@ -325,6 +347,11 @@ public class GeneralPanel extends Panel {
 				if (t > maxDay)
 					t = maxDay;
 				cal.set(Calendar.DAY_OF_MONTH, t);
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 				return t;
 			}, "day of month", 2));
 			compList.add(new Label("/", dateLoc + 43, 24));
@@ -334,15 +361,25 @@ public class GeneralPanel extends Panel {
 				if (t > 9999)
 					t = 9999;
 				cal.set(Calendar.YEAR, t);
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 				return t;
 			}, "year", 4));
 			compList.add(new ShortBox(dateLoc + 88, 24, 16, 16, () -> {
 				return (short) cal.get(Calendar.HOUR_OF_DAY);
 			}, (Short t) -> {
-				short maxH = (short) cal.getMaximum(Calendar.HOUR_OF_DAY);
-				if (t > maxH)
-					t = maxH;
+				short maxS = (short) cal.getMaximum(Calendar.HOUR_OF_DAY);
+				if (t > maxS)
+					t = maxS;
 				cal.set(Calendar.HOUR_OF_DAY, t);
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 				return t;
 			}, "hours", 2));
 			compList.add(new Label(":", dateLoc + 108, 24));
@@ -353,13 +390,56 @@ public class GeneralPanel extends Panel {
 				if (t > maxM)
 					t = maxM;
 				cal.set(Calendar.MINUTE, t);
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
 				return t;
 			}, "minutes", 2));
+			compList.add(new Label(":", dateLoc + 132, 24));
+			compList.add(new ShortBox(dateLoc + 136, 24, 16, 16, () -> {
+				return (short) cal.get(Calendar.SECOND);
+			}, (Short t) -> {
+				short maxM = (short) cal.getMaximum(Calendar.SECOND);
+				if (t > maxM)
+					t = maxM;
+				cal.set(Calendar.SECOND, t);
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				return t;
+			}, "seconds", 2));
+			compList.add(new Label(".", dateLoc + 155, 24));
+			compList.add(new ShortBox(dateLoc + 160, 24, 22, 16, () -> {
+				return (short) cal.get(Calendar.MILLISECOND);
+			}, (Short t) -> {
+				short maxM = (short) cal.getMaximum(Calendar.MILLISECOND);
+				if (t > maxM)
+					t = maxM;
+				cal.set(Calendar.MILLISECOND, t);
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				return t;
+			}, "milliseconds", 3));
+			compList.add(new Button("Set to current", dateLoc + 190, 22, 80, 16, () -> {
+				cal.setTime(new Date());
+				try {
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+			}));
 			compList.add(new Label(() -> {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 				dateFormat.setCalendar(cal);
 				return "(" + dateFormat.format(cal.getTime()) + ")";
-			}, dateLoc + 136, 24));
+			}, dateLoc + 84, 40));
 		}
 		compList.add(mp = new MapView(winSize.width / 2 - 320, 164, new Supplier<Boolean>() {
 			@Override
@@ -368,7 +448,7 @@ public class GeneralPanel extends Panel {
 			}
 		}));
 		ProfileManager.addListener(mp);
-		compList.add(new BooleanBox("Show Grid?", 756, 406, new Supplier<Boolean>() {
+		compList.add(new BooleanBox("Show Grid?", false, 756, 406, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {
 				return SaveEditorPanel.showMapGrid;

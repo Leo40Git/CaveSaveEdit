@@ -30,7 +30,7 @@ public class SettingsDialog extends BaseDialog {
 		addComponent(new Button("Change Line Color", Resources.miscIcons[1], 4, 23, 292, 17, () -> {
 			setLineColor();
 		}));
-		addComponent(new BooleanBox("Load NPCs?", 4, 43, () -> {
+		addComponent(new BooleanBox("Load NPCs?", false, 4, 43, () -> {
 			return ExeData.doLoadNpc();
 		}, (Boolean newVal) -> {
 			ExeData.setLoadNpc(newVal);

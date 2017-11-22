@@ -105,7 +105,7 @@ public class VariablesPanel extends Panel {
 		}
 		compList.add(new Label("(W) - Underwater physics variable", 4, 362));
 		compList.add(
-				new BooleanBox("Water doesn't cause splash and trigger air timer", 4, 386, new Supplier<Boolean>() {
+				new BooleanBox("Water doesn't cause splash and trigger air timer", false, 4, 386, new Supplier<Boolean>() {
 
 					@Override
 					public Boolean get() {

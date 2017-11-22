@@ -158,7 +158,7 @@ public class InventoryPanel extends Panel {
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 8; j++) {
 				final int i2 = equipId;
-				compList.add(new BooleanBox("Equip." + equipId, 4 + (winSize.width / 3) * i, 506 + 18 * j,
+				compList.add(new BooleanBox("Equip." + equipId, true, 4 + (winSize.width / 3) * i, 506 + 18 * j,
 						new Supplier<Boolean>() {
 							@Override
 							public Boolean get() {

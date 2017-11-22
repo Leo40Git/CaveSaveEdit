@@ -13,15 +13,16 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class BooleanBox extends Component {
-
-	private boolean missingMCI;
+	
+	private boolean labelIsMCI, missingMCI;
 	private String label;
 	private Supplier<Boolean> vSup;
 	private Function<Boolean, Boolean> update;
 
-	public BooleanBox(String label, int x, int y, Supplier<Boolean> vSup, Function<Boolean, Boolean> update) {
+	public BooleanBox(String label, boolean labelIsMCI, int x, int y, Supplier<Boolean> vSup, Function<Boolean, Boolean> update) {
 		super(label, x, y, 15, 15);
 		this.label = label;
+		this.labelIsMCI = labelIsMCI;
 		this.vSup = vSup;
 		this.update = update;
 	}
@@ -34,7 +35,7 @@ public class BooleanBox extends Component {
 			g.setColor(Main.COLOR_BG);
 		g.fillRect(x, y, getWidth(), getHeight());
 		String t = label;
-		if (t.contains(".")) {
+		if (labelIsMCI) {
 			t = MCI.get(t);
 			if (label.equals(t)) {
 				missingMCI = true;

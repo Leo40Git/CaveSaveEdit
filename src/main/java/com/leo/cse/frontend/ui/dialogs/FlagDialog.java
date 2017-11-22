@@ -32,7 +32,7 @@ public class FlagDialog extends BaseDialog {
 			}
 		}, "flag ID", 4));
 		addComponent(new Label("State:", 76, 2));
-		BooleanBox flagBox = new BooleanBox("", 106, 4, () -> {
+		BooleanBox flagBox = new BooleanBox("", false, 106, 4, () -> {
 			try {
 				return (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flag);
 			} catch (ProfileFieldException e) {

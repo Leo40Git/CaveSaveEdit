@@ -30,8 +30,8 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.exe.ExeData;
-import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
+import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
@@ -50,7 +50,6 @@ import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
 import com.leo.cse.frontend.ui.panels.Panel;
-import com.leo.cse.frontend.ui.panels.PlusPanel;
 import com.leo.cse.frontend.ui.panels.VariablesPanel;
 import com.leo.cse.frontend.ui.panels.WarpsPanel;
 
@@ -338,16 +337,18 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean var = MCI.getSpecial("VarHack"), plus = ExeData.isPlusMode();
-		tabs = new EditorPanel[(var || plus ? 5 : 4)];
+		boolean var = MCI.getSpecial("VarHack")/*, plus = ExeData.isPlusMode()*/;
+		tabs = new EditorPanel[(var /*|| plus*/ ? 5 : 4)];
 		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
 		tabs[2] = new EditorPanel(EditorTab.WARPS, new WarpsPanel());
 		tabs[3] = new EditorPanel(EditorTab.FLAGS, new FlagsPanel());
 		if (var)
 			tabs[4] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
+		/*
 		if (plus)
 			tabs[4] = new EditorPanel(EditorTab.PLUS_EXCLUSIVE, new PlusPanel());
+		*/
 		int tabNum = tabs.length - 1;
 		if (currentTab > tabNum)
 			currentTab = tabNum;
