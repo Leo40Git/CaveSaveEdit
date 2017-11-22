@@ -275,9 +275,16 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
 			else {
 				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
-				if (ProfileManager.getType() == PlusProfile.class)
+				if (ProfileManager.getType() == PlusProfile.class) {
 					if (ProfileManager.getLoadedSection() > 2)
 						costume += 10;
+					int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
+					while (diff > 5)
+						diff -= 5;
+					if (diff % 2 == 1)
+						diff--;
+					costume += diff;
+				}
 			}
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();

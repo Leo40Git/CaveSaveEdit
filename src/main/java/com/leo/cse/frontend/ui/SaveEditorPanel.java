@@ -283,6 +283,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 					return;
 			}
 			ProfileManager.unload();
+			loading = true;
+			repaint();
+			addComponents();
+			loading = false;
 		}, () -> {
 			return ProfileManager.isLoaded();
 		}));
@@ -291,6 +295,10 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		}));
 		mbiFile.add(new MenuBarItem("Unload Game/Mod", () -> {
 			ExeData.unload();
+			loading = true;
+			repaint();
+			addComponents();
+			loading = false;
 		}, () -> {
 			return ExeData.isLoaded();
 		}));
@@ -340,6 +348,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			tabs[4] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
 		if (plus)
 			tabs[4] = new EditorPanel(EditorTab.PLUS_EXCLUSIVE, new PlusPanel());
+		int tabNum = tabs.length - 1;
+		if (currentTab > tabNum)
+			currentTab = tabNum;
 	}
 
 	public void saveSettings() {

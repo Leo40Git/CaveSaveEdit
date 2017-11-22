@@ -38,6 +38,8 @@ public abstract class Profile implements IProfile {
 
 		public Object call(Object... args);
 
+		public String[] getModifiedFields();
+
 	}
 
 	protected File loadedFile;
@@ -134,7 +136,7 @@ public abstract class Profile implements IProfile {
 		assertHasField(field);
 		ProfileField fieldObj = fields.get(field);
 		if (!fieldObj.hasIndexes())
-			throw new ProfileFieldException("Field is not indexed!");
+			throw new ProfileFieldException("Field " + field + " is not indexed!");
 		return fieldObj.getMinumumIndex();
 	}
 
@@ -143,7 +145,7 @@ public abstract class Profile implements IProfile {
 		assertHasField(field);
 		ProfileField fieldObj = fields.get(field);
 		if (!fieldObj.hasIndexes())
-			throw new ProfileFieldException("Field is not indexed!");
+			throw new ProfileFieldException("Field " + field + " is not indexed!");
 		return fieldObj.getMaximumIndex();
 	}
 
@@ -152,7 +154,7 @@ public abstract class Profile implements IProfile {
 		assertHasField(field);
 		Class<?> fieldType = getFieldType(field);
 		if (fieldType == null)
-			throw new ProfileFieldException("Field does not have value type!");
+			throw new ProfileFieldException("Field " + field + " does not have value type!");
 		if (!fieldType.isInstance(value))
 			return false;
 		return fields.get(field).acceptsValue(value);
@@ -174,7 +176,7 @@ public abstract class Profile implements IProfile {
 		ProfileField fieldObj = fields.get(field);
 		if (fieldObj.hasIndexes())
 			if (index < fieldObj.getMinumumIndex() || index > fieldObj.getMaximumIndex())
-				throw new ProfileFieldException("Index " + index + " is out of bounds for field!");
+				throw new ProfileFieldException("Index " + index + " is out of bounds for field " + field + "!");
 		fieldObj.setValue(index, value);
 	}
 
@@ -191,7 +193,10 @@ public abstract class Profile implements IProfile {
 	@Override
 	public int getMethodArgNum(String method) throws ProfileMethodException {
 		assertHasMethod(method);
-		return methods.get(method).getArgTypes().length;
+		Class<?>[] argTypes = methods.get(method).getArgTypes();
+		if (argTypes == null)
+			return -1;
+		return argTypes.length;
 	}
 
 	@Override
@@ -204,6 +209,12 @@ public abstract class Profile implements IProfile {
 	public Class<?> getMethodRetType(String method) throws ProfileMethodException {
 		assertHasMethod(method);
 		return methods.get(method).getRetType();
+	}
+
+	@Override
+	public String[] getMethodModifiedFields(String method) throws ProfileMethodException {
+		assertHasMethod(method);
+		return methods.get(method).getModifiedFields();
 	}
 
 	@Override

@@ -8,7 +8,8 @@ import java.io.IOException;
 import com.leo.cse.backend.ByteUtils;
 
 public class NormalProfile extends Profile {
-
+	
+	public static final String EVENT_DATA_MODIFIED = "data.modified";
 	/**
 	 * Map field.
 	 */

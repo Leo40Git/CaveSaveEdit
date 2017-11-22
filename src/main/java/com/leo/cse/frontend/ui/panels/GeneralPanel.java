@@ -1,12 +1,16 @@
 package com.leo.cse.frontend.ui.panels;
 
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.exe.ExeData;
-import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
+import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
@@ -268,6 +272,95 @@ public class GeneralPanel extends Panel {
 			}
 		}, "time played"));
 		compList.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 216, 124));
+		if (ProfileManager.getType() == PlusProfile.class) {
+			// difficulty
+			compList.add(new Label("Difficulty:", 4, 144));
+			compList.add(new RadioBoxes(54, 144, 176, 3, new String[] { "Original", "Easy", "Hard" }, () -> {
+				int diff = 0;
+				try {
+					diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				while (diff > 5)
+					diff -= 5;
+				if (diff % 2 == 1)
+					diff--;
+				return diff / 2;
+			}, (Integer t) -> {
+				try {
+					short diff = (short) (t * 2);
+					ProfileManager.setField(PlusProfile.FIELD_DIFFICULTY, diff);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				return t;
+			}, false, (Integer id) -> {
+				return true;
+			}));
+			// modify date
+			long unix = 0;
+			try {
+				unix = (long) ProfileManager.getField(PlusProfile.FIELD_MODIFY_DATE);
+			} catch (ProfileFieldException e) {
+				e.printStackTrace();
+			}
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTimeInMillis(unix * 1000);
+			final int dateLoc = winSize.width / 2 + 40;
+			compList.add(new Label("Last modified at:", dateLoc, 4));
+			compList.add(new ShortBox(dateLoc, 24, 16, 16, () -> {
+				return (short) (cal.get(Calendar.MONTH) + 1);
+			}, (Short t) -> {
+				if (t > 12)
+					t = 12;
+				cal.set(Calendar.MONTH, t - 1);
+				return t;
+			}, "month", 2));
+			compList.add(new Label("/", dateLoc + 19, 24));
+			compList.add(new ShortBox(dateLoc + 24, 24, 16, 16, () -> {
+				return (short) cal.get(Calendar.DAY_OF_MONTH);
+			}, (Short t) -> {
+				short maxDay = (short) cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+				if (t > maxDay)
+					t = maxDay;
+				cal.set(Calendar.DAY_OF_MONTH, t);
+				return t;
+			}, "day of month", 2));
+			compList.add(new Label("/", dateLoc + 43, 24));
+			compList.add(new ShortBox(dateLoc + 48, 24, 28, 16, () -> {
+				return (short) cal.get(Calendar.YEAR);
+			}, (Short t) -> {
+				if (t > 9999)
+					t = 9999;
+				cal.set(Calendar.YEAR, t);
+				return t;
+			}, "year", 4));
+			compList.add(new ShortBox(dateLoc + 88, 24, 16, 16, () -> {
+				return (short) cal.get(Calendar.HOUR_OF_DAY);
+			}, (Short t) -> {
+				short maxH = (short) cal.getMaximum(Calendar.HOUR_OF_DAY);
+				if (t > maxH)
+					t = maxH;
+				cal.set(Calendar.HOUR_OF_DAY, t);
+				return t;
+			}, "hours", 2));
+			compList.add(new Label(":", dateLoc + 108, 24));
+			compList.add(new ShortBox(dateLoc + 112, 24, 16, 16, () -> {
+				return (short) cal.get(Calendar.MINUTE);
+			}, (Short t) -> {
+				short maxM = (short) cal.getMaximum(Calendar.MINUTE);
+				if (t > maxM)
+					t = maxM;
+				cal.set(Calendar.MINUTE, t);
+				return t;
+			}, "minutes", 2));
+			compList.add(new Label(() -> {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+				dateFormat.setCalendar(cal);
+				return "(" + dateFormat.format(cal.getTime()) + ")";
+			}, dateLoc + 136, 24));
+		}
 		compList.add(mp = new MapView(winSize.width / 2 - 320, 164, new Supplier<Boolean>() {
 			@Override
 			public Boolean get() {

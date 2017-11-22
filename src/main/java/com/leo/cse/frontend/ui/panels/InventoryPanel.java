@@ -150,7 +150,7 @@ public class InventoryPanel extends Panel {
 		int itemId = 0;
 		for (int i = 0; i < 6; i++) {
 			for (int j = 0; j < 5; j++) {
-				compList.add(new ItemBox(j * (winSize.width / 5), 204 + i * 50, winSize.width / 5 - 5, 48, itemId));
+				compList.add(new ItemBox(4 + j * (winSize.width / 5 - 1), 204 + i * 50, winSize.width / 5 - 4, 48, itemId));
 				itemId++;
 			}
 		}

@@ -490,6 +490,11 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	@Override
 	public void postLoad(boolean plusMode) {
+		try {
+			ProfileManager.reload();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

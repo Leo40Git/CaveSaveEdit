@@ -11,6 +11,7 @@ import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
 import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
+import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
 
 public class ProfileManager {
 
@@ -255,11 +256,17 @@ public class ProfileManager {
 			implObj = new NormalProfile();
 		}
 		impl = (IProfile) implObj;
+		if (impl.supportsSections() && section < 0)
+			throw new IOException("Profile class supports sections, but section to load was not provided!");
 		impl.load(file, section);
 		undoMan = new UndoManager();
 		modified = false;
 		// notify listeners
 		notifyListeners(EVENT_LOAD, section, null, null);
+	}
+
+	public static void load(File file) throws IOException {
+		load(file, -1);
 	}
 
 	public static void load(String path, int section) throws IOException {
@@ -276,6 +283,15 @@ public class ProfileManager {
 		modified = false;
 		// notify listeners
 		notifyListeners(EVENT_LOAD, section, null, null);
+	}
+
+	public static void reload() throws IOException {
+		if (impl == null)
+			return;
+		File loadedFile = impl.getLoadedFile();
+		if (loadedFile == null)
+			return;
+		load(loadedFile, impl.getLoadedSection());
 	}
 
 	public static void save(File file, int section) throws IOException {
@@ -302,7 +318,7 @@ public class ProfileManager {
 		file = null;
 		modified = false;
 		undoMan = null;
-		notifyListeners(EVENT_UNLOAD, 0, null, null);
+		notifyListeners(EVENT_UNLOAD, -1, null, null);
 	}
 
 	public static File getLoadedFile() {
@@ -404,6 +420,41 @@ public class ProfileManager {
 
 	public static void setField(String field, Object value) throws ProfileFieldException {
 		setField(field, 0, value);
+	}
+
+	public static boolean hasMethod(String method) throws ProfileMethodException {
+		if (impl == null)
+			return false;
+		return impl.hasMethod(method);
+	}
+
+	public static int getMethodArgNum(String method) throws ProfileMethodException {
+		if (impl == null)
+			return -1;
+		return impl.getMethodArgNum(method);
+	}
+
+	public static Class<?>[] getMethodArgTypes(String method) throws ProfileMethodException {
+		if (impl == null)
+			return null;
+		return impl.getMethodArgTypes(method);
+	}
+
+	public static Class<?> getMethodRetType(String method) throws ProfileMethodException {
+		if (impl == null)
+			return null;
+		return impl.getMethodRetType(method);
+	}
+
+	public static Object callMethod(String method, Object... args) throws ProfileMethodException {
+		if (impl == null)
+			return null;
+		Object ret = impl.callMethod(method, args);
+		String[] modFields = impl.getMethodModifiedFields(method);
+		if (modFields != null)
+			for (String field : modFields)
+				notifyListeners(field, -1, null, null);
+		return ret;
 	}
 
 }

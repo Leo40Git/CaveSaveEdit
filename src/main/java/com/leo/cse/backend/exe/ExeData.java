@@ -782,9 +782,10 @@ public class ExeData {
 		stageImage = null;
 		npcRegu = null;
 		npcSym = null;
+		System.gc();
 		ProfileManager.setHeader(NormalProfile.DEFAULT_HEADER);
 		ProfileManager.setFlagHeader(NormalProfile.DEFAULT_FLAGH);
-		System.gc();
+		plusMode = false;
 		notifyListeners(NOTIFY_UNLOAD);
 	}
 

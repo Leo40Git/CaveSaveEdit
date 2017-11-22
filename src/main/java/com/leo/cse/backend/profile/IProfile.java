@@ -85,6 +85,8 @@ public interface IProfile {
 	public Class<?>[] getMethodArgTypes(String method) throws ProfileMethodException;
 
 	public Class<?> getMethodRetType(String method) throws ProfileMethodException;
+	
+	public String[] getMethodModifiedFields(String method) throws ProfileMethodException;
 
 	public Object callMethod(String method, Object... args) throws ProfileMethodException;
 
