@@ -969,7 +969,7 @@ public class ExeData {
 	private static void initExeStringsPlus() {
 		exeStrings = new String[STRING_POINTERS.length];
 		exeStrings[STRING_ARMSITEM] = "ArmsItem.tsc";
-		exeStrings[STRING_IMG_EXT] = "%s/%s.png"; // CS+ uses PNGs
+		exeStrings[STRING_IMG_EXT] = "%s/%s.bmp";
 		exeStrings[STRING_CREDIT] = "Credit.tsc";
 		exeStrings[STRING_NPC_TBL] = "npc.tbl";
 		exeStrings[STRING_MYCHAR] = "MyChar";
