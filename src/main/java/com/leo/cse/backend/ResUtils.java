@@ -59,7 +59,13 @@ public class ResUtils {
 	public static File getGraphicsFile(String directory, String name) {
 		String ext = ExeData.getExeString(ExeData.STRING_IMG_EXT);
 		String file = String.format(ext, directory, name);
-		return new File(file);
+		File ret = new File(file);
+		if (!ret.exists() && ExeData.isPlusMode()) {
+			// older versions of CS+ used BMPs
+			file = String.format("%s/%s.bmp", directory, name);
+			ret = new File(file);
+		}
+		return ret;
 	}
 
 	/**
