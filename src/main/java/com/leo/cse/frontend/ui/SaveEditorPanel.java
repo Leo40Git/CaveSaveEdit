@@ -287,6 +287,8 @@ public class SaveEditorPanel extends JPanel
 		if (plus)
 			mbiFile.add(new MenuBarItem("Change File", () -> {
 				addDialogBox(new PlusSlotDialog());
+			}, () -> {
+				return ProfileManager.isLoaded();
 			}));
 		mbiFile.add(new MenuBarItem("Unload Profile", () -> {
 			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
