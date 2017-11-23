@@ -139,14 +139,9 @@ public class NormalProfile extends Profile {
 	}
 
 	protected byte[] data;
-	
-	@Override
-	public boolean supportsSections() {
-		return false;
-	}
 
 	@Override
-	public void load(File file, int section) throws IOException {
+	public void load(File file) throws IOException {
 		// read data
 		data = new byte[FILE_LENGTH];
 		try (FileInputStream fis = new FileInputStream(file)) {
@@ -164,13 +159,9 @@ public class NormalProfile extends Profile {
 		// set loaded file
 		loadedFile = file;
 	}
-	
-	@Override
-	public void loadSection(int section) throws IOException {
-	}
 
 	@Override
-	public void save(File file, int section) throws IOException {
+	public void save(File file) throws IOException {
 		if (data == null)
 			return;
 		// back up file just in case

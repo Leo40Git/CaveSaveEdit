@@ -94,6 +94,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		if (reboot) {
 			window.dispose();
 			ProfileManager.removeListener(window);
+			ProfileManager.removeListener(SaveEditorPanel.panel);
 			ProfileManager.unload();
 			ExeData.removeListener(window);
 			ExeData.unload();
@@ -131,6 +132,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		addMouseListener(sep);
 		addMouseMotionListener(sep);
 		addMouseWheelListener(sep);
+		ProfileManager.addListener(sep);
 		Dimension winSize = new Dimension(WINDOW_SIZE);
 		winSize.width += 32;
 		winSize.height += 48;
@@ -172,7 +174,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				}
 			}
 			try {
-				ProfileManager.load(file, 0);
+				ProfileManager.load(file);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
@@ -463,7 +465,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	@Override
-	public void onChange(String field, int id, Object oldValue, Object newValue) {
+	public void onChange(String field, int id, Object oldValue, Object newValue) {	
 		setTitle(this);
 	}
 

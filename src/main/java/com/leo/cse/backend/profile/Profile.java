@@ -43,18 +43,12 @@ public abstract class Profile implements IProfile {
 	}
 
 	protected File loadedFile;
-	protected int loadedSection;
 	protected String header;
 	protected String flagH;
 
 	@Override
 	public File getLoadedFile() {
 		return loadedFile;
-	}
-
-	@Override
-	public int getLoadedSection() {
-		return loadedSection;
 	}
 
 	@Override
@@ -104,8 +98,6 @@ public abstract class Profile implements IProfile {
 			throw new ProfileMethodException("Method " + methodName + " is already defined!");
 		if (method == null)
 			throw new ProfileMethodException("method == null!");
-		if (method.getArgTypes() == null)
-			throw new ProfileMethodException("method.getArgTypes() == null!");
 		methods.put(methodName, method);
 	}
 
@@ -195,7 +187,7 @@ public abstract class Profile implements IProfile {
 		assertHasMethod(method);
 		Class<?>[] argTypes = methods.get(method).getArgTypes();
 		if (argTypes == null)
-			return -1;
+			return 0;
 		return argTypes.length;
 	}
 
@@ -221,14 +213,18 @@ public abstract class Profile implements IProfile {
 	public Object callMethod(String method, Object... args) throws ProfileMethodException {
 		assertHasMethod(method);
 		int argNum = getMethodArgNum(method);
+		if (argNum > 0 && args == null)
+			throw new ProfileMethodException("Amount of arguments is insufficent, is 0 but should be " + argNum + "!");
 		if (args.length < argNum)
 			throw new ProfileMethodException(
 					"Amount of arguments is insufficent, is " + args.length + " but should be " + argNum + "!");
 		Class<?>[] argTypes = getMethodArgTypes(method);
-		for (int i = 0; i < argTypes.length; i++)
-			if (!argTypes[i].isInstance(args[i]))
-				throw new ProfileMethodException("Argument " + i + " has bad type: " + argTypes[i].getName()
-						+ " was expected, but " + args[i].getClass().getName() + " was received instead!");
+		if (argTypes != null) {
+			for (int i = 0; i < argTypes.length; i++)
+				if (!argTypes[i].isInstance(args[i]))
+					throw new ProfileMethodException("Argument " + i + " has bad type: " + argTypes[i].getName()
+							+ " was expected, but " + args[i].getClass().getName() + " was received instead!");
+		}
 		return methods.get(method).call(args);
 	}
 

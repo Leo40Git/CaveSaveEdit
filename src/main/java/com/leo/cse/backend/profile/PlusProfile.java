@@ -52,6 +52,19 @@ public class PlusProfile extends NormalProfile {
 	 *            {@link Integer}, slot to clear.
 	 */
 	public static final String METHOD_DELETE_FILE = "file.delete";
+	
+	public static final String METHOD_FILE_EXISTS = "file.exists";
+
+	public static final String METHOD_GET_ACTIVE_FILE = "file.active.get";
+
+	public static final String METHOD_SET_ACTIVE_FILE = "file.active.set";
+	
+	private int curSection = -1;
+	
+	@Override
+	protected int correctPointer(int ptr) {
+		return curSection * SECTION_LENGTH + ptr;
+	}
 
 	public PlusProfile() {
 		super(false);
@@ -71,7 +84,7 @@ public class PlusProfile extends NormalProfile {
 
 				@Override
 				public boolean acceptsValue(Object value) {
-					return value instanceof Short;
+					return value instanceof Boolean;
 				}
 
 				@Override
@@ -177,47 +190,106 @@ public class PlusProfile extends NormalProfile {
 				}
 
 			});
+			addMethod(METHOD_FILE_EXISTS, new ProfileMethod() {
+
+				@Override
+				public Class<?>[] getArgTypes() {
+					return oneInt;
+				}
+
+				@Override
+				public Class<?> getRetType() {
+					return Boolean.class;
+				}
+
+				@Override
+				public Object call(Object... args) {
+					int secToChk = (int) args[0];
+					int ptr = secToChk * SECTION_LENGTH;
+					// check header
+					String profHeader = ByteUtils.readString(data, ptr, header.length());
+					if (!header.equals(profHeader))
+						return false;
+					// check flag header
+					String profFlagH = ByteUtils.readString(data, ptr + 0x218, flagH.length());
+					if (!flagH.equals(profFlagH))
+						return false;
+					return true;
+				}
+
+				@Override
+				public String[] getModifiedFields() {
+					return null;
+				}
+				
+			});
+			addMethod(METHOD_GET_ACTIVE_FILE, new ProfileMethod() {
+
+				@Override
+				public Class<?>[] getArgTypes() {
+					return null;
+				}
+
+				@Override
+				public Class<?> getRetType() {
+					return Integer.class;
+				}
+
+				@Override
+				public Object call(Object... args) {
+					return curSection;
+				}
+
+				@Override
+				public String[] getModifiedFields() {
+					return null;
+				}
+				
+			});
+			addMethod(METHOD_SET_ACTIVE_FILE, new ProfileMethod() {
+
+				@Override
+				public Class<?>[] getArgTypes() {
+					return oneInt;
+				}
+
+				@Override
+				public Class<?> getRetType() {
+					return null;
+				}
+
+				@Override
+				public Object call(Object... args) {
+					curSection = (int) args[0];
+					return null;
+				}
+
+				@Override
+				public String[] getModifiedFields() {
+					return null;
+				}
+				
+			});
 		} catch (ProfileMethodException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public boolean supportsSections() {
-		return true;
-	}
-
-	@Override
-	public void load(File file, int section) throws IOException {
+	public void load(File file) throws IOException {
 		// read data
 		data = new byte[FILE_LENGTH];
 		try (FileInputStream fis = new FileInputStream(file)) {
 			if (fis.read(data) < data.length)
 				throw new IOException("file is too small");
 		}
-		int off = SECTION_LENGTH * section;
-		// check header
-		String profHeader = ByteUtils.readString(data, off, header.length());
-		if (!header.equals(profHeader))
-			throw new IOException("Invalid file header!");
-		// check flag header
-		String profFlagH = ByteUtils.readString(data, off + 0x218, flagH.length());
-		if (!flagH.equals(profFlagH))
-			throw new IOException("Flag header is missing!");
 		// set loaded file & section
 		loadedFile = file;
-		loadedSection = section;
+		curSection = 0;
 	}
 
 	@Override
-	public void loadSection(int section) throws IOException {
-		if (loadedFile == null)
-			return;
-		load(loadedFile, section);
-	}
-
-	@Override
-	public void save(File file, int section) throws IOException {
+	public void save(File file) throws IOException {
 		if (data == null)
 			return;
 		// back up file just in case
@@ -253,11 +325,6 @@ public class PlusProfile extends NormalProfile {
 		}
 		// set loaded file
 		loadedFile = file;
-	}
-
-	@Override
-	protected int correctPointer(int ptr) {
-		return SECTION_LENGTH * loadedSection + ptr;
 	}
 
 }

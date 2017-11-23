@@ -333,7 +333,11 @@ public class GeneralPanel extends Panel {
 					t = 12;
 				cal.set(Calendar.MONTH, t - 1);
 				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+					long time = cal.getTime().getTime() / 1000;
+					if (time < 0)
+						time = 0;
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, time);
+					cal.setTimeInMillis(time * 1000);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}
@@ -348,7 +352,11 @@ public class GeneralPanel extends Panel {
 					t = maxDay;
 				cal.set(Calendar.DAY_OF_MONTH, t);
 				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+					long time = cal.getTime().getTime() / 1000;
+					if (time < 0)
+						time = 0;
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, time);
+					cal.setTimeInMillis(time * 1000);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}
@@ -362,7 +370,11 @@ public class GeneralPanel extends Panel {
 					t = 9999;
 				cal.set(Calendar.YEAR, t);
 				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+					long time = cal.getTime().getTime() / 1000;
+					if (time < 0)
+						time = 0;
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, time);
+					cal.setTimeInMillis(time * 1000);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}
@@ -376,7 +388,11 @@ public class GeneralPanel extends Panel {
 					t = maxS;
 				cal.set(Calendar.HOUR_OF_DAY, t);
 				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+					long time = cal.getTime().getTime() / 1000;
+					if (time < 0)
+						time = 0;
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, time);
+					cal.setTimeInMillis(time * 1000);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}
@@ -391,7 +407,11 @@ public class GeneralPanel extends Panel {
 					t = maxM;
 				cal.set(Calendar.MINUTE, t);
 				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+					long time = cal.getTime().getTime() / 1000;
+					if (time < 0)
+						time = 0;
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, time);
+					cal.setTimeInMillis(time * 1000);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}
@@ -406,31 +426,24 @@ public class GeneralPanel extends Panel {
 					t = maxM;
 				cal.set(Calendar.SECOND, t);
 				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+					long time = cal.getTime().getTime() / 1000;
+					if (time < 0)
+						time = 0;
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, time);
+					cal.setTimeInMillis(time * 1000);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}
 				return t;
 			}, "seconds", 2));
-			compList.add(new Label(".", dateLoc + 155, 24));
-			compList.add(new ShortBox(dateLoc + 160, 24, 22, 16, () -> {
-				return (short) cal.get(Calendar.MILLISECOND);
-			}, (Short t) -> {
-				short maxM = (short) cal.getMaximum(Calendar.MILLISECOND);
-				if (t > maxM)
-					t = maxM;
-				cal.set(Calendar.MILLISECOND, t);
-				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
-				return t;
-			}, "milliseconds", 3));
-			compList.add(new Button("Set to current", dateLoc + 190, 22, 80, 16, () -> {
+			compList.add(new Button("Set to current", dateLoc + 164, 24, 80, 16, () -> {
 				cal.setTime(new Date());
 				try {
-					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, cal.getTime().getTime() / 1000);
+					long time = cal.getTime().getTime() / 1000;
+					if (time < 0)
+						time = 0;
+					ProfileManager.setField(PlusProfile.FIELD_MODIFY_DATE, time);
+					cal.setTimeInMillis(time * 1000);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}

@@ -18,6 +18,7 @@ import com.leo.cse.backend.exe.MapInfo.PxeEntry;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
+import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
 import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
@@ -276,7 +277,8 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			else {
 				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
 				if (ProfileManager.getType() == PlusProfile.class) {
-					if (ProfileManager.getLoadedSection() > 2)
+					int curSec = (Integer) ProfileManager.callMethod(PlusProfile.METHOD_GET_ACTIVE_FILE);
+					if (curSec > 2)
 						costume += 10;
 					int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
 					while (diff > 5)
@@ -286,7 +288,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 					costume += diff;
 				}
 			}
-		} catch (ProfileFieldException e) {
+		} catch (ProfileFieldException | ProfileMethodException e) {
 			e.printStackTrace();
 		}
 		int xPixel = playerPos[0];

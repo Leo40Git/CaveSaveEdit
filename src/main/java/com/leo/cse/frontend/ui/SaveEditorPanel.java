@@ -32,6 +32,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.NormalProfile;
+import com.leo.cse.backend.profile.PlusProfile;
+import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
@@ -45,6 +47,7 @@ import com.leo.cse.frontend.ui.components.ScrollBar;
 import com.leo.cse.frontend.ui.dialogs.AboutDialog;
 import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.NikuEditDialog;
+import com.leo.cse.frontend.ui.dialogs.PlusSlotDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
@@ -53,7 +56,8 @@ import com.leo.cse.frontend.ui.panels.Panel;
 import com.leo.cse.frontend.ui.panels.VariablesPanel;
 import com.leo.cse.frontend.ui.panels.WarpsPanel;
 
-public class SaveEditorPanel extends JPanel implements MouseInputListener, MouseWheelListener, KeyListener {
+public class SaveEditorPanel extends JPanel
+		implements MouseInputListener, MouseWheelListener, KeyListener, ProfileListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
@@ -241,7 +245,13 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	private int currentMenubar = -1;
 	private Component lastFocus;
 	private List<Dialog> dBoxes;
-	private boolean loading;
+	private boolean loading, gotProfile;
+
+	public void setGotProfile(boolean gotProfile) {
+		this.gotProfile = gotProfile;
+		if (gotProfile)
+			addComponents();
+	}
 
 	public static boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
 	public static boolean showMapGrid = Config.getBoolean(Config.KEY_SHOW_MAP_GRID, false);
@@ -268,11 +278,16 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 	}
 
 	public void addComponents() {
+		boolean plus = ExeData.isPlusMode();
 		menuBars = new ArrayList<>();
 		List<MenuBarItem> mbiFile = new ArrayList<>();
 		mbiFile.add(new MenuBarItem("Load Profile", "Ctrl+O", Resources.toolbarIcons[0], () -> {
 			loadProfile();
 		}));
+		if (plus)
+			mbiFile.add(new MenuBarItem("Change File", () -> {
+				addDialogBox(new PlusSlotDialog());
+			}));
 		mbiFile.add(new MenuBarItem("Unload Profile", () -> {
 			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
 				int sel = JOptionPane.showConfirmDialog(Main.window,
@@ -337,7 +352,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean var = MCI.getSpecial("VarHack")/*, plus = ExeData.isPlusMode()*/;
+		boolean var = MCI.getSpecial("VarHack");
 		tabs = new EditorPanel[(var /*|| plus*/ ? 5 : 4)];
 		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
@@ -445,7 +460,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				c = !c;
 			}
 		} else {
-			if (ProfileManager.isLoaded()) {
+			if (gotProfile) {
 				for (Component comp : tabs[currentTab].getPanel().getComponents())
 					comp.render(g2d, compViewport);
 			} else {
@@ -628,6 +643,7 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		try {
 			ProfileManager.save();
 		} catch (IOException e1) {
+			e1.printStackTrace();
 			JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 					"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 		}
@@ -654,8 +670,9 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 				e.printStackTrace();
 			}
 			try {
-				ProfileManager.save(file, ProfileManager.getLoadedSection());
+				ProfileManager.save(file);
 			} catch (IOException e1) {
+				e1.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -1024,6 +1041,17 @@ public class SaveEditorPanel extends JPanel implements MouseInputListener, Mouse
 		} else
 			lastFocus.onKey(code, shift, ctrl);
 		repaint();
+	}
+
+	@Override
+	public void onChange(String field, int id, Object oldValue, Object newValue) {
+		if (ProfileManager.EVENT_LOAD.equals(field)) {
+			if (ProfileManager.getType() == PlusProfile.class)
+				addDialogBox(new PlusSlotDialog());
+			else
+				gotProfile = true;
+		} else if (ProfileManager.EVENT_UNLOAD.equals(field))
+			gotProfile = false;
 	}
 
 	@Override

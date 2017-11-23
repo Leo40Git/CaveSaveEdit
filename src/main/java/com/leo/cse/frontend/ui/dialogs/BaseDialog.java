@@ -15,23 +15,24 @@ import com.leo.cse.frontend.ui.components.IScrollable;
 
 public class BaseDialog extends Dialog {
 
-	protected String title, message;
+	protected String title;
 	protected int width, height;
+	private boolean closeButton;
 	protected boolean wantsToClose;
 	protected IScrollable scrollable;
-	private boolean quitHover;
+	private boolean closeHover;
 	private List<Component> comps;
 
-	public BaseDialog(String title, String message, int width, int height) {
+	public BaseDialog(String title, int width, int height, boolean closeButton) {
 		this.title = title;
-		this.message = message;
 		this.width = width;
 		this.height = height + 18;
+		this.closeButton = closeButton;
 		comps = new ArrayList<>();
 	}
 
 	public BaseDialog(String title, int width, int height) {
-		this(title, null, width, height);
+		this(title, width, height, true);
 	}
 
 	protected void addComponent(Component comp) {
@@ -51,6 +52,10 @@ public class BaseDialog extends Dialog {
 	protected int getWindowY() {
 		return getWindowY(true);
 	}
+	
+	public void requestClose() {
+		wantsToClose = true;
+	}
 
 	@Override
 	public void render(Graphics g) {
@@ -63,15 +68,15 @@ public class BaseDialog extends Dialog {
 		g.drawRect(x, y, width, height);
 		FrontUtils.drawString(g, title, x + 4, y);
 		g.drawLine(x, y + 18, x + width, y + 18);
-		if (quitHover)
-			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
-		else
-			g.setColor(Main.COLOR_BG);
-		g.fillRect(x + width - 16, y + 2, 14, 14);
-		g.drawImage(Resources.dialogClose, x + width - 16, y + 2, null);
+		if (closeButton) {
+			if (closeHover)
+				g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+			else
+				g.setColor(Main.COLOR_BG);
+			g.fillRect(x + width - 16, y + 2, 14, 14);
+			g.drawImage(Resources.dialogClose, x + width - 16, y + 2, null);
+		}
 		g.setColor(Main.lineColor);
-		if (message != null)
-			FrontUtils.drawString(g, message, x + 4, y + 22);
 		final int yOff = y + 18;
 		g.translate(x, yOff);
 		for (Component comp : comps)
@@ -82,9 +87,11 @@ public class BaseDialog extends Dialog {
 	@Override
 	public void onClick(int x, int y, boolean shift, boolean ctrl) {
 		final int wx = getWindowX(), wy = getWindowY(false);
-		if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14)) {
-			wantsToClose = true;
-			return;
+		if (closeButton) {
+			if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14)) {
+				wantsToClose = true;
+				return;
+			}
 		}
 		x -= wx;
 		y -= wy + 18;
@@ -108,10 +115,12 @@ public class BaseDialog extends Dialog {
 	@Override
 	public void updateHover(int x, int y) {
 		final int wx = getWindowX(), wy = getWindowY(false);
-		quitHover = false;
-		if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14)) {
-			quitHover = true;
-			return;
+		if (closeButton) {
+			closeHover = false;
+			if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14)) {
+				closeHover = true;
+				return;
+			}
 		}
 		x -= wx;
 		y -= wy + 18;
@@ -123,7 +132,7 @@ public class BaseDialog extends Dialog {
 			comp.updateHover(x, y, hover);
 		}
 	}
-	
+
 	@Override
 	public void onScroll(int rotations, boolean shift, boolean ctrl) {
 		if (scrollable != null)

@@ -135,7 +135,7 @@ public class FrontUtils {
 
 	public static void drawNineSlice(Graphics g, Image img, int x, int y, int w, int h) {
 		final int iw = img.getWidth(null), ih = img.getHeight(null);
-		final int sw = iw / 3, sh = ih / 3;
+		final int sw = (int) (iw / 3f), sh = (int) (ih / 3f);
 		// top left
 		g.drawImage(img, x, y, x + sw, y + sh, 0, 0, sw, sh, null);
 		// top middle

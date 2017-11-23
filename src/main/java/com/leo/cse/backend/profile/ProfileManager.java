@@ -242,7 +242,7 @@ public class ProfileManager {
 		undoMan.redo();
 	}
 
-	public static void load(File file, int section) throws IOException {
+	public static void load(File file) throws IOException {
 		unload();
 		if (implClass == null)
 			implClass = NormalProfile.class;
@@ -256,33 +256,15 @@ public class ProfileManager {
 			implObj = new NormalProfile();
 		}
 		impl = (IProfile) implObj;
-		if (impl.supportsSections() && section < 0)
-			throw new IOException("Profile class supports sections, but section to load was not provided!");
-		impl.load(file, section);
+		impl.load(file);
 		undoMan = new UndoManager();
 		modified = false;
 		// notify listeners
-		notifyListeners(EVENT_LOAD, section, null, null);
+		notifyListeners(EVENT_LOAD, -1, null, null);
 	}
 
-	public static void load(File file) throws IOException {
-		load(file, -1);
-	}
-
-	public static void load(String path, int section) throws IOException {
-		load(new File(path), section);
-	}
-
-	public static void loadSection(int section) throws IOException {
-		if (impl == null)
-			return;
-		if (impl.getLoadedFile() == null)
-			return;
-		impl.loadSection(section);
-		undoMan = new UndoManager();
-		modified = false;
-		// notify listeners
-		notifyListeners(EVENT_LOAD, section, null, null);
+	public static void load(String path) throws IOException {
+		load(new File(path));
 	}
 
 	public static void reload() throws IOException {
@@ -291,26 +273,26 @@ public class ProfileManager {
 		File loadedFile = impl.getLoadedFile();
 		if (loadedFile == null)
 			return;
-		load(loadedFile, impl.getLoadedSection());
+		load(loadedFile);
 	}
 
-	public static void save(File file, int section) throws IOException {
+	public static void save(File file) throws IOException {
 		if (impl == null)
 			return;
-		impl.save(file, section);
+		impl.save(file);
 		modified = false;
 		// notify listeners
-		notifyListeners(EVENT_SAVE, section, null, null);
+		notifyListeners(EVENT_SAVE, -1, null, null);
 	}
 
-	public static void save(String path, int section) throws IOException {
-		save(new File(path), section);
+	public static void save(String path) throws IOException {
+		save(new File(path));
 	}
 
 	public static void save() throws IOException {
 		if (impl == null)
 			return;
-		save(impl.getLoadedFile(), impl.getLoadedSection());
+		save(impl.getLoadedFile());
 	}
 
 	public static void unload() {
@@ -325,12 +307,6 @@ public class ProfileManager {
 		if (impl == null)
 			return null;
 		return impl.getLoadedFile();
-	}
-
-	public static int getLoadedSection() {
-		if (impl == null)
-			return 0;
-		return impl.getLoadedSection();
 	}
 
 	public static boolean isLoaded() {
@@ -451,9 +427,11 @@ public class ProfileManager {
 			return null;
 		Object ret = impl.callMethod(method, args);
 		String[] modFields = impl.getMethodModifiedFields(method);
-		if (modFields != null)
+		if (modFields != null) {
+			modified = true;
 			for (String field : modFields)
 				notifyListeners(field, -1, null, null);
+		}
 		return ret;
 	}
 

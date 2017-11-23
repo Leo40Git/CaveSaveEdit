@@ -732,8 +732,7 @@ public class ExeData {
 	 * Loads mapdata from a stage.tbl file.
 	 * 
 	 * @throws IOException
-	 *             probably all the time because this code is designed for
-	 *             executables.
+	 *             if an I/O error occurs.
 	 */
 	// TODO CS+ support
 	private static void loadPlus() throws IOException {
@@ -1398,14 +1397,25 @@ public class ExeData {
 	/**
 	 * Loads a graphics file.
 	 * 
+	 * @param name
+	 *            file name
+	 * @return file that was loaded
+	 */
+	private static File loadGraphic(String name) {
+		File ret = ResUtils.getGraphicsFile(dataDir.toString(), name);
+		addImage(ret);
+		return ret;
+	}
+
+	/**
+	 * Loads a graphics file.
+	 * 
 	 * @param strid
 	 *            executable string id to get file name from
 	 * @return file that was loaded
 	 */
 	private static File loadGraphic(int strid) {
-		File ret = ResUtils.getGraphicsFile(dataDir.toString(), getExeString(strid));
-		addImage(ret);
-		return ret;
+		return loadGraphic(getExeString(strid));
 	}
 
 	/**

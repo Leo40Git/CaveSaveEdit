@@ -42,17 +42,11 @@ public interface IProfile {
 
 	}
 
-	public void load(File file, int section) throws IOException;
+	public void load(File file) throws IOException;
 
-	public void loadSection(int section) throws IOException;
-
-	public void save(File file, int section) throws IOException;
+	public void save(File file) throws IOException;
 
 	public File getLoadedFile();
-
-	public boolean supportsSections();
-
-	public int getLoadedSection();
 
 	public String getHeader();
 
