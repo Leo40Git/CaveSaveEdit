@@ -89,14 +89,14 @@ public class PlusProfile extends NormalProfile {
 
 				@Override
 				public Object getValue(int index) {
-					byte flag = data[0x1F04D];
+					byte flag = data[0x1F04C];
 					return (flag == 0 ? false : true);
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
 					byte flag = (byte) ((Boolean) value ? 1 : 0);
-					data[0x1F04D] = flag;
+					data[0x1F04C] = flag;
 				}
 			});
 		} catch (ProfileFieldException e) {
