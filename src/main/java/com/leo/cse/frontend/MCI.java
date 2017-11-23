@@ -78,8 +78,10 @@ public class MCI {
 			throws NoSuchMethodException {
 		Object fObj = scope.get(name, scope);
 		if (!(fObj instanceof Function)) {
+			if (cx == defaultCx && scope == defaultScope)
+				throw new NoSuchMethodException("Could not find method " + name + "!");
 			try {
-				invokeFunction(defaultCx, defaultScope, name, args);
+				return invokeFunction(defaultCx, defaultScope, name, args);
 			} catch (NoSuchMethodException e) {
 				throw e;
 			}
@@ -181,20 +183,18 @@ public class MCI {
 		defaultCx = cx;
 		defaultScope = scope;
 	}
-	
+
 	public static void readPlus() throws Exception {
 		read0(MCI.class.getResourceAsStream("plus.mci"), new File("plus.mci"));
 		plus = true;
 		validate();
-		defaultCx = cx;
-		defaultScope = scope;
 	}
 
 	public static void read(File file) throws Exception {
 		read0(new FileInputStream(file), file);
 		validate();
 	}
-	
+
 	public static boolean isPlus() {
 		return plus;
 	}
@@ -213,7 +213,7 @@ public class MCI {
 	public static boolean contains(String key) {
 		return mci.contains(key);
 	}
-	
+
 	public static String getNullable(String key) {
 		Object obj = mci.get(key);
 		if (obj == null)
@@ -411,11 +411,11 @@ public class MCI {
 		Point offset = (Point) oe2;
 		return new EntityExtras(frameRect, offset);
 	}
-	
+
 	public static void set(String key, String value) {
 		mci.put(key, value);
 	}
-	
+
 	public static void set(String key, int value) {
 		mci.put(key, value);
 	}
