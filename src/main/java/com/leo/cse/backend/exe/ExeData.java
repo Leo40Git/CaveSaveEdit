@@ -762,6 +762,23 @@ public class ExeData {
 		loaded = true;
 	}
 
+	public static File correctFile(File src) {
+		if (!plusMode)
+			return src;
+		if (src.exists())
+			return src;
+		String name = src.getName();
+		String parent = src.getParentFile().getName();
+		if ("Stage".equalsIgnoreCase(parent))
+			name = "Stage/" + name;
+		if ("Npc".equals(parent))
+			name = "Npc/" + name;
+		File base = ResUtils.getBaseFolder(src);
+		if (base == null)
+			return null;
+		return new File(base + "/" + name);
+	}
+
 	/**
 	 * Unloads the executable.
 	 */
@@ -980,7 +997,7 @@ public class ExeData {
 		exeStrings[STRING_STAGEIMAGE] = "StageImage";
 		exeStrings[STRING_NPCSYM] = "Npc/NpcSym";
 		exeStrings[STRING_NPCREGU] = "Npc/NpcRegu";
-		exeStrings[STRING_TEXTBOX] = "Textbox";
+		exeStrings[STRING_TEXTBOX] = "TextBox";
 		exeStrings[STRING_CARET] = "Caret";
 		exeStrings[STRING_BULLET] = "Bullet";
 		exeStrings[STRING_FACE] = "Face";
@@ -1009,7 +1026,7 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadNpcTbl() throws IOException {
-		File tblFile = ResUtils.newFile(dataDir + "/" + getExeString(STRING_NPC_TBL));
+		File tblFile = correctFile(ResUtils.newFile(dataDir + "/" + getExeString(STRING_NPC_TBL)));
 		FileChannel inChan;
 		ByteBuffer dBuf;
 		FileInputStream inStream;
@@ -1402,7 +1419,7 @@ public class ExeData {
 	 * @return file that was loaded
 	 */
 	private static File loadGraphic(String name) {
-		File ret = ResUtils.getGraphicsFile(dataDir.toString(), name);
+		File ret = correctFile(ResUtils.getGraphicsFile(dataDir.toString(), name));
 		addImage(ret);
 		return ret;
 	}

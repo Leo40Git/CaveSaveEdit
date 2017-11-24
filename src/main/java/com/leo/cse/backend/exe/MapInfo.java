@@ -135,15 +135,15 @@ public class MapInfo {
 		String npc = ExeData.getExeString(ExeData.STRING_NPC_FOLDER);
 		String prt = ExeData.getExeString(ExeData.STRING_PRT_PREFIX);
 		String npcP = ExeData.getExeString(ExeData.STRING_NPC_PREFIX);
-		tileset = ResUtils.getGraphicsFile(directory.toString(), String.format(prt, stage, d.getTileset()));
+		tileset = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), String.format(prt, stage, d.getTileset())));
 		ExeData.addImage(tileset);
-		bgImage = ResUtils.getGraphicsFile(directory.toString(), d.getBgName());
+		bgImage = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), d.getBgName()));
 		ExeData.addImage(bgImage);
 		if (!ExeData.doLoadNpc())
 			return;
-		npcSheet1 = ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet1()));
+		npcSheet1 = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet1())));
 		ExeData.addImage(npcSheet1);
-		npcSheet2 = ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet2()));
+		npcSheet2 = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet2())));
 		ExeData.addImage(npcSheet2);
 	}
 
