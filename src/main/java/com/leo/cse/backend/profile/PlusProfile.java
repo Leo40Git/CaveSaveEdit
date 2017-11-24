@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.leo.cse.backend.ByteUtils;
 
@@ -59,7 +61,12 @@ public class PlusProfile extends NormalProfile {
 
 	public static final String METHOD_SET_ACTIVE_FILE = "file.active.set";
 	
+	public static final String METHOD_PUSH_ACTIVE_FILE = "file.active.push";
+	
+	public static final String METHOD_POP_ACTIVE_FILE = "file.active.pop";
+	
 	private int curSection = -1;
+	private List<Integer> secQueue;
 	
 	@Override
 	protected int correctPointer(int ptr) {
@@ -68,6 +75,7 @@ public class PlusProfile extends NormalProfile {
 
 	public PlusProfile() {
 		super(false);
+		secQueue = new ArrayList<>();
 		setupFieldsPlus();
 		setupMethodsPlus();
 	}
@@ -261,6 +269,58 @@ public class PlusProfile extends NormalProfile {
 				@Override
 				public Object call(Object... args) {
 					curSection = (int) args[0];
+					return null;
+				}
+
+				@Override
+				public String[] getModifiedFields() {
+					return null;
+				}
+				
+			});
+			addMethod(METHOD_PUSH_ACTIVE_FILE, new ProfileMethod() {
+
+				@Override
+				public Class<?>[] getArgTypes() {
+					return oneInt;
+				}
+
+				@Override
+				public Class<?> getRetType() {
+					return null;
+				}
+
+				@Override
+				public Object call(Object... args) {
+					int newSec = (int) args[0];
+					secQueue.add(curSection);
+					curSection = newSec;
+					return null;
+				}
+
+				@Override
+				public String[] getModifiedFields() {
+					return null;
+				}
+				
+			});
+			addMethod(METHOD_POP_ACTIVE_FILE, new ProfileMethod() {
+
+				@Override
+				public Class<?>[] getArgTypes() {
+					return null;
+				}
+
+				@Override
+				public Class<?> getRetType() {
+					return null;
+				}
+
+				@Override
+				public Object call(Object... args) {
+					if (secQueue.isEmpty())
+						return null;
+					curSection = secQueue.remove(0);
 					return null;
 				}
 

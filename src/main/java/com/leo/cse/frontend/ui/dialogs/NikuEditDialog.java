@@ -47,7 +47,7 @@ public class NikuEditDialog extends BaseDialog {
 		int result = FrontUtils.openFileChooser("Load 290.rec...", NIKU_FILTER, dir, false, false);
 		if (result == JFileChooser.APPROVE_OPTION)
 			try {
-				NikuRecord.read(FrontUtils.getSelectedFile());
+				NikuRecord.load(FrontUtils.getSelectedFile());
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the 290.rec file:\n" + e,
@@ -61,7 +61,7 @@ public class NikuEditDialog extends BaseDialog {
 			saveNikuAs();
 		else
 			try {
-				NikuRecord.write(null);
+				NikuRecord.save(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the 290.rec file:\n" + e,
@@ -77,7 +77,7 @@ public class NikuEditDialog extends BaseDialog {
 		int result = FrontUtils.openFileChooser("Save 290.rec...", NIKU_FILTER, dir, false, true);
 		if (result == JFileChooser.APPROVE_OPTION)
 			try {
-				NikuRecord.write(FrontUtils.getSelectedFile());
+				NikuRecord.save(FrontUtils.getSelectedFile());
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the 290.rec file:\n" + e,

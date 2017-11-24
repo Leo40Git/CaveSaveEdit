@@ -17,7 +17,7 @@ public class NikuRecord {
 		return (byte) (b & 0xFF);
 	}
 
-	public static void read(File src) throws IOException {
+	public static void load(File src) throws IOException {
 		int[] result = new int[4];
 		byte[] buf = new byte[20];
 		FileInputStream fis = new FileInputStream(src);
@@ -47,7 +47,7 @@ public class NikuRecord {
 		file = src;
 	}
 
-	public static void write(File dest) throws IOException {
+	public static void save(File dest) throws IOException {
 		if (dest == null)
 			dest = file;
 		byte[] bufByte = new byte[20];

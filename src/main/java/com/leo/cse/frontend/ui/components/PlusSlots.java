@@ -61,10 +61,8 @@ public class PlusSlots extends Component {
 				FrontUtils.drawString(g, "New", x + 4, y + 22);
 				return;
 			}
-			int oldSec = 0;
 			try {
-				oldSec = (int) ProfileManager.callMethod(PlusProfile.METHOD_GET_ACTIVE_FILE);
-				ProfileManager.callMethod(PlusProfile.METHOD_SET_ACTIVE_FILE, section);
+				ProfileManager.callMethod(PlusProfile.METHOD_PUSH_ACTIVE_FILE, section);
 			} catch (ProfileMethodException e) {
 				e.printStackTrace();
 			}
@@ -138,7 +136,7 @@ public class PlusSlots extends Component {
 			g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + Math.abs(sourceX2 - sourceX1),
 					yPixel + Math.abs(sourceY2 - sourceY1), sourceX1, sourceY1, sourceX2, sourceY2, null);
 			try {
-				ProfileManager.callMethod(PlusProfile.METHOD_SET_ACTIVE_FILE, oldSec);
+				ProfileManager.callMethod(PlusProfile.METHOD_POP_ACTIVE_FILE);
 			} catch (ProfileMethodException e) {
 				e.printStackTrace();
 			}
