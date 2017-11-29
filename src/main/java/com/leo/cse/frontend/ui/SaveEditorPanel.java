@@ -447,8 +447,9 @@ public class SaveEditorPanel extends JPanel
 		if (loading) {
 			g2d.setFont(Resources.font);
 			boolean c = false;
-			final Color c1 = Main.lineColor;
-			final Color c2 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), 191);
+			final int cr = Main.lineColor.getRed(), cg = Main.lineColor.getGreen(), cb = Main.lineColor.getBlue();
+			final Color c1 = new Color(cr, cg, cb);
+			final Color c2 = new Color(cr, cg, cb, 191);
 			final String s = " Loading...";
 			final int sw = g2d.getFontMetrics().stringWidth(s);
 			final int sh = g2d.getFontMetrics().getHeight();
@@ -1048,9 +1049,10 @@ public class SaveEditorPanel extends JPanel
 	@Override
 	public void onChange(String field, int id, Object oldValue, Object newValue) {
 		if (ProfileManager.EVENT_LOAD.equals(field)) {
-			if (ProfileManager.getType() == PlusProfile.class)
+			if (ProfileManager.getType() == PlusProfile.class) {
+				gotProfile = false;
 				addDialogBox(new PlusSlotDialog());
-			else
+			} else
 				gotProfile = true;
 		} else if (ProfileManager.EVENT_UNLOAD.equals(field))
 			gotProfile = false;
