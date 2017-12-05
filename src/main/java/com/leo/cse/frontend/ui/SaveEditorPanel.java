@@ -52,6 +52,7 @@ import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
+import com.leo.cse.frontend.ui.panels.MapFlagsPanel;
 import com.leo.cse.frontend.ui.panels.Panel;
 import com.leo.cse.frontend.ui.panels.VariablesPanel;
 import com.leo.cse.frontend.ui.panels.WarpsPanel;
@@ -197,8 +198,9 @@ public class SaveEditorPanel extends JPanel
 		INVENTORY("Inventory", 1),
 		WARPS("Warps", 2),
 		FLAGS("Flags", 3),
+		MAP_FLAGS("Map Flags", 5),
 		VARIABLES("Variables", 4),
-		PLUS_EXCLUSIVE("Cave Story+ Exclusive", 5);
+		EQUIP_PLUS("Equip+", 6);
 
 		String label;
 		int icon;
@@ -354,18 +356,18 @@ public class SaveEditorPanel extends JPanel
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean var = MCI.getSpecial("VarHack");
-		tabs = new EditorPanel[(var /*|| plus*/ ? 5 : 4)];
+		boolean var = MCI.getSpecial("VarHack"), eqp = MCI.getSpecial("EquipPlusHack");
+		tabs = new EditorPanel[(var ? 6 : 5)];
 		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
 		tabs[2] = new EditorPanel(EditorTab.WARPS, new WarpsPanel());
 		tabs[3] = new EditorPanel(EditorTab.FLAGS, new FlagsPanel());
-		if (var)
-			tabs[4] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
-		/*
-		if (plus)
-			tabs[4] = new EditorPanel(EditorTab.PLUS_EXCLUSIVE, new PlusPanel());
-		*/
+		if (eqp)
+			tabs[4] = new EditorPanel(EditorTab.MAP_FLAGS, new MapFlagsPanel());
+		else
+			tabs[4] = new EditorPanel(EditorTab.MAP_FLAGS, new MapFlagsPanel());
+		if (var && !eqp)
+			tabs[5] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
 		int tabNum = tabs.length - 1;
 		if (currentTab > tabNum)
 			currentTab = tabNum;

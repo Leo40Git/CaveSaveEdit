@@ -230,7 +230,7 @@ public class NormalProfile extends Profile {
 		makeFieldInts(FIELD_ITEMS, 30, 0, 0x0D8);
 		makeFieldInts(FIELD_WARP_ID, 7, Integer.BYTES * 2, 0x158);
 		makeFieldInts(FIELD_WARP_LOCATION, 7, Integer.BYTES * 2, 0x15C);
-		makeFieldBytes(FIELD_MAP_FLAGS, 128, 0, 0x196);
+		makeFieldBools(FIELD_MAP_FLAGS, 128, 0, 0x196);
 		makeFieldFlags(FIELD_FLAGS, 8000, 0x21C);
 	}
 
@@ -384,6 +384,58 @@ public class NormalProfile extends Profile {
 				@Override
 				public void setValue(int index, Object value) {
 					ByteUtils.writeInt(data, correctPointer(ptr), (Integer) value);
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void makeFieldBools(String name, int length, int off, int ptr) {
+		try {
+			addField(name, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Boolean.class;
+				}
+
+				@Override
+				public boolean acceptsValue(Object value) {
+					return value instanceof Boolean;
+				}
+
+				@Override
+				public Object getValue(int index) {
+					byte[] ret = new byte[length];
+					ByteUtils.readBytes(data, correctPointer(ptr), off, ret);
+					return (ret[index] == 0 ? false : true);
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					byte actualVal = 0;
+					if ((Boolean) value)
+						actualVal = 1;
+					int cptr = correctPointer(ptr);
+					byte[] vals = new byte[length];
+					ByteUtils.readBytes(data, cptr, off, vals);
+					vals[index] = actualVal;
+					ByteUtils.writeBytes(data, cptr, off, vals);
+				}
+				
+				@Override
+				public boolean hasIndexes() {
+					return true;
+				}
+				
+				@Override
+				public int getMinumumIndex() {
+					return 0;
+				}
+				
+				@Override
+				public int getMaximumIndex() {
+					return length;
 				}
 			});
 		} catch (ProfileFieldException e) {

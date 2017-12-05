@@ -1757,7 +1757,7 @@ public class ExeData {
 	public static MapInfo getMapInfo(int num) {
 		if (num < 0)
 			throw new IndexOutOfBoundsException("Requested map number (" + num + ") is negative!");
-		if (mapInfo.size() < num)
+		if (mapInfo.size() - 1 < num)
 			throw new IndexOutOfBoundsException(
 					"Requested map number is " + num + ", but maximum map number is " + mapdata.size() + "!");
 		return mapInfo.get(num);
