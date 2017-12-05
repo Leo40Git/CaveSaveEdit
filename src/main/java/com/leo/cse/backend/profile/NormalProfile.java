@@ -279,7 +279,7 @@ public class NormalProfile extends Profile {
 		makeFieldLong(FIELD_CASH, 0x600);
 		makeFieldBytes(FIELD_EQP_VARIABLES, 64, 0, 0x196);
 		makeFieldFlags(FIELD_EQP_MODS_TRUE, 3, 0x1D6);
-		makeFieldFlags(FIELD_EQP_MODS_FALSE, 3, 0x1D9);
+		makeFieldFlags(FIELD_EQP_MODS_FALSE, 3, 0x1D8);
 	}
 	
 	protected int correctPointer(int ptr) {
