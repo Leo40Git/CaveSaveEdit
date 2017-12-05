@@ -13,6 +13,7 @@ import java.io.IOException;
 public interface IProfile {
 
 	/**
+	 * Exception from accessing profile fields.
 	 * 
 	 * @author Leo
 	 *
@@ -28,6 +29,7 @@ public interface IProfile {
 	}
 
 	/**
+	 * Exception from accessing profile methods.
 	 * 
 	 * @author Leo
 	 *
@@ -42,28 +44,79 @@ public interface IProfile {
 
 	}
 
+	/**
+	 * Loads a profile.
+	 * 
+	 * @param file
+	 *            file to load
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public void load(File file) throws IOException;
 
+	/**
+	 * Save a profile.
+	 * 
+	 * @param file
+	 *            file to save to
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public void save(File file) throws IOException;
 
+	/**
+	 * Gets the loaded file.
+	 * 
+	 * @return loaded file
+	 */
 	public File getLoadedFile();
 
+	/**
+	 * Gets the profile header.
+	 * 
+	 * @return profile header
+	 */
 	public String getHeader();
 
+	/**
+	 * Sets the profile header.
+	 * 
+	 * @param header
+	 *            new profile header
+	 */
 	public void setHeader(String header);
 
+	/**
+	 * Gets the flag profile header.
+	 * 
+	 * @return flags profile header
+	 */
 	public String getFlagHeader();
 
+	/**
+	 * Sets the flag profile header.
+	 * 
+	 * @param flagH
+	 *            new flag profile header
+	 */
 	public void setFlagHeader(String flagH);
 
+	/**
+	 * Checks if a field exists.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return <code>true</code> if it exists, <code>false</code> otherwise
+	 * @throws ProfileFieldException
+	 */
 	public boolean hasField(String field) throws ProfileFieldException;
 
 	public Class<?> getFieldType(String field) throws ProfileFieldException;
-	
+
 	public boolean fieldHasIndexes(String field) throws ProfileFieldException;
-	
+
 	public int getFieldMinimumIndex(String field) throws ProfileFieldException;
-	
+
 	public int getFieldMaximumIndex(String field) throws ProfileFieldException;
 
 	public boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException;
@@ -79,7 +132,7 @@ public interface IProfile {
 	public Class<?>[] getMethodArgTypes(String method) throws ProfileMethodException;
 
 	public Class<?> getMethodRetType(String method) throws ProfileMethodException;
-	
+
 	public String[] getMethodModifiedFields(String method) throws ProfileMethodException;
 
 	public Object callMethod(String method, Object... args) throws ProfileMethodException;
