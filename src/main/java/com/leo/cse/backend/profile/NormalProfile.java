@@ -91,6 +91,10 @@ public class NormalProfile extends Profile {
 	 */
 	public static final String FIELD_WARP_LOCATION = "warps.location";
 	/**
+	 * Map flags field.
+	 */
+	public static final String FIELD_MAP_FLAGS = "map_flags";
+	/**
 	 * Flags field.
 	 */
 	public static final String FIELD_FLAGS = "flags";
@@ -110,6 +114,12 @@ public class NormalProfile extends Profile {
 	 * Amount of cash "field". A field for this doesn't actually exist.
 	 */
 	public static final String FIELD_CASH = "cash";
+	
+	public static final String FIELD_EQP_VARIABLES = "eqp.variables";
+	
+	public static final String FIELD_EQP_MODS_TRUE = "eqp.mods.true";
+	
+	public static final String FIELD_EQP_MODS_FALSE = "eqp.mods.false";
 
 	/**
 	 * The expected file length.
@@ -220,6 +230,7 @@ public class NormalProfile extends Profile {
 		makeFieldInts(FIELD_ITEMS, 30, 0, 0x0D8);
 		makeFieldInts(FIELD_WARP_ID, 7, Integer.BYTES * 2, 0x158);
 		makeFieldInts(FIELD_WARP_LOCATION, 7, Integer.BYTES * 2, 0x15C);
+		makeFieldBytes(FIELD_MAP_FLAGS, 128, 0, 0x196);
 		makeFieldFlags(FIELD_FLAGS, 8000, 0x21C);
 	}
 
@@ -266,6 +277,9 @@ public class NormalProfile extends Profile {
 		makeFieldShorts(FIELD_VARIABLES, 123, 0, 0x50A);
 		makeFieldShorts(FIELD_PHYSICS_VARIABLES, 16, 0, 0x4DC);
 		makeFieldLong(FIELD_CASH, 0x600);
+		makeFieldBytes(FIELD_EQP_VARIABLES, 64, 0, 0x196);
+		makeFieldFlags(FIELD_EQP_MODS_TRUE, 3, 0x1D6);
+		makeFieldFlags(FIELD_EQP_MODS_FALSE, 3, 0x1D9);
 	}
 	
 	protected int correctPointer(int ptr) {
@@ -370,6 +384,55 @@ public class NormalProfile extends Profile {
 				@Override
 				public void setValue(int index, Object value) {
 					ByteUtils.writeInt(data, correctPointer(ptr), (Integer) value);
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void makeFieldBytes(String name, int length, int off, int ptr) {
+		try {
+			addField(name, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Byte.class;
+				}
+
+				@Override
+				public boolean acceptsValue(Object value) {
+					return value instanceof Byte;
+				}
+
+				@Override
+				public Object getValue(int index) {
+					byte[] ret = new byte[length];
+					ByteUtils.readBytes(data, correctPointer(ptr), off, ret);
+					return ret[index];
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					int cptr = correctPointer(ptr);
+					byte[] vals = new byte[length];
+					ByteUtils.readBytes(data, cptr, off, vals);
+					vals[index] = (Byte) value;
+					ByteUtils.writeBytes(data, cptr, off, vals);
+				}
+				
+				@Override
+				public boolean hasIndexes() {
+					return true;
+				}
+				
+				@Override
+				public int getMinumumIndex() {
+					return 0;
+				}
+				
+				@Override
+				public int getMaximumIndex() {
+					return length;
 				}
 			});
 		} catch (ProfileFieldException e) {

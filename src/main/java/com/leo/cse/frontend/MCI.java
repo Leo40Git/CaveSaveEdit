@@ -139,6 +139,8 @@ public class MCI {
 					tmp.put("Special.PhysVarHack", true);
 				if (specials.contains("BuyHack"))
 					tmp.put("Special.BuyHack", true);
+				if (specials.contains("EquipPlusHack"))
+					tmp.put("Special.EquipPlusHack", true);
 			}
 			// Map names
 			readList(tmp, "Map", invokeFunction(tcx, tscope, "getMapNames"));

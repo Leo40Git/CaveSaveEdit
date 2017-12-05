@@ -128,6 +128,29 @@ public class ByteUtils {
 	public static String readString(byte[] data, int ptr, int length) {
 		return readString(data, ptr, length, StrTools.DEFAULT_ENCODING);
 	}
+	
+	/**
+	 * Reads an array of <code>byte</code>s from a byte array.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @param ptr
+	 *            starting position
+	 * @param off
+	 *            byte offset between each short
+	 * @param dest
+	 *            destination array
+	 */
+	public static void readBytes(byte[] data, int ptr, int off, byte[] dest) {
+		if (off == 0) {
+			System.arraycopy(data, ptr, dest, 0, dest.length);
+			return;
+		}
+		for (int i = 0; i < dest.length; i++) {
+			dest[i] = data[ptr];
+			ptr += 1 + off;
+		}
+	}
 
 	/**
 	 * Reads a <code>short</code> from a byte array.
@@ -279,6 +302,25 @@ public class ByteUtils {
 	public static void writeString(byte[] data, int ptr, String value) {
 		byte[] dc = value.getBytes();
 		System.arraycopy(dc, 0, data, ptr, value.length());
+	}
+	
+	/**
+	 * Writes an array of <code>byte</code>s to a byte array.
+	 * 
+	 * @param data
+	 *            byte array
+	 * @param ptr
+	 *            starting position
+	 * @param off
+	 *            byte offset between each short
+	 * @param value
+	 *            shorts to write
+	 */
+	public static void writeBytes(byte[] data, int ptr, int off, byte[] value) {
+		for (int i = 0; i < value.length; i++) {
+			data[ptr] = value[i];
+			ptr += 1 + off;
+		}
 	}
 
 	/**
