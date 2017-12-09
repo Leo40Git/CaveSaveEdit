@@ -108,21 +108,97 @@ public interface IProfile {
 	 *            field to check
 	 * @return <code>true</code> if it exists, <code>false</code> otherwise
 	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
 	 */
 	public boolean hasField(String field) throws ProfileFieldException;
 
+	/**
+	 * Gets a field's value type.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return the field's type
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public Class<?> getFieldType(String field) throws ProfileFieldException;
 
+	/**
+	 * Checks if a field has indexes.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return <code>true</code> if it has indexes, <code>false</code> otherwise
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public boolean fieldHasIndexes(String field) throws ProfileFieldException;
 
+	/**
+	 * Gets the minimum index of a field.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return minimum field index
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public int getFieldMinimumIndex(String field) throws ProfileFieldException;
 
+	/**
+	 * Gets the maximum index of a field.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return maximum field index
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public int getFieldMaximumIndex(String field) throws ProfileFieldException;
 
+	/**
+	 * Checks if a field accepts a value.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @param value
+	 *            value to check
+	 * @return <code>true</code> if the value is acceptable, <code>false</code>
+	 *         otherwise
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException;
 
+	/**
+	 * Gets a field's value.
+	 * 
+	 * @param field
+	 *            field to get
+	 * @param index
+	 *            index to get. will be ignored if
+	 *            the field {@linkplain #fieldHasIndexes(String) doesn't have
+	 *            indexes}
+	 * @return value of the field
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public Object getField(String field, int index) throws ProfileFieldException;
 
+	/**
+	 * Sets a field's value.
+	 * 
+	 * @param field
+	 *            field to set
+	 * @param index
+	 *            index to set. will be ignored if
+	 *            the field {@linkplain #fieldHasIndexes(String) doesn't have
+	 *            indexes}
+	 * @param value
+	 *            value to set
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public void setField(String field, int index, Object value) throws ProfileFieldException;
 
 	public boolean hasMethod(String method) throws ProfileMethodException;
