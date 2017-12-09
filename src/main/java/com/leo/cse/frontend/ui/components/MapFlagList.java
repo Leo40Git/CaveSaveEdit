@@ -137,8 +137,8 @@ public class MapFlagList extends Component {
 				continue;
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
 				try {
-					boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id);
-					ProfileManager.setField(NormalProfile.FIELD_FLAGS, id, !value);
+					boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id);
+					ProfileManager.setField(NormalProfile.FIELD_MAP_FLAGS, id, !value);
 				} catch (ProfileFieldException e) {
 					e.printStackTrace();
 				}
