@@ -43,6 +43,11 @@ public interface IProfile {
 		}
 
 	}
+	
+	/**
+	 * Creates a new blank profile.
+	 */
+	public void create();
 
 	/**
 	 * Loads a profile.

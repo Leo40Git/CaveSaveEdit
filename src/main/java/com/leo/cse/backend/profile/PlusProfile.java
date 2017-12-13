@@ -54,20 +54,20 @@ public class PlusProfile extends NormalProfile {
 	 *            {@link Integer}, slot to clear.
 	 */
 	public static final String METHOD_DELETE_FILE = "file.delete";
-	
+
 	public static final String METHOD_FILE_EXISTS = "file.exists";
 
 	public static final String METHOD_GET_ACTIVE_FILE = "file.active.get";
 
 	public static final String METHOD_SET_ACTIVE_FILE = "file.active.set";
-	
+
 	public static final String METHOD_PUSH_ACTIVE_FILE = "file.active.push";
-	
+
 	public static final String METHOD_POP_ACTIVE_FILE = "file.active.pop";
-	
+
 	private int curSection = -1;
 	private List<Integer> secQueue;
-	
+
 	@Override
 	protected int correctPointer(int ptr) {
 		return curSection * SECTION_LENGTH + ptr;
@@ -229,7 +229,7 @@ public class PlusProfile extends NormalProfile {
 				public String[] getModifiedFields() {
 					return null;
 				}
-				
+
 			});
 			addMethod(METHOD_GET_ACTIVE_FILE, new ProfileMethod() {
 
@@ -252,7 +252,7 @@ public class PlusProfile extends NormalProfile {
 				public String[] getModifiedFields() {
 					return null;
 				}
-				
+
 			});
 			addMethod(METHOD_SET_ACTIVE_FILE, new ProfileMethod() {
 
@@ -276,7 +276,7 @@ public class PlusProfile extends NormalProfile {
 				public String[] getModifiedFields() {
 					return null;
 				}
-				
+
 			});
 			addMethod(METHOD_PUSH_ACTIVE_FILE, new ProfileMethod() {
 
@@ -302,7 +302,7 @@ public class PlusProfile extends NormalProfile {
 				public String[] getModifiedFields() {
 					return null;
 				}
-				
+
 			});
 			addMethod(METHOD_POP_ACTIVE_FILE, new ProfileMethod() {
 
@@ -328,11 +328,20 @@ public class PlusProfile extends NormalProfile {
 				public String[] getModifiedFields() {
 					return null;
 				}
-				
+
 			});
 		} catch (ProfileMethodException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void create() {
+		// create data
+		data = new byte[FILE_LENGTH];
+		// set loaded file to null & set section
+		loadedFile = null;
+		curSection = 0;
 	}
 
 	@Override

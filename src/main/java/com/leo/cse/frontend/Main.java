@@ -195,10 +195,13 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static void setTitle(Main window) {
 		if (window == null)
 			window = Main.window;
-		if (ProfileManager.isLoaded())
-			window.setTitle("CaveSaveEdit - " + ProfileManager.getLoadedFile().getAbsolutePath()
-					+ (ProfileManager.isModified() ? "*" : ""));
-		else
+		if (ProfileManager.isLoaded()) {
+			File prof = ProfileManager.getLoadedFile();
+			if (prof == null)
+				window.setTitle("CaveSaveEdit - UNSAVED*");
+			else
+				window.setTitle("CaveSaveEdit - " + prof.getAbsolutePath() + (ProfileManager.isModified() ? "*" : ""));
+		} else
 			window.setTitle("CaveSaveEdit");
 	}
 
@@ -465,7 +468,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	@Override
-	public void onChange(String field, int id, Object oldValue, Object newValue) {	
+	public void onChange(String field, int id, Object oldValue, Object newValue) {
 		setTitle(this);
 	}
 

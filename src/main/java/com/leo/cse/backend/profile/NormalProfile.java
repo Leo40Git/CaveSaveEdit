@@ -149,6 +149,17 @@ public class NormalProfile extends Profile {
 	}
 
 	protected byte[] data;
+	
+	@Override
+	public void create() {
+		// create data
+		data = new byte[FILE_LENGTH];
+		// insert header & flag header
+		ByteUtils.writeString(data, 0, header);
+		ByteUtils.writeString(data, 0x218, flagH);
+		// set loaded file to null
+		loadedFile = null;
+	}
 
 	@Override
 	public void load(File file) throws IOException {

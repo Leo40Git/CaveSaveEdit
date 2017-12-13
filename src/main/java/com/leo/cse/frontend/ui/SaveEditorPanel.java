@@ -284,6 +284,19 @@ public class SaveEditorPanel extends JPanel
 		boolean plus = ExeData.isPlusMode();
 		menuBars = new ArrayList<>();
 		List<MenuBarItem> mbiFile = new ArrayList<>();
+		mbiFile.add(new MenuBarItem("New Profile", Resources.toolbarIcons[8], () -> {
+			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
+				int sel = JOptionPane.showConfirmDialog(Main.window,
+						"Are you sure you want to create a new profile?\nUnsaved changes will be lost!",
+						"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (sel == JOptionPane.CANCEL_OPTION)
+					return;
+			}
+			ProfileManager.create();
+			loading = true;
+			addComponents();
+			loading = false;
+		}));
 		mbiFile.add(new MenuBarItem("Load Profile", "Ctrl+O", Resources.toolbarIcons[0], () -> {
 			loadProfile();
 		}));
@@ -303,7 +316,6 @@ public class SaveEditorPanel extends JPanel
 			}
 			ProfileManager.unload();
 			loading = true;
-			repaint();
 			addComponents();
 			loading = false;
 		}, () -> {
@@ -636,16 +648,24 @@ public class SaveEditorPanel extends JPanel
 		}
 		return true;
 	}
-
-	private void saveProfile() {
-		if (!canSave())
-			return;
+	
+	private void setSavedFlag() {
 		// force save flag to be on
 		try {
 			ProfileManager.setField(NormalProfile.FIELD_FLAGS, 431, true);
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void saveProfile() {
+		if (!canSave())
+			return;
+		if (ProfileManager.getLoadedFile() == null) {
+			saveProfileAs();
+			return;
+		}
+		setSavedFlag();
 		try {
 			ProfileManager.save();
 		} catch (IOException e1) {
@@ -669,12 +689,7 @@ public class SaveEditorPanel extends JPanel
 				if (confirmVal != JOptionPane.YES_OPTION)
 					return;
 			}
-			// force save flag to be on
-			try {
-				ProfileManager.setField(NormalProfile.FIELD_FLAGS, 431, true);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			setSavedFlag();
 			try {
 				ProfileManager.save(file);
 			} catch (IOException e1) {

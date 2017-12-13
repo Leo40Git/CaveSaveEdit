@@ -241,9 +241,8 @@ public class ProfileManager {
 			return;
 		undoMan.redo();
 	}
-
-	public static void load(File file) throws IOException {
-		unload();
+	
+	private static void makeImpl() {
 		if (implClass == null)
 			implClass = NormalProfile.class;
 		Object implObj;
@@ -256,11 +255,27 @@ public class ProfileManager {
 			implObj = new NormalProfile();
 		}
 		impl = (IProfile) implObj;
-		impl.load(file);
+	}
+	
+	private static void postLoad() {
 		undoMan = new UndoManager();
 		modified = false;
 		// notify listeners
 		notifyListeners(EVENT_LOAD, -1, null, null);
+	}
+	
+	public static void create() {
+		unload();
+		makeImpl();
+		impl.create();
+		postLoad();
+	}
+
+	public static void load(File file) throws IOException {
+		unload();
+		makeImpl();
+		impl.load(file);
+		postLoad();
 	}
 
 	public static void load(String path) throws IOException {
@@ -310,12 +325,16 @@ public class ProfileManager {
 	}
 
 	public static boolean isLoaded() {
-		return getLoadedFile() != null;
+		if (impl == null)
+			return false;
+		return true;
 	}
 
 	public static boolean isModified() {
 		if (impl == null)
 			return false;
+		if (getLoadedFile() == null)
+			return true;
 		return modified;
 	}
 
