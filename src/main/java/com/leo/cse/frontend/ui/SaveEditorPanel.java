@@ -284,7 +284,7 @@ public class SaveEditorPanel extends JPanel
 		boolean plus = ExeData.isPlusMode();
 		menuBars = new ArrayList<>();
 		List<MenuBarItem> mbiFile = new ArrayList<>();
-		mbiFile.add(new MenuBarItem("New Profile", Resources.toolbarIcons[8], () -> {
+		mbiFile.add(new MenuBarItem("New Profile", Resources.icons[8], () -> {
 			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
 				int sel = JOptionPane.showConfirmDialog(Main.window,
 						"Are you sure you want to create a new profile?\nUnsaved changes will be lost!",
@@ -297,7 +297,7 @@ public class SaveEditorPanel extends JPanel
 			addComponents();
 			loading = false;
 		}));
-		mbiFile.add(new MenuBarItem("Load Profile", "Ctrl+O", Resources.toolbarIcons[0], () -> {
+		mbiFile.add(new MenuBarItem("Load Profile", "Ctrl+O", Resources.icons[0], () -> {
 			loadProfile();
 		}));
 		if (plus)
@@ -321,7 +321,7 @@ public class SaveEditorPanel extends JPanel
 		}, () -> {
 			return ProfileManager.isLoaded();
 		}));
-		mbiFile.add(new MenuBarItem("Load Game/Mod", "Ctrl+Shift+O", Resources.toolbarIcons[1], () -> {
+		mbiFile.add(new MenuBarItem("Load Game/Mod", "Ctrl+Shift+O", Resources.icons[1], () -> {
 			loadExe();
 		}));
 		mbiFile.add(new MenuBarItem("Unload Game/Mod", () -> {
@@ -336,19 +336,19 @@ public class SaveEditorPanel extends JPanel
 		Supplier<Boolean> saveEnabled = () -> {
 			return ProfileManager.isLoaded();
 		};
-		mbiFile.add(new MenuBarItem("Save", "Ctrl+S", Resources.toolbarIcons[2], () -> {
+		mbiFile.add(new MenuBarItem("Save", "Ctrl+S", Resources.icons[2], () -> {
 			saveProfile();
 		}, saveEnabled));
-		mbiFile.add(new MenuBarItem("Save As", "Ctrl+Shift+S", Resources.toolbarIcons[3], () -> {
+		mbiFile.add(new MenuBarItem("Save As", "Ctrl+Shift+S", Resources.icons[3], () -> {
 			saveProfileAs();
 		}, saveEnabled));
-		mbiFile.add(new MenuBarItem("Settings", Resources.toolbarIcons[4], () -> {
+		mbiFile.add(new MenuBarItem("Settings", Resources.icons[4], () -> {
 			addDialogBox(new SettingsDialog());
 		}));
-		mbiFile.add(new MenuBarItem("About", Resources.toolbarIcons[5], () -> {
+		mbiFile.add(new MenuBarItem("About", Resources.icons[5], () -> {
 			addDialogBox(new AboutDialog());
 		}));
-		mbiFile.add(new MenuBarItem("Quit", Resources.toolbarIcons[6], () -> {
+		mbiFile.add(new MenuBarItem("Quit", Resources.icons[6], () -> {
 			Main.close();
 		}));
 		menuBars.add(new MenuBar("File", mbiFile));
@@ -365,7 +365,7 @@ public class SaveEditorPanel extends JPanel
 		}));
 		menuBars.add(new MenuBar("Edit", mbiEdit));
 		List<MenuBarItem> mbiTools = new ArrayList<>();
-		mbiTools.add(new MenuBarItem("Edit 290.rec", Resources.toolbarIcons[7], () -> {
+		mbiTools.add(new MenuBarItem("Edit 290.rec", Resources.icons[7], () -> {
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
@@ -421,7 +421,7 @@ public class SaveEditorPanel extends JPanel
 		else
 			g.setColor(Main.COLOR_BG);
 		g.fillRect(getWidth() - 32, 17, 16, 16);
-		g.drawImage(Resources.toolbarIcons[6], getWidth() - 32, 17, this);
+		g.drawImage(Resources.icons[6], getWidth() - 32, 17, this);
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		final Rectangle compViewport = new Rectangle(0, 0, winSize2.width, winSize2.height);

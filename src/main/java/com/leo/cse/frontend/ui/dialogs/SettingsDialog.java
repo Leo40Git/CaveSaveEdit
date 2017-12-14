@@ -24,10 +24,10 @@ public class SettingsDialog extends BaseDialog {
 
 	public SettingsDialog() {
 		super("Settings", 300, 104);
-		addComponent(new Button("MCI Settings", Resources.miscIcons[0], 4, 4, 292, 17, () -> {
+		addComponent(new Button("MCI Settings", Resources.icons[9], 4, 4, 292, 17, () -> {
 			SaveEditorPanel.panel.addDialogBox(new MCIDialog());
 		}));
-		addComponent(new Button("Change Line Color", Resources.miscIcons[1], 4, 23, 292, 17, () -> {
+		addComponent(new Button("Change Line Color", Resources.icons[10], 4, 23, 292, 17, () -> {
 			setLineColor();
 		}));
 		addComponent(new BooleanBox("Load NPCs?", false, 4, 43, () -> {

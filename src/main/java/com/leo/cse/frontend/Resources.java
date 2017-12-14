@@ -32,7 +32,7 @@ public class Resources {
 	
 	// uncolored images
 	public static BufferedImage drag;
-	public static BufferedImage[] editorTabIcons, toolbarIcons, miscIcons;
+	public static BufferedImage[] editorTabIcons, icons;
 	
 	// niku counter
 	public static BufferedImage[] nikuNumbers;
@@ -62,12 +62,16 @@ public class Resources {
 		editorTabIcons = new BufferedImage[7];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
-		toolbarIcons = new BufferedImage[9];
-		for (int i = 0; i < toolbarIcons.length; i++)
-			toolbarIcons[i] = ui.getSubimage(i * 16, 32, 16, 16);
-		miscIcons = new BufferedImage[2];
-		for (int i = 0; i < miscIcons.length; i++)
-			miscIcons[i] = ui.getSubimage(i * 16, 48, 16, 16);
+		icons = new BufferedImage[11];
+		int tbx = 0, tby = 16;
+		for (int i = 0; i < icons.length; i++) {
+			if (i % 10 == 0) {
+				tbx = 0;
+				tby += 16;
+			}
+			icons[i] = ui.getSubimage(tbx, tby, 16, 16);
+			tbx += 16;
+		}
 		nikuNumbers = new BufferedImage[10];
 		for (int i = 0; i < nikuNumbers.length; i++)
 			nikuNumbers[i] = ui.getSubimage(i * 16, 64, 16, 16);
@@ -81,14 +85,14 @@ public class Resources {
 		checkboxDisabled = ui.getSubimage(64, 0, 16, 16);
 		radioOff = ui.getSubimage(112, 0, 16, 16);
 		radioOffS = ui.getSubimage(32, 0, 8, 8);
-		radioOn = ui.getSubimage(112, 16, 16, 16);
+		radioOn = ui.getSubimage(128, 0, 16, 16);
 		radioOnS = ui.getSubimage(40, 0, 8, 8);
-		radioDisabled = ui.getSubimage(128, 16, 16, 16);
+		radioDisabled = ui.getSubimage(144, 0, 16, 16);
 		radioDisabledS = ui.getSubimage(32, 8, 8, 8);
 		dialogClose = ui.getSubimage(48, 0, 14, 14);
 		arrowDown = ui.getSubimage(80, 0, 8, 8);
 		arrowUp = ui.getSubimage(80, 8, 8, 8);
-		grid = ui.getSubimage(112, 14, 2, 2);
+		grid = ui.getSubimage(43, 8, 2, 2);
 	}
 
 	public static void colorImages(Color tint) {
