@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.leo.cse.backend.ByteUtils;
+import com.leo.cse.backend.profile.ProfileManager.FieldModChangeRecorder;
 
 public class PlusProfile extends NormalProfile {
 
@@ -114,7 +115,6 @@ public class PlusProfile extends NormalProfile {
 
 	protected void setupMethodsPlus() {
 		try {
-			final String[] dataMod = new String[] { EVENT_DATA_MODIFIED };
 			addMethod(METHOD_CLONE_FILE, new ProfileMethod() {
 
 				private final Class<?>[] argTypes = new Class<?>[] { Integer.class, Integer.class };
@@ -130,15 +130,11 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public String[] getModifiedFields() {
-					return dataMod;
-				}
-
-				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					int srcSec = (int) args[0];
 					int dstSec = (int) args[1];
 					System.arraycopy(data, srcSec * SECTION_LENGTH, data, dstSec * SECTION_LENGTH, SECTION_LENGTH);
+					fmcr.addChange(EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
 
@@ -157,17 +153,13 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public String[] getModifiedFields() {
-					return dataMod;
-				}
-
-				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					ByteUtils.writeString(newData, 0, header);
 					ByteUtils.writeString(newData, 0x218, flagH);
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
+					fmcr.addChange(EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
 
@@ -185,15 +177,11 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public String[] getModifiedFields() {
-					return dataMod;
-				}
-
-				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
+					fmcr.addChange(EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
 
@@ -211,7 +199,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					int secToChk = (int) args[0];
 					int ptr = secToChk * SECTION_LENGTH;
 					// check header
@@ -223,11 +211,6 @@ public class PlusProfile extends NormalProfile {
 					if (!flagH.equals(profFlagH))
 						return false;
 					return true;
-				}
-
-				@Override
-				public String[] getModifiedFields() {
-					return null;
 				}
 
 			});
@@ -244,13 +227,8 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					return curSection;
-				}
-
-				@Override
-				public String[] getModifiedFields() {
-					return null;
 				}
 
 			});
@@ -267,13 +245,8 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					curSection = (int) args[0];
-					return null;
-				}
-
-				@Override
-				public String[] getModifiedFields() {
 					return null;
 				}
 
@@ -291,15 +264,10 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					int newSec = (int) args[0];
 					secQueue.add(curSection);
 					curSection = newSec;
-					return null;
-				}
-
-				@Override
-				public String[] getModifiedFields() {
 					return null;
 				}
 
@@ -317,15 +285,10 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(Object... args) {
+				public Object call(FieldModChangeRecorder fmcr, Object... args) {
 					if (secQueue.isEmpty())
 						return null;
 					curSection = secQueue.remove(0);
-					return null;
-				}
-
-				@Override
-				public String[] getModifiedFields() {
 					return null;
 				}
 

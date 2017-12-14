@@ -14,6 +14,10 @@ import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
 
 public class ProfileManager {
+	
+	interface FieldModChangeRecorder {
+		public void addChange(String field, int index, Object oldVal, Object newVal);
+	}
 
 	/**
 	 * Used to notify {@link ProfileListener}s of the current profile being
@@ -473,13 +477,12 @@ public class ProfileManager {
 	public static Object callMethod(String method, Object... args) throws ProfileMethodException {
 		if (impl == null)
 			return null;
-		Object ret = impl.callMethod(method, args);
-		String[] modFields = impl.getMethodModifiedFields(method);
-		if (modFields != null) {
-			modified = true;
-			for (String field : modFields)
-				notifyListeners(field, -1, null, null);
-		}
+		Object ret = impl.callMethod(method, new FieldModChangeRecorder() {
+			@Override
+			public void addChange(String field, int index, Object oldVal, Object newVal) {
+				notifyListeners(field, index, oldVal, newVal);
+			}
+		}, args);
 		return ret;
 	}
 

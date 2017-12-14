@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.leo.cse.backend.profile.ProfileManager.FieldModChangeRecorder;
+
 public abstract class Profile implements IProfile {
 
 	public interface ProfileField {
@@ -36,9 +38,7 @@ public abstract class Profile implements IProfile {
 
 		public Class<?> getRetType();
 
-		public Object call(Object... args);
-
-		public String[] getModifiedFields();
+		public Object call(FieldModChangeRecorder fmcr, Object... args);
 
 	}
 
@@ -204,13 +204,7 @@ public abstract class Profile implements IProfile {
 	}
 
 	@Override
-	public String[] getMethodModifiedFields(String method) throws ProfileMethodException {
-		assertHasMethod(method);
-		return methods.get(method).getModifiedFields();
-	}
-
-	@Override
-	public Object callMethod(String method, Object... args) throws ProfileMethodException {
+	public Object callMethod(String method, FieldModChangeRecorder fmcr, Object... args) throws ProfileMethodException {
 		assertHasMethod(method);
 		int argNum = getMethodArgNum(method);
 		if (argNum > 0 && args == null)
@@ -225,7 +219,7 @@ public abstract class Profile implements IProfile {
 					throw new ProfileMethodException("Argument " + i + " has bad type: " + argTypes[i].getName()
 							+ " was expected, but " + args[i].getClass().getName() + " was received instead!");
 		}
-		return methods.get(method).call(args);
+		return methods.get(method).call(fmcr, args);
 	}
 
 }

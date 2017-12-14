@@ -8,7 +8,7 @@ import java.io.IOException;
 import com.leo.cse.backend.ByteUtils;
 
 public class NormalProfile extends Profile {
-	
+
 	public static final String EVENT_DATA_MODIFIED = "data.modified";
 	/**
 	 * Map field.
@@ -37,19 +37,19 @@ public class NormalProfile extends Profile {
 	/**
 	 * Maximum health field.
 	 */
-	public static final String FIELD_MAXIMUM_HEALTH = "maxHealth";
+	public static final String FIELD_MAXIMUM_HEALTH = "max_health";
 	/**
 	 * Whimsical Star count field.
 	 */
-	public static final String FIELD_STAR_COUNT = "starCount";
+	public static final String FIELD_STAR_COUNT = "star_count";
 	/**
 	 * Current health field.
 	 */
-	public static final String FIELD_CURRENT_HEALTH = "curHealth";
+	public static final String FIELD_CURRENT_HEALTH = "cur_health";
 	/**
 	 * Current weapon slot field.
 	 */
-	public static final String FIELD_CURRENT_WEAPON = "curWeapon";
+	public static final String FIELD_CURRENT_WEAPON = "cur_weapon";
 	/**
 	 * Equipment flags field.
 	 */
@@ -73,11 +73,11 @@ public class NormalProfile extends Profile {
 	/**
 	 * Weapon maximum ammo field.
 	 */
-	public static final String FIELD_WEAPON_MAXIMUM_AMMO = "weapons.maxAmmo";
+	public static final String FIELD_WEAPON_MAXIMUM_AMMO = "weapons.max_ammo";
 	/**
 	 * Weapon current ammo field.
 	 */
-	public static final String FIELD_WEAPON_CURRENT_AMMO = "weapons.curAmmo";
+	public static final String FIELD_WEAPON_CURRENT_AMMO = "weapons.cur_ammo";
 	/**
 	 * Items field.
 	 */
@@ -101,7 +101,7 @@ public class NormalProfile extends Profile {
 	/**
 	 * <MIM costume "field". A field for this doesn't actually exist.
 	 */
-	public static final String FIELD_MIM_COSTUME = "mimCostume";
+	public static final String FIELD_MIM_COSTUME = "mim_costume";
 	/**
 	 * Variables "field". A field for this doesn't actually exist.
 	 */
@@ -109,16 +109,16 @@ public class NormalProfile extends Profile {
 	/**
 	 * Physics variables "field". A field for this doesn't actually exist.
 	 */
-	public static final String FIELD_PHYSICS_VARIABLES = "physVars";
+	public static final String FIELD_PHYSICS_VARIABLES = "phys_vars";
 	/**
 	 * Amount of cash "field". A field for this doesn't actually exist.
 	 */
 	public static final String FIELD_CASH = "cash";
-	
+
 	public static final String FIELD_EQP_VARIABLES = "eqp.variables";
-	
+
 	public static final String FIELD_EQP_MODS_TRUE = "eqp.mods.true";
-	
+
 	public static final String FIELD_EQP_MODS_FALSE = "eqp.mods.false";
 
 	/**
@@ -149,7 +149,7 @@ public class NormalProfile extends Profile {
 	}
 
 	protected byte[] data;
-	
+
 	@Override
 	public void create() {
 		// create data
@@ -292,7 +292,7 @@ public class NormalProfile extends Profile {
 		makeFieldFlags(FIELD_EQP_MODS_TRUE, 3, 0x1D6);
 		makeFieldFlags(FIELD_EQP_MODS_FALSE, 3, 0x1D8);
 	}
-	
+
 	protected int correctPointer(int ptr) {
 		return ptr;
 	}
@@ -353,17 +353,17 @@ public class NormalProfile extends Profile {
 					vals[index] = (Short) value;
 					ByteUtils.writeShorts(data, cptr, off, vals);
 				}
-				
+
 				@Override
 				public boolean hasIndexes() {
 					return true;
 				}
-				
+
 				@Override
 				public int getMinumumIndex() {
 					return 0;
 				}
-				
+
 				@Override
 				public int getMaximumIndex() {
 					return length;
@@ -401,7 +401,7 @@ public class NormalProfile extends Profile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void makeFieldBools(String name, int length, int off, int ptr) {
 		try {
 			addField(name, new ProfileField() {
@@ -433,17 +433,17 @@ public class NormalProfile extends Profile {
 					vals[index] = actualVal;
 					ByteUtils.writeBytes(data, cptr, off, vals);
 				}
-				
+
 				@Override
 				public boolean hasIndexes() {
 					return true;
 				}
-				
+
 				@Override
 				public int getMinumumIndex() {
 					return 0;
 				}
-				
+
 				@Override
 				public int getMaximumIndex() {
 					return length;
@@ -453,7 +453,7 @@ public class NormalProfile extends Profile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void makeFieldBytes(String name, int length, int off, int ptr) {
 		try {
 			addField(name, new ProfileField() {
@@ -482,17 +482,17 @@ public class NormalProfile extends Profile {
 					vals[index] = (Byte) value;
 					ByteUtils.writeBytes(data, cptr, off, vals);
 				}
-				
+
 				@Override
 				public boolean hasIndexes() {
 					return true;
 				}
-				
+
 				@Override
 				public int getMinumumIndex() {
 					return 0;
 				}
-				
+
 				@Override
 				public int getMaximumIndex() {
 					return length;
@@ -531,17 +531,17 @@ public class NormalProfile extends Profile {
 					vals[index] = (Integer) value;
 					ByteUtils.writeInts(data, cptr, off, vals);
 				}
-				
+
 				@Override
 				public boolean hasIndexes() {
 					return true;
 				}
-				
+
 				@Override
 				public int getMinumumIndex() {
 					return 0;
 				}
-				
+
 				@Override
 				public int getMaximumIndex() {
 					return length;
@@ -608,17 +608,17 @@ public class NormalProfile extends Profile {
 					vals[index] = (Boolean) value;
 					ByteUtils.writeFlags(data, cptr, vals);
 				}
-				
+
 				@Override
 				public boolean hasIndexes() {
 					return true;
 				}
-				
+
 				@Override
 				public int getMinumumIndex() {
 					return 0;
 				}
-				
+
 				@Override
 				public int getMaximumIndex() {
 					return length;

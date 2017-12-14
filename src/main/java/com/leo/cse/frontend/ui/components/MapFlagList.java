@@ -18,6 +18,8 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class MapFlagList extends Component {
+	
+	public static final String DESC_NONE = "(unknown map)";
 
 	public static String getMapFlagName(int id) {
 		String mapName = null;
@@ -28,6 +30,8 @@ public class MapFlagList extends Component {
 			}
 		} else
 			mapName = MCI.get("Map", id);
+		if (mapName == null)
+			return DESC_NONE;
 		return mapName;
 	}
 

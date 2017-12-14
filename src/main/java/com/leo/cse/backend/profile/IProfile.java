@@ -3,6 +3,8 @@ package com.leo.cse.backend.profile;
 import java.io.File;
 import java.io.IOException;
 
+import com.leo.cse.backend.profile.ProfileManager.FieldModChangeRecorder;
+
 /**
  * Basic profile interface. Superinterface to all classes that can be used as
  * implementations in the {@link ProfileManager}.
@@ -214,8 +216,6 @@ public interface IProfile {
 
 	public Class<?> getMethodRetType(String method) throws ProfileMethodException;
 
-	public String[] getMethodModifiedFields(String method) throws ProfileMethodException;
-
-	public Object callMethod(String method, Object... args) throws ProfileMethodException;
+	public Object callMethod(String method, FieldModChangeRecorder fmcr, Object... args) throws ProfileMethodException;
 
 }
