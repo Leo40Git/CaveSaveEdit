@@ -373,6 +373,24 @@ public class ProfileManager {
 			return null;
 		return impl.getFieldType(field);
 	}
+	
+	public static boolean fieldHasIndexes(String field) throws ProfileFieldException {
+		if (impl == null)
+			return false;
+		return impl.fieldHasIndexes(field);
+	}
+	
+	public static int getFieldMinimumIndex(String field) throws ProfileFieldException {
+		if (impl == null)
+			return -1;
+		return impl.getFieldMinimumIndex(field);
+	}
+	
+	public static int getFieldMaximumIndex(String field) throws ProfileFieldException {
+		if (impl == null)
+			return -1;
+		return impl.getFieldMaximumIndex(field);
+	}
 
 	public static boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException {
 		if (impl == null)
@@ -395,10 +413,21 @@ public class ProfileManager {
 			return;
 		Class<?> type = getFieldType(field);
 		Class<?> compType = type.getComponentType();
+		String fieldStr = field;
+		if (fieldHasIndexes(fieldStr))
+			fieldStr += "[" + index + "]";
 		String valueStr = type.cast(value).toString();
-		if (compType != null)
-			valueStr = compType.getName() + "[" + "]";
-		System.out.println("setting field " + field + "[" + index + "] to " + valueStr);
+		if (compType != null) {
+			valueStr = compType.getName() + "[";
+			Object[] valArray = (Object[]) value;
+			for (int i = 0; i < valArray.length; i++) {
+				valueStr += compType.cast(valArray[i]);
+				if (i < valArray.length - 1)
+					valueStr += ",";
+			}
+			valueStr += "]";
+		}
+		System.out.println("setting field " + fieldStr + " to " + valueStr);
 		Object oldValue = impl.getField(field, index);
 		if (type.cast(oldValue) != type.cast(value)) {
 			modified = true;

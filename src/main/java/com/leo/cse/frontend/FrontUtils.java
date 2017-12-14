@@ -372,7 +372,7 @@ public class FrontUtils {
 
 	private static JFileChooser fc;
 
-	public static int openFileChooser(String title, FileFilter[] filters, File currentDirectory,
+	public static int openFileChooser(String title, FileFilter[] filters, int currentFilter, File currentDirectory,
 			boolean allowAllFilesFilter, boolean openOrSave) {
 		fc = new JFileChooser();
 		fc.setMultiSelectionEnabled(false);
@@ -383,6 +383,7 @@ public class FrontUtils {
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		for (FileFilter filter : filters)
 			fc.addChoosableFileFilter(filter);
+		fc.setFileFilter(filters[currentFilter]);
 		fc.setDialogTitle(title);
 		fc.setCurrentDirectory(currentDirectory);
 		int ret = 0;
@@ -397,7 +398,7 @@ public class FrontUtils {
 			boolean allowAllFilesFilter, boolean openOrSave) {
 		FileFilter[] filters = new FileFilter[1];
 		filters[0] = filter;
-		return openFileChooser(title, filters, currentDirectory, allowAllFilesFilter, openOrSave);
+		return openFileChooser(title, filters, 0, currentDirectory, allowAllFilesFilter, openOrSave);
 	}
 
 	public static File getSelectedFile() {

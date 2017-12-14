@@ -1,5 +1,6 @@
 package com.leo.cse.frontend.ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -35,22 +36,28 @@ public class PlusSlots extends Component {
 		private int section;
 
 		private BufferedImage[] imgCache;
-		private static final int IC_NUMBERS = 0, IC_NUMBERS_LAST = 9, IC_HP_BAR = 10, IC_HP_FILL = 11;
-		private static final int IC_LENGTH = IC_HP_FILL + 1;
+		private static final int IC_NUMBERS = 0, IC_NUMBERS_LAST = 9, IC_HP_BAR = 10, IC_HP_FILL = 11, IC_WEPS = 12,
+				IC_WEPS_LAST = 25;
+		private static final int IC_LENGTH = IC_WEPS_LAST + 1;
 
 		public PlusSlot(int section, int x, int y) {
-			super("PlusSlot:" + section, x, y, 145, 64);
+			super("PlusSlot:" + section, x, y, 260, 102);
 			this.section = section;
 		}
 
 		@Override
 		public void render(Graphics g, Rectangle viewport) {
 			super.render(g, viewport);
+			if (mode == MODE_PASTE && section == srcSec) {
+				Color lc3 = new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 15);
+				g.setColor(lc3);
+				g.fillRect(x, y, width, height - 1);
+			}
 			if (imgCache == null)
 				updateImageCache();
 			g.setColor(Main.lineColor);
 			g.setFont(Resources.font);
-			FrontUtils.drawString(g, Integer.toUnsignedString(section + 1), x + 138, y);
+			FrontUtils.drawString(g, Integer.toUnsignedString(section + 1), x + 248, y);
 			boolean exists = false;
 			try {
 				exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, section);
@@ -58,7 +65,7 @@ public class PlusSlots extends Component {
 				e.printStackTrace();
 			}
 			if (!exists) {
-				FrontUtils.drawString(g, "New", x + 4, y + 22);
+				FrontUtils.drawString(g, "New", x + 4, y + 58);
 				return;
 			}
 			try {
@@ -66,6 +73,28 @@ public class PlusSlots extends Component {
 			} catch (ProfileMethodException e) {
 				e.printStackTrace();
 			}
+			int wepx = 0, wepnum = 0;
+			try {
+				wepnum = (Integer) ProfileManager.getField(NormalProfile.FIELD_CURRENT_WEAPON);
+			} catch (ProfileFieldException e) {
+				e.printStackTrace();
+			}
+			for (int i = 0; i < 7; i++) {
+				int wep = 0;
+				try {
+					wep = (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_ID, wepnum);
+				} catch (ProfileFieldException e) {
+					e.printStackTrace();
+				}
+				wepnum++;
+				if (wepnum > 6)
+					wepnum = 0;
+				if (wep == 0)
+					continue;
+				g.drawImage(imgCache[IC_WEPS + wep - 1], x + 4 + (34 * wepx), y + 4, null);
+				wepx++;
+			}
+
 			short maxHP = 1, curHP = 0;
 			try {
 				maxHP = (short) ProfileManager.getField(NormalProfile.FIELD_MAXIMUM_HEALTH);
@@ -73,13 +102,13 @@ public class PlusSlots extends Component {
 			} catch (ProfileFieldException e) {
 				e.printStackTrace();
 			}
-			g.drawImage(imgCache[IC_HP_BAR], x + 4, y + 4, null);
+			g.drawImage(imgCache[IC_HP_BAR], x + 4, y + 40, null);
 			int curHPTen = curHP / 10;
 			if (curHPTen != 0)
-				g.drawImage(imgCache[IC_NUMBERS + curHPTen], x + 20, y + 4, null);
-			g.drawImage(imgCache[IC_NUMBERS + (curHP % 10)], x + 36, y + 4, null);
+				g.drawImage(imgCache[IC_NUMBERS + curHPTen], x + 20, y + 40, null);
+			g.drawImage(imgCache[IC_NUMBERS + (curHP % 10)], x + 36, y + 40, null);
 			if (maxHP > 0)
-				g.drawImage(imgCache[IC_HP_FILL], x + 52, y + 6, (int) (78 * (curHP / (float) maxHP)), 10, null);
+				g.drawImage(imgCache[IC_HP_FILL], x + 52, y + 42, (int) (78 * (curHP / (float) maxHP)), 10, null);
 			long unix = 0;
 			try {
 				unix = (long) ProfileManager.getField(PlusProfile.FIELD_MODIFY_DATE);
@@ -90,7 +119,7 @@ public class PlusSlots extends Component {
 			cal.setTimeInMillis(unix * 1000);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
 			dateFormat.setCalendar(cal);
-			FrontUtils.drawString(g, dateFormat.format(cal.getTime()), x + 4, y + 22);
+			FrontUtils.drawString(g, dateFormat.format(cal.getTime()), x + 4, y + 58);
 			int map = 0;
 			try {
 				map = (int) ProfileManager.getField(NormalProfile.FIELD_MAP);
@@ -98,7 +127,7 @@ public class PlusSlots extends Component {
 				e.printStackTrace();
 			}
 			MapInfo mi = ExeData.getMapInfo(map);
-			FrontUtils.drawString(g, mi.getMapName(), x + 4, y + 40);
+			FrontUtils.drawString(g, mi.getMapName(), x + 4, y + 76);
 			long costume = 0;
 			try {
 				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
@@ -113,7 +142,7 @@ public class PlusSlots extends Component {
 			} catch (ProfileFieldException e) {
 				e.printStackTrace();
 			}
-			int xPixel = x + 114, yPixel = y + 29;
+			int xPixel = x + 228, yPixel = y + 67;
 			int sourceX1 = 0;
 			int sourceY1 = (int) (64 * costume);
 			EntityExtras pe = null;
@@ -149,6 +178,10 @@ public class PlusSlots extends Component {
 				imgCache[i] = tb.getSubimage(16 * (i - IC_NUMBERS), 112, 16, 16);
 			imgCache[IC_HP_BAR] = tb.getSubimage(0, 80, 128, 16);
 			imgCache[IC_HP_FILL] = tb.getSubimage(0, 50, 78, 10);
+			BufferedImage ai = ExeData.getImage(ExeData.getArmsImage());
+			int ystart = MCI.getInteger("Game.ArmsImageYStart", 0), size = MCI.getInteger("Game.ArmsImageSize", 32);
+			for (int i = IC_WEPS; i <= IC_WEPS_LAST; i++)
+				imgCache[i] = ai.getSubimage(size * (i + 1 - IC_WEPS), ystart, size, size);
 		}
 
 		@Override
@@ -172,7 +205,7 @@ public class PlusSlots extends Component {
 	}
 
 	public PlusSlots(BaseDialog dialog) {
-		super("PlusSlots", 0, 0, 306, 284);
+		super("PlusSlots", 0, 0, 536, 398);
 		this.dialog = dialog;
 		curSec = -1;
 		try {
@@ -183,13 +216,13 @@ public class PlusSlots extends Component {
 		comps = new ArrayList<>();
 		addComponent(new Label("Normal Files", 4, 2));
 		addComponent(new PlusSlot(0, 4, 20));
-		addComponent(new PlusSlot(1, 4, 88));
-		addComponent(new PlusSlot(2, 4, 156));
-		addComponent(new Line(153, 4, 0, 216));
-		addComponent(new Label("Curly Story", 157, 2));
-		addComponent(new PlusSlot(3, 157, 20));
-		addComponent(new PlusSlot(4, 157, 88));
-		addComponent(new PlusSlot(5, 157, 156));
+		addComponent(new PlusSlot(1, 4, 126));
+		addComponent(new PlusSlot(2, 4, 232));
+		addComponent(new Line(268, 4, 0, 329));
+		addComponent(new Label("Curly Story", 272, 2));
+		addComponent(new PlusSlot(3, 272, 20));
+		addComponent(new PlusSlot(4, 272, 126));
+		addComponent(new PlusSlot(5, 272, 232));
 		addComponent(new Label(() -> {
 			switch (mode) {
 			case MODE_NORMAL:
@@ -202,12 +235,12 @@ public class PlusSlots extends Component {
 				return "Click on a file to paste file " + (srcSec + 1) + " to";
 			}
 			return "Unknown mode " + mode;
-		}, 150, 224, true));
+		}, 268, 338, true));
 		Button delBtn = new Button(() -> {
 			if (mode == MODE_DELETE)
 				return "Cancel Delete";
 			return "Delete File";
-		}, 4, 244, 147, 16, () -> {
+		}, 4, 358, 262, 16, () -> {
 			if (mode == MODE_DELETE) {
 				mode = MODE_NORMAL;
 				srcSec = -1;
@@ -222,7 +255,7 @@ public class PlusSlots extends Component {
 			if (mode == MODE_COPY || mode == MODE_PASTE)
 				return "Cancel Copy";
 			return "Copy File";
-		}, 155, 244, 147, 16, () -> {
+		}, 270, 358, 262, 16, () -> {
 			if (mode == MODE_COPY || mode == MODE_PASTE) {
 				mode = MODE_NORMAL;
 				srcSec = -1;
@@ -234,7 +267,7 @@ public class PlusSlots extends Component {
 			return mode == MODE_NORMAL || mode == MODE_COPY || mode == MODE_PASTE;
 		});
 		addComponent(cpyBtn);
-		Button savBtn = new Button("Save Changes", 77, 264, 147, 16, () -> {
+		Button savBtn = new Button("Save Changes", 137, 378, 262, 16, () -> {
 			try {
 				ProfileManager.save();
 			} catch (IOException e1) {

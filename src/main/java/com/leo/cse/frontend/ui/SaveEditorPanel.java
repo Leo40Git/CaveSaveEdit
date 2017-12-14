@@ -302,7 +302,7 @@ public class SaveEditorPanel extends JPanel
 		}));
 		if (plus)
 			mbiFile.add(new MenuBarItem("Change File", () -> {
-				addDialogBox(new PlusSlotDialog());
+				addDialogBox(new PlusSlotDialog(true));
 			}, () -> {
 				return ProfileManager.isLoaded();
 			}));
@@ -602,12 +602,15 @@ public class SaveEditorPanel extends JPanel
 	}
 
 	private void loadExe() {
-		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir")));
+		int type = 0;
+		File dir = new File(Config.get(Config.KEY_LAST_MOD, System.getProperty("user.dir")));
 		if (!dir.exists())
 			dir = new File(System.getProperty("user.dir"));
+		if (dir.getAbsolutePath().endsWith(".tbl"))
+			type = 1;
 		File base = null;
 		while (base == null || !base.exists()) {
-			int returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS, (base == null ? dir : base),
+			int returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS, type, (base == null ? dir : base),
 					false, false);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 				base = FrontUtils.getSelectedFile();
@@ -630,6 +633,7 @@ public class SaveEditorPanel extends JPanel
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
+				Config.set(Config.KEY_LAST_MOD, base2.getAbsolutePath());
 				addComponents();
 				SwingUtilities.invokeLater(() -> {
 					loading = false;
@@ -1069,7 +1073,7 @@ public class SaveEditorPanel extends JPanel
 		if (ProfileManager.EVENT_LOAD.equals(field)) {
 			if (ProfileManager.getType() == PlusProfile.class) {
 				gotProfile = false;
-				addDialogBox(new PlusSlotDialog());
+				addDialogBox(new PlusSlotDialog(false));
 			} else
 				gotProfile = true;
 		} else if (ProfileManager.EVENT_UNLOAD.equals(field))

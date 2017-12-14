@@ -4,8 +4,8 @@ import com.leo.cse.frontend.ui.components.PlusSlots;
 
 public class PlusSlotDialog extends BaseDialog {
 
-	public PlusSlotDialog() {
-		super("Select file", 306, 284, false);
+	public PlusSlotDialog(boolean closeButton) {
+		super("Select file", 536, 398, closeButton);
 		addComponent(new PlusSlots(this));
 	}
 
