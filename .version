@@ -1,8 +1,4 @@
-2.0
-Version 2.0 - The Quite Big Update:
-- Replaced toolbar with menu bar
-- Added 290.rec editor
-- Components now react to the mouse hovering over them
-- Added quit button to window title
-- Smarter EXE data loading
-- Tons and tons of internal refactoring
+3.0
+Version 3.0 - The Plus Update:
+- Added Cave Story+ support!
+- Many other fixes and changes that I can't remember

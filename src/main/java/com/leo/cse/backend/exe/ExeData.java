@@ -467,7 +467,6 @@ public class ExeData {
 		STRING_HEAD = Arrays.binarySearch(STRING_POINTERS, HEAD_PTR);
 	}
 
-	// TODO CS+ support
 	/**
 	 * CS+ flag. If <code>true</code>, the currently loaded "executable" is in fact
 	 * a stage.tbl file.
@@ -734,10 +733,8 @@ public class ExeData {
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
-	// TODO CS+ support
 	private static void loadPlus() throws IOException {
 		plusMode = true;
-		System.out.println("Attempting to load CS+ stuff, errors may occur!");
 		try {
 			notifyListeners(NOTIFY_PRELOAD);
 			initExeStringsPlus();
@@ -1314,7 +1311,6 @@ public class ExeData {
 	 * @exception IOException
 	 *                if an I/O error occurs.
 	 */
-	// TODO CS+ support
 	private static void fillMapdataPlus() throws IOException {
 		File stageTbl = new File(dataDir + "/stage.tbl"); // int maps array data
 		FileChannel inChan;
