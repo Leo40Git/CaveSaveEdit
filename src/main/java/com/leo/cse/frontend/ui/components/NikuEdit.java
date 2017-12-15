@@ -85,10 +85,10 @@ public class NikuEdit extends Component implements IScrollable {
 					Integer.toUnsignedString(NikuRecord.getMinutes()));
 			if (nVal == null)
 				return;
-			int min = Integer.parseUnsignedInt(nVal);
-			if (min > 99)
-				min = 99;
 			try {
+				int min = Integer.parseUnsignedInt(nVal);
+				if (min > 99)
+					min = 99;
 				NikuRecord.setMinutes(min);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
@@ -100,10 +100,10 @@ public class NikuEdit extends Component implements IScrollable {
 					Integer.toUnsignedString(NikuRecord.getSeconds()));
 			if (nVal == null)
 				return;
-			int sec = Integer.parseUnsignedInt(nVal);
-			if (sec > 59)
-				sec = 59;
 			try {
+				int sec = Integer.parseUnsignedInt(nVal);
+				if (sec > 59)
+					sec = 59;
 				NikuRecord.setSeconds(sec);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
@@ -115,10 +115,10 @@ public class NikuEdit extends Component implements IScrollable {
 					Integer.toUnsignedString(NikuRecord.getTenths()));
 			if (nVal == null)
 				return;
-			int ten = Integer.parseUnsignedInt(nVal);
-			if (ten > 9)
-				ten = 9;
 			try {
+				int ten = Integer.parseUnsignedInt(nVal);
+				if (ten > 9)
+					ten = 9;
 				NikuRecord.setTenths(ten);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",

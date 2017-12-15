@@ -1,4 +1,6 @@
-3.0
+3.0.1
+Hotfix 3.0.1:
+- Fix 290.rec editor crashing program when entered number is invalid
 Version 3.0 - The Plus Update:
 - Added Cave Story+ support!
 - Many other fixes and changes that I can't remember
