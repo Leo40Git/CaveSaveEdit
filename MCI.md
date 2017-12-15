@@ -45,7 +45,7 @@ If no special support is required, `null` can also be returned.
 Both of these functions get the following parameters:  
 - `x:Number` - The X position of the player in pixels.
 - `y:Number` - The Y position of the player in pixels.
-- `leftright:Boolean` - `false` if the player is facing left, `right` if the player is facing right.
+- `leftright:Boolean` - `false` if the player is facing left, `true` if the player is facing right.
 - `costume:Number` - The costume ID the player is currently using. If no costume hacks (<MIM or TSC+) are applied: 0 if the Mimiga Mask is not equipped, 1 if the Mimiga Mask is equipped.
 
 ## Entity extras
