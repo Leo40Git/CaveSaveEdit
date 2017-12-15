@@ -49,7 +49,6 @@ import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.NikuEditDialog;
 import com.leo.cse.frontend.ui.dialogs.PlusSlotDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
-import com.leo.cse.frontend.ui.panels.EquipPlusPanel;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
@@ -375,10 +374,13 @@ public class SaveEditorPanel extends JPanel
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
 		tabs[2] = new EditorPanel(EditorTab.WARPS, new WarpsPanel());
 		tabs[3] = new EditorPanel(EditorTab.FLAGS, new FlagsPanel());
+		/// TODO Add Equip+ support
+		/*
 		if (eqp)
 			tabs[4] = new EditorPanel(EditorTab.EQUIP_PLUS, new EquipPlusPanel());
 		else
-			tabs[4] = new EditorPanel(EditorTab.MAP_FLAGS, new MapFlagsPanel());
+		*/
+		tabs[4] = new EditorPanel(EditorTab.MAP_FLAGS, new MapFlagsPanel());
 		if (var && !eqp)
 			tabs[5] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
 		int tabNum = tabs.length - 1;
@@ -610,8 +612,8 @@ public class SaveEditorPanel extends JPanel
 			type = 1;
 		File base = null;
 		while (base == null || !base.exists()) {
-			int returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS, type, (base == null ? dir : base),
-					false, false);
+			int returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS, type,
+					(base == null ? dir : base), false, false);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 				base = FrontUtils.getSelectedFile();
 			else
@@ -652,7 +654,7 @@ public class SaveEditorPanel extends JPanel
 		}
 		return true;
 	}
-	
+
 	private void setSavedFlag() {
 		// force save flag to be on
 		try {

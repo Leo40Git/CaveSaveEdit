@@ -164,11 +164,11 @@ public class FrontUtils {
 
 	public static String intsToString(int... nums) {
 		String ret = "(";
-		for (int i = 0; i < nums.length; i++)
-			if (i == nums.length - 1)
-				ret += nums[i];
-			else
-				ret += nums[i] + ",";
+		for (int i = 0; i < nums.length; i++) {
+			ret += nums[i];
+			if (i != nums.length - 1)
+				ret += ",";
+		}
 		ret += ")";
 		return ret;
 	}
@@ -332,41 +332,19 @@ public class FrontUtils {
 	 *            the initial color set when the dialog is shown
 	 * @param showTransparencyControls
 	 *            whether to show controls for configuring the color's transparency
-	 * @param forceNew
-	 *            whether to force a new ColorChooser to be created
 	 * @return the chosen color or null if the user canceled the dialog
 	 */
 	public static Color showColorChooserDialog(Component component, String title, Color initialColor,
-			boolean showTransparencyControls, boolean forceNew) {
-		if (cc == null || forceNew) {
-			cc = new JColorChooser(initialColor != null ? initialColor : Color.white);
-			if (!showTransparencyControls)
-				hideTransparencyControls(cc);
-		}
+			boolean showTransparencyControls) {
+		cc = new JColorChooser(initialColor != null ? initialColor : Color.white);
+		if (!showTransparencyControls)
+			hideTransparencyControls(cc);
 		Color[] result = new Color[1];
 		ActionListener okListener = e -> result[0] = cc.getColor();
 		JDialog dialog = JColorChooser.createDialog(component, title, true, cc, okListener, null);
 		dialog.setVisible(true);
 		dialog.dispose();
 		return result[0];
-	}
-
-	/**
-	 * Shows a modal color chooser dialog and blocks until the dialog is closed.
-	 * 
-	 * @param component
-	 *            the parent component for the dialog; may be null
-	 * @param title
-	 *            the dialog's title
-	 * @param initialColor
-	 *            the initial color set when the dialog is shown
-	 * @param showTransparencyControls
-	 *            whether to show controls for configuring the color's transparency
-	 * @return the chosen color or null if the user canceled the dialog
-	 */
-	public static Color showColorChooserDialog(Component component, String title, Color initialColor,
-			boolean showTransparencyControls) {
-		return showColorChooserDialog(component, title, initialColor, showTransparencyControls, false);
 	}
 	// end code from stack overflow
 

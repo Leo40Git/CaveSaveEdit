@@ -26,7 +26,7 @@ To add an empty space to any of these arrays, add a `null`.
 `VarHack` for the <VAR hack (cannot be enabled with <MIM or <BUY),  
 `PhysVarHack` for the <PHY hack (depends on <VAR),  
 `BuyHack` for the <BUY hack,  
-`EquipPlusHack` for Enlight's Equip+ hack.  
+`EquipPlusHack` for Enlight's Equip+ hack. **CURRENTLY NOT FUNCTIONAL!**  
 If no special support is required, `null` can also be returned.
 - `getMapNames:Array<String>` - Gets a list of map names. Only used when an executable isn't loaded.
 - `getSongNames:Array<String>` - Gets a list of song names.
