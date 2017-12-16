@@ -12,7 +12,8 @@ Yes, it's that simple!
 # MCI
 The MCI system is used for mod support.  
 This system allows users to add custom items, weapons, equipment and more to the save editor with ease.  
-See [the MCI readme](MCI.md) for more information about the MCI system.
+See [the MCI readme](MCI.md) for more information about the MCI system.  
+Want to share MCI files you have created or obtain MCI files that other people have made? Check the **[MCI Repository](https://github.com/Leo40Git/CSE-MCI-Repository)**!
 # Notes
 This editor only works with vanilla profiles, meaning that any mod with custom profiles (i.e. any of txin's mods excluding The Ultimate Challenge) will **not** work.  
 You _can_ edit save files with modified extensions, just change the file filter on the "open profile" window to "All files" and you're good.
