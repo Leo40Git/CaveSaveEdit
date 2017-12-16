@@ -6,8 +6,8 @@ CSE has a dependency on [Rhino](https://github.com/mozilla/rhino). Versions 1_7R
 There is only one `main` method, located in `com.leo.cse.frontend.Main`.  
 This is an Eclipse project, although I believe IntelliJ can import Eclipse projects natively.  
 # How to Use
-Click on "Load profile" in the toolbar to load a profile. If a Profile.dat file is found in the same directory as the application, it will be loaded automatically on startup.  
-Modify the values to your liking, and then click on "Save" in the toolbar to save the new profile.  
+Click on "File" -> "Load Profile" to load a profile. If a Profile.dat file is found in the same directory as the application, it will be loaded automatically on startup.  
+Modify the values to your liking, and then click on "File" -> "Save" in the toolbar to save the new profile.  
 Yes, it's that simple!
 # MCI
 The MCI system is used for mod support.  
