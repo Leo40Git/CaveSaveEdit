@@ -132,6 +132,10 @@ public class BaseDialog extends Dialog {
 			comp.updateHover(x, y, hover);
 		}
 	}
+	
+	@Override
+	public void onKey(int code, boolean shift, boolean ctrl) {
+	}
 
 	@Override
 	public void onScroll(int rotations, boolean shift, boolean ctrl) {

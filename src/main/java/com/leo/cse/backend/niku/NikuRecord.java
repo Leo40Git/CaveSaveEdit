@@ -6,15 +6,147 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEdit;
+
 import com.leo.cse.backend.ByteUtils;
 
 public class NikuRecord {
 
+	private static boolean modified;
+
+	public static boolean isModified() {
+		return modified;
+	}
+
+	private static UndoManager undoMan;
+
+	static class NikuEdit implements UndoableEdit {
+
+		private int oldValue;
+		private int newValue;
+		private boolean hasBeenUndone;
+
+		public NikuEdit(int oldValue, int newValue) {
+			this.oldValue = oldValue;
+			this.newValue = newValue;
+		}
+
+		@Override
+		public void undo() throws CannotUndoException {
+			setValue(oldValue, false);
+			hasBeenUndone = true;
+		}
+
+		@Override
+		public boolean canUndo() {
+			return !hasBeenUndone;
+		}
+
+		@Override
+		public void redo() throws CannotRedoException {
+			setValue(newValue, false);
+			hasBeenUndone = false;
+		}
+
+		@Override
+		public boolean canRedo() {
+			return hasBeenUndone;
+		}
+
+		@Override
+		public void die() {
+			oldValue = 0;
+			newValue = 0;
+		}
+
+		@Override
+		public boolean addEdit(UndoableEdit anEdit) {
+			return false;
+		}
+
+		@Override
+		public boolean replaceEdit(UndoableEdit anEdit) {
+			return false;
+		}
+
+		@Override
+		public boolean isSignificant() {
+			return true;
+		}
+
+		@Override
+		public String getPresentationName() {
+			return "290.rec time";
+		}
+
+		@Override
+		public String getUndoPresentationName() {
+			return "undo " + getPresentationName() + " to " + oldValue;
+		}
+
+		@Override
+		public String getRedoPresentationName() {
+			return "redo " + getPresentationName() + " to " + newValue;
+		}
+
+	}
+
+	public static boolean canUndo() {
+		if (undoMan == null)
+			return false;
+		return undoMan.canUndo();
+	}
+
+	/**
+	 * Undoes an edit.
+	 */
+	public static void undo() {
+		if (!canUndo())
+			return;
+		undoMan.undo();
+	}
+
+	public static boolean canRedo() {
+		if (undoMan == null)
+			return false;
+		return undoMan.canRedo();
+	}
+
+	/**
+	 * Redoes an edit.
+	 */
+	public static void redo() {
+		if (!canRedo())
+			return;
+		undoMan.redo();
+	}
+
 	private static int value;
 	private static File file;
 	
+	public static File getFile() {
+		return file;
+	}
+	
+	private static boolean loaded;
+	
+	public static boolean isLoaded() {
+		return loaded;
+	}
+
 	private static byte unsigned(byte b) {
 		return (byte) (b & 0xFF);
+	}
+	
+	public static void create() {
+		value = 0;
+		file = null;
+		loaded = true;
+		modified = false;
+		undoMan = new UndoManager();
 	}
 
 	public static void load(File src) throws IOException {
@@ -45,6 +177,9 @@ public class NikuRecord {
 			throw new IOException("290.rec file is corrupt");
 		value = result[0];
 		file = src;
+		loaded = true;
+		modified = false;
+		undoMan = new UndoManager();
 	}
 
 	public static void save(File dest) throws IOException {
@@ -74,6 +209,15 @@ public class NikuRecord {
 		fos.write(bufByte);
 		fos.close();
 		file = dest;
+		modified = false;
+	}
+	
+	public static void unload() {
+		file = null;
+		loaded = false;
+		value = 0;
+		modified = false;
+		undoMan = null;
 	}
 
 	public static int getValue() {
@@ -85,46 +229,46 @@ public class NikuRecord {
 			value = 0;
 		if (value > 299999)
 			value = 299999;
+		if (undoMan != null && addUndo && value != NikuRecord.value) {
+			modified = true;
+			undoMan.addEdit(new NikuEdit(NikuRecord.value, value));
+		}
 		NikuRecord.value = value;
 	}
 
 	public static void setValue(int value) {
 		setValue(value, true);
 	}
-	
+
 	public static int getTenths() {
 		return (value / 5) % 10;
 	}
-	
+
 	public static int getSeconds() {
 		return (value / 50) % 60;
 	}
-	
+
 	public static int getMinutes() {
 		return value / 3000;
 	}
-	
+
 	public static void setTime(int tens, int seconds, int minutes) {
 		int value = tens * 5;
 		value += seconds * 50;
 		value += minutes * 3000;
 		setValue(value);
 	}
-	
+
 	public static void setTenths(int tens) {
 		setTime(tens, getSeconds(), getMinutes());
 	}
-	
+
 	public static void setSeconds(int seconds) {
 		setTime(getTenths(), seconds, getMinutes());
 	}
-	
+
 	public static void setMinutes(int minutes) {
 		setTime(getTenths(), getSeconds(), minutes);
-	}
-
-	public static File getFile() {
-		return file;
 	}
 
 }

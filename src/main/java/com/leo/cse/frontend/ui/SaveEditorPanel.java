@@ -1016,8 +1016,6 @@ public class SaveEditorPanel extends JPanel
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if (!dBoxes.isEmpty())
-			return;
 		int code = e.getKeyCode();
 		int mods = e.getModifiersEx();
 		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) != 0;
@@ -1025,48 +1023,52 @@ public class SaveEditorPanel extends JPanel
 		if (code == KeyEvent.VK_ESCAPE) {
 			Main.close();
 		}
-		ScrollBar scroll = tabs[currentTab].getPanel().getGlobalScrollbar();
-		if (scroll != null && (code == KeyEvent.VK_HOME || code == KeyEvent.VK_END)) {
-			scroll.onKey(code, shift, ctrl);
-			repaint();
-		} else if (lastFocus == null) {
-			switch (code) {
-			case KeyEvent.VK_O:
-				if (ctrl) {
-					if (shift)
-						loadExe();
-					else
-						loadProfile();
-				}
-				break;
-			case KeyEvent.VK_S:
-				if (ctrl) {
-					if (shift)
-						saveProfileAs();
-					else {
-						saveProfile();
-						Main.setTitle(Main.window);
+		if (!dBoxes.isEmpty()) {
+			dBoxes.get(0).onKey(code, shift, ctrl);
+		} else {
+			ScrollBar scroll = tabs[currentTab].getPanel().getGlobalScrollbar();
+			if (scroll != null && (code == KeyEvent.VK_HOME || code == KeyEvent.VK_END)) {
+				scroll.onKey(code, shift, ctrl);
+				repaint();
+			} else if (lastFocus == null) {
+				switch (code) {
+				case KeyEvent.VK_O:
+					if (ctrl) {
+						if (shift)
+							loadExe();
+						else
+							loadProfile();
 					}
-				}
-				break;
-			case KeyEvent.VK_Z:
-				if (ctrl) {
-					if (shift)
+					break;
+				case KeyEvent.VK_S:
+					if (ctrl) {
+						if (shift)
+							saveProfileAs();
+						else {
+							saveProfile();
+							Main.setTitle(Main.window);
+						}
+					}
+					break;
+				case KeyEvent.VK_Z:
+					if (ctrl) {
+						if (shift)
+							ProfileManager.redo();
+						else
+							ProfileManager.undo();
+					}
+					break;
+				case KeyEvent.VK_Y:
+					if (ctrl) {
 						ProfileManager.redo();
-					else
-						ProfileManager.undo();
+					}
+					break;
+				default:
+					break;
 				}
-				break;
-			case KeyEvent.VK_Y:
-				if (ctrl) {
-					ProfileManager.redo();
-				}
-				break;
-			default:
-				break;
-			}
-		} else
-			lastFocus.onKey(code, shift, ctrl);
+			} else
+				lastFocus.onKey(code, shift, ctrl);
+		}
 		repaint();
 	}
 

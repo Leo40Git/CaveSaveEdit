@@ -12,6 +12,8 @@ public abstract class Dialog {
 	
 	public abstract void updateHover(int x, int y);
 	
+	public abstract void onKey(int code, boolean shift, boolean ctrl);
+	
 	public abstract void onScroll(int rotations, boolean shift, boolean ctrl);
 
 }
