@@ -94,7 +94,7 @@ public class SaveEditorPanel extends JPanel
 		}
 
 		public MenuBarItem(String label, BufferedImage icon, Runnable onClick, Supplier<Boolean> enabled) {
-			this(label, null, icon, onClick, Main.TRUE_SUPPLIER);
+			this(label, null, icon, onClick, enabled);
 		}
 
 		public MenuBarItem(String label, BufferedImage icon, Runnable onClick) {
@@ -299,13 +299,12 @@ public class SaveEditorPanel extends JPanel
 		mbiFile.add(new MenuBarItem("Load Profile", "Ctrl+O", Resources.icons[0], () -> {
 			loadProfile();
 		}));
-		if (plus)
-			mbiFile.add(new MenuBarItem("Change File", () -> {
-				addDialogBox(new PlusSlotDialog(true));
-			}, () -> {
-				return ProfileManager.isLoaded();
-			}));
-		mbiFile.add(new MenuBarItem("Unload Profile", () -> {
+		mbiFile.add(new MenuBarItem("Change File", Resources.icons[13], () -> {
+			addDialogBox(new PlusSlotDialog(true));
+		}, () -> {
+			return ProfileManager.isLoaded() && plus;
+		}));
+		mbiFile.add(new MenuBarItem("Unload Profile", Resources.icons[11], () -> {
 			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
 				int sel = JOptionPane.showConfirmDialog(Main.window,
 						"Are you sure you want to unload the profile?\nUnsaved changes will be lost!",
@@ -323,7 +322,7 @@ public class SaveEditorPanel extends JPanel
 		mbiFile.add(new MenuBarItem("Load Game/Mod", "Ctrl+Shift+O", Resources.icons[1], () -> {
 			loadExe();
 		}));
-		mbiFile.add(new MenuBarItem("Unload Game/Mod", () -> {
+		mbiFile.add(new MenuBarItem("Unload Game/Mod", Resources.icons[12], () -> {
 			ExeData.unload();
 			loading = true;
 			repaint();
@@ -368,7 +367,7 @@ public class SaveEditorPanel extends JPanel
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean var = MCI.getSpecial("VarHack"), eqp = MCI.getSpecial("EquipPlusHack");
+		boolean var = plus && MCI.getSpecial("VarHack"), eqp = plus && MCI.getSpecial("EquipPlusHack");
 		tabs = new EditorPanel[(var ? 6 : 5)];
 		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
