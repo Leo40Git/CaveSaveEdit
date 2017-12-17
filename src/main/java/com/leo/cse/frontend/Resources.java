@@ -62,7 +62,7 @@ public class Resources {
 		editorTabIcons = new BufferedImage[7];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
-		icons = new BufferedImage[14];
+		icons = new BufferedImage[15];
 		int tbx = 0, tby = 16;
 		for (int i = 0; i < icons.length; i++) {
 			if (i % 10 == 0) {

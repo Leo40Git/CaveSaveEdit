@@ -403,7 +403,6 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			return;
 		if (mapInfo.hasMissingAssets())
 			return;
-		System.out.println("MapView.onKey");
 		updateCamCoords();
 		int px = playerPos[0], py = playerPos[1];
 		int amount = 32;

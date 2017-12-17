@@ -47,7 +47,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	private static final long serialVersionUID = -5073541927297432013L;
 
 	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
-	public static final Version VERSION = new Version("3.2");
+	public static final Version VERSION = new Version("3.3");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);
@@ -154,7 +154,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		return getActualSize(true);
 	}
 
-	public static void loadProfile(File file) {
+	public static void loadProfile(File file, boolean record) {
 		if (SaveEditorPanel.panel != null)
 			SaveEditorPanel.panel.setLoading(true);
 		window.repaint();
@@ -182,7 +182,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				return;
 			} finally {
 				System.out.println("loaded profile " + ProfileManager.getLoadedFile());
-				Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
+				if (record)
+					Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
 				SwingUtilities.invokeLater(() -> {
 					if (SaveEditorPanel.panel != null)
 						SaveEditorPanel.panel.setLoading(false);
@@ -190,6 +191,10 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				});
 			}
 		});
+	}
+	
+	public static void loadProfile(File file) {
+		loadProfile(file, true);
 	}
 
 	public static void setTitle(Main window) {
@@ -462,7 +467,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			SwingUtilities.invokeLater(() -> {
 				File p = new File(System.getProperty("user.dir") + "/Profile.dat");
 				if (p.exists())
-					loadProfile(p);
+					loadProfile(p, false);
 			});
 		});
 	}

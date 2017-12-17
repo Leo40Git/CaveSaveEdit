@@ -280,7 +280,6 @@ public class SaveEditorPanel extends JPanel
 	}
 
 	public void addComponents() {
-		boolean plus = ExeData.isPlusMode();
 		menuBars = new ArrayList<>();
 		List<MenuBarItem> mbiFile = new ArrayList<>();
 		mbiFile.add(new MenuBarItem("New Profile", Resources.icons[8], () -> {
@@ -302,7 +301,7 @@ public class SaveEditorPanel extends JPanel
 		mbiFile.add(new MenuBarItem("Change File", Resources.icons[13], () -> {
 			addDialogBox(new PlusSlotDialog(true));
 		}, () -> {
-			return ProfileManager.isLoaded() && plus;
+			return ProfileManager.isLoaded() && ExeData.isPlusMode();
 		}));
 		mbiFile.add(new MenuBarItem("Unload Profile", Resources.icons[11], () -> {
 			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
@@ -321,6 +320,11 @@ public class SaveEditorPanel extends JPanel
 		}));
 		mbiFile.add(new MenuBarItem("Load Game/Mod", "Ctrl+Shift+O", Resources.icons[1], () -> {
 			loadExe();
+		}));
+		mbiFile.add(new MenuBarItem("Run Game", "Ctrl+R", Resources.icons[14], () -> {
+			runExe();
+		}, () -> {
+			return ExeData.isLoaded();
 		}));
 		mbiFile.add(new MenuBarItem("Unload Game/Mod", Resources.icons[12], () -> {
 			ExeData.unload();
@@ -367,7 +371,8 @@ public class SaveEditorPanel extends JPanel
 			addDialogBox(new NikuEditDialog());
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean var = plus && MCI.getSpecial("VarHack"), eqp = plus && MCI.getSpecial("EquipPlusHack");
+		boolean plus = ExeData.isPlusMode(), var = plus && MCI.getSpecial("VarHack"),
+				eqp = plus && MCI.getSpecial("EquipPlusHack");
 		tabs = new EditorPanel[(var ? 6 : 5)];
 		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
@@ -643,6 +648,30 @@ public class SaveEditorPanel extends JPanel
 			}
 		});
 
+	}
+
+	private void runExe() {
+		if (ExeData.isPlusMode()) {
+			String path = System.getenv("programfiles(x86)");
+			if (path == null) {
+				path = System.getenv("programfiles");
+			}
+			try {
+				Runtime.getRuntime().exec(path + "/Steam/Steam.exe -applaunch 200900");
+			} catch (IOException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Could not run game!\nThe following exception occured: " + e,
+						"Could not run game", JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			try {
+				Runtime.getRuntime().exec(ExeData.getBase().getAbsolutePath());
+			} catch (IOException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Could not run game! The following exception occured:\n" + e,
+						"Could not run game", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 	private boolean canSave() {
@@ -1061,6 +1090,9 @@ public class SaveEditorPanel extends JPanel
 					if (ctrl) {
 						ProfileManager.redo();
 					}
+					break;
+				case KeyEvent.VK_R:
+					runExe();
 					break;
 				default:
 					break;
