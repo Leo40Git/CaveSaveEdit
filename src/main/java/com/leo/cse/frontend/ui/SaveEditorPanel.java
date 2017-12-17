@@ -660,7 +660,7 @@ public class SaveEditorPanel extends JPanel
 				Runtime.getRuntime().exec(path + "/Steam/Steam.exe -applaunch 200900");
 			} catch (IOException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Could not run game!\nThe following exception occured: " + e,
+				JOptionPane.showMessageDialog(this, "Could not run game! The following exception occured:\n" + e,
 						"Could not run game", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
