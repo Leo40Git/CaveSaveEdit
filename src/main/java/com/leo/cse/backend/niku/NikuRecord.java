@@ -126,13 +126,13 @@ public class NikuRecord {
 
 	private static int value;
 	private static File file;
-	
+
 	public static File getFile() {
 		return file;
 	}
-	
+
 	private static boolean loaded;
-	
+
 	public static boolean isLoaded() {
 		return loaded;
 	}
@@ -140,7 +140,7 @@ public class NikuRecord {
 	private static byte unsigned(byte b) {
 		return (byte) (b & 0xFF);
 	}
-	
+
 	public static void create() {
 		value = 0;
 		file = null;
@@ -211,7 +211,7 @@ public class NikuRecord {
 		file = dest;
 		modified = false;
 	}
-	
+
 	public static void unload() {
 		file = null;
 		loaded = false;
@@ -229,9 +229,10 @@ public class NikuRecord {
 			value = 0;
 		if (value > 299999)
 			value = 299999;
-		if (undoMan != null && addUndo && value != NikuRecord.value) {
+		if (value != NikuRecord.value) {
 			modified = true;
-			undoMan.addEdit(new NikuEdit(NikuRecord.value, value));
+			if (undoMan != null && addUndo)
+				undoMan.addEdit(new NikuEdit(NikuRecord.value, value));
 		}
 		NikuRecord.value = value;
 	}

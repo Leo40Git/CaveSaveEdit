@@ -14,7 +14,7 @@ import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
 
 public class ProfileManager {
-	
+
 	interface FieldModChangeRecorder {
 		public void addChange(String field, int index, Object oldVal, Object newVal);
 	}
@@ -245,7 +245,7 @@ public class ProfileManager {
 			return;
 		undoMan.redo();
 	}
-	
+
 	private static void makeImpl() {
 		if (implClass == null)
 			implClass = NormalProfile.class;
@@ -260,14 +260,14 @@ public class ProfileManager {
 		}
 		impl = (IProfile) implObj;
 	}
-	
+
 	private static void postLoad() {
 		undoMan = new UndoManager();
 		modified = false;
 		// notify listeners
 		notifyListeners(EVENT_LOAD, -1, null, null);
 	}
-	
+
 	public static void create() {
 		unload();
 		makeImpl();
@@ -377,19 +377,19 @@ public class ProfileManager {
 			return null;
 		return impl.getFieldType(field);
 	}
-	
+
 	public static boolean fieldHasIndexes(String field) throws ProfileFieldException {
 		if (impl == null)
 			return false;
 		return impl.fieldHasIndexes(field);
 	}
-	
+
 	public static int getFieldMinimumIndex(String field) throws ProfileFieldException {
 		if (impl == null)
 			return -1;
 		return impl.getFieldMinimumIndex(field);
 	}
-	
+
 	public static int getFieldMaximumIndex(String field) throws ProfileFieldException {
 		if (impl == null)
 			return -1;
@@ -433,7 +433,21 @@ public class ProfileManager {
 		}
 		System.out.println("setting field " + fieldStr + " to " + valueStr);
 		Object oldValue = impl.getField(field, index);
-		if (type.cast(oldValue) != type.cast(value)) {
+		boolean different = false;
+		if (compType == null)
+			different = !type.cast(oldValue).equals(type.cast(value));
+		else {
+			Object[] oldArr = (Object[]) type.cast(oldValue), newArr = (Object[]) type.cast(value);
+			if (oldArr.length != newArr.length)
+				different = true;
+			if (!different)
+				for (int i = 0; i < oldArr.length; i++) {
+					different = !compType.cast(oldArr[i]).equals(compType.cast(newArr[i]));
+					if (different)
+						break;
+				}
+		}
+		if (different) {
 			modified = true;
 			notifyListeners(field, index, oldValue, value);
 			if (addUndo)
