@@ -159,24 +159,28 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			SaveEditorPanel.panel.setLoading(true);
 		window.repaint();
 		SwingUtilities.invokeLater(() -> {
-			File newExe = new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
-			if (newExe.exists()) {
-				// unload existing exe
-				ExeData.unload();
-				// try to load exe
-				try {
-					ExeData.load(new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe"));
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.err.println("EXE loading failed.");
-					JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
-							"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+			if (Config.getBoolean(Config.KEY_AUTOLOAD_EXE, true)) {
+				File newExe = new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
+				if (newExe.exists()) {
+					// unload existing exe
+					ExeData.unload();
+					// try to load exe
+					try {
+						ExeData.load(newExe);
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.err.println("EXE loading failed.");
+						JOptionPane.showMessageDialog(Main.window,
+								"An error occured while loading the executable:\n" + e, "Could not load executable!",
+								JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 			try {
 				ProfileManager.load(file);
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.err.println("Profile loading failed.");
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
 						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -192,7 +196,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			}
 		});
 	}
-	
+
 	public static void loadProfile(File file) {
 		loadProfile(file, true);
 	}

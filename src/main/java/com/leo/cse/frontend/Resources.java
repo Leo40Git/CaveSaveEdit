@@ -89,7 +89,7 @@ public class Resources {
 		radioOnS = ui.getSubimage(40, 0, 8, 8);
 		radioDisabled = ui.getSubimage(144, 0, 16, 16);
 		radioDisabledS = ui.getSubimage(32, 8, 8, 8);
-		dialogClose = ui.getSubimage(48, 0, 14, 14);
+		dialogClose = ui.getSubimage(48, 0, 15, 15);
 		arrowDown = ui.getSubimage(80, 0, 8, 8);
 		arrowUp = ui.getSubimage(80, 8, 8, 8);
 		grid = ui.getSubimage(43, 8, 2, 2);

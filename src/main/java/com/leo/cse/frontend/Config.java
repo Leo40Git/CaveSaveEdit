@@ -24,6 +24,7 @@ public class Config {
 	public static final String KEY_LOAD_NPCS = "load_npcs";
 	public static final String KEY_ENCODING = "encoding";
 	public static final String KEY_SKIP_UPDATE_CHECK = "skip_update_check";
+	public static final String KEY_AUTOLOAD_EXE = "autoload_exe";
 
 	private static Preferences config;
 

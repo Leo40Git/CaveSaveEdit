@@ -73,7 +73,7 @@ public class BaseDialog extends Dialog {
 				g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
 			else
 				g.setColor(Main.COLOR_BG);
-			g.fillRect(x + width - 16, y + 2, 14, 14);
+			g.fillRect(x + width - 16, y + 2, 15, 15);
 			g.drawImage(Resources.dialogClose, x + width - 16, y + 2, null);
 		}
 		g.setColor(Main.lineColor);
@@ -88,7 +88,7 @@ public class BaseDialog extends Dialog {
 	public void onClick(int x, int y, boolean shift, boolean ctrl) {
 		final int wx = getWindowX(), wy = getWindowY(false);
 		if (closeButton) {
-			if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14)) {
+			if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 15, 15)) {
 				wantsToClose = true;
 				return;
 			}
@@ -117,15 +117,13 @@ public class BaseDialog extends Dialog {
 		final int wx = getWindowX(), wy = getWindowY(false);
 		if (closeButton) {
 			closeHover = false;
-			if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 14, 14)) {
+			if (FrontUtils.pointInRectangle(x, y, wx + width - 16, wy + 2, 15, 15)) {
 				closeHover = true;
 				return;
 			}
 		}
 		x -= wx;
 		y -= wy + 18;
-		if (x < 0 || y < 0)
-			return;
 		for (Component comp : comps) {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			boolean hover = FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh);

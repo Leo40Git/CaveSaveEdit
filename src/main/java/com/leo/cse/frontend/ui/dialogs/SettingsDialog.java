@@ -51,6 +51,12 @@ public class SettingsDialog extends BaseDialog {
 			});
 			return newVal;
 		}));
+		addComponent(new BooleanBox("Autoload game/mod next to profile?", false, 96, 43, () -> {
+			return Config.getBoolean(Config.KEY_AUTOLOAD_EXE, true);
+		}, (Boolean newVal) -> {
+			Config.setBoolean(Config.KEY_AUTOLOAD_EXE, newVal);
+			return newVal;
+		}));
 		addComponent(new Label("Encoding:", 4, 62));
 		addComponent(new StringBox(54, 63, 242, 17, () -> {
 			return ExeData.getEncoding();

@@ -151,7 +151,7 @@ public class PlusSlots extends Component {
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			}
-			int sourceX2 = 32, sourceY2 = sourceY1 + 32;
+			int sourceX2 = sourceX1 + 32, sourceY2 = sourceY1 + 32;
 			if (pe != null) {
 				Rectangle pf = pe.getFrameRect();
 				Point po = pe.getOffset();

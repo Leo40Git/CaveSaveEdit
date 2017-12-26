@@ -438,730 +438,656 @@ function getPlayerOffset(x, y, leftright, costume) {
 // Entity extras
 function getEntityFrame(entity) {
     switch (entity.type) {
-    case 0: // Null ()
-	return java.awt.Rectangle(0, 0, 0, 0);
     case 1: // EXP (Weapn energy)
-	return java.awt.Rectangle(0, 32, 32, 64);
+        return java.awt.Rectangle(0, 32, 32, 64);
     case 2: // Behemoth (Enemy Behem)
-	return java.awt.Rectangle(0, 0, 64, 48);
-    case 3: // Null_disappear (?)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(0, 0, 64, 48);
     case 4: // Smoke (Smoke)
-	return java.awt.Rectangle(128, 0, 160, 32);
+        return java.awt.Rectangle(128, 0, 160, 32);
     case 5: // Critter(g) (Enemy CrtHG)
-	return java.awt.Rectangle(0, 94, 32, 124);
+        return java.awt.Rectangle(0, 94, 32, 124);
     case 6: // Beetle(horiz_g) (Enemy BtlHG)
-	return java.awt.Rectangle(0, 160, 32, 192);
+        return java.awt.Rectangle(0, 160, 32, 192);
     case 7: // Basil (Enemy Basil)
-	return java.awt.Rectangle(512, 128, 560, 166);
+        return java.awt.Rectangle(512, 128, 560, 166);
     case 8: // Beetle(follow) (Enemy BtlF1)
-	return java.awt.Rectangle(160, 160, 192, 192);
+        return java.awt.Rectangle(160, 160, 192, 192);
     case 9: // Balrog(DropIn) (Blrg drop)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 10: // Balrog(Shoot) (Boss Blrg0)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 11: // Shot(Balrog) (Proj Blrg1)
-	return java.awt.Rectangle(480, 160, 512, 192);
+        return java.awt.Rectangle(480, 160, 512, 192);
     case 12: // Balrog(cutscene) (Blrg)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 13: // ForceField (Force field)
-	return java.awt.Rectangle(256, 0, 288, 32);
+        return java.awt.Rectangle(256, 0, 298, 32);
     case 14: // SantaKey (Santa Key)
-	return java.awt.Rectangle(450, 0, 480, 32);
+        return java.awt.Rectangle(450, 0, 480, 32);
     case 15: // Chest(closed) (Chest closd)
-	return java.awt.Rectangle(480, 0, 512, 32);
+        return java.awt.Rectangle(480, 0, 512, 32);
     case 16: // SavePoint (Save point)
-	return java.awt.Rectangle(192, 32, 224, 64);
+        return java.awt.Rectangle(192, 32, 224, 64);
     case 17: // Refill (Refil)
-	return java.awt.Rectangle(576, 0, 608, 32);
+        return java.awt.Rectangle(576, 0, 608, 32);
     case 18: // Door (Door)
-	return java.awt.Rectangle(448, 32, 480, 80);
+        return java.awt.Rectangle(448, 32, 480, 80);
     case 19: // Balrog(burst) (Blrg bust)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 20: // Computer (Compu)
-	return java.awt.Rectangle(576, 32, 640, 80);
+        return java.awt.Rectangle(576, 32, 640, 80);
     case 21: // Chest(open) (Chest open)
-	return java.awt.Rectangle(448, 80, 480, 96);
+        return java.awt.Rectangle(448, 80, 480, 96);
     case 22: // Teleporter (Telep)
-	return java.awt.Rectangle(480, 32, 528, 96);
+        return java.awt.Rectangle(480, 32, 528, 96);
     case 23: // TP_lights (Telep light)
-	return java.awt.Rectangle(528, 64, 576, 72);
+        return java.awt.Rectangle(528, 64, 576, 72);
     case 24: // PowerCritter (Enemy PCrit)
-	return java.awt.Rectangle(0, 0, 48, 48);
+        return java.awt.Rectangle(0, 0, 48, 48);
     case 25: // Lift (Lift platf)
-	return java.awt.Rectangle(512, 128, 580, 160);
+        return java.awt.Rectangle(512, 128, 580, 160);
     case 26: // Bat(circle_black) (Enemy BatBC)
-	return java.awt.Rectangle(64, 160, 96, 192);
+        return java.awt.Rectangle(64, 160, 96, 192);
     case 27: // DeathTrap (Death trap)
-	return java.awt.Rectangle(192, 128, 256, 176);
+        return java.awt.Rectangle(192, 128, 256, 176);
     case 28: // Critter(fly_g) (Enemy CrtFy)
-	return java.awt.Rectangle(96, 96, 128, 128);
+        return java.awt.Rectangle(96, 96, 128, 128);
     case 29: // Cthulhu (Cthu)
-	return java.awt.Rectangle(0, 384, 32, 432);
+        return java.awt.Rectangle(0, 384, 32, 432);
     case 30: // Gunsmith (Hermt Gunsm)
-	return java.awt.Rectangle(0, 64, 32, 96);
+        return java.awt.Rectangle(0, 64, 32, 96);
     case 31: // Bat(hang_black) (Enemy BatBH)
-	return java.awt.Rectangle(0, 158, 32, 190);
+        return java.awt.Rectangle(0, 158, 32, 190);
     case 32: // Life Capsule (Capsl life)
-	return java.awt.Rectangle(64, 192, 96, 224);
+        return java.awt.Rectangle(64, 192, 96, 224);
     case 33: // Shot(Bllg_bounce) (Proj Blrg2)
-	return java.awt.Rectangle(480, 160, 512, 192);
+        return java.awt.Rectangle(480, 160, 512, 192);
     case 34: // Bed (Bed)
-	return java.awt.Rectangle(384, 96, 448, 128);
+        return java.awt.Rectangle(384, 96, 448, 128);
     case 35: // Mannan (Enemy Manan)
-	return java.awt.Rectangle(192, 128, 240, 192);
+        return java.awt.Rectangle(192, 128, 240, 192);
     case 36: // Balrog(hover) (Boss Blrg2)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 37: // Signpost (Sign post)
-	return java.awt.Rectangle(384, 128, 416, 160);
+        return java.awt.Rectangle(384, 128, 416, 160);
     case 38: // Fire (Fire place)
-	return java.awt.Rectangle(256, 128, 288, 160);
+        return java.awt.Rectangle(256, 128, 288, 160);
     case 39: // SaveSign (Save sign)
-	return java.awt.Rectangle(448, 128, 480, 160);
+        return java.awt.Rectangle(448, 126, 480, 160);
     case 40: // Santa (Santa)
-	return java.awt.Rectangle(0, 64, 32, 96);
-    case 41: // BustedDoor (Door bustd)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(0, 64, 32, 96);
     case 42: // Sue (Sue)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 43: // Chalkboard (Black board)
-	return java.awt.Rectangle(256, 160, 336, 224);
+        return java.awt.Rectangle(256, 160, 336, 224);
     case 44: // Polish (Enemy Polsh)
-	return java.awt.Rectangle(0, 0, 64, 64);
+        return java.awt.Rectangle(0, 0, 64, 64);
     case 45: // Baby (Enemy Baby)
-	return java.awt.Rectangle(32, 64, 64, 96);
-    case 46: // H/V_trigger (H/V trigr)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(32, 64, 64, 96);
     case 47: // SandCroc (Enemy SandCroc)
-	return java.awt.Rectangle(306, 94, 376, 160);
+        return java.awt.Rectangle(306, 94, 376, 160);
     case 48: // ProjOmega (Proj Omega)
-	return java.awt.Rectangle(574, 174, 606, 206);
+        return java.awt.Rectangle(574, 174, 606, 206);
     case 49: // SkullHead (Enemy SkulH)
-	return java.awt.Rectangle(64, 160, 128, 204);
+        return java.awt.Rectangle(64, 160, 128, 204);
     case 50: // ProjSkeleton (Proj Skele)
-	return java.awt.Rectangle(96, 64, 128, 96);
+        return java.awt.Rectangle(96, 64, 128, 96);
     case 51: // Crow&SkullHead (Enemy CrowS)
-	return java.awt.Rectangle(128, 160, 252, 204);
+        return java.awt.Rectangle(128, 160, 252, 204);
     case 52: // BlueRobot(sit) (BRobt sit)
-	return java.awt.Rectangle(512, 400, 544, 432);
-    case 53: // Unknown(crash) (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(512, 400, 544, 432);
     case 54: // SkullStep (Enemy SkulS)
-	return java.awt.Rectangle(64, 160, 128, 204);
+        return java.awt.Rectangle(64, 160, 128, 204);
     case 55: // Cairn (Kazum)
-	return java.awt.Rectangle(384, 384, 416, 432);
+        return java.awt.Rectangle(384, 384, 416, 432);
     case 56: // BeetleHorizBrown (Enemy BtlHB)
-	return java.awt.Rectangle(0, 284, 32, 316);
+        return java.awt.Rectangle(0, 284, 32, 316);
     case 57: // Crow (Enemy Crow)
-	return java.awt.Rectangle(192, 160, 256, 224);
+        return java.awt.Rectangle(192, 160, 256, 224);
     case 58: // Basu(1) (Enemy Basu1)
-	return java.awt.Rectangle(384, 0, 432, 48);
+        return java.awt.Rectangle(384, 0, 432, 48);
     case 59: // EyeDoor (Enemy Door)
-	return java.awt.Rectangle(416, 160, 448, 208);
+        return java.awt.Rectangle(416, 160, 448, 208);
     case 60: // Toroko (Torok)
-	return java.awt.Rectangle(0, 128, 32, 160);
+        return java.awt.Rectangle(0, 128, 32, 160);
     case 61: // King (King)
-	return java.awt.Rectangle(448, 64, 480, 96);
+        return java.awt.Rectangle(448, 64, 480, 96);
     case 62: // Kazuma(pc) (Kazum compu)
-	return java.awt.Rectangle(544, 384, 576, 432);
+        return java.awt.Rectangle(544, 384, 576, 432);
     case 63: // Toroko(stick) (Torok attck)
-	return java.awt.Rectangle(128, 128, 160, 160);
+        return java.awt.Rectangle(128, 128, 160, 160);
     case 64: // Critter(b) (Enemy CrtHB)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 65: // Bat(blue) (Enemy BatBu)
-	return java.awt.Rectangle(64, 64, 96, 96);
+        return java.awt.Rectangle(64, 64, 96, 96);
     case 66: // MiseryBubble (Bubbl)
-	return java.awt.Rectangle(64, 432, 110, 480);
+        return java.awt.Rectangle(64, 432, 110, 480);
     case 67: // Misery(float) (Msry float)
-	return java.awt.Rectangle(160, 0, 192, 32);
+        return java.awt.Rectangle(160, 0, 192, 32);
     case 68: // Balrog(run) (Boss Blrg1)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 69: // Pignon (Enemy Pign)
-	return java.awt.Rectangle(96, 0, 128, 32);
+        return java.awt.Rectangle(96, 0, 128, 32);
     case 70: // Sparkle (Spark item)
-	return java.awt.Rectangle(192, 96, 224, 128);
+        return java.awt.Rectangle(192, 96, 224, 128);
     case 71: // Chinfish (Enemy Chinf)
-	return java.awt.Rectangle(128, 64, 160, 96);
+        return java.awt.Rectangle(128, 64, 160, 96);
     case 72: // Sprinkler (Sprnk)
-	return java.awt.Rectangle(448, 96, 480, 128);
-    case 73: // Water drop (Water drop)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(448, 96, 480, 128);
     case 74: // Jack (Jack)
-	return java.awt.Rectangle(128, 0, 160, 32);
+        return java.awt.Rectangle(128, 0, 160, 32);
     case 75: // Kanpachi(fishn) (Kanpa fishn)
-	return java.awt.Rectangle(554, 64, 602, 112);
+        return java.awt.Rectangle(554, 64, 602, 112);
     case 76: // Flowers (Flowr)
-	return java.awt.Rectangle(64, 0, 96, 32);
+        return java.awt.Rectangle(64, 0, 96, 32);
     case 77: // Yamashita (Sanda pavil)
-	return java.awt.Rectangle(0, 32, 96, 96);
+        return java.awt.Rectangle(0, 32, 96, 96);
     case 78: // Pot (Pot)
-	return java.awt.Rectangle(320, 96, 352, 128);
+        return java.awt.Rectangle(320, 96, 352, 128);
     case 79: // Mahin (Mahin)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 80: // Gravekeeper (Enemy GravK)
-	return java.awt.Rectangle(0, 128, 48, 176);
+        return java.awt.Rectangle(0, 128, 48, 176);
     case 81: // Giant_Pignon (Enemy GPign)
-	return java.awt.Rectangle(288, 128, 336, 176);
+        return java.awt.Rectangle(288, 128, 336, 176);
     case 82: // Misery(stand) (Msry stand)
-	return java.awt.Rectangle(224, 0, 256, 32);
+        return java.awt.Rectangle(224, 0, 256, 32);
     case 83: // Igor(cutscene) (Igor)
-	return java.awt.Rectangle(0, 0, 80, 80);
+        return java.awt.Rectangle(0, 0, 80, 80);
     case 84: // Shot(basu1) (Proj Basu1)
-	return java.awt.Rectangle(128, 96, 160, 128);
+        return java.awt.Rectangle(128, 96, 160, 128);
     case 85: // Terminal (Termn)
-	return java.awt.Rectangle(544, 192, 574, 240);
+        return java.awt.Rectangle(544, 192, 574, 240);
     case 86: // Missle (Missl)
-	return java.awt.Rectangle(0, 160, 32, 192);
+        return java.awt.Rectangle(0, 160, 32, 192);
     case 87: // Heart (Heart)
-	return java.awt.Rectangle(64, 160, 96, 192);
+        return java.awt.Rectangle(64, 160, 96, 192);
     case 88: // Igor (Boss Igor)
-	return java.awt.Rectangle(0, 0, 80, 80);
+        return java.awt.Rectangle(0, 0, 80, 80);
     case 89: // Igor(dead) (Dead Igor)
-	return java.awt.Rectangle(574, 176, 616, 208);
-    case 90: // Unknown(90) (Backg)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(574, 176, 616, 208);
     case 91: // Cage (Cage)
-	return java.awt.Rectangle(192, 176, 256, 224);
+        return java.awt.Rectangle(192, 176, 256, 224);
     case 92: // Sue(pc) (Sue compu)
-	return java.awt.Rectangle(544, 432, 576, 480);
+        return java.awt.Rectangle(544, 432, 576, 480);
     case 93: // Chaco (Chaco)
-	return java.awt.Rectangle(256, 0, 288, 32);
+        return java.awt.Rectangle(256, 0, 288, 32);
     case 94: // Kulala (Enemy Kulal)
-	return java.awt.Rectangle(544, 0, 640, 48);
+        return java.awt.Rectangle(544, 0, 640, 48);
     case 95: // Jelly (Enemy Jelly)
-	return java.awt.Rectangle(384, 130, 416, 162);
+        return java.awt.Rectangle(384, 130, 416, 162);
     case 96: // Fan(l) (Fan left)
-	return java.awt.Rectangle(576, 240, 608, 272);
+        return java.awt.Rectangle(576, 240, 608, 272);
     case 97: // Fan(u) (Fan up)
-	return java.awt.Rectangle(576, 272, 608, 304);
+        return java.awt.Rectangle(576, 272, 608, 304);
     case 98: // Fan(r) (Fan right)
-	return java.awt.Rectangle(576, 304, 608, 336);
+        return java.awt.Rectangle(576, 304, 608, 336);
     case 99: // Fan(d) (Fan down)
-	return java.awt.Rectangle(576, 336, 608, 368);
+        return java.awt.Rectangle(576, 336, 608, 368);
     case 100: // Grate (Grate)
-	return java.awt.Rectangle(544, 96, 576, 128);
+        return java.awt.Rectangle(544, 96, 576, 128);
     case 101: // ControlScreen (PowCn scrn)
-	return java.awt.Rectangle(480, 272, 512, 304);
+        return java.awt.Rectangle(480, 272, 512, 304);
     case 102: // PowerWave (PowCn pflow)
-	return java.awt.Rectangle(416, 240, 448, 272);
+        return java.awt.Rectangle(416, 240, 448, 272);
     case 103: // Shot(manann) (Proj Manan)
-	return java.awt.Rectangle(386, 198, 418, 230);
+        return java.awt.Rectangle(386, 198, 418, 230);
     case 104: // Frog (Enemy Frog)
-	return java.awt.Rectangle(0, 224, 64, 288);
+        return java.awt.Rectangle(0, 224, 64, 288);
     case 105: // Balloon(hey_low) (Bloon HeyL)
-	return java.awt.Rectangle(256, 64, 288, 96);
+        return java.awt.Rectangle(256, 64, 288, 96);
     case 106: // Balloon(hey_high) (Bloon HeyH)
-	return java.awt.Rectangle(256, 64, 288, 96);
+        return java.awt.Rectangle(256, 64, 288, 96);
     case 107: // Malco (Malco)
-	return java.awt.Rectangle(416, 0, 448, 48);
+        return java.awt.Rectangle(416, 0, 448, 48);
     case 108: // Shot(Balfrog) (Proj Bfrog)
-	return java.awt.Rectangle(192, 96, 220, 126);
+        return java.awt.Rectangle(192, 96, 220, 126);
     case 109: // Malco(broke) (Malco damgd)
-	return java.awt.Rectangle(480, 0, 512, 48);
+        return java.awt.Rectangle(480, 0, 512, 48);
     case 110: // Puchi (Enemy Puchi)
-	return java.awt.Rectangle(192, 256, 224, 288);
+        return java.awt.Rectangle(192, 256, 224, 288);
     case 111: // Quote(teleOut) (Quote t-out)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 112: // Quote(teleIn) (Quote t-in)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 113: // Booster (Boost)
-	return java.awt.Rectangle(448, 0, 480, 32);
+        return java.awt.Rectangle(448, 0, 480, 32);
     case 114: // Press (Enemy Press)
-	return java.awt.Rectangle(352, 224, 384, 272);
+        return java.awt.Rectangle(352, 224, 384, 272);
     case 115: // Ravil (Enemy Ravil)
-	return java.awt.Rectangle(0, 240, 48, 288);
+        return java.awt.Rectangle(0, 240, 48, 288);
     case 116: // RedPetals (RFlow petal)
-	return java.awt.Rectangle(544, 368, 640, 400);
+        return java.awt.Rectangle(544, 368, 640, 400);
     case 117: // Curly (Curly)
-	return java.awt.Rectangle(0, 192, 32, 224);
+        return java.awt.Rectangle(0, 192, 32, 224);
     case 118: // Curly(boss) (Boss Curly)
-	return java.awt.Rectangle(0, 64, 64, 112);
+        return java.awt.Rectangle(0, 64, 64, 112);
     case 119: // Table&Chair (Table chair)
-	return java.awt.Rectangle(496, 368, 544, 400);
+        return java.awt.Rectangle(496, 368, 544, 400);
     case 120: // Colon_1 (Colon 1)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 121: // Colon_2 (Colon 2)
-	return java.awt.Rectangle(128, 32, 160, 64);
+        return java.awt.Rectangle(128, 32, 160, 64);
     case 122: // Colon_attack (Enemy Colon)
-	return java.awt.Rectangle(160, 0, 192, 32);
+        return java.awt.Rectangle(160, 0, 192, 32);
     case 123: // Shot(Curly) (Proj Curly)
-	return java.awt.Rectangle(384, 0, 416, 32);
+        return java.awt.Rectangle(384, 0, 416, 32);
     case 124: // Sunstone (Sun stone)
-	return java.awt.Rectangle(384, 0, 446, 64);
+        return java.awt.Rectangle(384, 0, 446, 64);
     case 125: // HiddenItem (Hiddn H/M)
-	return java.awt.Rectangle(288, 400, 320, 432);
+        return java.awt.Rectangle(288, 400, 320, 432);
     case 126: // Puppy (Puppy run)
-	return java.awt.Rectangle(48, 144, 64, 160);
+        return java.awt.Rectangle(48, 144, 64, 160);
     case 127: // MG_trail_2 (Glows Momnt)
-	return java.awt.Rectangle(128, 172, 224, 180);
-    case 128: // MG_trail_3 (Glows Momnt)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 129: // Snake_Fball_trail (Glows Momnt)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(128, 172, 224, 180);
     case 130: // Puppy_wag (Puppy wag)
-	return java.awt.Rectangle(96, 288, 128, 320);
+        return java.awt.Rectangle(96, 288, 128, 320);
     case 131: // Puppy_sleep (Puppy sleep)
-	return java.awt.Rectangle(288, 288, 320, 320);
+        return java.awt.Rectangle(288, 288, 320, 320);
     case 132: // Puppy_bark (Puppy bark)
-	return java.awt.Rectangle(256, 288, 288, 320);
+        return java.awt.Rectangle(256, 288, 288, 320);
     case 133: // Jenka (Jenka)
-	return java.awt.Rectangle(352, 64, 384, 96);
+        return java.awt.Rectangle(352, 64, 384, 96);
     case 134: // Armadillo (Enemy Armdl)
-	return java.awt.Rectangle(448, 0, 512, 32);
+        return java.awt.Rectangle(448, 0, 512, 32);
     case 135: // Skeleton (Enemy Skelt)
-	return java.awt.Rectangle(576, 64, 640, 128);
+        return java.awt.Rectangle(576, 64, 640, 128);
     case 136: // Puppy_hat (Carry Puppy)
-	return java.awt.Rectangle(96, 288, 128, 320);
+        return java.awt.Rectangle(96, 288, 128, 320);
     case 137: // LargeDoor_frame (LDoor frame)
-	return java.awt.Rectangle(192, 272, 256, 336);
+        return java.awt.Rectangle(192, 272, 256, 336);
     case 138: // LargeDoor_door (LDoor doors)
-	return java.awt.Rectangle(192, 224, 256, 272);
+        return java.awt.Rectangle(192, 224, 256, 272);
     case 139: // Doctor(crown) (Doctr)
-	return java.awt.Rectangle(0, 256, 48, 320);
+        return java.awt.Rectangle(0, 256, 48, 320);
     case 140: // Toroko(frenzy) (Boss Torok)
-	return java.awt.Rectangle(0, 0, 64, 64);
+        return java.awt.Rectangle(0, 0, 64, 64);
     case 141: // TorokoBlock (CRASH)
-	return java.awt.Rectangle(576, 64, 608, 96);
+        return java.awt.Rectangle(576, 64, 608, 96);
     case 142: // FlowerCub (Enemy Flwcb)
-	return java.awt.Rectangle(0, 256, 32, 288);
+        return java.awt.Rectangle(0, 256, 32, 288);
     case 143: // Jenka(collapse) (Jenka uncon)
-	return java.awt.Rectangle(416, 64, 510, 96);
+        return java.awt.Rectangle(416, 64, 510, 96);
     case 144: // Toroko(teleIn) (Torok telep)
-	return java.awt.Rectangle(64, 128, 96, 160);
-    case 145: // Unknown(145) (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(64, 128, 96, 160);
     case 146: // Lightning (Ligtn)
-	return java.awt.Rectangle(608, 416, 640, 480);
+        return java.awt.Rectangle(608, 416, 640, 480);
     case 147: // Critter(hover) (Enemy CrtHv)
-	return java.awt.Rectangle(0, 192, 32, 224);
+        return java.awt.Rectangle(0, 192, 32, 224);
     case 148: // Shot(crit_p) (Proj CrtHv)
-	return java.awt.Rectangle(192, 192, 208, 208);
+        return java.awt.Rectangle(192, 192, 208, 208);
     case 149: // MovBlock_h (Block MoveH)
-	return java.awt.Rectangle(32, 0, 96, 64);
+        return java.awt.Rectangle(32, 0, 96, 64);
     case 150: // Quote (Quote)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 151: // BlueRobot(stand) (BRobt stand)
-	return java.awt.Rectangle(384, 0, 416, 32);
+        return java.awt.Rectangle(384, 0, 416, 32);
     case 152: // Shutter(stuck) (Shutr stuck)
-	return java.awt.Rectangle(192, 128, 224, 192);
+        return java.awt.Rectangle(192, 128, 224, 192);
     case 153: // Gaudi (Enemy Gaudi)
-	return java.awt.Rectangle(0, 0, 48, 48);
+        return java.awt.Rectangle(0, 0, 48, 48);
     case 154: // Gaudi(dead) (Dead Gaudi)
-	return java.awt.Rectangle(384, 0, 432, 48);
+        return java.awt.Rectangle(384, 0, 432, 48);
     case 155: // Gaudi(flying) (Enemy GaudF)
-	return java.awt.Rectangle(0, 96, 48, 144);
+        return java.awt.Rectangle(0, 96, 48, 144);
     case 156: // Shot(Gaudi) (Proj GaudF)
-	return java.awt.Rectangle(192, 224, 224, 256);
+        return java.awt.Rectangle(192, 224, 224, 256);
     case 157: // MovBlock_v (Block MoveV)
-	return java.awt.Rectangle(32, 0, 96, 64);
+        return java.awt.Rectangle(32, 0, 96, 64);
     case 158: // FishMissle(x) (Proj MonX)
-	return java.awt.Rectangle(0, 448, 32, 480);
+        return java.awt.Rectangle(0, 448, 32, 480);
     case 159: // X(dead) (Dead MonX)
-	return java.awt.Rectangle(288, 262, 384, 398);
+        return java.awt.Rectangle(288, 262, 384, 398);
     case 160: // Pooh_black (Boss PoohB)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 161: // Shot(p_black) (Proj PoohB)
-	return java.awt.Rectangle(0, 96, 32, 128);
+        return java.awt.Rectangle(0, 96, 32, 128);
     case 162: // p_black(dead) (Dead PoohB)
-	return java.awt.Rectangle(80, 0, 160, 48);
+        return java.awt.Rectangle(80, 0, 160, 48);
     case 163: // Dr.Gero (Dr Gero)
-	return java.awt.Rectangle(384, 0, 416, 32);
+        return java.awt.Rectangle(384, 0, 416, 32);
     case 164: // Nurse_Hasumi (Nurse Hasum)
-	return java.awt.Rectangle(448, 0, 480, 32);
+        return java.awt.Rectangle(448, 0, 480, 32);
     case 165: // Curly(collapse) (Curly uncon)
-	return java.awt.Rectangle(448, 192, 480, 224);
+        return java.awt.Rectangle(448, 192, 480, 224);
     case 166: // Chaba (Chaba Gaudi)
-	return java.awt.Rectangle(292, 212, 362, 255);
+        return java.awt.Rectangle(292, 212, 362, 255);
     case 167: // Booster(fall) (Boost fall)
-	return java.awt.Rectangle(608, 0, 640, 32);
+        return java.awt.Rectangle(608, 0, 640, 32);
     case 168: // Boulder (Bould)
-	return java.awt.Rectangle(527, 115, 640, 192);
+        return java.awt.Rectangle(527, 115, 640, 192);
     case 169: // Balrog(Missle) (Boss Blrg3)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 170: // Shot(bllg_msl) (Proj Blrg3)
-	return java.awt.Rectangle(224, 192, 256, 208);
+        return java.awt.Rectangle(224, 192, 256, 208);
     case 171: // Fire_Whirr (Enemy FWhir)
-	return java.awt.Rectangle(244, 96, 308, 160);
+        return java.awt.Rectangle(244, 96, 308, 160);
     case 172: // Shot(Whirr) (Proj FWhir)
-	return java.awt.Rectangle(496, 96, 528, 160);
+        return java.awt.Rectangle(496, 96, 528, 160);
     case 173: // Gaudi(Armor) (Enemy GaudA)
-	return java.awt.Rectangle(0, 256, 48, 304);
+        return java.awt.Rectangle(0, 256, 48, 304);
     case 174: // Shot(gaud_arm) (Proj GaudA)
-	return java.awt.Rectangle(240, 160, 272, 192);
+        return java.awt.Rectangle(240, 160, 272, 192);
     case 175: // Gaudi_Egg (Enemy GaudE)
-	return java.awt.Rectangle(336, 160, 384, 208);
+        return java.awt.Rectangle(336, 160, 384, 208);
     case 176: // BuyoBuyo (Enemy BuyoB)
-	return java.awt.Rectangle(192, 256, 256, 288);
+        return java.awt.Rectangle(192, 256, 256, 288);
     case 177: // Buyo_baby (Enemy Buyo)
-	return java.awt.Rectangle(384, 288, 416, 320);
+        return java.awt.Rectangle(384, 288, 416, 320);
     case 178: // Shot(core_spin) (Proj Core1)
-	return java.awt.Rectangle(0, 448, 32, 480);
+        return java.awt.Rectangle(0, 448, 32, 480);
     case 179: // Shot(core_wisp) (Proj Core2)
-	return java.awt.Rectangle(96, 448, 144, 480);
+        return java.awt.Rectangle(96, 448, 144, 480);
     case 180: // Curly_AI (Curly A.I.)
-	return java.awt.Rectangle(0, 192, 32, 224);
-    case 181: // Unknown(181) (?)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 182: // Unknown(182) (?)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(0, 192, 32, 224);
     case 183: // MiseryBubble (?)
-	return java.awt.Rectangle(64, 432, 110, 480);
+        return java.awt.Rectangle(64, 432, 110, 480);
     case 184: // Shutter(big) (Shutr large)
-	return java.awt.Rectangle(0, 128, 64, 192);
+        return java.awt.Rectangle(0, 128, 64, 192);
     case 185: // Shutter(small) (Shutr small)
-	return java.awt.Rectangle(192, 128, 224, 192);
+        return java.awt.Rectangle(192, 128, 224, 192);
     case 186: // LiftBlock (Lift block)
-	return java.awt.Rectangle(96, 96, 128, 128);
+        return java.awt.Rectangle(96, 96, 128, 128);
     case 187: // FuzzCore (Enemy FuzzC)
-	return java.awt.Rectangle(448, 208, 512, 272);
+        return java.awt.Rectangle(448, 208, 512, 272);
     case 188: // Fuzz(baby) (Fuzz Baby)
-	return java.awt.Rectangle(576, 208, 608, 240);
+        return java.awt.Rectangle(576, 208, 608, 240);
     case 189: // HomingFlame (Proj HomFl)
-	return java.awt.Rectangle(96, 448, 128, 480);
+        return java.awt.Rectangle(96, 448, 128, 480);
     case 190: // BrokeRobo (Surfc robot)
-	return java.awt.Rectangle(384, 64, 416, 96);
+        return java.awt.Rectangle(384, 64, 416, 96);
     case 191: // WaterLevel (Water level)
-	return java.awt.Rectangle(0, 416, 32, 448);
+        return java.awt.Rectangle(0, 416, 32, 448);
     case 192: // Scooter (Scoot)
-	return java.awt.Rectangle(450, 128, 508, 160);
+        return java.awt.Rectangle(450, 128, 508, 160);
     case 193: // Scooter(broke) (Scoot dead)
-	return java.awt.Rectangle(510, 190, 638, 224);
+        return java.awt.Rectangle(510, 190, 638, 224);
     case 194: // BrokenRobo (BRobt dead)
-	return java.awt.Rectangle(384, 224, 450, 255);
+        return java.awt.Rectangle(384, 224, 450, 255);
     case 195: // GrateMouth (Grate mouth)
-	return java.awt.Rectangle(224, 128, 255, 160);
+        return java.awt.Rectangle(224, 128, 255, 160);
     case 196: // MotionWall (Mtion wall)
-	return java.awt.Rectangle(256, 64, 288, 96);
+        return java.awt.Rectangle(256, 64, 288, 96);
     case 197: // PorcupineFish (Enemy PFish)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 198: // Shot(ironH) (Proj IronH)
-	return java.awt.Rectangle(480, 92, 410, 142);
+        return java.awt.Rectangle(480, 92, 410, 142);
     case 199: // Current (Water curnt)
-	return java.awt.Rectangle(448, 100, 480, 128);
+        return java.awt.Rectangle(448, 100, 480, 128);
     case 200: // Enemy - Dragon Zombie (Enemy DragZ)
-	return java.awt.Rectangle(0, 0, 80, 80);
+        return java.awt.Rectangle(0, 0, 80, 80);
     case 201: // Dragon Zombie (dead) (Dead DragZ)
-	return java.awt.Rectangle(400, 40, 484, 72);
+        return java.awt.Rectangle(400, 40, 484, 72);
     case 202: // Projectile - Dragon Zombie (Proj DragZ)
-	return java.awt.Rectangle(364, 432, 400, 478);
+        return java.awt.Rectangle(364, 432, 400, 478);
     case 203: // Enemy - Critter (hopping, aqua) (Enemy CrtHA)
-	return java.awt.Rectangle(0, 160, 32, 192);
+        return java.awt.Rectangle(0, 160, 32, 192);
     case 204: // Falling Spike (small) (Spike FallS)
-	return java.awt.Rectangle(480, 288, 512, 320);
+        return java.awt.Rectangle(480, 288, 512, 320);
     case 205: // Falling Spike (large) (Spike FallL)
-	return java.awt.Rectangle(256, 160, 288, 224);
+        return java.awt.Rectangle(256, 160, 288, 224);
     case 206: // Enemy - Counter Bomb (Enemy CBomb)
-	return java.awt.Rectangle(160, 160, 240, 248);
+        return java.awt.Rectangle(160, 160, 240, 248);
     case 207: // Balloon (countdown) (Bloon CDown)
-	return java.awt.Rectangle(0, 288, 32, 314);
+        return java.awt.Rectangle(0, 288, 32, 314);
     case 208: // Enemy - Basu (2) (Enemy Basu2)
-	return java.awt.Rectangle(496, 160, 544, 204);
+        return java.awt.Rectangle(496, 160, 544, 204);
     case 209: // Projectile - Basu (2) (Proj Basu2)
-	return java.awt.Rectangle(400, 224, 432, 256);
+        return java.awt.Rectangle(400, 224, 432, 256);
     case 210: // Enemy - Beetle (follow 2) (Enemy BtlF2)
-	return java.awt.Rectangle(0, 224, 32, 256);
+        return java.awt.Rectangle(0, 224, 32, 256);
     case 211: // Spikes (Spike)
-	return java.awt.Rectangle(512, 400, 544, 432);
+        return java.awt.Rectangle(512, 400, 544, 432);
     case 212: // Sky Dragon (Sky Dragn)
-	return java.awt.Rectangle(320, 320, 394, 384);
+        return java.awt.Rectangle(320, 320, 394, 384);
     case 213: // Enemy - Night Spirit (Enemy NiteS)
-	return java.awt.Rectangle(0, 0, 96, 96);
+        return java.awt.Rectangle(0, 0, 96, 96);
     case 214: // Projectile - Night Spirit (Proj NiteS)
-	return java.awt.Rectangle(288, 96, 352, 128);
+        return java.awt.Rectangle(288, 96, 352, 128);
     case 215: // Enemy - Sandcroc (white) (Enemy ScrcW)
-	return java.awt.Rectangle(0, 240, 96, 256);
+        return java.awt.Rectangle(0, 240, 96, 256);
     case 216: // Debug cat (Debug cat)
-	return java.awt.Rectangle(512, 400, 544, 432);
+        return java.awt.Rectangle(512, 400, 544, 432);
     case 217: // Itoh (Itoh)
-	return java.awt.Rectangle(288, 128, 320, 160);
-    case 218: // Projectile? (Proj?)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(288, 128, 160, 320);
     case 219: // Generator - Smoke/Underwater current (Genrt Smoke)
-	return java.awt.Rectangle(32, 0, 64, 32);
+        return java.awt.Rectangle(32, 0, 64, 32);
     case 220: // Shovel Brigade (SBrig stand)
-	return java.awt.Rectangle(0, 128, 32, 160);
+        return java.awt.Rectangle(0, 128, 32, 160);
     case 221: // Shovel Brigade (walking) (SBrig walk)
-	return java.awt.Rectangle(0, 128, 32, 160);
+        return java.awt.Rectangle(0, 128, 32, 160);
     case 222: // Prison bars (Prisn bars)
-	return java.awt.Rectangle(192, 336, 224, 400);
+        return java.awt.Rectangle(192, 336, 224, 400);
     case 223: // Momorin (Momo)
-	return java.awt.Rectangle(160, 388, 192, 432);
+        return java.awt.Rectangle(160, 388, 192, 432);
     case 224: // Chie (Chie)
-	return java.awt.Rectangle(224, 64, 256, 96);
+        return java.awt.Rectangle(224, 64, 256, 96);
     case 225: // Megane (Megan)
-	return java.awt.Rectangle(128, 128, 160, 160);
+        return java.awt.Rectangle(128, 128, 160, 160);
     case 226: // Kanpachi (Kanpa stand)
-	return java.awt.Rectangle(544, 64, 592, 112);
+        return java.awt.Rectangle(544, 64, 592, 112);
     case 227: // Bucket (Buckt)
-	return java.awt.Rectangle(416, 64, 448, 96);
+        return java.awt.Rectangle(416, 64, 448, 96);
     case 228: // Droll (guard) (Droll guard)
-	return java.awt.Rectangle(0, 0, 64, 84);
+        return java.awt.Rectangle(0, 0, 64, 84);
     case 229: // Red Flowers (sprouts) (RFlow sprts)
-	return java.awt.Rectangle(0, 200, 32, 224);
+        return java.awt.Rectangle(0, 200, 32, 224);
     case 230: // Red Flowers (blooming) (RFlow bloom)
-	return java.awt.Rectangle(200, 200, 256, 256);
+        return java.awt.Rectangle(200, 200, 256, 256);
     case 231: // Rocket (Rockt)
-	return java.awt.Rectangle(352, 64, 416, 96);
+        return java.awt.Rectangle(352, 64, 416, 96);
     case 232: // Enemy - Orangebell (Enemy Orang)
-	return java.awt.Rectangle(256, 0, 320, 64);
-    case 233: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(256, 0, 320, 64);
     case 234: // Red Flowers (picked) (RFlow pickd)
-	return java.awt.Rectangle(288, 200, 344, 224);
+        return java.awt.Rectangle(288, 200, 344, 224);
     case 235: // Enemy - Midorin (Midor)
-	return java.awt.Rectangle(384, 200, 416, 224);
+        return java.awt.Rectangle(384, 200, 416, 224);
     case 236: // Enemy - Gunfish (Enemy Gunfs)
-	return java.awt.Rectangle(256, 120, 308, 176);
+        return java.awt.Rectangle(256, 120, 308, 176);
     case 237: // Projectile - Gunfish (Proj Gunfs)
-	return java.awt.Rectangle(624, 64, 638, 80);
+        return java.awt.Rectangle(624, 64, 638, 80);
     case 238: // Enemy - Press (killer) (Enemy PresK)
-	return java.awt.Rectangle(368, 400, 416, 432);
+        return java.awt.Rectangle(368, 400, 416, 432);
     case 239: // Cage bars (Cage bars)
-	return java.awt.Rectangle(192, 222, 288, 288);
+        return java.awt.Rectangle(192, 222, 288, 288);
     case 240: // Mimiga (jailed) (Mimig jail)
-	return java.awt.Rectangle(0, 128, 32, 160);
+        return java.awt.Rectangle(0, 128, 32, 160);
     case 241: // Enemy - Critter (hopping, red) (Enemy CritHR)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 242: // Enemy - Bat (red) (Enemy BatRd)
-	return java.awt.Rectangle(0, 64, 32, 96);
+        return java.awt.Rectangle(0, 64, 32, 96);
     case 243: // Generator - Bat (red) (Genrt BatRd)
-	return java.awt.Rectangle(0, 64, 32, 96);
+        return java.awt.Rectangle(0, 64, 32, 96);
     case 244: // Acid drop (Acid drop)
-	return java.awt.Rectangle(192, 0, 204, 32);
+        return java.awt.Rectangle(192, 0, 204, 32);
     case 245: // Generator - Acid drop (Genrt Acid)
-	return java.awt.Rectangle(192, 0, 204, 32);
+        return java.awt.Rectangle(192, 0, 204, 32);
     case 246: // Enemy - Press (proximity) (Enemy PresP)
-	return java.awt.Rectangle(288, 224, 320, 272);
+        return java.awt.Rectangle(288, 224, 320, 272);
     case 247: // Boss - Misery (Boss Msry)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 248: // Boss - Misery (vanish) (Boss MsryV)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 249: // Projectile - Misery (energy shot) (Proj Msry1)
-	return java.awt.Rectangle(64, 64, 96, 96);
+        return java.awt.Rectangle(64, 64, 96, 96);
     case 250: // Projectile - Misery (lightning ball) (Proj Msry2)
-	return java.awt.Rectangle(0, 64, 32, 96);
+        return java.awt.Rectangle(0, 64, 32, 96);
     case 251: // Projectile - Misery (lightning) (Proj Msry3)
-	return java.awt.Rectangle(160, 64, 192, 128);
-    case 252: // Projectile - Misery (Bat) (Misery bat)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(160, 64, 192, 128);
     case 253: // Energy Capsule (Capsl enrgy)
-	return java.awt.Rectangle(0, 128, 32, 160);
+        return java.awt.Rectangle(0, 128, 32, 160);
     case 254: // Helicopter (Heli copter)
-	return java.awt.Rectangle(0, 0, 256, 128);
-    case 255: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(0, 0, 256, 128);
     case 256: // Doctor (crowned, facing away) (Doctr back)
-	return java.awt.Rectangle(96, 320, 144, 384);
+        return java.awt.Rectangle(96, 320, 144, 384);
     case 257: // Red Crystal (Red Cryst)
-	return java.awt.Rectangle(352, 64, 366, 96);
+        return java.awt.Rectangle(352, 64, 366, 96);
     case 258: // Mimiga (sleeping) (Mimig sleep)
-	return java.awt.Rectangle(96, 64, 128, 96);
+        return java.awt.Rectangle(96, 64, 128, 96);
     case 259: // Curly (carried, unconscious) (Carry Curl1)
-	return java.awt.Rectangle(320, 192, 352, 224);
+        return java.awt.Rectangle(320, 192, 352, 224);
     case 260: // Shovel Brigade (caged) (SBrig cage)
-	return java.awt.Rectangle(0, 128, 32, 160);
+        return java.awt.Rectangle(0, 128, 32, 160);
     case 261: // Chie (caged) (Chie cage)
-	return java.awt.Rectangle(224, 64, 256, 96);
+        return java.awt.Rectangle(224, 64, 256, 96);
     case 262: // Chaco (caged) (Chaco cage)
-	return java.awt.Rectangle(256, 0, 288, 32);
+        return java.awt.Rectangle(256, 0, 288, 32);
     case 263: // Boss - Doctor (Boss Doct1)
-	return java.awt.Rectangle(364, 320, 416, 384);
+        return java.awt.Rectangle(364, 320, 416, 384);
     case 264: // Projectile - Doctor (red wave) (Proj Doct1)
-	return java.awt.Rectangle(572, 0, 604, 32);
+        return java.awt.Rectangle(572, 0, 604, 32);
     case 265: // Projectile - Doctor (red ball - fast vanish) (Proj RFBal)
-	return java.awt.Rectangle(572, 0, 604, 32);
+        return java.awt.Rectangle(572, 0, 604, 32);
     case 266: // Projectile - Doctor (red ball - slow vanish) (Proj RSBal)
-	return java.awt.Rectangle(572, 0, 604, 32);
+        return java.awt.Rectangle(572, 0, 604, 32);
     case 267: // Boss - Muscle Doctor (Boss Doct2)
-	return java.awt.Rectangle(0, 128, 80, 224);
+        return java.awt.Rectangle(0, 128, 80, 224);
     case 268: // Enemy - Igor (Enemy Igor)
-	return java.awt.Rectangle(0, 0, 80, 80);
+        return java.awt.Rectangle(0, 0, 80, 80);
     case 269: // Enemy - Bat (red energy) (Enemy BatRE)
-	return java.awt.Rectangle(464, 0, 496, 32);
+        return java.awt.Rectangle(464, 0, 496, 32);
     case 270: // Red energy (Red enrgy)
-	return java.awt.Rectangle(336, 64, 348, 80);
+        return java.awt.Rectangle(336, 64, 348, 80);
     case 271: // Underwater block (UBlok)
-	return java.awt.Rectangle(256, 32, 288, 64);
+        return java.awt.Rectangle(256, 32, 288, 64);
     case 272: // Generator - Underwater block (Genrt UBlok)
-	return java.awt.Rectangle(256, 32, 288, 64);
+        return java.awt.Rectangle(256, 32, 288, 64);
     case 273: // Projectile - Droll (Proj Droll)
-	return java.awt.Rectangle(496, 80, 544, 128);
+        return java.awt.Rectangle(496, 80, 544, 128);
     case 274: // Enemy - Droll (Enemy Droll)
-	return java.awt.Rectangle(0, 0, 64, 84);
+        return java.awt.Rectangle(0, 0, 64, 84);
     case 275: // Puppy (with items) (Puppy items)
-	return java.awt.Rectangle(96, 288, 128, 320);
+        return java.awt.Rectangle(96, 288, 128, 320);
     case 276: // Boss - Red Demon (Boss RDemn)
-	return java.awt.Rectangle(0, 128, 64, 204);
+        return java.awt.Rectangle(0, 128, 64, 204);
     case 277: // Projectile - Red Demon (Proj RDemn)
-	return java.awt.Rectangle(256, 0, 300, 48);
+        return java.awt.Rectangle(256, 0, 300, 48);
     case 278: // Little family (Littl famly)
-	return java.awt.Rectangle(0, 240, 12, 256);
+        return java.awt.Rectangle(0, 240, 12, 256);
     case 279: // Falling block (large) (FBlck large)
-	return java.awt.Rectangle(0, 32, 64, 96);
+        return java.awt.Rectangle(0, 32, 64, 96);
     case 280: // Sue (teleported in by Misery) (Sue telep)
-	return java.awt.Rectangle(224, 64, 254, 96);
+        return java.awt.Rectangle(224, 64, 254, 96);
     case 281: // Doctor (red energy form) (Doctr enrgy)
-	return java.awt.Rectangle(366, 320, 416, 384);
+        return java.awt.Rectangle(366, 320, 416, 384);
     case 282: // Mini Undead Core - floats forward (Mini UCore)
-	return java.awt.Rectangle(512, 240, 640, 320);
+        return java.awt.Rectangle(512, 240, 640, 320);
     case 283: // Enemy - Misery (transformed) (Enemy Msry)
-	return java.awt.Rectangle(0, 128, 64, 192);
+        return java.awt.Rectangle(0, 128, 64, 192);
     case 284: // Enemy - Sue (transformed) (Enemy Sue)
-	return java.awt.Rectangle(0, 256, 64, 320);
+        return java.awt.Rectangle(0, 256, 64, 320);
     case 285: // Projectile - Undead Core (orange spiral shot) (Proj OSpir)
-	return java.awt.Rectangle(0, 448, 32, 480);
+        return java.awt.Rectangle(0, 448, 32, 480);
     case 286: // Orange Dot (Orang Dot)
-	return java.awt.Rectangle(464, 210, 494, 238);
+        return java.awt.Rectangle(464, 210, 494, 238);
     case 287: // Orange Smoke (Orang Smoke)
-	return java.awt.Rectangle(96, 448, 128, 438);
+        return java.awt.Rectangle(96, 448, 128, 438);
     case 288: // Projectile - Undead Core (glowing rock thing) (Proj GRock)
-	return java.awt.Rectangle(464, 142, 496, 176);
+        return java.awt.Rectangle(464, 142, 496, 176);
     case 289: // Enemy - Critter (hopping, orange) (Enemy CrtHO)
-	return java.awt.Rectangle(320, 64, 352, 96);
+        return java.awt.Rectangle(320, 64, 352, 96);
     case 290: // Enemy - Bat (orange) (Enemy BatOr)
-	return java.awt.Rectangle(224, 64, 256, 96);
+        return java.awt.Rectangle(224, 64, 256, 96);
     case 291: // Mini Undead Core (before fight) (UCore Mini)
-	return java.awt.Rectangle(512, 0, 640, 80);
-    case 292: // Quake (Quake)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(512, 0, 640, 80);
     case 293: // Projectile - Undead Core (huge energy shot) (Proj HEner)
-	return java.awt.Rectangle(560, 400, 640, 480);
+        return java.awt.Rectangle(560, 400, 640, 480);
     case 294: // Quake & Generator - Falling blocks (Quake FBlck)
-	return java.awt.Rectangle(0, 32, 64, 96);
+        return java.awt.Rectangle(0, 32, 64, 96);
     case 295: // Cloud (Cloud)
-	return java.awt.Rectangle(288, 224, 384, 284);
-    case 296: // Generator - Cloud (Genrt Cloud)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 297: // <CRASH> (Sometimes) (CRASH SOME)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(288, 224, 384, 284);
     case 298: // Doctor (uncrowned) (Intro Doctr)
-	return java.awt.Rectangle(200, 320, 240, 384);
+        return java.awt.Rectangle(200, 320, 240, 384);
     case 299: // Balrog/Misery (bubble) (Intro Bubbl)
-	return java.awt.Rectangle(0, 0, 96, 96);
+        return java.awt.Rectangle(0, 0, 96, 96);
     case 300: // Demon Crown (Intro Crown)
-	return java.awt.Rectangle(384, 160, 416, 192);
+        return java.awt.Rectangle(384, 160, 416, 192);
     case 301: // Enemy - Fish Missile (orange) (Enemy FishO)
-	return java.awt.Rectangle(286, 0, 318, 32);
-    case 302: // Something with ending Scenes (End Scene)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 303: // <nothing?> (?)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(286, 0, 318, 32);
     case 304: // Gaudi (sitting) (Gaudi sit)
-	return java.awt.Rectangle(0, 352, 48, 384);
+        return java.awt.Rectangle(0, 352, 48, 384);
     case 305: // Puppy (small) (Puppy small)
-	return java.awt.Rectangle(320, 300, 352, 320);
+        return java.awt.Rectangle(320, 300, 352, 320);
     case 306: // Balrog (nurse) (Blrg nurse)
-	return java.awt.Rectangle(480, 200, 560, 256);
+        return java.awt.Rectangle(480, 200, 560, 256);
     case 307: // Santa (caged) (Santa cage)
-	return java.awt.Rectangle(0, 64, 32, 96);
+        return java.awt.Rectangle(0, 64, 32, 96);
     case 308: // Enemy - Stumpy (Enemy Stump)
-	return java.awt.Rectangle(252, 228, 284, 260);
+        return java.awt.Rectangle(252, 228, 284, 260);
     case 309: // Enemy - Bute (Enemy Bute)
-	return java.awt.Rectangle(0, 0, 32, 32);
+        return java.awt.Rectangle(0, 0, 32, 32);
     case 310: // Enemy - Bute (sword) (Enemy ButeS)
-	return java.awt.Rectangle(64, 0, 108, 32);
+        return java.awt.Rectangle(64, 0, 108, 32);
     case 311: // Enemy - Bute (archer) (Enemy ButeA)
-	return java.awt.Rectangle(0, 64, 48, 112);
+        return java.awt.Rectangle(0, 64, 48, 112);
     case 312: // Projectile - Bute (archer) (Proj ButeA)
-	return java.awt.Rectangle(0, 320, 32, 352);
+        return java.awt.Rectangle(0, 320, 32, 352);
     case 313: // Boss - Ma Pignon (Boss MPign)
-	return java.awt.Rectangle(256, 0, 288, 32);
-    case 314: // Falling, Indestructible (???)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 315: // Enemy (hopping, disappears) (Enemy ???)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(256, 0, 288, 32);
     case 316: // Enemy - Bute (defeated) (Dead Bute)
-	return java.awt.Rectangle(542, 82, 586, 110);
+        return java.awt.Rectangle(542, 82, 586, 110);
     case 317: // Enemy - Mesa (Enemy Mesa)
-	return java.awt.Rectangle(0, 160, 64, 236);
+        return java.awt.Rectangle(0, 160, 64, 236);
     case 318: // Enemy - Mesa (defeated) (Dead Mesa)
-	return java.awt.Rectangle(448, 160, 512, 240);
-    case 319: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(448, 160, 512, 240);
     case 320: // Curly (carried, shooting) (Carry Curl2)
-	return java.awt.Rectangle(0, 192, 32, 224);
-    case 321: // <nothing?> (?)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(0, 192, 32, 224);
     case 322: // Enemy - Deleet (Enemy Delet)
-	return java.awt.Rectangle(320, 432, 364, 478);
+        return java.awt.Rectangle(320, 432, 364, 478);
     case 323: // Enemy - Bute (generator) (Enemy ButeG)
-	return java.awt.Rectangle(432, 64, 464, 108);
+        return java.awt.Rectangle(432, 64, 464, 108);
     case 324: // Generator - Bute (Genrt Bute)
-	return java.awt.Rectangle(432, 64, 464, 108);
+        return java.awt.Rectangle(432, 64, 464, 108);
     case 325: // Projectile - Heavy Press (Proj HeavP)
-	return java.awt.Rectangle(476, 0, 510, 192);
+        return java.awt.Rectangle(476, 0, 510, 192);
     case 326: // Itoh/Sue (turning human) (turn human)
-	return java.awt.Rectangle(194, 256, 320, 308);
-    case 327: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(194, 256, 320, 308);
     case 328: // Transmogrifier (human machn)
-	return java.awt.Rectangle(192, 0, 256, 96);
+        return java.awt.Rectangle(192, 0, 256, 96);
     case 329: // Building fan (Bldg fan)
-	return java.awt.Rectangle(96, 0, 128, 32);
+        return java.awt.Rectangle(96, 0, 128, 32);
     case 330: // Enemy - Rolling (Enemy Rolln)
-	return java.awt.Rectangle(288, 272, 320, 304);
+        return java.awt.Rectangle(288, 272, 320, 304);
     case 331: // Projectile - Ballos (bone) (Proj Blls1)
-	return java.awt.Rectangle(576, 160, 608, 192);
-    case 332: // Projectile - Ballos (shockwave) (Proj Blls2)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(576, 160, 608, 192);
     case 333: // Projectile - Ballos (lightning) (Proj Blls3)
-	return java.awt.Rectangle(520, 0, 542, 480);
-    case 334: // Sweat (Sweat)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(520, 0, 542, 480);
     case 335: // Ika-chan (Ika- chan)
-	return java.awt.Rectangle(0, 32, 32, 64);
+        return java.awt.Rectangle(0, 32, 32, 64);
     case 336: // Generator - Ika-chan? (Genrt Ika)
-	return java.awt.Rectangle(0, 32, 32, 64);
+        return java.awt.Rectangle(0, 32, 32, 64);
     case 337: // Numahachi (Numa hachi)
-	return java.awt.Rectangle(512, 224, 576, 300);
+        return java.awt.Rectangle(512, 224, 576, 300);
     case 338: // Enemy - Green Devil (Enemy GDevl)
-	return java.awt.Rectangle(566, 0, 604, 32);
-    case 339: // Generator - Green Devil (Genrt GDevl)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(566, 0, 604, 32);
     case 340: // Boss - Ballos (Boss Blls1)
-	return java.awt.Rectangle(0, 0, 88, 80);
-    case 341: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 342: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 343: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 344: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(0, 0, 88, 80);
     case 345: // Projectile - Ballos (skull) (Proj Blls4)
-	return java.awt.Rectangle(256, 352, 288, 384);
-    case 346: // <CRASH> (CRASH)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(256, 352, 288, 384);
     case 347: // Enemy - Hoppy (Enemy Hoppy)
-	return java.awt.Rectangle(512, 96, 544, 128);
+        return java.awt.Rectangle(512, 96, 544, 128);
     case 348: // Ballos spikes (rising) (Spike Blls)
-	return java.awt.Rectangle(252, 302, 288, 352);
+        return java.awt.Rectangle(252, 302, 288, 352);
     case 349: // Statue (Statu)
-	return java.awt.Rectangle(64, 200, 128, 288);
+        return java.awt.Rectangle(64, 200, 128, 288);
     case 350: // Enemy - Bute (archer, red) (Enemy ButRA)
-	return java.awt.Rectangle(98, 324, 140, 364);
-    case 351: // Statue (can shoot) (Statu shoot)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(98, 324, 140, 364);
     case 352: // King (sword) (King sword)
-	return java.awt.Rectangle(448, 64, 476, 96);
+        return java.awt.Rectangle(448, 64, 476, 96);
     case 353: // Enemy - Bute (sword, red) (Enemy ButRS)
-	return java.awt.Rectangle(396, 316, 432, 352);
-    case 354: // Invisible deathtrap wall (Invis Trap)
-	return java.awt.Rectangle(0, 0, 0, 0);
-    case 355: // <CRASH> (Sometimes) (CRASH SOME)
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(396, 316, 432, 352);
     case 356: // Balrog (rescue) (Blrg rescu)
-	return java.awt.Rectangle(0, 0, 80, 48);
+        return java.awt.Rectangle(0, 0, 80, 48);
     case 357: // Puppy (ghost) (Puppy ghost)
-	return java.awt.Rectangle(448, 274, 480, 306);
+        return java.awt.Rectangle(448, 274, 480, 306);
     case 358: // Misery (wind) (Msry wind)
-	return java.awt.Rectangle(416, 20, 444, 64);
+        return java.awt.Rectangle(416, 20, 444, 64);
     case 359: // Generator - Water drop (Genrt WDrop)
-	return java.awt.Rectangle(144, 32, 148, 36);
+        return java.awt.Rectangle(144, 32, 148, 36);
     case 360: // 'Thank you!' (Thank you!)
-	return java.awt.Rectangle(0, 352, 96, 366);
+        return java.awt.Rectangle(0, 352, 96, 366);
     default:
-	return java.awt.Rectangle(0, 0, 0, 0);
+        return java.awt.Rectangle(0, 0, 0, 0);
     }
 }
 function getEntityOffset(entity) {
