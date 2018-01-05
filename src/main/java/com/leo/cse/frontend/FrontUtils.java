@@ -127,6 +127,8 @@ public class FrontUtils {
 		if (vert)
 			y -= (g.getFontMetrics().getHeight() / 4) * 3;
 		final int lineSpace = g.getFontMetrics().getHeight();
+		if (str == null)
+			return;
 		for (String line : str.split("\n")) {
 			y += lineSpace;
 			drawString0(g, line, x - g.getFontMetrics().stringWidth(line) / 2, y - 1, shadowOnly);

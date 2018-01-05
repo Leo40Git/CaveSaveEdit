@@ -97,6 +97,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			ProfileManager.removeListener(SaveEditorPanel.panel);
 			ProfileManager.unload();
 			ExeData.removeListener(window);
+			ExeData.removeListener(SaveEditorPanel.panel);
 			ExeData.unload();
 			window = null;
 			SaveEditorPanel.panel = null;
@@ -133,6 +134,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		addMouseMotionListener(sep);
 		addMouseWheelListener(sep);
 		ProfileManager.addListener(sep);
+		ExeData.addListener(sep);
 		Dimension winSize = new Dimension(WINDOW_SIZE);
 		winSize.width += 32;
 		winSize.height += 48;
@@ -189,8 +191,6 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				if (record)
 					Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
 				SwingUtilities.invokeLater(() -> {
-					if (SaveEditorPanel.panel != null)
-						SaveEditorPanel.panel.setLoading(false);
 					window.repaint();
 				});
 			}
@@ -473,6 +473,17 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				if (p.exists())
 					loadProfile(p, false);
 			});
+			Thread rrThread = new Thread(() -> {
+				while (true) {
+					window.repaint();
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}, "RepaintRequest");
+			rrThread.start();
 		});
 	}
 
@@ -482,37 +493,37 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	@Override
-	public void preLoad(boolean plusMode) {
-		if (plusMode) {
+	public void onEvent(String event, String loadName, int loadId, int loadIdMax) {
+		boolean plusMode = ExeData.isPlusMode();
+		switch (event) {
+		case ExeData.EVENT_PRELOAD:
+			if (plusMode)
+				try {
+					MCI.readPlus();
+				} catch (Exception e) {
+					resourceError(e);
+				}
+			else if (MCI.isPlus())
+				try {
+					MCI.readDefault();
+				} catch (Exception e) {
+					resourceError(e);
+				}
+			break;
+		case ExeData.EVENT_POSTLOAD:
 			try {
-				MCI.readPlus();
-			} catch (Exception e) {
-				resourceError(e);
+				ProfileManager.reload();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} else if (MCI.isPlus()) {
-			try {
-				MCI.readDefault();
-			} catch (Exception e) {
-				resourceError(e);
-			}
+			break;
+		default:
+			break;
 		}
 	}
 
 	@Override
-	public void load(boolean plusMode) {
-	}
-
-	@Override
-	public void postLoad(boolean plusMode) {
-		try {
-			ProfileManager.reload();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void unload() {
+	public void onSubevent(String event, String loadName, int loadId, int loadIdMax) {
 	}
 
 }

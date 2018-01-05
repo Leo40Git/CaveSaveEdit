@@ -8,33 +8,8 @@ package com.leo.cse.backend.exe;
  */
 public interface ExeLoadListener {
 
-	/**
-	 * Called before anything is done.
-	 * 
-	 * @param plusMode
-	 *            <code>true</code> if loading CS+, <code>false</code> otherwise
-	 */
-	public void preLoad(boolean plusMode);
+	public void onEvent(String event, String loadName, int loadId, int loadIdMax);
 
-	/**
-	 * Called before resource files are loaded.
-	 * 
-	 * @param plusMode
-	 *            <code>true</code> if loading CS+, <code>false</code> otherwise
-	 */
-	public void load(boolean plusMode);
-
-	/**
-	 * Called after everything is done.
-	 * 
-	 * @param plusMode
-	 *            <code>true</code> if loading CS+, <code>false</code> otherwise
-	 */
-	public void postLoad(boolean plusMode);
-
-	/**
-	 * Called when data gets unloaded.
-	 */
-	public void unload();
+	public void onSubevent(String event, String loadName, int loadId, int loadIdMax);
 
 }

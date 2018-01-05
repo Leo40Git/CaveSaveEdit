@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.StrTools;
@@ -26,6 +27,7 @@ import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
+import com.leo.cse.frontend.Main;
 
 // credit to Noxid for making Booster's Lab open source so I could steal code
 // from it
@@ -67,34 +69,24 @@ public class ExeData {
 		listeners.remove(l);
 	}
 
-	/**
-	 * Pre-load event.
-	 * 
-	 * @see ExeLoadListener#preLoad(boolean)
-	 * @see #notifyListeners(int)
-	 */
-	private static final int NOTIFY_PRELOAD = 0;
-	/**
-	 * Load event.
-	 * 
-	 * @see ExeLoadListener#load(boolean)
-	 * @see #notifyListeners(int)
-	 */
-	private static final int NOTIFY_LOAD = 1;
-	/**
-	 * Post-load event.
-	 * 
-	 * @see ExeLoadListener#postLoad(boolean)
-	 * @see #notifyListeners(int)
-	 */
-	private static final int NOTIFY_POSTLOAD = 2;
-	/**
-	 * Unload event.
-	 * 
-	 * @see ExeLoadListener#unload()
-	 * @see #notifyListeners(int)
-	 */
-	private static final int NOTIFY_UNLOAD = 3;
+	public static final String EVENT_PRELOAD = "load.pre";
+	public static final String EVENT_LOAD = "load.during";
+	public static final String EVENT_POSTLOAD = "load.post";
+	public static final String EVENT_UNLOAD = "load.un";
+
+	public static final String EVENT_EXE_STRING = "load.exestr";
+	public static final String EVENT_NPC_TBL = "load.npctbl";
+	public static final String EVENT_MAP_DATA = "load.map.data";
+	public static final String EVENT_MAP_INFO = "load.map.info";
+	public static final String LOADNAME_MAP_INFO_PXA = "tileset definition";
+	public static final String LOADNAME_MAP_INFO_IMAGES = "images";
+	public static final String LOADNAME_MAP_INFO_PXM = "layout file";
+	public static final String LOADNAME_MAP_INFO_PXE = "entities file";
+	public static final String LOADNAME_MAP_INFO_TSC = "script file";
+
+	public static final String SUBEVENT_IMAGE = "sub.img";
+	public static final String SUBEVENT_PXA = "sub.pxa";
+	public static final String SUBEVENT_END = "sub.end";
 
 	/**
 	 * Notifies all listeners of an event.
@@ -106,26 +98,14 @@ public class ExeData {
 	 * @see #NOTIFY_POSTLOAD
 	 * @see #NOTIFY_UNLOAD
 	 */
-	private static void notifyListeners(int notifyType) {
+	private static void notifyListeners(boolean sub, String event, String loadName, int loadId, int loadIdMax) {
 		if (listeners == null)
 			return;
 		for (ExeLoadListener l : listeners)
-			switch (notifyType) {
-			case NOTIFY_PRELOAD:
-				l.preLoad(plusMode);
-				break;
-			case NOTIFY_LOAD:
-				l.load(plusMode);
-				break;
-			case NOTIFY_POSTLOAD:
-				l.postLoad(plusMode);
-				break;
-			case NOTIFY_UNLOAD:
-				l.unload();
-				break;
-			default:
-				throw new RuntimeException("Unknown event type " + notifyType);
-			}
+			if (sub)
+				l.onSubevent(event, loadName, loadId, loadIdMax);
+			else
+				l.onEvent(event, loadName, loadId, loadIdMax);
 	}
 
 	/**
@@ -666,13 +646,28 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	public static void load(File file) throws IOException {
-		File base = file;
-		if (base == null)
-			base = new File(
-					ProfileManager.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
-		if (!base.exists())
-			return;
-		load0(base);
+		Thread exeLoad = new Thread(() -> {
+			File base = file;
+			if (base == null)
+				base = new File(ProfileManager.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName")
+						+ ".exe");
+			if (!base.exists())
+				return;
+			try {
+				load0(base);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("EXE loading failed.");
+				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
+						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+			}
+			try {
+				Thread.currentThread().join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}, "ExeLoad");
+		exeLoad.start();
 	}
 
 	/**
@@ -704,7 +699,7 @@ public class ExeData {
 		}
 		plusMode = false;
 		try {
-			notifyListeners(NOTIFY_PRELOAD);
+			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
 			loadExeStrings();
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
@@ -716,10 +711,10 @@ public class ExeData {
 			pxaMap = new HashMap<File, byte[]>();
 			loadNpcTbl();
 			fillMapdata();
-			notifyListeners(NOTIFY_LOAD);
+			notifyListeners(false, EVENT_LOAD, null, -1, -1);
 			loadMapInfo();
 			loadGraphics();
-			notifyListeners(NOTIFY_POSTLOAD);
+			notifyListeners(false, EVENT_POSTLOAD, null, -1, -1);
 		} catch (IOException e) {
 			loaded = false;
 			throw e;
@@ -736,7 +731,7 @@ public class ExeData {
 	private static void loadPlus() throws IOException {
 		plusMode = true;
 		try {
-			notifyListeners(NOTIFY_PRELOAD);
+			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
 			initExeStringsPlus();
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
@@ -748,10 +743,10 @@ public class ExeData {
 			pxaMap = new HashMap<File, byte[]>();
 			loadNpcTbl();
 			fillMapdataPlus();
-			notifyListeners(NOTIFY_LOAD);
+			notifyListeners(false, EVENT_LOAD, null, -1, -1);
 			loadMapInfo();
 			loadGraphics();
-			notifyListeners(NOTIFY_POSTLOAD);
+			notifyListeners(false, EVENT_POSTLOAD, null, -1, -1);
 		} catch (IOException e) {
 			loaded = false;
 			throw e;
@@ -799,7 +794,7 @@ public class ExeData {
 		ProfileManager.setHeader(NormalProfile.DEFAULT_HEADER);
 		ProfileManager.setFlagHeader(NormalProfile.DEFAULT_FLAGH);
 		plusMode = false;
-		notifyListeners(NOTIFY_UNLOAD);
+		notifyListeners(false, EVENT_UNLOAD, null, -1, -1);
 	}
 
 	/**
@@ -973,6 +968,7 @@ public class ExeData {
 			str = str.replaceAll("\\\\", "/");
 			exeStrings[i] = str;
 			uBuf.clear();
+			notifyListeners(false, EVENT_EXE_STRING, null, i, STRING_POINTERS.length - 1);
 		}
 		inStream.close();
 	}
@@ -983,37 +979,69 @@ public class ExeData {
 	private static void initExeStringsPlus() {
 		exeStrings = new String[STRING_POINTERS.length];
 		exeStrings[STRING_ARMSITEM] = "ArmsItem.tsc";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ARMSITEM, STRING_POINTERS.length - 1);
 		exeStrings[STRING_IMG_EXT] = "%s/%s.bmp";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_IMG_EXT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_CREDIT] = "Credit.tsc";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_CREDIT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_NPC_TBL] = "npc.tbl";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPC_TBL, STRING_POINTERS.length - 1);
 		exeStrings[STRING_MYCHAR] = "MyChar";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_MYCHAR, STRING_POINTERS.length - 1);
 		exeStrings[STRING_TITLE] = "Title";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_TITLE, STRING_POINTERS.length - 1);
 		exeStrings[STRING_ARMSIMAGE] = "ArmsImage";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ARMSIMAGE, STRING_POINTERS.length - 1);
 		exeStrings[STRING_ARMS] = "Arms";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ARMS, STRING_POINTERS.length - 1);
 		exeStrings[STRING_ITEMIMAGE] = "ItemImage";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ITEMIMAGE, STRING_POINTERS.length - 1);
 		exeStrings[STRING_STAGEIMAGE] = "StageImage";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_STAGEIMAGE, STRING_POINTERS.length - 1);
 		exeStrings[STRING_NPCSYM] = "Npc/NpcSym";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPCSYM, STRING_POINTERS.length - 1);
 		exeStrings[STRING_NPCREGU] = "Npc/NpcRegu";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPCREGU, STRING_POINTERS.length - 1);
 		exeStrings[STRING_TEXTBOX] = "TextBox";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_TEXTBOX, STRING_POINTERS.length - 1);
 		exeStrings[STRING_CARET] = "Caret";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_CARET, STRING_POINTERS.length - 1);
 		exeStrings[STRING_BULLET] = "Bullet";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_BULLET, STRING_POINTERS.length - 1);
 		exeStrings[STRING_FACE] = "Face";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_FACE, STRING_POINTERS.length - 1);
 		exeStrings[STRING_FADE] = "Fade";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_FADE, STRING_POINTERS.length - 1);
 		exeStrings[STRING_DATA_FOLDER] = ""; // not needed
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_DATA_FOLDER, STRING_POINTERS.length - 1);
 		exeStrings[STRING_LOADING] = "Loading";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_LOADING, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PXM_TAG] = "PXM";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXM_TAG, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PROFILE_HEADER] = PlusProfile.DEFAULT_HEADER;
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_HEADER, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PROFILE_FLAGH] = PlusProfile.DEFAULT_FLAGH;
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_FLAGH, STRING_POINTERS.length - 1);
 		exeStrings[STRING_STAGESELECT] = "StageSelect.tsc";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_STAGESELECT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_STAGE_FOLDER] = "Stage";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_STAGE_FOLDER, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PRT_PREFIX] = "%s/Prt%s";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PRT_PREFIX, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PXA_EXT] = "%s/%s.pxa";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXA_EXT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PXM_EXT] = "%s/%s.pxm";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXM_EXT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PXE_EXT] = "%s/%s.pxe";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXE_EXT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_TSC_EXT] = "%s/%s.tsc";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_TSC_EXT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_NPC_FOLDER] = "Npc";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPC_FOLDER, STRING_POINTERS.length - 1);
 		exeStrings[STRING_NPC_PREFIX] = "%s/Npc%s";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPC_PREFIX, STRING_POINTERS.length - 1);
 		exeStrings[STRING_HEAD] = "Head.tsc";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_HEAD, STRING_POINTERS.length - 1);
 	}
 
 	/**
@@ -1214,6 +1242,7 @@ public class ExeData {
 				uBuf.get(buffer, 0, 0x23);
 				newMap.setMapName(StrTools.CString(buffer, encoding));
 				mapdata.add(newMap);
+				notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps);
 			} // for each map
 		} else { // exe has been edited probably
 			if (secHeaders[mapSec].contains(".csmap")) {
@@ -1255,6 +1284,7 @@ public class ExeData {
 					uBuf.get(buffer, 0, 0x23);
 					newMap.setMapName(StrTools.CString(buffer, encoding));
 					mapdata.add(newMap);
+					notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps);
 				} // for each map
 			} else {
 				// sue's workshop
@@ -1263,7 +1293,6 @@ public class ExeData {
 				inChan.position(0x208 + 0x28 * mapSec + 0x10);
 				inChan.read(uBuf);
 				uBuf.flip();
-				@SuppressWarnings("unused")
 				int numMaps = uBuf.getInt() / 200;
 				uBuf.flip();
 				inChan.read(uBuf);
@@ -1297,7 +1326,7 @@ public class ExeData {
 					uBuf.get(buffer, 0, 0x23);
 					newMap.setMapName(StrTools.CString(buffer));
 					mapdata.add(newMap);
-					nMaps++;
+					notifyListeners(false, EVENT_MAP_DATA, null, nMaps++, numMaps);
 				} // for each map
 			}
 		}
@@ -1353,8 +1382,31 @@ public class ExeData {
 	 * Loads map info.
 	 */
 	private static void loadMapInfo() {
-		for (int i = 0; i < mapdata.size(); i++)
+		int mdSize = mapdata.size();
+		for (int i = 0; i < mdSize; i++)
 			mapInfo.add(new MapInfo(mapdata.get(i)));
+		for (int i = 0; i < mdSize; i++) {
+			mapInfo.get(i).loadImages();
+			notifyListeners(false, EVENT_MAP_INFO, LOADNAME_MAP_INFO_IMAGES, i, mdSize - 1);
+		}
+		for (int i = 0; i < mdSize; i++) {
+			mapInfo.get(i).loadPXA();
+			notifyListeners(false, EVENT_MAP_INFO, LOADNAME_MAP_INFO_PXA, i, mdSize - 1);
+		}
+		for (int i = 0; i < mdSize; i++) {
+			mapInfo.get(i).loadMap();
+			notifyListeners(false, EVENT_MAP_INFO, LOADNAME_MAP_INFO_PXM, i, mdSize - 1);
+		}
+		if (loadNpc)
+			for (int i = 0; i < mdSize; i++) {
+				mapInfo.get(i).loadEntities();
+				notifyListeners(false, EVENT_MAP_INFO, LOADNAME_MAP_INFO_PXE, i, mdSize - 1);
+			}
+		if (loadTSC)
+			for (int i = 0; i < mdSize; i++) {
+				mapInfo.get(i).loadTSC();
+				notifyListeners(false, EVENT_MAP_INFO, LOADNAME_MAP_INFO_TSC, i, mdSize - 1);
+			}
 	}
 
 	/**
@@ -1476,6 +1528,7 @@ public class ExeData {
 		if (srcFile == null)
 			return;
 		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
+		notifyListeners(true, SUBEVENT_IMAGE, srcFile.getAbsolutePath(), -1, -1);
 		try {
 			if (imageMap.containsKey(srcFile))
 				return;
@@ -1483,6 +1536,7 @@ public class ExeData {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		notifyListeners(true, SUBEVENT_END, srcFile.getAbsolutePath(), -1, -1);
 	}
 
 	/**
@@ -1641,6 +1695,7 @@ public class ExeData {
 			return pxaMap.get(srcFile);
 		byte[] pxaArray = null;
 		boolean succ = false;
+		notifyListeners(true, SUBEVENT_PXA, srcFile.getAbsolutePath(), -1, -1);
 		try {
 			FileInputStream inStream = new FileInputStream(srcFile);
 			inChan = inStream.getChannel();
@@ -1667,6 +1722,7 @@ public class ExeData {
 				pxaMap.put(srcFile, dummyArray);
 			}
 		}
+		notifyListeners(true, SUBEVENT_END, srcFile.getAbsolutePath(), -1, -1);
 		return pxaArray;
 	}
 

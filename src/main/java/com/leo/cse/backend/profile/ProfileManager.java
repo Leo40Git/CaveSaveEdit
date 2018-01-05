@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
@@ -12,6 +13,7 @@ import javax.swing.undo.UndoableEdit;
 
 import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
+import com.leo.cse.frontend.Main;
 
 public class ProfileManager {
 
@@ -276,10 +278,28 @@ public class ProfileManager {
 	}
 
 	public static void load(File file) throws IOException {
-		unload();
-		makeImpl();
-		impl.load(file);
-		postLoad();
+		Thread profLoad = new Thread(() -> {
+			unload();
+			makeImpl();
+			boolean ok = true;
+			try {
+				impl.load(file);
+			} catch (Exception e) {
+				ok = false;
+				e.printStackTrace();
+				System.err.println("Profile loading failed.");
+				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
+						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
+			}
+			if (ok)
+				postLoad();
+			try {
+				Thread.currentThread().join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}, "ProfLoad");
+		profLoad.start();
 	}
 
 	public static void load(String path) throws IOException {

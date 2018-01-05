@@ -30,6 +30,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.PlusProfile;
@@ -58,7 +59,7 @@ import com.leo.cse.frontend.ui.panels.VariablesPanel;
 import com.leo.cse.frontend.ui.panels.WarpsPanel;
 
 public class SaveEditorPanel extends JPanel
-		implements MouseInputListener, MouseWheelListener, KeyListener, ProfileListener {
+		implements MouseInputListener, MouseWheelListener, KeyListener, ProfileListener, ExeLoadListener {
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
@@ -249,6 +250,22 @@ public class SaveEditorPanel extends JPanel
 	private List<Dialog> dBoxes;
 	private boolean loading, gotProfile;
 
+	static class LoadProgress {
+		boolean active = false;
+		String title = null, name = null;
+		int id = -1, idMax = -1;
+
+		@Override
+		public String toString() {
+			String ret = title;
+			if (name != null)
+				ret = String.format(ret, name);
+			return ret;
+		}
+	}
+
+	private LoadProgress progLoad, progSubload;
+
 	public void setGotProfile(boolean gotProfile) {
 		this.gotProfile = gotProfile;
 		if (gotProfile)
@@ -390,6 +407,8 @@ public class SaveEditorPanel extends JPanel
 		int tabNum = tabs.length - 1;
 		if (currentTab > tabNum)
 			currentTab = tabNum;
+		progLoad = new LoadProgress();
+		progSubload = new LoadProgress();
 	}
 
 	public void saveSettings() {
@@ -465,7 +484,7 @@ public class SaveEditorPanel extends JPanel
 		}
 		// components
 		g2d.translate(0, 17);
-		if (loading) {
+		if (loading || progLoad.active || progSubload.active) {
 			g2d.setFont(Resources.font);
 			boolean c = false;
 			final int cr = Main.lineColor.getRed(), cg = Main.lineColor.getGreen(), cb = Main.lineColor.getBlue();
@@ -482,6 +501,27 @@ public class SaveEditorPanel extends JPanel
 					FrontUtils.drawString(g2d, s, xx + sw, yy);
 				}
 				c = !c;
+			}
+			if (progLoad.active) {
+				final int width = 320, height = 100;
+				final int x = winSize.width / 2 - width / 2, y = winSize.height / 2 - height / 2;
+				FrontUtils.drawNineSlice(g, Resources.shadow, x - 16, y - 16, width + 32, height + 32);
+				g2d.setColor(Main.COLOR_BG);
+				g2d.fillRect(x, y, width, height);
+				g2d.setColor(Main.lineColor);
+				g2d.drawRect(x, y, width, height);
+				FrontUtils.drawStringCentered(g2d, progLoad.toString(), x + width / 2, y + 4, false, false);
+				if (progLoad.idMax > 1) {
+					String idStr = progLoad.id + "/" + progLoad.idMax;
+					FrontUtils.drawStringCentered(g2d, idStr, x + width / 2, y + 18, false, false);
+					g2d.drawRect(x + 20, y + 36, 260, 16);
+					float prog = progLoad.id / (float) progLoad.idMax;
+					g2d.fillRect(x + 22, y + 38, (int) (257 * prog), 13);
+				}
+				if (progSubload.active) {
+					FrontUtils.drawStringCentered(g2d, progSubload.toString(), x + width / 2,
+							y + 54, false, false);
+				}
 			}
 		} else {
 			if (gotProfile) {
@@ -1111,8 +1151,62 @@ public class SaveEditorPanel extends JPanel
 				addDialogBox(new PlusSlotDialog(false));
 			} else
 				gotProfile = true;
-		} else if (ProfileManager.EVENT_UNLOAD.equals(field))
+			setLoading(false);
+		} else if (ProfileManager.EVENT_UNLOAD.equals(field)) {
 			gotProfile = false;
+			setLoading(false);
+		}
+	}
+
+	@Override
+	public void onEvent(String event, String loadName, int loadId, int loadIdMax) {
+		progLoad.name = loadName;
+		progLoad.id = loadId;
+		progLoad.idMax = loadIdMax;
+		switch (event) {
+		case ExeData.EVENT_PRELOAD:
+			progLoad.active = true;
+			progLoad.title = "Preparing to load";
+			break;
+		case ExeData.EVENT_EXE_STRING:
+			progLoad.title = "Reading game strings";
+			break;
+		case ExeData.EVENT_NPC_TBL:
+			progLoad.title = "Reading entity definitions";
+			break;
+		case ExeData.EVENT_MAP_DATA:
+			progLoad.title = "Reading data for map:";
+			break;
+		case ExeData.EVENT_MAP_INFO:
+			progLoad.title = "Loading %s for map:";
+			break;
+		case ExeData.EVENT_POSTLOAD:
+			progLoad.active = false;
+			progSubload.active = false;
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onSubevent(String event, String loadName, int loadId, int loadIdMax) {
+		progSubload.name = loadName;
+		progSubload.id = loadId;
+		progSubload.idMax = loadIdMax;
+		switch (event) {
+		case ExeData.SUBEVENT_IMAGE:
+			progSubload.active = true;
+			progSubload.title = "Loading image:\n%s";
+			break;
+		case ExeData.SUBEVENT_PXA:
+			progSubload.active = true;
+			progSubload.title = "Loading PXA file:\n%s";
+			break;
+		case ExeData.SUBEVENT_END:
+		default:
+			break;
+		}
 	}
 
 	@Override

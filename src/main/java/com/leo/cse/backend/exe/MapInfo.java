@@ -23,6 +23,7 @@ import com.leo.cse.backend.tsc.TSCFile;
  */
 public class MapInfo {
 
+	private Mapdata d;
 	/**
 	 * Width of the map, in tiles.
 	 */
@@ -98,27 +99,19 @@ public class MapInfo {
 	 *            source map data
 	 */
 	public MapInfo(Mapdata d) {
+		this.d = d;
 		fileName = d.getFileName();
 		scrollType = d.getScrollType();
 		mapName = d.getMapName();
 		File directory = ExeData.getDataDir();
-		loadImageResource(d, directory);
+		setupFiles(d, directory);
 		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
 		String pxa = ExeData.getExeString(ExeData.STRING_PXA_EXT);
 		pxaFile = new File(String.format(pxa, directory + "/" + stage, d.getTileset()));
+	}
+
+	public void loadPXA() {
 		ExeData.addPxa(pxaFile);
-		loadMap(d);
-		if (ExeData.doLoadNpc())
-			getEntities(d);
-		if (ExeData.doLoadTSC()) {
-			try {
-				tscFile = new TSCFile(
-						String.format(ExeData.getExeString(ExeData.STRING_TSC_EXT), directory + "/" + stage, fileName));
-			} catch (IOException e) {
-				System.err.println("Failed to load TSC:\n" + fileName);
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/**
@@ -129,21 +122,29 @@ public class MapInfo {
 	 * @param directory
 	 *            data directory
 	 */
-	private void loadImageResource(Mapdata d, File directory) {
+	private void setupFiles(Mapdata d, File directory) {
 		// load each image resource
 		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
 		String npc = ExeData.getExeString(ExeData.STRING_NPC_FOLDER);
 		String prt = ExeData.getExeString(ExeData.STRING_PRT_PREFIX);
 		String npcP = ExeData.getExeString(ExeData.STRING_NPC_PREFIX);
-		tileset = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), String.format(prt, stage, d.getTileset())));
-		ExeData.addImage(tileset);
+		tileset = ExeData
+				.correctFile(ResUtils.getGraphicsFile(directory.toString(), String.format(prt, stage, d.getTileset())));
 		bgImage = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), d.getBgName()));
+		if (!ExeData.doLoadNpc())
+			return;
+		npcSheet1 = ExeData.correctFile(
+				ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet1())));
+		npcSheet2 = ExeData.correctFile(
+				ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet2())));
+	}
+
+	public void loadImages() {
+		ExeData.addImage(tileset);
 		ExeData.addImage(bgImage);
 		if (!ExeData.doLoadNpc())
 			return;
-		npcSheet1 = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet1())));
 		ExeData.addImage(npcSheet1);
-		npcSheet2 = ExeData.correctFile(ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet2())));
 		ExeData.addImage(npcSheet2);
 	}
 
@@ -153,7 +154,7 @@ public class MapInfo {
 	 * @param d
 	 *            source map data
 	 */
-	protected void loadMap(Mapdata d) {
+	public void loadMap() {
 		// load the map data
 		ByteBuffer mapBuf;
 		File directory = ExeData.getDataDir();
@@ -232,7 +233,7 @@ public class MapInfo {
 	 * @param d
 	 *            source map data
 	 */
-	private void getEntities(Mapdata d) {
+	public void loadEntities() {
 		pxeList = new LinkedList<>();
 		File directory = ExeData.getDataDir();
 		String currentFileName = String.format(ExeData.getExeString(ExeData.STRING_PXE_EXT),
@@ -273,6 +274,18 @@ public class MapInfo {
 			e.printStackTrace();
 			System.err.println("Failed to load PXE:\n" + currentFileName);
 			pxeList = null;
+		}
+	}
+
+	public void loadTSC() {
+		File directory = ExeData.getDataDir();
+		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
+		try {
+			tscFile = new TSCFile(
+					String.format(ExeData.getExeString(ExeData.STRING_TSC_EXT), directory + "/" + stage, fileName));
+		} catch (IOException e) {
+			System.err.println("Failed to load TSC:\n" + fileName);
+			e.printStackTrace();
 		}
 	}
 
