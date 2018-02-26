@@ -1,8 +1,5 @@
 package com.leo.cse.frontend;
 
-import static com.leo.cse.frontend.FrontUtils.generateMask;
-
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
@@ -22,16 +19,7 @@ public class Resources {
 	public static BufferedImage shadow;
 	public static BufferedImage ui;
 	
-	// colored images
-	public static BufferedImage checkboxOff, checkboxOn, checkboxDisabled;
-	public static BufferedImage radioOff, radioOn, radioDisabled;
-	public static BufferedImage radioOffS, radioOnS, radioDisabledS;
-	public static BufferedImage dialogClose;
-	public static BufferedImage arrowDown, arrowUp;
-	public static BufferedImage grid;
-	
-	// uncolored images
-	public static BufferedImage drag;
+	// icons
 	public static BufferedImage[] editorTabIcons, icons;
 	
 	// niku counter
@@ -57,13 +45,11 @@ public class Resources {
 	}
 
 	private static void loadImages() {
-		reloadColorImages();
-		drag = ui.getSubimage(40, 8, 3, 8);
 		editorTabIcons = new BufferedImage[7];
 		for (int i = 0; i < editorTabIcons.length; i++)
-			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
-		icons = new BufferedImage[15];
-		int tbx = 0, tby = 16;
+			editorTabIcons[i] = ui.getSubimage(i * 16, 0, 16, 16);
+		icons = new BufferedImage[13];
+		int tbx = 0, tby = 0;
 		for (int i = 0; i < icons.length; i++) {
 			if (i % 10 == 0) {
 				tbx = 0;
@@ -74,42 +60,9 @@ public class Resources {
 		}
 		nikuNumbers = new BufferedImage[10];
 		for (int i = 0; i < nikuNumbers.length; i++)
-			nikuNumbers[i] = ui.getSubimage(i * 16, 64, 16, 16);
-		nikuIcon = ui.getSubimage(0, 80, 14, 14);
-		nikuPunc = ui.getSubimage(14, 80, 62, 14);
-	}
-
-	private static void reloadColorImages() {
-		checkboxOff = ui.getSubimage(0, 0, 16, 16);
-		checkboxOn = ui.getSubimage(16, 0, 16, 16);
-		checkboxDisabled = ui.getSubimage(64, 0, 16, 16);
-		radioOff = ui.getSubimage(112, 0, 16, 16);
-		radioOffS = ui.getSubimage(32, 0, 8, 8);
-		radioOn = ui.getSubimage(128, 0, 16, 16);
-		radioOnS = ui.getSubimage(40, 0, 8, 8);
-		radioDisabled = ui.getSubimage(144, 0, 16, 16);
-		radioDisabledS = ui.getSubimage(32, 8, 8, 8);
-		dialogClose = ui.getSubimage(48, 0, 15, 15);
-		arrowDown = ui.getSubimage(80, 0, 8, 8);
-		arrowUp = ui.getSubimage(80, 8, 8, 8);
-		grid = ui.getSubimage(43, 8, 2, 2);
-	}
-
-	public static void colorImages(Color tint) {
-		reloadColorImages();
-		checkboxOff = generateMask(checkboxOff, tint, 1f);
-		checkboxOn = generateMask(checkboxOn, tint, 1f);
-		checkboxDisabled = generateMask(checkboxDisabled, tint, 1f);
-		radioOff = generateMask(radioOff, tint, 1f);
-		radioOffS = generateMask(radioOffS, tint, 1f);
-		radioOn = generateMask(radioOn, tint, 1f);
-		radioOnS = generateMask(radioOnS, tint, 1f);
-		radioDisabled = generateMask(radioDisabled, tint, 1f);
-		radioDisabledS = generateMask(radioDisabledS, tint, 1f);
-		dialogClose = generateMask(dialogClose, tint, 1f);
-		arrowDown = generateMask(arrowDown, tint, 1f);
-		arrowUp = generateMask(arrowUp, tint, 1f);
-		grid = generateMask(grid, tint, 1f);
+			nikuNumbers[i] = ui.getSubimage(i * 16, 48, 16, 16);
+		nikuIcon = ui.getSubimage(0, 64, 14, 14);
+		nikuPunc = ui.getSubimage(14, 64, 62, 14);
 	}
 
 }

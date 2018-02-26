@@ -1,6 +1,5 @@
 package com.leo.cse.frontend;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -10,7 +9,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Transparency;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -158,12 +156,6 @@ public class FrontUtils {
 		g.drawImage(img, x + (w - sw), y + (h - sh), x + w, y + h, sw * 2, sh * 2, sw * 3, sh * 3, null);
 	}
 
-	public static void drawCheckeredGrid(Graphics g, int x, int y, int w, int h) {
-		for (int py = 0; py < h; py += 2)
-			for (int px = 0; px < w; px += 2)
-				g.drawImage(Resources.grid, x + px, y + py, null);
-	}
-
 	public static String intsToString(int... nums) {
 		String ret = "(";
 		for (int i = 0; i < nums.length; i++) {
@@ -243,51 +235,6 @@ public class FrontUtils {
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-	}
-
-	public static BufferedImage generateMask(BufferedImage imgSource, Color color, float alpha) {
-		int imgWidth = imgSource.getWidth();
-		int imgHeight = imgSource.getHeight();
-
-		BufferedImage imgMask = createCompatibleImage(imgWidth, imgHeight, Transparency.TRANSLUCENT);
-		Graphics2D g2 = imgMask.createGraphics();
-		applyQualityRenderingHints(g2);
-
-		g2.drawImage(imgSource, 0, 0, null);
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, alpha));
-		g2.setColor(color);
-
-		g2.fillRect(0, 0, imgSource.getWidth(), imgSource.getHeight());
-		g2.dispose();
-
-		return imgMask;
-	}
-
-	public static BufferedImage generateMask(BufferedImage imgSource, Color color, int alpha) {
-		return generateMask(imgSource, color, alpha / 255f);
-	}
-
-	public static BufferedImage tint(BufferedImage master, BufferedImage tint) {
-		int imgWidth = master.getWidth();
-		int imgHeight = master.getHeight();
-
-		BufferedImage tinted = createCompatibleImage(imgWidth, imgHeight, Transparency.TRANSLUCENT);
-		Graphics2D g2 = tinted.createGraphics();
-		applyQualityRenderingHints(g2);
-
-		g2.drawImage(master, 0, 0, null);
-		g2.drawImage(tint, 0, 0, null);
-		g2.dispose();
-
-		return tinted;
-	}
-
-	public static BufferedImage colorImage(BufferedImage image, int red, int green, int blue, int alpha) {
-		return tint(image, generateMask(image, new Color(red, green, blue), alpha));
-	}
-
-	public static BufferedImage colorImage(BufferedImage image, Color color) {
-		return colorImage(image, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 	// end code from stack overflow
 

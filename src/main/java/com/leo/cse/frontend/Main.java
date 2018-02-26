@@ -1,12 +1,12 @@
 package com.leo.cse.frontend;
 
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -20,16 +20,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.function.Supplier;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.BevelBorder;
 
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.exe.ExeData;
@@ -41,8 +45,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
-	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
-	public static final Version VERSION = new Version("3.4");
+	public static final Dimension WINDOW_SIZE = new Dimension(640, 480);
+	public static final Version VERSION = new Version("4.0");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 
@@ -58,7 +62,6 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	};
 
 	public static Main window;
-	public static Color lineColor;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
@@ -88,19 +91,18 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		if (reboot) {
 			window.dispose();
 			ProfileManager.removeListener(window);
-			//ProfileManager.removeListener(SaveEditorPanel.panel);
+			// ProfileManager.removeListener(SaveEditorPanel.panel);
 			ProfileManager.unload();
 			ExeData.removeListener(window);
-			//ExeData.removeListener(SaveEditorPanel.panel);
+			// ExeData.removeListener(SaveEditorPanel.panel);
 			ExeData.unload();
 			window = null;
-			//SaveEditorPanel.panel = null;
+			// SaveEditorPanel.panel = null;
 			System.gc();
 			Main.main(new String[0]);
 		} else {
-			Config.setColor(Config.KEY_LINE_COLOR, lineColor);
 			Config.set(Config.KEY_ENCODING, ExeData.getEncoding());
-			//SaveEditorPanel.panel.saveSettings();
+			// SaveEditorPanel.panel.saveSettings();
 			System.exit(0);
 		}
 	}
@@ -116,9 +118,14 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
 		setIconImage(Resources.icon);
+		/*
 		setUndecorated(true);
 		setBackground(new Color(0, 0, 0, 0));
+		*/
 	}
+	
+	// TODO REMOVE THIS TEST CODE!
+	private JPanel TEST_panel;
 
 	private void initPanel() {
 		/*
@@ -131,31 +138,37 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		ProfileManager.addListener(sep);
 		ExeData.addListener(sep);
 		*/
-		Dimension winSize = new Dimension(WINDOW_SIZE);
-		winSize.width += 32;
-		winSize.height += 48;
-		setMaximumSize(winSize);
-		setMinimumSize(winSize);
-		setPreferredSize(winSize);
+		// TODO REMOVE THIS TEST CODE!
+		TEST_panel = new JPanel();
+		TEST_addImagesToPanel(Resources.editorTabIcons);
+		TEST_addImagesToPanel(Resources.icons);
+		TEST_addImagesToPanel(Resources.nikuNumbers);
+		TEST_addImageToPanel(Resources.nikuIcon);
+		TEST_addImageToPanel(Resources.nikuPunc);
+		add(TEST_panel);
+		setMaximumSize(WINDOW_SIZE);
+		setMinimumSize(WINDOW_SIZE);
+		setPreferredSize(WINDOW_SIZE);
 		pack();
 		setResizable(false);
 		setLocationRelativeTo(null);
 	}
 
-	public Dimension getActualSize(boolean excludeHeadFoot) {
-		final Insets i = getInsets();
-		return new Dimension(WINDOW_SIZE.width - (i.left + i.right),
-				WINDOW_SIZE.height - (i.top + i.bottom) - (excludeHeadFoot ? 33 : 0));
+	// TODO REMOVE THESE TEST METHODS!
+	private void TEST_addImageToPanel(BufferedImage img) {
+		TEST_panel.add(new JLabel(new ImageIcon(img)));
 	}
 
-	public Dimension getActualSize() {
-		return getActualSize(true);
+	private void TEST_addImagesToPanel(BufferedImage[] imgs) {
+		for (int i = 0; i < imgs.length; i++)
+			TEST_addImageToPanel(imgs[i]);
 	}
 
 	public static void loadProfile(File file, boolean record) {
 		/*
 		if (SaveEditorPanel.panel != null)
-			SaveEditorPanel.panel.setLoading(true);*/
+			SaveEditorPanel.panel.setLoading(true);
+		*/
 		window.repaint();
 		SwingUtilities.invokeLater(() -> {
 			if (Config.getBoolean(Config.KEY_AUTOLOAD_EXE, true)) {
@@ -241,9 +254,37 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	public static class LoadFrame extends JFrame {
+
 		private static final long serialVersionUID = 1L;
-		
-		// TODO Remake this
+
+		private JLabel loadLabel;
+
+		public void setLoadString(String loadString) {
+			loadLabel.setText(loadString);
+		}
+
+		public LoadFrame() {
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setUndecorated(true);
+			final Dimension size = new Dimension(320, 120);
+			setPreferredSize(size);
+			setMaximumSize(size);
+			setMinimumSize(size);
+			setResizable(false);
+			loadLabel = new JLabel("Checking for updates...");
+			loadLabel.setFont(loadLabel.getFont().deriveFont(Font.BOLD, 20));
+			loadLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			loadLabel.setVerticalAlignment(SwingConstants.CENTER);
+			loadLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+			loadLabel.setOpaque(true);
+			add(loadLabel);
+			pack();
+			setLocationRelativeTo(null);
+			setIconImage(Resources.icon);
+			setVisible(true);
+			requestFocus();
+		}
+
 	}
 
 	public static void resourceError(Throwable e) {
@@ -398,16 +439,14 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			loadFrame = updateCheck(false, false);
 		}
 		SwingUtilities.invokeLater(() -> {
-			//loadFrame.setLoadString("Loading...");
+			loadFrame.setLoadString("Loading...");
 			loadFrame.repaint();
 		});
-		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
 		ExeData.setEncoding(Config.get(Config.KEY_ENCODING, StrTools.DEFAULT_ENCODING));
 		ExeData.setLoadNpc(Config.getBoolean(Config.KEY_LOAD_NPCS, true));
 		// Profile.setNoUndo(false);
 		try {
 			Resources.loadUI();
-			Resources.colorImages(lineColor);
 			MCI.readDefault();
 		} catch (Exception e) {
 			resourceError(e);
@@ -423,6 +462,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				if (p.exists())
 					loadProfile(p, false);
 			});
+			/*
 			Thread rrThread = new Thread(() -> {
 				while (true) {
 					window.repaint();
@@ -434,6 +474,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				}
 			}, "RepaintRequest");
 			rrThread.start();
+			*/
 		});
 	}
 
