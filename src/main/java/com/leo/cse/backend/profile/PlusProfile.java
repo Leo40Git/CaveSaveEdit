@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.leo.cse.backend.ByteUtils;
-import com.leo.cse.backend.profile.ProfileManager.FieldModChangeRecorder;
+import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
 
 public class PlusProfile extends NormalProfile {
 
@@ -84,33 +84,7 @@ public class PlusProfile extends NormalProfile {
 	protected void setupFieldsPlus() {
 		makeFieldLong(FIELD_MODIFY_DATE, 0x608);
 		makeFieldShort(FIELD_DIFFICULTY, 0x610);
-		try {
-			addField(FIELD_BEAT_HELL, new ProfileField() {
-				@Override
-				public Class<?> getType() {
-					return Boolean.class;
-				}
-
-				@Override
-				public boolean acceptsValue(Object value) {
-					return value instanceof Boolean;
-				}
-
-				@Override
-				public Object getValue(int index) {
-					byte flag = data[0x1F04C];
-					return (flag == 0 ? false : true);
-				}
-
-				@Override
-				public void setValue(int index, Object value) {
-					byte flag = (byte) ((Boolean) value ? 1 : 0);
-					data[0x1F04C] = flag;
-				}
-			});
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
+		makeFieldBool(FIELD_BEAT_HELL, 0x1F04C);
 	}
 
 	protected void setupMethodsPlus() {
@@ -130,7 +104,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					int srcSec = (int) args[0];
 					int dstSec = (int) args[1];
 					System.arraycopy(data, srcSec * SECTION_LENGTH, data, dstSec * SECTION_LENGTH, SECTION_LENGTH);
@@ -153,7 +127,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					ByteUtils.writeString(newData, 0, header);
@@ -177,7 +151,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
@@ -199,7 +173,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					int secToChk = (int) args[0];
 					int ptr = secToChk * SECTION_LENGTH;
 					// check header
@@ -227,7 +201,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					return curSection;
 				}
 
@@ -245,7 +219,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					curSection = (int) args[0];
 					return null;
 				}
@@ -264,7 +238,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					int newSec = (int) args[0];
 					secQueue.add(curSection);
 					curSection = newSec;
@@ -285,7 +259,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldModChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fmcr, Object... args) {
 					if (secQueue.isEmpty())
 						return null;
 					curSection = secQueue.remove(0);

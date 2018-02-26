@@ -646,28 +646,20 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	public static void load(File file) throws IOException {
-		Thread exeLoad = new Thread(() -> {
-			File base = file;
-			if (base == null)
-				base = new File(ProfileManager.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName")
-						+ ".exe");
-			if (!base.exists())
-				return;
-			try {
-				load0(base);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.err.println("EXE loading failed.");
-				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
-						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
-			}
-			try {
-				Thread.currentThread().join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}, "ExeLoad");
-		exeLoad.start();
+		File base = file;
+		if (base == null)
+			base = new File(ProfileManager.getLoadedFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName")
+					+ ".exe");
+		if (!base.exists())
+			return;
+		try {
+			load0(base);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("EXE loading failed.");
+			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
+					"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	/**

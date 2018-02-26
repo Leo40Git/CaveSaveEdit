@@ -17,7 +17,13 @@ import com.leo.cse.frontend.Main;
 
 public class ProfileManager {
 
-	interface FieldModChangeRecorder {
+	/**
+	 * Used to record field changes from executing methods.
+	 * 
+	 * @author Leo
+	 *
+	 */
+	interface FieldChangeRecorder {
 		public void addChange(String field, int index, Object oldVal, Object newVal);
 	}
 
@@ -31,10 +37,23 @@ public class ProfileManager {
 	 */
 	public static final String EVENT_LOAD = "event.load";
 
+	/**
+	 * Used to notify {@link ProfileListener}s of the current profile being
+	 * unloaded.
+	 */
 	public static final String EVENT_UNLOAD = "event.unload";
 
+	/**
+	 * The current implementation class for profiles.
+	 */
 	private static Class<? extends IProfile> implClass = NormalProfile.class;
 
+	/**
+	 * Sets the implementation class for profiles.
+	 * 
+	 * @param className
+	 *            name of new implementation class
+	 */
 	@SuppressWarnings("unchecked")
 	public static void setClass(String className) {
 		Class<?> tmpClass;
@@ -53,35 +72,71 @@ public class ProfileManager {
 		implClass = (Class<? extends IProfile>) tmpClass;
 	}
 
+	/**
+	 * The current profile implementation - an instance of {@link #implClass}.
+	 */
 	private static IProfile impl;
 
+	/**
+	 * Gets the current profile implementation type.<br>
+	 * Note that if this is <b>not</b>
+	 * equal to {@link #implClass}, something has gone wrong.
+	 * 
+	 * @return type of current profile implementation
+	 */
 	public static Class<? extends IProfile> getType() {
 		if (impl == null)
 			return null;
 		return impl.getClass();
 	}
 
-	private static File file;
-
-	public static File getFile() {
-		return file;
-	}
-
+	/**
+	 * A list of {@link ProfileListener}s that will be notified if a field gets
+	 * modified.
+	 */
 	private static List<ProfileListener> listeners;
+	/**
+	 * Modified flag. If <code>true</code>, profile data has been modified since the
+	 * last save.
+	 */
 	private static boolean modified;
 
+	/**
+	 * Adds a listener.
+	 * 
+	 * @param l
+	 *            listener
+	 */
 	public static void addListener(ProfileListener l) {
 		if (listeners == null)
 			listeners = new LinkedList<>();
 		listeners.add(l);
 	}
 
+	/**
+	 * Removes a listener.
+	 * 
+	 * @param l
+	 *            listener
+	 */
 	public static void removeListener(ProfileListener l) {
 		if (listeners == null)
 			return;
 		listeners.remove(l);
 	}
 
+	/**
+	 * Notifies all listeners of a field being modified.
+	 * 
+	 * @param field
+	 *            field that was modified
+	 * @param id
+	 *            index of field that was modified (if applicable)
+	 * @param oldValue
+	 *            old value of field
+	 * @param newValue
+	 *            new value of field
+	 */
 	private static void notifyListeners(String field, int id, Object oldValue, Object newValue) {
 		if (listeners == null)
 			return;
@@ -89,6 +144,9 @@ public class ProfileManager {
 			l.onChange(field, id, oldValue, newValue);
 	}
 
+	/**
+	 * Manages undoing and redoing profile edits.
+	 */
 	private static UndoManager undoMan;
 
 	/**
@@ -218,6 +276,12 @@ public class ProfileManager {
 		return impl != null && impl.getLoadedFile() != null && undoMan != null;
 	}
 
+	/**
+	 * Checks if an edit can be undone.
+	 * 
+	 * @return <code>true</code> if an edit can be undone, <code>false</code>
+	 *         otherwise
+	 */
 	public static boolean canUndo() {
 		if (!undoManExists())
 			return false;
@@ -233,6 +297,12 @@ public class ProfileManager {
 		undoMan.undo();
 	}
 
+	/**
+	 * Checks if an edit can be redone.
+	 * 
+	 * @return <code>true</code> if an edit can be redone, <code>false</code>
+	 *         otherwise
+	 */
 	public static boolean canRedo() {
 		if (!undoManExists())
 			return false;
@@ -248,6 +318,10 @@ public class ProfileManager {
 		undoMan.redo();
 	}
 
+	/**
+	 * Creates an instance ({@link #impl}) of the current profile implementation
+	 * ({@link #implClass}).
+	 */
 	private static void makeImpl() {
 		if (implClass == null)
 			implClass = NormalProfile.class;
@@ -263,6 +337,9 @@ public class ProfileManager {
 		impl = (IProfile) implObj;
 	}
 
+	/**
+	 * Called after loading a profile.
+	 */
 	private static void postLoad() {
 		undoMan = new UndoManager();
 		modified = false;
@@ -270,6 +347,9 @@ public class ProfileManager {
 		notifyListeners(EVENT_LOAD, -1, null, null);
 	}
 
+	/**
+	 * Creates a new blank profile.
+	 */
 	public static void create() {
 		unload();
 		makeImpl();
@@ -277,35 +357,47 @@ public class ProfileManager {
 		postLoad();
 	}
 
+	/**
+	 * Loads a profile.
+	 * 
+	 * @param file
+	 *            profile to load
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void load(File file) throws IOException {
-		Thread profLoad = new Thread(() -> {
-			unload();
-			makeImpl();
-			boolean ok = true;
-			try {
-				impl.load(file);
-			} catch (Exception e) {
-				ok = false;
-				e.printStackTrace();
-				System.err.println("Profile loading failed.");
-				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
-						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
-			}
-			if (ok)
-				postLoad();
-			try {
-				Thread.currentThread().join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}, "ProfLoad");
-		profLoad.start();
+		unload();
+		makeImpl();
+		try {
+			impl.load(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Profile loading failed.");
+			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
+					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		postLoad();
 	}
 
+	/**
+	 * Loads a profile.
+	 * 
+	 * @param path
+	 *            path to profile to load
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void load(String path) throws IOException {
 		load(new File(path));
 	}
 
+	/**
+	 * Reloads an already-loaded profile.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void reload() throws IOException {
 		if (impl == null)
 			return;
@@ -315,6 +407,14 @@ public class ProfileManager {
 		load(loadedFile);
 	}
 
+	/**
+	 * Saves a profile.
+	 * 
+	 * @param file
+	 *            file to save to
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void save(File file) throws IOException {
 		if (impl == null)
 			return;
@@ -324,36 +424,68 @@ public class ProfileManager {
 		notifyListeners(EVENT_SAVE, -1, null, null);
 	}
 
+	/**
+	 * Saves a profile.
+	 * 
+	 * @param file
+	 *            path to file to save to
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void save(String path) throws IOException {
 		save(new File(path));
 	}
 
+	/**
+	 * Saves a profile to the file it was loaded from.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void save() throws IOException {
 		if (impl == null)
 			return;
 		save(impl.getLoadedFile());
 	}
 
+	/**
+	 * Unloads the currently loaded profile.
+	 */
 	public static void unload() {
 		impl = null;
-		file = null;
 		modified = false;
 		undoMan = null;
 		notifyListeners(EVENT_UNLOAD, -1, null, null);
 	}
 
+	/**
+	 * Gets the currently loaded file.
+	 * 
+	 * @return currently loaded file, or <code>null</code> if none is loaded
+	 */
 	public static File getLoadedFile() {
 		if (impl == null)
 			return null;
 		return impl.getLoadedFile();
 	}
 
+	/**
+	 * Checks if a file is currently loaded.
+	 * 
+	 * @return <code>true</code> if a file is loaded, <code>false</code> otherwise.
+	 */
 	public static boolean isLoaded() {
 		if (impl == null)
 			return false;
 		return true;
 	}
 
+	/**
+	 * Checks if the file has been modified since the last save.
+	 * 
+	 * @return <code>true</code> if file has been modified, <code>false</code>
+	 *         otherwise.
+	 */
 	public static boolean isModified() {
 		if (impl == null)
 			return false;
@@ -511,7 +643,7 @@ public class ProfileManager {
 	public static Object callMethod(String method, Object... args) throws ProfileMethodException {
 		if (impl == null)
 			return null;
-		Object ret = impl.callMethod(method, new FieldModChangeRecorder() {
+		Object ret = impl.callMethod(method, new FieldChangeRecorder() {
 			@Override
 			public void addChange(String field, int index, Object oldVal, Object newVal) {
 				notifyListeners(field, index, oldVal, newVal);

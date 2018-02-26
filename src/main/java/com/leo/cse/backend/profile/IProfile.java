@@ -3,7 +3,7 @@ package com.leo.cse.backend.profile;
 import java.io.File;
 import java.io.IOException;
 
-import com.leo.cse.backend.profile.ProfileManager.FieldModChangeRecorder;
+import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
 
 /**
  * Basic profile interface. Superinterface to all classes that can be used as
@@ -216,6 +216,6 @@ public interface IProfile {
 
 	public Class<?> getMethodRetType(String method) throws ProfileMethodException;
 
-	public Object callMethod(String method, FieldModChangeRecorder fmcr, Object... args) throws ProfileMethodException;
+	public Object callMethod(String method, FieldChangeRecorder fmcr, Object... args) throws ProfileMethodException;
 
 }

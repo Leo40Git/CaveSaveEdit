@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.leo.cse.backend.profile.ProfileManager.FieldModChangeRecorder;
+import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
 
 public abstract class Profile implements IProfile {
 
@@ -38,7 +38,7 @@ public abstract class Profile implements IProfile {
 
 		public Class<?> getRetType();
 
-		public Object call(FieldModChangeRecorder fmcr, Object... args);
+		public Object call(FieldChangeRecorder fmcr, Object... args);
 
 	}
 
@@ -204,7 +204,7 @@ public abstract class Profile implements IProfile {
 	}
 
 	@Override
-	public Object callMethod(String method, FieldModChangeRecorder fmcr, Object... args) throws ProfileMethodException {
+	public Object callMethod(String method, FieldChangeRecorder fmcr, Object... args) throws ProfileMethodException {
 		assertHasMethod(method);
 		int argNum = getMethodArgNum(method);
 		if (argNum > 0 && args == null)

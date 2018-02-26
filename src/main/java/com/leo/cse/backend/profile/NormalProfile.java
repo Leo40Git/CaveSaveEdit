@@ -401,6 +401,36 @@ public class NormalProfile extends Profile {
 			e.printStackTrace();
 		}
 	}
+	
+	protected void makeFieldBool(String name, int ptr) {
+		try {
+			addField(name, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Boolean.class;
+				}
+
+				@Override
+				public boolean acceptsValue(Object value) {
+					return value instanceof Boolean;
+				}
+
+				@Override
+				public Object getValue(int index) {
+					byte flag = data[correctPointer(ptr)];
+					return (flag == 0 ? false : true);
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					byte flag = (byte) ((Boolean) value ? 1 : 0);
+					data[correctPointer(ptr)] = flag;
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+	}
 
 	protected void makeFieldBools(String name, int length, int off, int ptr) {
 		try {
