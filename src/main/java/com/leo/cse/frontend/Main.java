@@ -3,12 +3,8 @@ package com.leo.cse.frontend;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -40,7 +36,6 @@ import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
-import com.leo.cse.frontend.ui.SaveEditorPanel;
 
 public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
@@ -50,7 +45,6 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static final Version VERSION = new Version("3.4");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
-	public static final Color COLOR_BG = new Color(0, 0, 25);
 
 	public static final Supplier<Boolean> TRUE_SUPPLIER = new Supplier<Boolean>() {
 		public Boolean get() {
@@ -94,19 +88,19 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		if (reboot) {
 			window.dispose();
 			ProfileManager.removeListener(window);
-			ProfileManager.removeListener(SaveEditorPanel.panel);
+			//ProfileManager.removeListener(SaveEditorPanel.panel);
 			ProfileManager.unload();
 			ExeData.removeListener(window);
-			ExeData.removeListener(SaveEditorPanel.panel);
+			//ExeData.removeListener(SaveEditorPanel.panel);
 			ExeData.unload();
 			window = null;
-			SaveEditorPanel.panel = null;
+			//SaveEditorPanel.panel = null;
 			System.gc();
 			Main.main(new String[0]);
 		} else {
 			Config.setColor(Config.KEY_LINE_COLOR, lineColor);
 			Config.set(Config.KEY_ENCODING, ExeData.getEncoding());
-			SaveEditorPanel.panel.saveSettings();
+			//SaveEditorPanel.panel.saveSettings();
 			System.exit(0);
 		}
 	}
@@ -127,6 +121,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	private void initPanel() {
+		/*
 		SaveEditorPanel sep = new SaveEditorPanel();
 		add(sep);
 		addKeyListener(sep);
@@ -135,6 +130,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		addMouseWheelListener(sep);
 		ProfileManager.addListener(sep);
 		ExeData.addListener(sep);
+		*/
 		Dimension winSize = new Dimension(WINDOW_SIZE);
 		winSize.width += 32;
 		winSize.height += 48;
@@ -157,8 +153,9 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	public static void loadProfile(File file, boolean record) {
+		/*
 		if (SaveEditorPanel.panel != null)
-			SaveEditorPanel.panel.setLoading(true);
+			SaveEditorPanel.panel.setLoading(true);*/
 		window.repaint();
 		SwingUtilities.invokeLater(() -> {
 			if (Config.getBoolean(Config.KEY_AUTOLOAD_EXE, true)) {
@@ -244,56 +241,9 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	public static class LoadFrame extends JFrame {
-		private static final long serialVersionUID = 5562200728043308281L;
-
-		private String loadString = "Checking for updates...";
-
-		public void setLoadString(String loadString) {
-			this.loadString = loadString;
-		}
-
-		private class LoadFramePanel extends JPanel {
-			private static final long serialVersionUID = 191674646820485865L;
-
-			private Color trans;
-			private Dimension size;
-
-			public LoadFramePanel(Color trans, Dimension win) {
-				this.trans = trans;
-				this.size = win;
-			}
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				Graphics2D g2d = (Graphics2D) g;
-				g2d.setBackground(trans);
-				g2d.clearRect(0, 0, getWidth(), getHeight());
-				FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
-				g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				g2d.setColor(COLOR_BG);
-				g2d.fillRect(16, 16, size.width - 32, size.height - 32);
-				g2d.setColor(Color.white);
-				g2d.drawRect(16, 16, size.width - 32, size.height - 32);
-				g2d.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
-				FrontUtils.drawStringCentered(g2d, loadString, size.width / 2, size.height / 2, true, false);
-			}
-		}
-
-		public LoadFrame() {
-			final Dimension win = new Dimension(232, 112);
-			setIconImage(Resources.icon);
-			setPreferredSize(win);
-			setMaximumSize(win);
-			setMinimumSize(win);
-			setUndecorated(true);
-			final Color trans = new Color(0, 0, 0, 0);
-			setBackground(trans);
-			add(new LoadFramePanel(trans, win));
-			pack();
-			setLocationRelativeTo(null);
-			setVisible(true);
-			requestFocus();
-		}
+		private static final long serialVersionUID = 1L;
+		
+		// TODO Remake this
 	}
 
 	public static void resourceError(Throwable e) {
@@ -448,7 +398,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			loadFrame = updateCheck(false, false);
 		}
 		SwingUtilities.invokeLater(() -> {
-			loadFrame.setLoadString("Loading...");
+			//loadFrame.setLoadString("Loading...");
 			loadFrame.repaint();
 		});
 		lineColor = Config.getColor(Config.KEY_LINE_COLOR, Color.white);
