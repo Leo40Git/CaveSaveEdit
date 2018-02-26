@@ -71,6 +71,11 @@ public class PlusProfile extends NormalProfile {
 
 	@Override
 	protected int correctPointer(int ptr) {
+		// there are variables beyond the 6 save files (FIELD_BEAT_HELL),
+		// so if the pointer is higher than (SECTION_LENGTH * 6), it should
+		// be returned as-is
+		if (ptr > SECTION_LENGTH * 6)
+			return ptr;
 		return curSection * SECTION_LENGTH + ptr;
 	}
 
@@ -271,7 +276,7 @@ public class PlusProfile extends NormalProfile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void create() {
 		// create data
