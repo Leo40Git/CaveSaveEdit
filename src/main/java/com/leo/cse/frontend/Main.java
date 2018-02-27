@@ -18,6 +18,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
@@ -27,6 +29,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
@@ -49,6 +52,9 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static final Version VERSION = new Version("4.0");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
+
+	private static ExecutorService exeLoad;
+	private static ExeLoadFrame exeLoadFrame;
 
 	public static final Supplier<Boolean> TRUE_SUPPLIER = new Supplier<Boolean>() {
 		public Boolean get() {
@@ -123,7 +129,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		setBackground(new Color(0, 0, 0, 0));
 		*/
 	}
-	
+
 	// TODO REMOVE THIS TEST CODE!
 	private JPanel TEST_panel;
 
@@ -173,20 +179,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		SwingUtilities.invokeLater(() -> {
 			if (Config.getBoolean(Config.KEY_AUTOLOAD_EXE, true)) {
 				File newExe = new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
-				if (newExe.exists()) {
-					// unload existing exe
-					ExeData.unload();
-					// try to load exe
-					try {
-						ExeData.load(newExe);
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.err.println("EXE loading failed.");
-						JOptionPane.showMessageDialog(Main.window,
-								"An error occured while loading the executable:\n" + e, "Could not load executable!",
-								JOptionPane.ERROR_MESSAGE);
-					}
-				}
+				if (newExe.exists())
+					loadExe(newExe);
 			}
 			try {
 				ProfileManager.load(file);
@@ -205,6 +199,29 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				});
 			}
 		});
+	}
+
+	public static void loadExe(File exe) {
+		if (exeLoad == null)
+			exeLoad = Executors.newSingleThreadExecutor();
+		exeLoad.submit(() -> loadExeOnCurrentThread(exe));
+	}
+
+	public static void loadExeOnCurrentThread(File exe) {
+		String tname = Thread.currentThread().getName();
+		System.out.println("Starting EXE loading on thread " + tname);
+		// unload existing exe
+		ExeData.unload();
+		// try to load exe
+		try {
+			ExeData.load(exe);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("EXE loading failed.");
+			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
+					"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+		}
+		System.out.println("Finished EXE loading on thread " + tname);
 	}
 
 	public static void loadProfile(File file) {
@@ -253,7 +270,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		}
 	}
 
-	public static class LoadFrame extends JFrame {
+	public static class InitLoadFrame extends JFrame {
 
 		private static final long serialVersionUID = 1L;
 
@@ -263,7 +280,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			loadLabel.setText(loadString);
 		}
 
-		public LoadFrame() {
+		public InitLoadFrame() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setUndecorated(true);
 			final Dimension size = new Dimension(320, 120);
@@ -281,6 +298,75 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			pack();
 			setLocationRelativeTo(null);
 			setIconImage(Resources.icon);
+			setAlwaysOnTop(true);
+			setVisible(true);
+			requestFocus();
+		}
+
+	}
+
+	public static class ExeLoadFrame extends JFrame {
+
+		private static final long serialVersionUID = 1L;
+
+		private JLabel loadLabel;
+		private int loadProgress, loadTotal;
+		private JProgressBar loadProgressBar;
+		private JLabel subLabel;
+		private int subProgress, subTotal;
+		private JProgressBar subProgressBar;
+
+		public void setLoadString(String loadString) {
+			loadLabel.setText(loadString);
+		}
+
+		public void setLoadProgress(int progress, int total) {
+			loadProgress = progress;
+			loadTotal = total;
+			loadProgressBar.setValue(loadProgress);
+			loadProgressBar.setMaximum(loadTotal);
+		}
+
+		public void setSubString(String subString) {
+			subLabel.setText(subString);
+		}
+
+		public void setSubProgress(int progress, int total) {
+			subProgress = progress;
+			subTotal = total;
+			subProgressBar.setValue(subProgress);
+			subProgressBar.setMaximum(subTotal);
+		}
+
+		public ExeLoadFrame() {
+			Font labelFont;
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setUndecorated(true);
+			final Dimension size = new Dimension(480, 80);
+			setPreferredSize(size);
+			setMaximumSize(size);
+			setMinimumSize(size);
+			setResizable(false);
+			JPanel panel = new JPanel();
+			panel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			loadLabel = new JLabel("...");
+			loadLabel.setFont(labelFont = loadLabel.getFont().deriveFont(Font.PLAIN, 12));
+			panel.add(loadLabel);
+			loadProgressBar = new JProgressBar();
+			setLoadProgress(0, 1);
+			panel.add(loadProgressBar);
+			subLabel = new JLabel("...");
+			subLabel.setFont(labelFont);
+			panel.add(subLabel);
+			subProgressBar = new JProgressBar();
+			setSubProgress(0, 1);
+			panel.add(subProgressBar);
+			add(panel);
+			pack();
+			setLocationRelativeTo(null);
+			setIconImage(Resources.icon);
+			setAlwaysOnTop(true);
 			setVisible(true);
 			requestFocus();
 		}
@@ -296,8 +382,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		System.exit(1);
 	}
 
-	public static LoadFrame updateCheck(boolean disposeOfLoadFrame, boolean showUpToDate) {
-		LoadFrame loadFrame = new LoadFrame();
+	public static InitLoadFrame updateCheck(boolean disposeOfLoadFrame, boolean showUpToDate) {
+		InitLoadFrame loadFrame = new InitLoadFrame();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
 		System.out.println("Update check: starting");
 		try {
@@ -424,7 +510,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		} catch (Exception e) {
 			resourceError(e);
 		}
-		LoadFrame loadFrame;
+		InitLoadFrame loadFrame;
 		final String skipuc = "skipuc";
 		boolean skipucF = new File(System.getProperty("user.dir") + "/" + skipuc).exists();
 		boolean skipucR = Config.getBoolean(Config.KEY_SKIP_UPDATE_CHECK, false);
@@ -434,7 +520,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		}
 		if (skipucF) {
 			System.out.println("Update check: skip file detected, skipping");
-			loadFrame = new LoadFrame();
+			loadFrame = new InitLoadFrame();
 		} else {
 			loadFrame = updateCheck(false, false);
 		}
@@ -485,6 +571,10 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	@Override
 	public void onEvent(String event, String loadName, int loadId, int loadIdMax) {
+		if (exeLoadFrame == null)
+			exeLoadFrame = new ExeLoadFrame();
+		System.out.println("EVENT! " + event + "," + loadName + "," + loadId + "," + loadIdMax);
+		exeLoadFrame.setLoadProgress(loadId, loadIdMax);
 		boolean plusMode = ExeData.isPlusMode();
 		switch (event) {
 		case ExeData.EVENT_PRELOAD:
@@ -500,6 +590,19 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				} catch (Exception e) {
 					resourceError(e);
 				}
+			exeLoadFrame.setLoadString("Preparing to load...");
+			break;
+		case ExeData.EVENT_EXE_STRING:
+			exeLoadFrame.setLoadString("Reading game string no. " + loadId);
+			break;
+		case ExeData.EVENT_NPC_TBL:
+			exeLoadFrame.setLoadString("Reading " + loadName + " for entity " + loadId);
+			break;
+		case ExeData.EVENT_MAP_DATA:
+			exeLoadFrame.setLoadString("Reading data for map " + loadId);
+			break;
+		case ExeData.EVENT_MAP_INFO:
+			exeLoadFrame.setLoadString("Loading " + loadName + " for map " + loadId);
 			break;
 		case ExeData.EVENT_POSTLOAD:
 			try {
@@ -507,6 +610,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			exeLoadFrame.dispose();
+			exeLoadFrame = null;
 			break;
 		default:
 			break;
@@ -515,6 +620,18 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	@Override
 	public void onSubevent(String event, String loadName, int loadId, int loadIdMax) {
+		exeLoadFrame.setSubProgress(loadId, loadIdMax);
+		switch (event) {
+		case ExeData.SUBEVENT_IMAGE:
+			exeLoadFrame.setSubString("<html>Loading image:<br>" + loadName + "</html>");
+			break;
+		case ExeData.SUBEVENT_PXA:
+			exeLoadFrame.setSubString("<html>Loading PXA file:<br>" + loadName + "</html>");
+			break;
+		case ExeData.SUBEVENT_END:
+		default:
+			break;
+		}
 	}
 
 }

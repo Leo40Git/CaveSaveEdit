@@ -30,6 +30,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -350,6 +352,24 @@ public class FrontUtils {
 
 	public static String rect2Str(Rectangle r) {
 		return r.x + ":" + r.y + ":" + r.width + ":" + r.height;
+	}
+	
+	public static void shutdownExecutor(ExecutorService executor) {
+		try {
+		    System.out.println("attempt to shutdown executor");
+		    executor.shutdown();
+		    executor.awaitTermination(5, TimeUnit.SECONDS);
+		}
+		catch (InterruptedException e) {
+		    System.err.println("tasks interrupted");
+		}
+		finally {
+		    if (!executor.isTerminated()) {
+		        System.err.println("cancel non-finished tasks");
+		    }
+		    executor.shutdownNow();
+		    System.out.println("shutdown finished");
+		}
 	}
 
 }

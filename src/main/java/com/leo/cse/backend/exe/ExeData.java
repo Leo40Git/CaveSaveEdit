@@ -76,6 +76,16 @@ public class ExeData {
 
 	public static final String EVENT_EXE_STRING = "load.exestr";
 	public static final String EVENT_NPC_TBL = "load.npctbl";
+	public static final String LOADNAME_NPC_TBL_FLAGS = "entity flags";
+	public static final String LOADNAME_NPC_TBL_HEALTH = "amount of health health";
+	public static final String LOADNAME_NPC_TBL_TILESET = "tileset to use";
+	public static final String LOADNAME_NPC_TBL_DEATHSND = "death sound";
+	public static final String LOADNAME_NPC_TBL_HURTSND = "hurt sound";
+	public static final String LOADNAME_NPC_TBL_SIZE = "smoke & dropped health/missile size";
+	public static final String LOADNAME_NPC_TBL_EXP = "experience dropped on defeat";
+	public static final String LOADNAME_NPC_TBL_DAMAGE = "amount of damage";
+	public static final String LOADNAME_NPC_TBL_HITBOX = "hitbox";
+	public static final String LOADNAME_NPC_TBL_DISPLAYBOX = "display box";
 	public static final String EVENT_MAP_DATA = "load.map.data";
 	public static final String EVENT_MAP_INFO = "load.map.info";
 	public static final String LOADNAME_MAP_INFO_PXA = "tileset definition";
@@ -1079,6 +1089,7 @@ public class ExeData {
 		flagDat = new short[calculated_npcs];
 		for (int i = 0; i < flagDat.length; i++) {
 			flagDat[i] = dBuf.getShort();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_FLAGS, i, calculated_npcs - 1);
 		}
 
 		// read health section
@@ -1089,6 +1100,7 @@ public class ExeData {
 		healthDat = new short[calculated_npcs];
 		for (int i = 0; i < healthDat.length; i++) {
 			healthDat[i] = dBuf.getShort();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_HEALTH, i, calculated_npcs - 1);
 		}
 
 		// read tileset section
@@ -1096,28 +1108,44 @@ public class ExeData {
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		tilesetDat = dBuf.array();
+		tilesetDat = new byte[calculated_npcs];
+		for (int i = 0; i < tilesetDat.length; i++) {
+			tilesetDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_TILESET, i, calculated_npcs - 1);
+		}
 
 		// read death sound section
 		dBuf = ByteBuffer.allocate(calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		deathDat = dBuf.array();
+		deathDat = new byte[calculated_npcs];
+		for (int i = 0; i < deathDat.length; i++) {
+			deathDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DEATHSND, i, calculated_npcs - 1);
+		}
 
 		// read hurt sound section
 		dBuf = ByteBuffer.allocate(calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		hurtDat = dBuf.array();
+		hurtDat = new byte[calculated_npcs];
+		for (int i = 0; i < hurtDat.length; i++) {
+			hurtDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_HURTSND, i, calculated_npcs - 1);
+		}
 
 		// read size section
 		dBuf = ByteBuffer.allocate(calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		sizeDat = dBuf.array();
+		sizeDat = new byte[calculated_npcs];
+		for (int i = 0; i < sizeDat.length; i++) {
+			sizeDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_SIZE, i, calculated_npcs - 1);
+		}
 
 		// read experience section
 		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
@@ -1127,6 +1155,7 @@ public class ExeData {
 		expDat = new int[calculated_npcs];
 		for (int i = 0; i < expDat.length; i++) {
 			expDat[i] = dBuf.getInt();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_EXP, i, calculated_npcs - 1);
 		}
 
 		// read damage section
@@ -1137,21 +1166,34 @@ public class ExeData {
 		damageDat = new int[calculated_npcs];
 		for (int i = 0; i < damageDat.length; i++) {
 			damageDat[i] = dBuf.getInt();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DAMAGE, i, calculated_npcs - 1);
 		}
 
+		int npcId = 0;
 		// read hitbox section
 		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		hitboxDat = dBuf.array();
+		hitboxDat = new byte[4 * calculated_npcs];
+		for (int i = 0; i < hitboxDat.length; i++) {
+			hitboxDat[i] = dBuf.get();
+			if (i % 4 == 0)
+				notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_HITBOX, npcId++, calculated_npcs - 1);
+		}
 
+		npcId = 0;
 		// read display box section
 		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		displayDat = dBuf.array();
+		displayDat = new byte[4 * calculated_npcs];
+		for (int i = 0; i < displayDat.length; i++) {
+			displayDat[i] = dBuf.get();
+			if (i % 4 == 0)
+				notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DISPLAYBOX, npcId++, calculated_npcs);
+		}
 		// finished reading file
 		inChan.close();
 		inStream.close();
