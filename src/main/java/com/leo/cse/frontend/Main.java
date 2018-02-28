@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -24,7 +23,7 @@ import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -43,6 +42,8 @@ import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
+import com.leo.cse.frontend.ui.MenuBarHandler;
+import com.leo.cse.frontend.ui.panels.CorePanel;
 
 public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
@@ -68,6 +69,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	};
 
 	public static Main window;
+	private static MenuBarHandler windowMBH;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
@@ -130,44 +132,22 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		*/
 	}
 
-	// TODO REMOVE THIS TEST CODE!
-	private JPanel TEST_panel;
-
 	private void initPanel() {
 		/*
 		SaveEditorPanel sep = new SaveEditorPanel();
 		add(sep);
-		addKeyListener(sep);
-		addMouseListener(sep);
-		addMouseMotionListener(sep);
-		addMouseWheelListener(sep);
 		ProfileManager.addListener(sep);
 		ExeData.addListener(sep);
 		*/
-		// TODO REMOVE THIS TEST CODE!
-		TEST_panel = new JPanel();
-		TEST_addImagesToPanel(Resources.editorTabIcons);
-		TEST_addImagesToPanel(Resources.icons);
-		TEST_addImagesToPanel(Resources.nikuNumbers);
-		TEST_addImageToPanel(Resources.nikuIcon);
-		TEST_addImageToPanel(Resources.nikuPunc);
-		add(TEST_panel);
+		windowMBH = new MenuBarHandler(this);
+		CorePanel cp = new CorePanel();
+		add(cp);
 		setMaximumSize(WINDOW_SIZE);
 		setMinimumSize(WINDOW_SIZE);
 		setPreferredSize(WINDOW_SIZE);
 		pack();
 		setResizable(false);
 		setLocationRelativeTo(null);
-	}
-
-	// TODO REMOVE THESE TEST METHODS!
-	private void TEST_addImageToPanel(BufferedImage img) {
-		TEST_panel.add(new JLabel(new ImageIcon(img)));
-	}
-
-	private void TEST_addImagesToPanel(BufferedImage[] imgs) {
-		for (int i = 0; i < imgs.length; i++)
-			TEST_addImageToPanel(imgs[i]);
 	}
 
 	public static void loadProfile(File file, boolean record) {
@@ -209,6 +189,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	public static void loadExeOnCurrentThread(File exe) {
 		String tname = Thread.currentThread().getName();
+		window.setEnabled(false);
 		System.out.println("Starting EXE loading on thread " + tname);
 		// unload existing exe
 		ExeData.unload();
@@ -221,6 +202,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
 					"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 		}
+		window.setEnabled(true);
+		window.requestFocus();
 		System.out.println("Finished EXE loading on thread " + tname);
 	}
 
@@ -270,7 +253,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		}
 	}
 
-	public static class InitLoadFrame extends JFrame {
+	public static class InitLoadFrame extends JDialog {
 
 		private static final long serialVersionUID = 1L;
 
@@ -281,7 +264,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		}
 
 		public InitLoadFrame() {
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			setUndecorated(true);
 			final Dimension size = new Dimension(320, 120);
 			setPreferredSize(size);
@@ -298,14 +281,13 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			pack();
 			setLocationRelativeTo(null);
 			setIconImage(Resources.icon);
-			setAlwaysOnTop(true);
 			setVisible(true);
 			requestFocus();
 		}
 
 	}
 
-	public static class ExeLoadFrame extends JFrame {
+	public static class ExeLoadFrame extends JDialog {
 
 		private static final long serialVersionUID = 1L;
 
@@ -340,7 +322,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 		public ExeLoadFrame() {
 			Font labelFont;
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			setUndecorated(true);
 			final Dimension size = new Dimension(480, 80);
 			setPreferredSize(size);
@@ -366,7 +348,6 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			pack();
 			setLocationRelativeTo(null);
 			setIconImage(Resources.icon);
-			setAlwaysOnTop(true);
 			setVisible(true);
 			requestFocus();
 		}
@@ -543,23 +524,12 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			loadFrame.dispose();
 			window.setVisible(true);
 			window.requestFocus();
+			/*
 			SwingUtilities.invokeLater(() -> {
 				File p = new File(System.getProperty("user.dir") + "/Profile.dat");
 				if (p.exists())
 					loadProfile(p, false);
 			});
-			/*
-			Thread rrThread = new Thread(() -> {
-				while (true) {
-					window.repaint();
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}, "RepaintRequest");
-			rrThread.start();
 			*/
 		});
 	}
@@ -567,6 +537,14 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	@Override
 	public void onChange(String field, int id, Object oldValue, Object newValue) {
 		setTitle(this);
+		switch (field) {
+		case ProfileManager.EVENT_LOAD:
+			windowMBH.setProfileLoaded(true);
+			break;
+		case ProfileManager.EVENT_UNLOAD:
+			windowMBH.setProfileLoaded(false);
+			break;
+		}
 	}
 
 	@Override
@@ -578,6 +556,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		boolean plusMode = ExeData.isPlusMode();
 		switch (event) {
 		case ExeData.EVENT_PRELOAD:
+			windowMBH.setPlusMode(plusMode);
 			if (plusMode)
 				try {
 					MCI.readPlus();
@@ -612,6 +591,10 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			}
 			exeLoadFrame.dispose();
 			exeLoadFrame = null;
+			windowMBH.setExeLoaded(true);
+			break;
+		case ExeData.EVENT_UNLOAD:
+			windowMBH.setExeLoaded(false);
 			break;
 		default:
 			break;

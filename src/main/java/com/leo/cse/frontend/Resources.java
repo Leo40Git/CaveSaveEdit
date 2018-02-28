@@ -4,8 +4,11 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class Resources {
 
@@ -48,7 +51,7 @@ public class Resources {
 		editorTabIcons = new BufferedImage[7];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 0, 16, 16);
-		icons = new BufferedImage[13];
+		icons = new BufferedImage[14];
 		int tbx = 0, tby = 0;
 		for (int i = 0; i < icons.length; i++) {
 			if (i % 10 == 0) {
@@ -63,6 +66,19 @@ public class Resources {
 			nikuNumbers[i] = ui.getSubimage(i * 16, 48, 16, 16);
 		nikuIcon = ui.getSubimage(0, 64, 14, 14);
 		nikuPunc = ui.getSubimage(14, 64, 62, 14);
+	}
+	
+	private static Map<BufferedImage, ImageIcon> iconCache;
+	
+	public static ImageIcon createIconForImage(BufferedImage image) {
+		if (iconCache == null)
+			iconCache = new HashMap<>();
+		else
+			if (iconCache.containsKey(image))
+				return iconCache.get(image);
+		ImageIcon icon = new ImageIcon(image);
+		iconCache.put(image, icon);
+		return icon;
 	}
 
 }
