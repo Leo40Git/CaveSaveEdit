@@ -29,6 +29,12 @@ public class ProfileManager {
 
 	/**
 	 * Used to notify {@link ProfileListener}s of the current profile being
+	 * modified. Basically a generic "catch-all" event for when something
+	 * unspecified happens.
+	 */
+	public static final String EVENT_DATA_MODIFIED = "event.data_mod";
+	/**
+	 * Used to notify {@link ProfileListener}s of the current profile being
 	 * saved.
 	 */
 	public static final String EVENT_SAVE = "event.save";

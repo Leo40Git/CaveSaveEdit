@@ -26,12 +26,19 @@ public class PlusProfile extends NormalProfile {
 	 */
 	public static final String FIELD_MODIFY_DATE = "modify_date";
 
+	/**
+	 * Difficulty: 0-1 for Original, 2-3 for Easy, 4-5 for Hard, wraps around (6 =
+	 * 0, 7 = 1, etc.)
+	 */
 	public static final String FIELD_DIFFICULTY = "difficulty";
 
+	/**
+	 * "Beat Bloodstained Sanctuary" flag. Unlocks Sanctuary Time Attack.
+	 */
 	public static final String FIELD_BEAT_HELL = "beat_hell";
 
 	/**
-	 * Clones one file to another.<br/>
+	 * Clones one file to another.
 	 * 
 	 * @param A0
 	 *            {@link Integer}, slot to duplicate.
@@ -41,7 +48,7 @@ public class PlusProfile extends NormalProfile {
 	public static final String METHOD_CLONE_FILE = "file.clone";
 
 	/**
-	 * Creates a new file.<br/>
+	 * Creates a new file.
 	 * 
 	 * @param A0
 	 *            {@link Integer}, slot to initialize.
@@ -49,24 +56,59 @@ public class PlusProfile extends NormalProfile {
 	public static final String METHOD_NEW_FILE = "file.new";
 
 	/**
-	 * Deletes a file.<br/>
+	 * Deletes a file.
 	 * 
 	 * @param A0
 	 *            {@link Integer}, slot to clear.
 	 */
 	public static final String METHOD_DELETE_FILE = "file.delete";
 
+	/**
+	 * Checks if a file exists.
+	 * 
+	 * @param A0
+	 *            {@link Integer}, slot to check.
+	 * @return {@link Boolean}, <code>true</code> if slot is filled,
+	 *         <code>false</code> otherwise
+	 */
 	public static final String METHOD_FILE_EXISTS = "file.exists";
 
+	/**
+	 * Gets the currently active file.
+	 * 
+	 * @return {@link Integer}, currently selected slot.
+	 */
 	public static final String METHOD_GET_ACTIVE_FILE = "file.active.get";
 
+	/**
+	 * Sets the currently active file.
+	 * 
+	 * @param A0
+	 *            {@link Integer}, slot to select.
+	 */
 	public static final String METHOD_SET_ACTIVE_FILE = "file.active.set";
 
+	/**
+	 * Pushes a new active file.
+	 * 
+	 * @param A0
+	 *            {@link Integer}, slot to select.
+	 */
 	public static final String METHOD_PUSH_ACTIVE_FILE = "file.active.push";
 
+	/**
+	 * Pops an older active file.
+	 */
 	public static final String METHOD_POP_ACTIVE_FILE = "file.active.pop";
 
+	/**
+	 * Currently active file.
+	 */
 	private int curSection = -1;
+	/**
+	 * Active file queue for {@link #METHOD_PUSH_ACTIVE_FILE} and
+	 * {@link #METHOD_POP_ACTIVE_FILE}.
+	 */
 	private List<Integer> secQueue;
 
 	@Override
@@ -109,11 +151,11 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int srcSec = (int) args[0];
 					int dstSec = (int) args[1];
 					System.arraycopy(data, srcSec * SECTION_LENGTH, data, dstSec * SECTION_LENGTH, SECTION_LENGTH);
-					fmcr.addChange(EVENT_DATA_MODIFIED, -1, null, null);
+					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
 
@@ -132,13 +174,13 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					ByteUtils.writeString(newData, 0, header);
 					ByteUtils.writeString(newData, 0x218, flagH);
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
-					fmcr.addChange(EVENT_DATA_MODIFIED, -1, null, null);
+					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
 
@@ -156,11 +198,11 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
-					fmcr.addChange(EVENT_DATA_MODIFIED, -1, null, null);
+					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
 
@@ -303,9 +345,9 @@ public class PlusProfile extends NormalProfile {
 	public void save(File file) throws IOException {
 		if (data == null)
 			return;
-		// back up file just in case
 		File backup = null;
 		if (file.exists()) {
+			// back up file just in case
 			backup = new File(file.getAbsolutePath() + ".bkp");
 			if (backup.exists()) {
 				backup.delete();
@@ -316,21 +358,26 @@ public class PlusProfile extends NormalProfile {
 				fis.read(data);
 				fos.write(data);
 			}
-		} else {
+		} else
+			// create file to write to
 			file.createNewFile();
-		}
 		// start writing
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (backup != null) {
-				System.err.println("Error while saving profile! Recovering backup.");
+				// attempt to recover
+				System.err.println("Error while saving profile! Attempting to recover backup.");
+				e.printStackTrace();
 				try (FileOutputStream fos = new FileOutputStream(file);
 						FileInputStream fis = new FileInputStream(backup)) {
 					byte[] data = new byte[FILE_LENGTH];
 					fis.read(data);
 					fos.write(data);
+				} catch (Exception e2) {
+					System.err.println("Error while recovering backup!");
+					e2.printStackTrace();
 				}
 			}
 		}

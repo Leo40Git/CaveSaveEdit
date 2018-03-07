@@ -9,7 +9,6 @@ import com.leo.cse.backend.ByteUtils;
 
 public class NormalProfile extends Profile {
 
-	public static final String EVENT_DATA_MODIFIED = "data.modified";
 	/**
 	 * Map field.
 	 */
@@ -114,12 +113,51 @@ public class NormalProfile extends Profile {
 	 * Amount of cash "field". A field for this doesn't actually exist.
 	 */
 	public static final String FIELD_CASH = "cash";
-
+	/**
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
+	 * EQ+ variables.
+	 */
 	public static final String FIELD_EQP_VARIABLES = "eqp.variables";
-
+	/**
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
+	 * EQ+ "true" modifiers.
+	 */
 	public static final String FIELD_EQP_MODS_TRUE = "eqp.mods.true";
-
+	/**
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
+	 * EQ+ "false" modifiers.
+	 */
 	public static final String FIELD_EQP_MODS_FALSE = "eqp.mods.false";
+	
+	private static int getFieldInt(String field) {
+		Object vObj = null;
+		try {
+			vObj = ProfileManager.getField(field);
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+		return (Integer) vObj;
+	}
+
+	/**
+	 * Gets the current map.
+	 * 
+	 * @return map
+	 * @see #FIELD_MAP
+	 */
+	public static int getMap() {
+		return getFieldInt(FIELD_MAP);
+	}
+	
+	/**
+	 * Gets the currently playing song.
+	 * 
+	 * @return song
+	 * @see #FIELD_SONG
+	 */
+	public static int getSong() {
+		return getFieldInt(FIELD_SONG);
+	}
 
 	/**
 	 * The expected file length.
@@ -185,9 +223,9 @@ public class NormalProfile extends Profile {
 	public void save(File file) throws IOException {
 		if (data == null)
 			return;
-		// back up file just in case
 		File backup = null;
 		if (file.exists()) {
+			// back up file just in case
 			backup = new File(file.getAbsolutePath() + ".bkp");
 			if (backup.exists()) {
 				backup.delete();
@@ -198,21 +236,26 @@ public class NormalProfile extends Profile {
 				fis.read(data);
 				fos.write(data);
 			}
-		} else {
+		} else
+			// create file to write to
 			file.createNewFile();
-		}
 		// start writing
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (backup != null) {
-				System.err.println("Error while saving profile! Recovering backup.");
+				// attempt to recover
+				System.err.println("Error while saving profile! Attempting to recover backup.");
+				e.printStackTrace();
 				try (FileOutputStream fos = new FileOutputStream(file);
 						FileInputStream fis = new FileInputStream(backup)) {
 					byte[] data = new byte[FILE_LENGTH];
 					fis.read(data);
 					fos.write(data);
+				} catch (Exception e2) {
+					System.err.println("Error while recovering backup!");
+					e2.printStackTrace();
 				}
 			}
 		}
@@ -401,7 +444,7 @@ public class NormalProfile extends Profile {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void makeFieldBool(String name, int ptr) {
 		try {
 			addField(name, new ProfileField() {
