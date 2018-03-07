@@ -19,5 +19,5 @@ This editor only works with vanilla profiles, meaning that any mod with custom p
 You _can_ edit save files with modified extensions, just change the file filter on the "open profile" window to "All files" and you're good.
 # Credits
 - **Noxid ([@taedixon](https://github.com/taedixon)):** Executable related code (classes in `com.leo.cse.backend.exe`), taken with~~out~~ permission from **[Booster's Lab](https://github.com/taedixon/boosters-lab)**.
-- **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites (`ui.png` and `shadow.png`) 
+- **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites (`ui.png`) _Soon to be removed!_
 - **Carrotlord:** StrTools class (`com.leo.cse.backend.StrTools`)
