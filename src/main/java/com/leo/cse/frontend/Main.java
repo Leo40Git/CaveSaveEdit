@@ -125,7 +125,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
-		setIconImage(Resources.icon);
+		setIconImage(Resources.appIcon);
 		/*
 		setUndecorated(true);
 		setBackground(new Color(0, 0, 0, 0));
@@ -280,7 +280,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			add(loadLabel);
 			pack();
 			setLocationRelativeTo(null);
-			setIconImage(Resources.icon);
+			setIconImage(Resources.appIcon);
 			setVisible(true);
 			requestFocus();
 		}
@@ -347,7 +347,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			add(panel);
 			pack();
 			setLocationRelativeTo(null);
-			setIconImage(Resources.icon);
+			setIconImage(Resources.appIcon);
 			setVisible(true);
 			requestFocus();
 		}
