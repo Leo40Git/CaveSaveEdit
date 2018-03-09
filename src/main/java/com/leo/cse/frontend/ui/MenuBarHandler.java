@@ -3,24 +3,26 @@ package com.leo.cse.frontend.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.PlusProfile;
-import com.leo.cse.backend.profile.Profile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
+import com.leo.cse.frontend.Config;
+import com.leo.cse.frontend.FrontUtils;
+import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
@@ -42,7 +44,8 @@ public class MenuBarHandler implements ActionListener {
 	public static final String ACTION_FILE_ABOUT = "file.about";
 	public static final String ACTION_FILE_QUIT = "file.quit";
 	// ---------------
-	public static final String ACTION_FILE_GEN_PROF_MAP = "file.generate_profile_map";
+	// public static final String ACTION_FILE_GEN_PROF_MAP =
+	// "file.generate_profile_map";
 
 	private boolean plusMode;
 
@@ -59,7 +62,7 @@ public class MenuBarHandler implements ActionListener {
 		item.setActionCommand(actionCmd);
 	}
 
-	private JMenuItem mFile_ChangeFile, mFile_UnloadProfile, mFile_RunExe, mFile_UnloadExe, mFile_Save, mFile_SaveAs;
+	private JMenuItem mFile_ChangeSlot, mFile_UnloadProfile, mFile_RunExe, mFile_UnloadExe, mFile_Save, mFile_SaveAs;
 
 	private void addFileMenu(JMenuBar mb) {
 		JMenu mFile = new JMenu("File");
@@ -74,7 +77,7 @@ public class MenuBarHandler implements ActionListener {
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK));
 		mFileItem.setIcon(Resources.getIcon(Resources.Icon.LOAD_PROFILE));
 		mFile.add(mFileItem);
-		mFile_ChangeFile = mFileItem = new JMenuItem("Change Slot");
+		mFile_ChangeSlot = mFileItem = new JMenuItem("Change Slot");
 		setAction(mFileItem, ACTION_FILE_CHANGE_SLOT);
 		mFileItem.setIcon(Resources.getIcon(Resources.Icon.PLUS_CHANGE_SLOT));
 		mFileItem.setEnabled(false);
@@ -85,6 +88,9 @@ public class MenuBarHandler implements ActionListener {
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile.addSeparator();
+
+		// ---------------
+
 		mFileItem = new JMenuItem("Load Game/Mod");
 		setAction(mFileItem, ACTION_FILE_LOAD_EXE);
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
@@ -101,6 +107,9 @@ public class MenuBarHandler implements ActionListener {
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile.addSeparator();
+
+		// ---------------
+
 		mFile_Save = mFileItem = new JMenuItem("Save");
 		setAction(mFileItem, ACTION_FILE_SAVE);
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK));
@@ -114,6 +123,9 @@ public class MenuBarHandler implements ActionListener {
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile.addSeparator();
+
+		// ---------------
+
 		mFileItem = new JMenuItem("Settings");
 		setAction(mFileItem, ACTION_FILE_SETTINGS);
 		mFileItem.setIcon(Resources.getIcon(Resources.Icon.SETTINGS));
@@ -126,16 +138,21 @@ public class MenuBarHandler implements ActionListener {
 		setAction(mFileItem, ACTION_FILE_QUIT);
 		mFileItem.setIcon(Resources.getIcon(Resources.Icon.QUIT));
 		mFile.add(mFileItem);
+		/*
 		mFile.addSeparator();
+		
+		// ---------------
+		
 		mFileItem = new JMenuItem("Generate profile map");
 		setAction(mFileItem, ACTION_FILE_GEN_PROF_MAP);
 		mFileItem.setIcon(Resources.getIcon(Resources.Icon.EMPTY));
 		mFile.add(mFileItem);
+		*/
 		mb.add(mFile);
 	}
 
 	public void setProfileLoaded(boolean profileLoaded) {
-		mFile_ChangeFile.setEnabled(profileLoaded && plusMode);
+		mFile_ChangeSlot.setEnabled(profileLoaded && plusMode);
 		mFile_UnloadProfile.setEnabled(profileLoaded);
 		mFile_Save.setEnabled(profileLoaded);
 		mFile_SaveAs.setEnabled(profileLoaded);
@@ -148,22 +165,189 @@ public class MenuBarHandler implements ActionListener {
 
 	public void setPlusMode(boolean plusMode) {
 		this.plusMode = plusMode;
-		mFile_ChangeFile.setEnabled(plusMode);
+		mFile_ChangeSlot.setEnabled(plusMode);
+	}
+
+	private static final FileFilter[] MOD_FILE_FILTERS;
+
+	static {
+		MOD_FILE_FILTERS = new FileFilter[2];
+		MOD_FILE_FILTERS[0] = new FileNameExtensionFilter("Executables", "exe");
+		MOD_FILE_FILTERS[1] = new FileNameExtensionFilter("CS+ stage.tbl", "tbl");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		File dir;
+		int returnVal;
 		switch (e.getActionCommand()) {
 		// File Menu
+		case ACTION_FILE_NEW_PROFILE:
+			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
+				int sel = JOptionPane.showConfirmDialog(Main.window,
+						"Are you sure you want to create a new profile?\nUnsaved changes will be lost!",
+						"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (sel == JOptionPane.CANCEL_OPTION)
+					break;
+			}
+			ProfileManager.create();
+			break;
+		case ACTION_FILE_LOAD_PROFILE:
+			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
+				int sel = JOptionPane.showConfirmDialog(Main.window,
+						"Are you sure you want to load a new profile?\nUnsaved changes will be lost!",
+						"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (sel == JOptionPane.CANCEL_OPTION)
+					break;
+			}
+			dir = new File(Config.get(Config.KEY_LAST_PROFILE, System.getProperty("user.dir")));
+			if (!dir.exists())
+				dir = new File(System.getProperty("user.dir"));
+			returnVal = FrontUtils.openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
+					dir, true, false);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				Main.loadProfile(FrontUtils.getSelectedFile());
+			}
+			break;
+		case ACTION_FILE_CHANGE_SLOT:
+			// TODO Create change slot dialog
+			break;
+		case ACTION_FILE_UNLOAD_PROFILE:
+			if (ProfileManager.isLoaded() && ProfileManager.isModified()) {
+				int sel = JOptionPane.showConfirmDialog(Main.window,
+						"Are you sure you want to unload the profile?\nUnsaved changes will be lost!",
+						"Unsaved changes detected", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (sel == JOptionPane.CANCEL_OPTION)
+					break;
+			}
+			ProfileManager.unload();
+			break;
+		// ---------------
+		case ACTION_FILE_LOAD_EXE:
+			int type = 0;
+			dir = new File(Config.get(Config.KEY_LAST_MOD, System.getProperty("user.dir")));
+			if (!dir.exists())
+				dir = new File(System.getProperty("user.dir"));
+			if (dir.getAbsolutePath().endsWith(".tbl"))
+				type = 1;
+			returnVal = FrontUtils.openFileChooser("Open game/mod", MOD_FILE_FILTERS, type, dir, false, false);
+			if (returnVal == JFileChooser.APPROVE_OPTION)
+				Main.loadExe(FrontUtils.getSelectedFile());
+			break;
+		case ACTION_FILE_RUN_EXE:
+			if (ExeData.isPlusMode()) {
+				// Launch CS+ via Steam
+				String path = System.getenv("programfiles(x86)");
+				if (path == null) {
+					path = System.getenv("programfiles");
+				}
+				try {
+					Runtime.getRuntime().exec(path + "/Steam/Steam.exe -applaunch 200900");
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(Main.window,
+							"Could not run game! The following exception occured:\n" + ex, "Could not run game",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				// Freeware Cave Story, just run the exe
+				try {
+					Runtime.getRuntime().exec(ExeData.getBase().getAbsolutePath());
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(Main.window,
+							"Could not run game! The following exception occured:\n" + ex, "Could not run game",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			break;
+		case ACTION_FILE_UNLOAD_EXE:
+			ExeData.unload();
+			break;
+		// ---------------
+		case ACTION_FILE_SAVE:
+			if (!canSave())
+				break;
+			if (ProfileManager.getLoadedFile() != null) {
+				setSavedFlag();
+				try {
+					ProfileManager.save();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
+							"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
+				}
+				break;
+			}
+		// fallthrough to ACTION_FILE_SAVE_AS ("Save As...")
+		case ACTION_FILE_SAVE_AS:
+			if (!canSave())
+				return;
+			returnVal = FrontUtils.openFileChooser("Save profile", new FileNameExtensionFilter("Profile Files", "dat"),
+					new File(Config.get(Config.KEY_LAST_PROFILE, System.getProperty("user.dir"))), false, true);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = FrontUtils.getSelectedFile();
+				if (file.exists()) {
+					int confirmVal = JOptionPane.showConfirmDialog(Main.window,
+							"Are you sure you want to overwrite this file?", "Overwrite confirmation",
+							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+					if (confirmVal != JOptionPane.YES_OPTION)
+						return;
+				}
+				setSavedFlag();
+				try {
+					ProfileManager.save(file);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
+							"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
+					return;
+				} finally {
+					Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
+				}
+			}
+			break;
+		// ---------------
+		case ACTION_FILE_SETTINGS:
+			// TODO Create settings dialog
+			break;
+		case ACTION_FILE_ABOUT:
+			// TODO Create about dialog
+			break;
+		case ACTION_FILE_QUIT:
+			Main.close();
+			break;
+		/*
+		// ---------------
 		case ACTION_FILE_GEN_PROF_MAP:
 			generateProfileMap(NormalProfile.class, new File("normal.pmp"));
 			generateProfileMap(PlusProfile.class, new File("plus.pmp"));
 			break;
+		*/
 		default:
 			break;
 		}
 	}
 
+	private void setSavedFlag() {
+		// force save flag to be on
+		try {
+			ProfileManager.setField(NormalProfile.FIELD_FLAGS, MCI.getInteger("Flag.SaveID", 431), true);
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private boolean canSave() {
+		if (!ProfileManager.isLoaded()) {
+			JOptionPane.showMessageDialog(Main.window, "There is no profile to save!\nPlease load a profile.",
+					"No profile to save", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
+
+	/*
 	private void generateProfileMap(Class<? extends Profile> classToMap, File output) {
 		ProfileManager.unload();
 		ProfileManager.setClass(classToMap.getName());
@@ -198,5 +382,6 @@ public class MenuBarHandler implements ActionListener {
 						+ output.getAbsolutePath(),
 				"Profile map generation successful!", JOptionPane.INFORMATION_MESSAGE);
 	}
+	*/
 
 }

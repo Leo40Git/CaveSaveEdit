@@ -173,7 +173,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			} finally {
 				System.out.println("loaded profile " + ProfileManager.getLoadedFile());
 				if (record)
-					Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
+					Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
 				SwingUtilities.invokeLater(() -> {
 					window.repaint();
 				});
@@ -551,7 +551,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public void onEvent(String event, String loadName, int loadId, int loadIdMax) {
 		if (exeLoadFrame == null)
 			exeLoadFrame = new ExeLoadFrame();
-		System.out.println("EVENT! " + event + "," + loadName + "," + loadId + "," + loadIdMax);
+		// System.out.println("EVENT! " + event + "," + loadName + "," + loadId + "," + loadIdMax);
 		exeLoadFrame.setLoadProgress(loadId, loadIdMax);
 		boolean plusMode = ExeData.isPlusMode();
 		switch (event) {
@@ -594,6 +594,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			windowMBH.setExeLoaded(true);
 			break;
 		case ExeData.EVENT_UNLOAD:
+			exeLoadFrame.dispose();
+			exeLoadFrame = null;
 			windowMBH.setExeLoaded(false);
 			break;
 		default:

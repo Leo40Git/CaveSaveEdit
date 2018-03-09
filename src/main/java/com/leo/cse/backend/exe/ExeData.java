@@ -142,17 +142,19 @@ public class ExeData {
 		ExeData.encoding = encoding;
 	}
 
+	private static int rsrcPtr;
+
 	/**
 	 * Base pointer for the ".rdata" segment in the executable. Used to read
 	 * {@linkplain #exeStrings the executable strings}.
 	 */
 	private static int rdataPtr;
 
-	// --------
-	// Pointers
-	// --------
-	// ...well, technically not actual pointers, but file positions
-	// Relative to rdataPtr!
+	// -------------
+	// Data Pointers
+	// -------------
+
+	// --!-- RELATIVE TO rdataPtr! --!--
 	/**
 	 * Pointer to file name for "ArmsItem.tsc".
 	 */
@@ -702,6 +704,7 @@ public class ExeData {
 		plusMode = false;
 		try {
 			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
+			locateSegments();
 			loadExeStrings();
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
@@ -902,18 +905,8 @@ public class ExeData {
 		}
 	}
 
-	/**
-	 * Loads strings from the executable.
-	 * 
-	 * @throws IOException
-	 *             if an I/O error occurs.
-	 */
-	private static void loadExeStrings() throws IOException {
-		String name = base.getName();
-		String ext = name.substring(name.length() - 3, name.length());
-		if (!"exe".equals(ext))
-			throw new IOException("Base file is not an executable!");
-		// locate .rdata segment
+	private static void locateSegments() throws IOException {
+		// setup I/O stuff
 		FileInputStream inStream;
 		FileChannel inChan;
 		inStream = new FileInputStream(base);
@@ -931,10 +924,9 @@ public class ExeData {
 		uBuf.flip();
 		int numSection = uBuf.getShort();
 		// read each segment
-		// find the .rdata segment
 		Vector<ByteBuffer> sections = new Vector<>();
 		inChan.position(0x208);
-		int rdataSec = -1;
+		int rdataSec = -1, rsrcSec = -1;
 		for (int i = 0; i < numSection; i++) {
 			ByteBuffer nuBuf = ByteBuffer.allocate(0x28);
 			nuBuf.order(ByteOrder.nativeOrder());
@@ -944,17 +936,42 @@ public class ExeData {
 			String segStr = new String(nuBuf.array());
 			if (segStr.contains(".rdata"))
 				rdataSec = i;
+			else if (segStr.contains(".rsrc"))
+				rsrcSec = i;
 		}
 		ExeSec[] headers = new ExeSec[sections.size()];
 		for (int i = 0; i < sections.size(); i++) {
 			headers[i] = new ExeSec(sections.get(i), inChan);
 		}
-		if (rdataSec == -1) {
-			inStream.close();
+		inStream.close();
+		if (rdataSec == -1)
 			throw new IOException("Could not find .rdata segment!");
-		}
+		if (rsrcSec == -1)
+			throw new IOException("Could not find .rsrc segment!");
 		rdataPtr = headers[rdataSec].getPos();
+		rsrcPtr = headers[rsrcSec].getPos();
 		System.out.println("rdataPtr=0x" + Integer.toHexString(rdataPtr).toUpperCase());
+		System.out.println("rsrcPtr=0x" + Integer.toHexString(rsrcPtr).toUpperCase());
+	}
+
+	/**
+	 * Loads strings from the executable.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void loadExeStrings() throws IOException {
+		String name = base.getName();
+		String ext = name.substring(name.length() - 3, name.length());
+		if (!"exe".equals(ext))
+			throw new IOException("Base file is not an executable!");
+		// setup I/O stuff
+		FileInputStream inStream;
+		FileChannel inChan;
+		inStream = new FileInputStream(base);
+		inChan = inStream.getChannel();
+		ByteBuffer uBuf = ByteBuffer.allocate(2);
+		uBuf.order(ByteOrder.LITTLE_ENDIAN);
 		// read the text
 		exeStrings = new String[STRING_POINTERS.length];
 		byte[] buffer = new byte[0x10];
