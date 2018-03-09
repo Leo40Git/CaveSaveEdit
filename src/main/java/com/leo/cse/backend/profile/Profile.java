@@ -2,7 +2,10 @@ package com.leo.cse.backend.profile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
@@ -48,7 +51,7 @@ public abstract class Profile {
 	protected File loadedFile;
 	protected String header;
 	protected String flagH;
-	
+
 	/**
 	 * Creates a new blank profile.
 	 */
@@ -122,11 +125,15 @@ public abstract class Profile {
 	}
 
 	protected Map<String, ProfileField> fields;
+	protected List<String> fieldNames;
 	protected Map<String, ProfileMethod> methods;
+	protected List<String> methodNames;
 
 	protected Profile() {
 		fields = new HashMap<>();
+		fieldNames = new LinkedList<>();
 		methods = new HashMap<>();
+		methodNames = new LinkedList<>();
 	}
 
 	protected void addField(String fieldName, ProfileField field) throws ProfileFieldException {
@@ -139,6 +146,7 @@ public abstract class Profile {
 		if (field.getType() == null)
 			throw new ProfileFieldException("field.getType() == null!");
 		fields.put(fieldName, field);
+		fieldNames.add(fieldName);
 	}
 
 	protected void addMethod(String methodName, ProfileMethod method) throws ProfileMethodException {
@@ -149,6 +157,11 @@ public abstract class Profile {
 		if (method == null)
 			throw new ProfileMethodException("method == null!");
 		methods.put(methodName, method);
+		methodNames.add(methodName);
+	}
+
+	public List<String> getAllFields() {
+		return Collections.unmodifiableList(fieldNames);
 	}
 
 	/**
@@ -296,6 +309,10 @@ public abstract class Profile {
 			if (index < fieldObj.getMinumumIndex() || index > fieldObj.getMaximumIndex())
 				throw new ProfileFieldException("Index " + index + " is out of bounds for field " + field + "!");
 		fieldObj.setValue(index, value);
+	}
+
+	public List<String> getAllMethods() {
+		return Collections.unmodifiableList(methodNames);
 	}
 
 	public boolean hasMethod(String method) throws ProfileMethodException {

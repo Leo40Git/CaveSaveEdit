@@ -599,6 +599,12 @@ public class ProfileManager {
 			return;
 		impl.setFlagHeader(flagH);
 	}
+	
+	public static List<String> getAllFields() {
+		if (impl == null)
+			return null;
+		return impl.getAllFields();
+	}
 
 	/**
 	 * Checks if a field exists.
@@ -816,6 +822,12 @@ public class ProfileManager {
 	 */
 	public static void setField(String field, Object value) throws ProfileFieldException {
 		setField(field, -1, value);
+	}
+	
+	public static List<String> getAllMethods() {
+		if (impl == null)
+			return null;
+		return impl.getAllMethods();
 	}
 
 	public static boolean hasMethod(String method) throws ProfileMethodException {

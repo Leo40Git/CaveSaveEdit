@@ -45,9 +45,10 @@ public class Resources {
 	}
 
 	private static void loadImages() {
-		iconsRaw = new BufferedImage[21];
+		iconsRaw = new BufferedImage[22];
+		iconsRaw[0] = new BufferedImage(24, 24, ui.getType());
 		int tbx = 0, tby = 0;
-		for (int i = 0; i < iconsRaw.length; i++) {
+		for (int i = 1; i < iconsRaw.length; i++) {
 			iconsRaw[i] = ui.getSubimage(tbx, tby, 24, 24);
 			tbx += 24;
 			if (tbx >= ui.getWidth()) {
@@ -66,37 +67,40 @@ public class Resources {
 	}
 
 	public enum Icon {
-		TAB_GENERAL(0),
-		TAB_INVENTORY(1),
-		TAB_WARPS(2),
-		TAB_FLAGS(3),
-		TAB_TSCPLUS_VARS(4),
-		TAB_MAP_FLAGS(5),
-		TAB_EQUIPPLUS(6),
-		LOAD_PROFILE(7),
-		LOAD_EXE(8),
-		SAVE(9),
-		SAVE_AS(10),
-		SETTINGS(11),
-		ABOUT(12),
-		QUIT(13),
-		NIKU_EDIT(14),
-		NEW_PROFILE(15),
-		MCI_SETTINGS(16),
-		UNLOAD_PROFILE(17),
-		UNLOAD_EXE(18),
-		PLUS_CHANGE_FILE(19),
-		RUN_EXE(20);
+		EMPTY(),
+		TAB_GENERAL(),
+		TAB_INVENTORY(),
+		TAB_WARPS(),
+		TAB_FLAGS(),
+		TAB_TSCPLUS_VARS(),
+		TAB_MAP_FLAGS(),
+		TAB_EQUIPPLUS(),
+		LOAD_PROFILE(),
+		LOAD_EXE(),
+		SAVE(),
+		SAVE_AS(),
+		SETTINGS(),
+		ABOUT(),
+		QUIT(),
+		NIKU_EDIT(),
+		NEW_PROFILE(),
+		MCI_SETTINGS(),
+		UNLOAD_PROFILE(),
+		UNLOAD_EXE(),
+		PLUS_CHANGE_SLOT(),
+		RUN_EXE();
 
 		private int id;
-
-		private Icon(int id) {
-			this.id = id;
-		}
 
 		public int id() {
 			return id;
 		}
+	}
+
+	static {
+		int id = 0;
+		for (Icon icon : Icon.values())
+			icon.id = id++;
 	}
 
 	public static ImageIcon getIcon(Icon icon) {
