@@ -717,8 +717,9 @@ public class ExeData {
 			loadNpcTbl();
 			fillMapdata();
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
-			loadMapInfo();
 			loadGraphics();
+			loadRsrc();
+			loadMapInfo();
 			notifyListeners(false, EVENT_POSTLOAD, null, -1, -1);
 		} catch (IOException e) {
 			loaded = false;
@@ -905,6 +906,12 @@ public class ExeData {
 		}
 	}
 
+	/**
+	 * Locate the executable segments.
+	 * 
+	 * @throws IOException
+	 *             if an I/O exception occurs.
+	 */
 	private static void locateSegments() throws IOException {
 		// setup I/O stuff
 		FileInputStream inStream;
@@ -1541,7 +1548,7 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadGraphics() throws IOException {
-		if (graphicsResolution < 0)
+		if (graphicsResolution <= 0)
 			graphicsResolution = 1;
 		title = loadGraphic(STRING_TITLE);
 		myChar = loadGraphic(STRING_MYCHAR);
@@ -1557,6 +1564,75 @@ public class ExeData {
 		face = loadGraphic(STRING_FACE);
 		fade = loadGraphic(STRING_FADE);
 		loading = loadGraphic(STRING_LOADING);
+	}
+
+	/**
+	 * Load resources from the executable.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void loadRsrc() throws IOException {
+		// setup I/O stuff
+		FileInputStream inStream;
+		FileChannel inChan;
+		inStream = new FileInputStream(base);
+		inChan = inStream.getChannel();
+		ByteBuffer uBuf = ByteBuffer.allocate(2);
+		uBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.position(rsrcPtr + 12);
+		inChan.read(uBuf);
+		uBuf.flip();
+		short nameNum = uBuf.getShort();
+		uBuf.clear();
+		inChan.read(uBuf);
+		uBuf.flip();
+		short idNum = uBuf.getShort();
+		ByteBuffer uBuf4 = ByteBuffer.allocate(4);
+		uBuf4.order(ByteOrder.LITTLE_ENDIAN);
+		// read name entries
+		for (int i = 0; i < nameNum; i++) {
+			System.out.println(
+					"Reading name entry " + i + " (at 0x" + Long.toHexString(inChan.position()).toUpperCase() + "):");
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int nameOffset = uBuf4.getInt();
+			System.out.println("nameOffset=0x" + Integer.toHexString(nameOffset).toUpperCase());
+			uBuf4.clear();
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int otherThing = uBuf4.getInt();
+			if ((otherThing & (1 << 31)) == 0)
+				// "other thing" is data entry offset
+				System.out.println("dataEntryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			else {
+				// "other thing" is subdirectory offset
+				otherThing ^= 1 << 31; // unset high bit
+				System.out.println("subdirectoryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			}
+		}
+		// read ID entries
+		for (int i = 0; i < idNum; i++) {
+			System.out.println(
+					"Reading ID entry " + i + " (at 0x" + Long.toHexString(inChan.position()).toUpperCase() + "):");
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int id = uBuf4.getInt();
+			System.out.println("id=0x" + Integer.toHexString(id).toUpperCase());
+			uBuf4.clear();
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int otherThing = uBuf4.getInt();
+			if ((otherThing & (1 << 31)) == 0)
+				// "other thing" is data entry offset
+				System.out.println("dataEntryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			else {
+				// "other thing" is subdirectory offset
+				otherThing ^= 1 << 31; // unset high bit
+				System.out.println("subdirectoryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			}
+		}
+		inStream.close();
 	}
 
 	/**
