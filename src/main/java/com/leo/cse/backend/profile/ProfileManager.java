@@ -11,11 +11,47 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
-import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
 import com.leo.cse.frontend.Main;
 
+/**
+ * Stores information for a profile.
+ * 
+ * @author Leo
+ *
+ */
 public class ProfileManager {
+
+	/**
+	 * Exception from accessing profile fields.
+	 * 
+	 * @author Leo
+	 *
+	 */
+	public static class ProfileFieldException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+
+		public ProfileFieldException(String message) {
+			super(message);
+		}
+
+	}
+
+	/**
+	 * Exception from accessing profile methods.
+	 * 
+	 * @author Leo
+	 *
+	 */
+	public static class ProfileMethodException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+
+		public ProfileMethodException(String message) {
+			super(message);
+		}
+
+	}
 
 	/**
 	 * Used to record field changes from executing methods.
@@ -24,6 +60,18 @@ public class ProfileManager {
 	 *
 	 */
 	interface FieldChangeRecorder {
+		/**
+		 * Record a change.
+		 * 
+		 * @param field
+		 *            field name
+		 * @param index
+		 *            index of field
+		 * @param oldVal
+		 *            old value
+		 * @param newVal
+		 *            new value
+		 */
 		public void addChange(String field, int index, Object oldVal, Object newVal);
 	}
 
@@ -52,7 +100,7 @@ public class ProfileManager {
 	/**
 	 * The current implementation class for profiles.
 	 */
-	private static Class<? extends IProfile> implClass = NormalProfile.class;
+	private static Class<? extends Profile> implClass = NormalProfile.class;
 
 	/**
 	 * Sets the implementation class for profiles.
@@ -70,18 +118,18 @@ public class ProfileManager {
 			e.printStackTrace();
 			tmpClass = NormalProfile.class;
 		}
-		if (!IProfile.class.isAssignableFrom(tmpClass)) {
+		if (!Profile.class.isAssignableFrom(tmpClass)) {
 			System.err.println("Profile class does not implement Profile interface: " + className
 					+ "\nUsing default NormalProfile class instead");
 			tmpClass = NormalProfile.class;
 		}
-		implClass = (Class<? extends IProfile>) tmpClass;
+		implClass = (Class<? extends Profile>) tmpClass;
 	}
 
 	/**
 	 * The current profile implementation - an instance of {@link #implClass}.
 	 */
-	private static IProfile impl;
+	private static Profile impl;
 
 	/**
 	 * Gets the current profile implementation type.<br>
@@ -90,7 +138,7 @@ public class ProfileManager {
 	 * 
 	 * @return type of current profile implementation
 	 */
-	public static Class<? extends IProfile> getType() {
+	public static Class<? extends Profile> getType() {
 		if (impl == null)
 			return null;
 		return impl.getClass();
@@ -278,6 +326,12 @@ public class ProfileManager {
 
 	}
 
+	/**
+	 * Checks if the undo manager exists.
+	 * 
+	 * @return <code>true</code> if undo manager exists, <code>false</code>
+	 *         otherwise.
+	 */
 	private static boolean undoManExists() {
 		return impl != null && impl.getLoadedFile() != null && undoMan != null;
 	}
@@ -340,7 +394,7 @@ public class ProfileManager {
 			e.printStackTrace();
 			implObj = new NormalProfile();
 		}
-		impl = (IProfile) implObj;
+		impl = (Profile) implObj;
 	}
 
 	/**
@@ -500,76 +554,194 @@ public class ProfileManager {
 		return modified;
 	}
 
+	/**
+	 * Gets the profile header.
+	 * 
+	 * @return profile header
+	 */
 	public static String getHeader() {
 		if (impl == null)
 			return null;
 		return impl.getHeader();
 	}
 
+	/**
+	 * Sets the profile header for validating profiles.
+	 * 
+	 * @param header
+	 *            new profile header
+	 */
 	public static void setHeader(String header) {
 		if (impl == null)
 			return;
 		impl.setHeader(header);
 	}
 
+	/**
+	 * Gets the flag section header.
+	 * 
+	 * @return flag header
+	 */
 	public static String getFlagHeader() {
 		if (impl == null)
 			return null;
 		return impl.getFlagHeader();
 	}
 
+	/**
+	 * Sets the flag section header for validating profiles.
+	 * 
+	 * @param flagH
+	 *            new flag header
+	 */
 	public static void setFlagHeader(String flagH) {
 		if (impl == null)
 			return;
 		impl.setFlagHeader(flagH);
 	}
 
+	/**
+	 * Checks if a field exists.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return <code>true</code> if it exists, <code>false</code> otherwise
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static boolean hasField(String field) throws ProfileFieldException {
 		if (impl == null)
 			return false;
 		return impl.hasField(field);
 	}
 
+	/**
+	 * Gets a field's value type.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return the field's type
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static Class<?> getFieldType(String field) throws ProfileFieldException {
 		if (impl == null)
 			return null;
 		return impl.getFieldType(field);
 	}
 
+	/**
+	 * Checks if a field has indexes.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return <code>true</code> if it has indexes, <code>false</code> otherwise
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static boolean fieldHasIndexes(String field) throws ProfileFieldException {
 		if (impl == null)
 			return false;
 		return impl.fieldHasIndexes(field);
 	}
 
+	/**
+	 * Gets the minimum index of a field.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return minimum field index
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static int getFieldMinimumIndex(String field) throws ProfileFieldException {
 		if (impl == null)
 			return -1;
 		return impl.getFieldMinimumIndex(field);
 	}
 
+	/**
+	 * Gets the maximum index of a field.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @return maximum field index
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static int getFieldMaximumIndex(String field) throws ProfileFieldException {
 		if (impl == null)
 			return -1;
 		return impl.getFieldMaximumIndex(field);
 	}
 
+	/**
+	 * Checks if a field accepts a value.
+	 * 
+	 * @param field
+	 *            field to check
+	 * @param value
+	 *            value to check
+	 * @return <code>true</code> if the value is acceptable, <code>false</code>
+	 *         otherwise
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException {
 		if (impl == null)
 			return false;
 		return impl.fieldAcceptsValue(field, value);
 	}
 
+	/**
+	 * Gets a field's value.
+	 * 
+	 * @param field
+	 *            field to get
+	 * @param index
+	 *            index to get. will be ignored if
+	 *            the field {@linkplain #fieldHasIndexes(String) doesn't have
+	 *            indexes}
+	 * @return value of the field
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static Object getField(String field, int index) throws ProfileFieldException {
 		if (impl == null)
 			return null;
 		return impl.getField(field, index);
 	}
 
+	/**
+	 * Gets a field's value.
+	 * 
+	 * @param field
+	 *            field to get
+	 * @return value of the field
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static Object getField(String field) throws ProfileFieldException {
-		return getField(field, 0);
+		return getField(field, -1);
 	}
 
+	/**
+	 * Sets a field's value.
+	 * 
+	 * @param field
+	 *            field to set
+	 * @param index
+	 *            index to set. will be ignored if
+	 *            the field {@linkplain #fieldHasIndexes(String) doesn't have
+	 *            indexes}
+	 * @param value
+	 *            value to set
+	 * @param addUndo
+	 *            <code>true</code> to add change to the {@linkplain #undoMan undo
+	 *            manager}, <code>false</code> otherwise
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static void setField(String field, int index, Object value, boolean addUndo) throws ProfileFieldException {
 		if (impl == null)
 			return;
@@ -614,12 +786,36 @@ public class ProfileManager {
 		impl.setField(field, index, value);
 	}
 
+	/**
+	 * Sets a field's value.
+	 * 
+	 * @param field
+	 *            field to set
+	 * @param index
+	 *            index to set. will be ignored if
+	 *            the field {@linkplain #fieldHasIndexes(String) doesn't have
+	 *            indexes}
+	 * @param value
+	 *            value to set
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static void setField(String field, int index, Object value) throws ProfileFieldException {
 		setField(field, index, value, true);
 	}
 
+	/**
+	 * Sets a field's value.
+	 * 
+	 * @param field
+	 *            field to set
+	 * @param value
+	 *            value to set
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
 	public static void setField(String field, Object value) throws ProfileFieldException {
-		setField(field, 0, value);
+		setField(field, -1, value);
 	}
 
 	public static boolean hasMethod(String method) throws ProfileMethodException {

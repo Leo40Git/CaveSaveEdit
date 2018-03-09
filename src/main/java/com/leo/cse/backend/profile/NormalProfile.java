@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.leo.cse.backend.ByteUtils;
+import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
 
 public class NormalProfile extends Profile {
 
@@ -128,11 +129,21 @@ public class NormalProfile extends Profile {
 	 * EQ+ "false" modifiers.
 	 */
 	public static final String FIELD_EQP_MODS_FALSE = "eqp.mods.false";
-	
-	private static int getFieldInt(String field) {
+
+	/**
+	 * Gets an {@link Integer} (automatically unboxed to primitive <code>int</code>)
+	 * value from a field.
+	 * 
+	 * @param field
+	 *            field to get
+	 * @param index
+	 *            index of field to get
+	 * @return value value of field
+	 */
+	private static int getFieldInt(String field, int index) {
 		Object vObj = null;
 		try {
-			vObj = ProfileManager.getField(field);
+			vObj = ProfileManager.getField(field, index);
 		} catch (ProfileFieldException e) {
 			e.printStackTrace();
 		}
@@ -140,15 +151,42 @@ public class NormalProfile extends Profile {
 	}
 
 	/**
+	 * Sets an {@link Integer} (automatically unboxed to primitive <code>int</code>)
+	 * value to a field.
+	 * 
+	 * @param field
+	 *            field to set
+	 * @param index
+	 *            index of field to set
+	 * @return value value to set to
+	 */
+	private static void setFieldInt(String field, int index, int value) {
+		try {
+			ProfileManager.setField(field, index, value);
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Gets the current map.
 	 * 
-	 * @return map
-	 * @see #FIELD_MAP
+	 * @return map current map
 	 */
 	public static int getMap() {
-		return getFieldInt(FIELD_MAP);
+		return getFieldInt(FIELD_MAP, -1);
 	}
-	
+
+	/**
+	 * Sets the current map.
+	 * 
+	 * @param map
+	 *            new map
+	 */
+	public static void setMap(int map) {
+		setFieldInt(FIELD_MAP, -1, map);
+	}
+
 	/**
 	 * Gets the currently playing song.
 	 * 
@@ -156,7 +194,17 @@ public class NormalProfile extends Profile {
 	 * @see #FIELD_SONG
 	 */
 	public static int getSong() {
-		return getFieldInt(FIELD_SONG);
+		return getFieldInt(FIELD_SONG, -1);
+	}
+
+	/**
+	 * Sets the currently playing song.
+	 * 
+	 * @param song
+	 *            new song
+	 */
+	public static void setSong(int song) {
+		setFieldInt(FIELD_SONG, -1, song);
 	}
 
 	/**
@@ -307,7 +355,7 @@ public class NormalProfile extends Profile {
 					for (int i = 7968; i < 7995; i++)
 						try {
 							if ((boolean) getField(FIELD_FLAGS, i))
-								ret |= (long) Math.pow(2, i - 7968);
+								ret |= 1 << (i - 7968);
 						} catch (ProfileFieldException e) {
 							e.printStackTrace();
 						}
@@ -319,7 +367,7 @@ public class NormalProfile extends Profile {
 					long v = (Long) value;
 					for (int i = 7968; i < 7995; i++)
 						try {
-							setField(FIELD_FLAGS, i, (v & (long) Math.pow(2, i - 7968)) != 0);
+							setField(FIELD_FLAGS, i, (v & (1 << (i - 7968))) != 0);
 						} catch (ProfileFieldException e) {
 							e.printStackTrace();
 						}

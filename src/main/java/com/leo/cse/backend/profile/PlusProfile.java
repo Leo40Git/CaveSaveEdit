@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.leo.cse.backend.ByteUtils;
 import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
+import com.leo.cse.backend.profile.ProfileManager.ProfileMethodException;
 
 public class PlusProfile extends NormalProfile {
 
