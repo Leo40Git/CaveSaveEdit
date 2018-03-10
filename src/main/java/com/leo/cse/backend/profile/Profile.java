@@ -18,7 +18,7 @@ public abstract class Profile {
 
 		public Class<?> getType();
 
-		public boolean acceptsValue(Object value);
+		public boolean acceptsValue(int index, Object value);
 
 		public Object getValue(int index);
 
@@ -253,7 +253,9 @@ public abstract class Profile {
 	 * Checks if a field accepts a value.
 	 * 
 	 * @param field
-	 *            field to check
+	 *            field to check against
+	 * @param index
+	 *            index to check against
 	 * @param value
 	 *            value to check
 	 * @return <code>true</code> if the value is acceptable, <code>false</code>
@@ -261,14 +263,14 @@ public abstract class Profile {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException {
+	public boolean fieldAcceptsValue(String field, int index, Object value) throws ProfileFieldException {
 		assertHasField(field);
 		Class<?> fieldType = getFieldType(field);
 		if (fieldType == null)
 			throw new ProfileFieldException("Field " + field + " does not have value type!");
 		if (!fieldType.isInstance(value))
 			return false;
-		return fields.get(field).acceptsValue(value);
+		return fields.get(field).acceptsValue(index, value);
 	}
 
 	/**

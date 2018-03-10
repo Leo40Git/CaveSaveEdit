@@ -723,7 +723,7 @@ public class ProfileManager {
 			return false;
 		boolean ret = false;
 		try {
-			ret = impl.fieldAcceptsValue(field, index);
+			ret = impl.fieldAcceptsValue(field, index, value);
 		} catch (ProfileFieldException e) {
 			throw new RuntimeException(e);
 		}

@@ -233,7 +233,7 @@ public class NormalProfile extends Profile {
 		// set loaded file
 		loadedFile = file;
 	}
-	
+
 	@Override
 	public void unload() {
 		data = null;
@@ -274,7 +274,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Long;
 				}
 
@@ -326,7 +326,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Short;
 				}
 
@@ -354,7 +354,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Short;
 				}
 
@@ -403,7 +403,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Integer;
 				}
 
@@ -431,7 +431,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Boolean;
 				}
 
@@ -461,7 +461,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Boolean;
 				}
 
@@ -513,7 +513,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Byte;
 				}
 
@@ -562,7 +562,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Integer;
 				}
 
@@ -611,7 +611,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Long;
 				}
 
@@ -639,7 +639,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Boolean;
 				}
 
@@ -688,7 +688,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Short[];
 				}
 
