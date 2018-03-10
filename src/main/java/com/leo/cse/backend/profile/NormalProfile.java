@@ -131,83 +131,6 @@ public class NormalProfile extends Profile {
 	public static final String FIELD_EQP_MODS_FALSE = "eqp.mods.false";
 
 	/**
-	 * Gets an {@link Integer} (automatically unboxed to primitive <code>int</code>)
-	 * value from a field.
-	 * 
-	 * @param field
-	 *            field to get
-	 * @param index
-	 *            index of field to get
-	 * @return value value of field
-	 */
-	private static int getFieldInt(String field, int index) {
-		Object vObj = null;
-		try {
-			vObj = ProfileManager.getField(field, index);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
-		return (Integer) vObj;
-	}
-
-	/**
-	 * Sets an {@link Integer} (automatically unboxed to primitive <code>int</code>)
-	 * value to a field.
-	 * 
-	 * @param field
-	 *            field to set
-	 * @param index
-	 *            index of field to set
-	 * @return value value to set to
-	 */
-	private static void setFieldInt(String field, int index, int value) {
-		try {
-			ProfileManager.setField(field, index, value);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Gets the current map.
-	 * 
-	 * @return map current map
-	 */
-	public static int getMap() {
-		return getFieldInt(FIELD_MAP, -1);
-	}
-
-	/**
-	 * Sets the current map.
-	 * 
-	 * @param map
-	 *            new map
-	 */
-	public static void setMap(int map) {
-		setFieldInt(FIELD_MAP, -1, map);
-	}
-
-	/**
-	 * Gets the currently playing song.
-	 * 
-	 * @return song
-	 * @see #FIELD_SONG
-	 */
-	public static int getSong() {
-		return getFieldInt(FIELD_SONG, -1);
-	}
-
-	/**
-	 * Sets the currently playing song.
-	 * 
-	 * @param song
-	 *            new song
-	 */
-	public static void setSong(int song) {
-		setFieldInt(FIELD_SONG, -1, song);
-	}
-
-	/**
 	 * The expected file length.
 	 */
 	public static final int FILE_LENGTH = 0x604;
@@ -309,6 +232,12 @@ public class NormalProfile extends Profile {
 		}
 		// set loaded file
 		loadedFile = file;
+	}
+	
+	@Override
+	public void unload() {
+		data = null;
+		loadedFile = null;
 	}
 
 	protected void setupFields() {

@@ -19,7 +19,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
-import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
 import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
@@ -279,7 +278,7 @@ public class MenuBarHandler implements ActionListener {
 				}
 				break;
 			}
-		// fallthrough to ACTION_FILE_SAVE_AS ("Save As...")
+			// fallthrough to ACTION_FILE_SAVE_AS ("Save As...")
 		case ACTION_FILE_SAVE_AS:
 			if (!canSave())
 				return;
@@ -331,11 +330,7 @@ public class MenuBarHandler implements ActionListener {
 
 	private void setSavedFlag() {
 		// force save flag to be on
-		try {
-			ProfileManager.setField(NormalProfile.FIELD_FLAGS, MCI.getInteger("Flag.SaveID", 431), true);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
+		ProfileManager.setField(NormalProfile.FIELD_FLAGS, MCI.getInteger("Flag.SaveID", 431), true);
 	}
 
 	private boolean canSave() {

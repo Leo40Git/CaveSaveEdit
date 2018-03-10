@@ -124,6 +124,7 @@ public class ProfileManager {
 			tmpClass = NormalProfile.class;
 		}
 		implClass = (Class<? extends Profile>) tmpClass;
+		makeImpl();
 	}
 
 	/**
@@ -254,11 +255,7 @@ public class ProfileManager {
 		@Override
 		public void undo() throws CannotUndoException {
 			System.out.println("Attempting to undo: " + getUndoPresentationName());
-			try {
-				setField(field, index, oldVal, false);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			setField(field, index, oldVal, false);
 			hasBeenUndone = true;
 		}
 
@@ -270,11 +267,7 @@ public class ProfileManager {
 		@Override
 		public void redo() throws CannotRedoException {
 			System.out.println("Attempting to redo: " + getRedoPresentationName());
-			try {
-				setField(field, index, newVal, false);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			setField(field, index, newVal, false);
 			hasBeenUndone = false;
 		}
 
@@ -426,8 +419,10 @@ public class ProfileManager {
 	 *             if an I/O error occurs.
 	 */
 	public static void load(File file) throws IOException {
-		unload();
-		makeImpl();
+		if (impl == null)
+			makeImpl();
+		else
+			unload();
 		try {
 			impl.load(file);
 		} catch (Exception e) {
@@ -459,9 +454,7 @@ public class ProfileManager {
 	 *             if an I/O error occurs.
 	 */
 	public static void reload() throws IOException {
-		if (impl == null)
-			return;
-		File loadedFile = impl.getLoadedFile();
+		File loadedFile = getLoadedFile();
 		if (loadedFile == null)
 			return;
 		load(loadedFile);
@@ -512,7 +505,9 @@ public class ProfileManager {
 	 * Unloads the currently loaded profile.
 	 */
 	public static void unload() {
-		impl = null;
+		if (!isLoaded())
+			return;
+		impl.unload();
 		modified = false;
 		undoMan = null;
 		notifyListeners(EVENT_UNLOAD, -1, null, null);
@@ -535,9 +530,7 @@ public class ProfileManager {
 	 * @return <code>true</code> if a file is loaded, <code>false</code> otherwise.
 	 */
 	public static boolean isLoaded() {
-		if (impl == null)
-			return false;
-		return true;
+		return getLoadedFile() != null;
 	}
 
 	/**
@@ -599,7 +592,7 @@ public class ProfileManager {
 			return;
 		impl.setFlagHeader(flagH);
 	}
-	
+
 	public static List<String> getAllFields() {
 		if (impl == null)
 			return null;
@@ -615,10 +608,16 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static boolean hasField(String field) throws ProfileFieldException {
+	public static boolean hasField(String field) {
 		if (impl == null)
 			return false;
-		return impl.hasField(field);
+		boolean ret = false;
+		try {
+			ret = impl.hasField(field);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
 	/**
@@ -630,10 +629,16 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static Class<?> getFieldType(String field) throws ProfileFieldException {
+	public static Class<?> getFieldType(String field) {
 		if (impl == null)
 			return null;
-		return impl.getFieldType(field);
+		Class<?> ret = null;
+		try {
+			ret = impl.getFieldType(field);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
 	/**
@@ -645,10 +650,16 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static boolean fieldHasIndexes(String field) throws ProfileFieldException {
+	public static boolean fieldHasIndexes(String field) {
 		if (impl == null)
 			return false;
-		return impl.fieldHasIndexes(field);
+		boolean ret = false;
+		try {
+			ret = impl.fieldHasIndexes(field);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
 	/**
@@ -660,10 +671,16 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static int getFieldMinimumIndex(String field) throws ProfileFieldException {
+	public static int getFieldMinimumIndex(String field) {
 		if (impl == null)
 			return -1;
-		return impl.getFieldMinimumIndex(field);
+		int ret = -1;
+		try {
+			ret = impl.getFieldMinimumIndex(field);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
 	/**
@@ -675,17 +692,25 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static int getFieldMaximumIndex(String field) throws ProfileFieldException {
+	public static int getFieldMaximumIndex(String field) {
 		if (impl == null)
 			return -1;
-		return impl.getFieldMaximumIndex(field);
+		int ret = -1;
+		try {
+			ret = impl.getFieldMaximumIndex(field);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
 	/**
 	 * Checks if a field accepts a value.
 	 * 
 	 * @param field
-	 *            field to check
+	 *            field to check against
+	 * @param index
+	 *            index to check against
 	 * @param value
 	 *            value to check
 	 * @return <code>true</code> if the value is acceptable, <code>false</code>
@@ -693,10 +718,32 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static boolean fieldAcceptsValue(String field, Object value) throws ProfileFieldException {
+	public static boolean fieldAcceptsValue(String field, int index, Object value) {
 		if (impl == null)
 			return false;
-		return impl.fieldAcceptsValue(field, value);
+		boolean ret = false;
+		try {
+			ret = impl.fieldAcceptsValue(field, index);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
+	}
+
+	/**
+	 * Checks if a field accepts a value.
+	 * 
+	 * @param field
+	 *            field to check against
+	 * @param value
+	 *            value to check
+	 * @return <code>true</code> if the value is acceptable, <code>false</code>
+	 *         otherwise
+	 * @throws ProfileFieldException
+	 *             if a field-related exception occurs.
+	 */
+	public static boolean fieldAcceptsValue(String field, Object value) {
+		return fieldAcceptsValue(field, -1, value);
 	}
 
 	/**
@@ -712,10 +759,16 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static Object getField(String field, int index) throws ProfileFieldException {
+	public static Object getField(String field, int index) {
 		if (impl == null)
 			return null;
-		return impl.getField(field, index);
+		Object ret;
+		try {
+			ret = impl.getField(field, index);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
 	/**
@@ -727,7 +780,7 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static Object getField(String field) throws ProfileFieldException {
+	public static Object getField(String field) {
 		return getField(field, -1);
 	}
 
@@ -748,7 +801,7 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static void setField(String field, int index, Object value, boolean addUndo) throws ProfileFieldException {
+	public static void setField(String field, int index, Object value, boolean addUndo) {
 		if (impl == null)
 			return;
 		Class<?> type = getFieldType(field);
@@ -768,7 +821,7 @@ public class ProfileManager {
 			valueStr += "]";
 		}
 		System.out.println("setting field " + fieldStr + " to " + valueStr);
-		Object oldValue = impl.getField(field, index);
+		Object oldValue = getField(field, index);
 		boolean different = false;
 		if (compType == null)
 			different = !type.cast(oldValue).equals(type.cast(value));
@@ -789,7 +842,11 @@ public class ProfileManager {
 			if (addUndo)
 				undoMan.addEdit(new ProfileEdit(field, index, oldValue, value));
 		}
-		impl.setField(field, index, value);
+		try {
+			impl.setField(field, index, value);
+		} catch (ProfileFieldException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -806,7 +863,7 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static void setField(String field, int index, Object value) throws ProfileFieldException {
+	public static void setField(String field, int index, Object value) {
 		setField(field, index, value, true);
 	}
 
@@ -820,49 +877,78 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static void setField(String field, Object value) throws ProfileFieldException {
+	public static void setField(String field, Object value) {
 		setField(field, -1, value);
 	}
-	
+
 	public static List<String> getAllMethods() {
 		if (impl == null)
 			return null;
 		return impl.getAllMethods();
 	}
 
-	public static boolean hasMethod(String method) throws ProfileMethodException {
+	public static boolean hasMethod(String method) {
 		if (impl == null)
 			return false;
-		return impl.hasMethod(method);
+		boolean ret = false;
+		try {
+			ret = impl.hasMethod(method);
+		} catch (ProfileMethodException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
-	public static int getMethodArgNum(String method) throws ProfileMethodException {
+	public static int getMethodArgNum(String method) {
 		if (impl == null)
 			return -1;
-		return impl.getMethodArgNum(method);
+		int ret = -1;
+		try {
+			ret = impl.getMethodArgNum(method);
+		} catch (ProfileMethodException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
-	public static Class<?>[] getMethodArgTypes(String method) throws ProfileMethodException {
+	public static Class<?>[] getMethodArgTypes(String method) {
 		if (impl == null)
 			return null;
-		return impl.getMethodArgTypes(method);
+		Class<?>[] ret = null;
+		try {
+			ret = impl.getMethodArgTypes(method);
+		} catch (ProfileMethodException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
-	public static Class<?> getMethodRetType(String method) throws ProfileMethodException {
+	public static Class<?> getMethodRetType(String method) {
 		if (impl == null)
 			return null;
-		return impl.getMethodRetType(method);
+		Class<?> ret = null;
+		try {
+			ret = impl.getMethodRetType(method);
+		} catch (ProfileMethodException e) {
+			throw new RuntimeException(e);
+		}
+		return ret;
 	}
 
-	public static Object callMethod(String method, Object... args) throws ProfileMethodException {
+	public static Object callMethod(String method, Object... args) {
 		if (impl == null)
 			return null;
-		Object ret = impl.callMethod(method, new FieldChangeRecorder() {
-			@Override
-			public void addChange(String field, int index, Object oldVal, Object newVal) {
-				notifyListeners(field, index, oldVal, newVal);
-			}
-		}, args);
+		Object ret = null;
+		try {
+			ret = impl.callMethod(method, new FieldChangeRecorder() {
+				@Override
+				public void addChange(String field, int index, Object oldVal, Object newVal) {
+					notifyListeners(field, index, oldVal, newVal);
+				}
+			}, args);
+		} catch (ProfileMethodException e) {
+			throw new RuntimeException(e);
+		}
 		return ret;
 	}
 

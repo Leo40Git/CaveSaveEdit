@@ -78,6 +78,11 @@ public abstract class Profile {
 	public abstract void save(File file) throws IOException;
 
 	/**
+	 * Unloads the currently loaded profile.
+	 */
+	public abstract void unload();
+
+	/**
 	 * Gets the loaded file.
 	 * 
 	 * @return loaded file, or <code>null</code> if no file is loaded
