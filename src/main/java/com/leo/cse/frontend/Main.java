@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -43,13 +44,13 @@ import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.MenuBarHandler;
-import com.leo.cse.frontend.ui.panels.CorePanel;
+import com.leo.cse.frontend.ui.panels.GeneralPanel;
 
 public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
-	public static final Dimension WINDOW_SIZE = new Dimension(640, 480);
+	public static final Dimension WINDOW_SIZE = new Dimension(800, 600);
 	public static final Version VERSION = new Version("4.0");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
@@ -140,8 +141,9 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		ExeData.addListener(sep);
 		*/
 		windowMBH = new MenuBarHandler(this);
-		CorePanel cp = new CorePanel();
-		add(cp);
+		JTabbedPane tPane = new JTabbedPane();
+		tPane.addTab("General", Resources.getIcon(Resources.Icon.TAB_GENERAL), new GeneralPanel());
+		add(tPane);
 		setMaximumSize(WINDOW_SIZE);
 		setMinimumSize(WINDOW_SIZE);
 		setPreferredSize(WINDOW_SIZE);
@@ -551,7 +553,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public void onEvent(String event, String loadName, int loadId, int loadIdMax) {
 		if (exeLoadFrame == null)
 			exeLoadFrame = new ExeLoadFrame();
-		// System.out.println("EVENT! " + event + "," + loadName + "," + loadId + "," + loadIdMax);
+		// System.out.println("EVENT! " + event + "," + loadName + "," + loadId + "," +
+		// loadIdMax);
 		exeLoadFrame.setLoadProgress(loadId, loadIdMax);
 		boolean plusMode = ExeData.isPlusMode();
 		switch (event) {

@@ -19,28 +19,19 @@ import com.leo.cse.backend.profile.ProfileManager;
 public class ComponentBuilder {
 
 	/**
-	 * Build component for modifying a field.
+	 * Build spinner for modifying a field.
 	 * 
 	 * @param field
 	 *            field to modify
 	 * @param index
 	 *            index to modify
-	 * @param title
-	 *            title of component (only appliacable if type of field is
-	 *            {@link Boolean})
-	 * @return component for modifying field
+	 * @return spinner for modifying field
+	 * @wbp.factory
 	 */
-	public static JComponent buildComponentForField(String field, int index, String title) {
-		JComponent ret = null;
+	public static JSpinner buildSpinnerForField(String field, int index) {
+		JSpinner ret = null;
 		Class<?> type = ProfileManager.getFieldType(field);
-		if (type == Boolean.class) {
-			boolean state = (Boolean) ProfileManager.getField(field, index);
-			JCheckBox chk = new JCheckBox(title, state);
-			chk.addActionListener((ActionEvent e) -> {
-				ProfileManager.setField(field, index, chk.isSelected());
-			});
-			ret = chk;
-		} else if (type == Byte.class) {
+		if (type == Byte.class) {
 			byte val = (Byte) ProfileManager.getField(field, index);
 			JSpinner spn = new JSpinner();
 			spn.setModel(new SpinnerNumberModel(val, 0, 0xFF, 1l));
@@ -73,7 +64,34 @@ public class ComponentBuilder {
 			});
 			ret = spn;
 		} else
-			throw new RuntimeException("Can't build component for field of type: " + type);
+			throw new RuntimeException("Can't build spinner for field of type: " + type);
+		return ret;
+	}
+
+	/**
+	 * Build checkbox for modifying a field.
+	 * 
+	 * @param field
+	 *            field to modify
+	 * @param index
+	 *            index to modify
+	 * @param title
+	 *            title for checkbox
+	 * @return checkbox for modifying field
+	 * @wbp.factory
+	 */
+	public static JComponent buildCheckBoxForField(String field, int index, String title) {
+		JCheckBox ret = null;
+		Class<?> type = ProfileManager.getFieldType(field);
+		if (type == Boolean.class) {
+			boolean state = (Boolean) ProfileManager.getField(field, index);
+			ret = new JCheckBox(title, state);
+			final JCheckBox retF = ret;
+			ret.addActionListener((ActionEvent e) -> {
+				ProfileManager.setField(field, index, retF.isSelected());
+			});
+		} else
+			throw new RuntimeException("Can't build checkbox for field of type: " + type);
 		return ret;
 	}
 
