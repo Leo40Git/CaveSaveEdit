@@ -25,8 +25,15 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
+/**
+ * Builds and handles the menu bar.
+ * 
+ * @author Leo
+ *
+ */
 public class MenuBarHandler implements ActionListener {
 
+	// ACTION COMMANDS
 	public static final String ACTION_FILE_NEW_PROFILE = "file.new_profile";
 	public static final String ACTION_FILE_LOAD_PROFILE = "file.load_profile";
 	public static final String ACTION_FILE_CHANGE_SLOT = "file.change_slot";
@@ -46,9 +53,18 @@ public class MenuBarHandler implements ActionListener {
 	// public static final String ACTION_FILE_GEN_PROF_MAP =
 	// "file.generate_profile_map";
 
+	/**
+	 * @see ExeData#plusMode
+	 */
 	private boolean plusMode;
 
 	// TODO Code menu bar functions
+	/**
+	 * Create a menu bar for the specified window.
+	 * 
+	 * @param window
+	 *            window to add menu bar to
+	 */
 	public MenuBarHandler(JFrame window) {
 		JMenuBar mb = new JMenuBar();
 		addFileMenu(mb);
@@ -56,12 +72,25 @@ public class MenuBarHandler implements ActionListener {
 		window.setJMenuBar(mb);
 	}
 
+	/**
+	 * Sets an action to a menu item
+	 * 
+	 * @param item
+	 *            menu item
+	 * @param actionCmd
+	 *            action command for menu item
+	 */
 	private void setAction(JMenuItem item, String actionCmd) {
 		item.addActionListener(this);
 		item.setActionCommand(actionCmd);
 	}
 
-	private JMenuItem mFile_ChangeSlot, mFile_UnloadProfile, mFile_RunExe, mFile_UnloadExe, mFile_Save, mFile_SaveAs;
+	private JMenuItem mFile_ChangeSlot;
+	private JMenuItem mFile_UnloadProfile;
+	private JMenuItem mFile_RunExe;
+	private JMenuItem mFile_UnloadExe;
+	private JMenuItem mFile_Save;
+	private JMenuItem mFile_SaveAs;
 
 	private void addFileMenu(JMenuBar mb) {
 		JMenu mFile = new JMenu("File");
