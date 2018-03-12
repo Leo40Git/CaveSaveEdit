@@ -50,7 +50,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
 
-	public static final Dimension WINDOW_SIZE = new Dimension(800, 600);
+	public static final Dimension WINDOW_SIZE = new Dimension(1024, 760);
 	public static final Version VERSION = new Version("4.0");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
