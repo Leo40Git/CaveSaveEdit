@@ -1,15 +1,19 @@
 package com.leo.cse.frontend.ui.panels;
 
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import java.awt.SystemColor;
-import java.awt.Font;
-import javax.swing.SwingConstants;
+
+import com.github.lgooddatepicker.components.DateTimePicker;
+import com.leo.cse.frontend.ui.components.MapView;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+import java.awt.Color;
 
 public class GeneralPanel extends JPanel {
 
@@ -24,7 +28,14 @@ public class GeneralPanel extends JPanel {
 	private final ButtonGroup btgDirection = new ButtonGroup();
 	private JSpinner spnHealthCur;
 	private JSpinner spnHealthMax;
-	private JLabel lblMapView;
+	private DateTimePicker dtpModifyDate;
+	private JRadioButton rdbtnDiffO;
+	private JRadioButton rdbtnDiffE;
+	private JRadioButton rdbtnDiffH;
+	private final ButtonGroup btgDifficulty = new ButtonGroup();
+	private JCheckBox chkBeatHell;
+	private MapView mapView;
+	private JPanel pnlPlusOnly;
 
 	/**
 	 * Create the panel.
@@ -113,18 +124,53 @@ public class GeneralPanel extends JPanel {
 		spinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		spinner.setBounds(90, 158, 160, 20);
 		add(spinner);
-
-		JPanel pnlMapViewPH = new JPanel();
-		pnlMapViewPH.setBackground(SystemColor.controlShadow);
-		pnlMapViewPH.setBounds(192, 186, 640, 480);
-		add(pnlMapViewPH);
-		pnlMapViewPH.setLayout(null);
 		
-		lblMapView = new JLabel("MapView");
-		lblMapView.setVerticalAlignment(SwingConstants.TOP);
-		lblMapView.setFont(lblMapView.getFont().deriveFont(lblMapView.getFont().getStyle() | Font.BOLD, 24f));
-		lblMapView.setBounds(10, 11, 260, 148);
-		pnlMapViewPH.add(lblMapView);
+		pnlPlusOnly = new JPanel();
+		pnlPlusOnly.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Cave Story+ Only", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnlPlusOnly.setBounds(679, 14, 309, 107);
+		add(pnlPlusOnly);
+		pnlPlusOnly.setLayout(null);
+		
+		dtpModifyDate = new DateTimePicker();
+		dtpModifyDate.setEnabled(false);
+		dtpModifyDate.setBounds(82, 16, 221, 23);
+		pnlPlusOnly.add(dtpModifyDate);
+		
+		JLabel lblModifyDate = new JLabel("Modify Date:");
+		lblModifyDate.setBounds(6, 19, 66, 14);
+		pnlPlusOnly.add(lblModifyDate);
+		
+		rdbtnDiffO = new JRadioButton("Original");
+		rdbtnDiffO.setBounds(82, 46, 70, 23);
+		pnlPlusOnly.add(rdbtnDiffO);
+		btgDifficulty.add(rdbtnDiffO);
+		rdbtnDiffO.setEnabled(false);
+		
+		rdbtnDiffE = new JRadioButton("Easy");
+		rdbtnDiffE.setBounds(154, 46, 60, 23);
+		pnlPlusOnly.add(rdbtnDiffE);
+		btgDifficulty.add(rdbtnDiffE);
+		rdbtnDiffE.setEnabled(false);
+		
+		rdbtnDiffH = new JRadioButton("Hard");
+		rdbtnDiffH.setBounds(216, 46, 54, 23);
+		pnlPlusOnly.add(rdbtnDiffH);
+		btgDifficulty.add(rdbtnDiffH);
+		rdbtnDiffH.setEnabled(false);
+		
+		JLabel lblDifficulty = new JLabel("Difficulty:");
+		lblDifficulty.setBounds(22, 50, 46, 14);
+		pnlPlusOnly.add(lblDifficulty);
+		
+		chkBeatHell = new JCheckBox("Beat Bloodstained Sanctuary?");
+		chkBeatHell.setBounds(82, 73, 188, 23);
+		pnlPlusOnly.add(chkBeatHell);
+		chkBeatHell.setEnabled(false);
+		
+		mapView = new MapView();
+		mapView.setEnabled(false);
+		mapView.setBounds(192, 186, 640, 480);
+		add(mapView);
 
 	}
 }
