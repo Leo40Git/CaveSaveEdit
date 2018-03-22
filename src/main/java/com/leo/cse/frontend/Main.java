@@ -17,6 +17,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -44,7 +46,7 @@ import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.MenuBarHandler;
-import com.leo.cse.frontend.ui.panels.GeneralPanel;
+import com.leo.cse.frontend.ui.panels.EditorPanel;
 
 public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
@@ -142,7 +144,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		*/
 		windowMBH = new MenuBarHandler(this);
 		JTabbedPane tPane = new JTabbedPane();
-		tPane.addTab("General", Resources.getIcon(Resources.Icon.TAB_GENERAL), new GeneralPanel());
+		setupTabbedPane(tPane);
 		add(tPane);
 		setMaximumSize(WINDOW_SIZE);
 		setMinimumSize(WINDOW_SIZE);
@@ -150,6 +152,13 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		pack();
 		setResizable(false);
 		setLocationRelativeTo(null);
+	}
+
+	private void setupTabbedPane(JTabbedPane tPane) {
+		List<EditorPanel> panels = new ArrayList<>();
+		// TODO Add panels
+		for (EditorPanel panel : panels)
+			tPane.addTab(panel.getTitle(), Resources.getIcon(panel.getIcon()), panel, panel.getTip());
 	}
 
 	public static void loadProfile(File file, boolean record) {

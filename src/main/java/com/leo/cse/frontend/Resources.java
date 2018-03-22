@@ -66,41 +66,41 @@ public class Resources {
 		nikuPunc = ui.getSubimage(14, 88, 62, 14);
 	}
 
+	private static int lastIconID = 0;
+
 	public enum Icon {
-		EMPTY(),
+		EMPTY(), // 0
 		TAB_GENERAL(),
 		TAB_INVENTORY(),
 		TAB_WARPS(),
 		TAB_FLAGS(),
-		TAB_TSCPLUS_VARS(),
+		TAB_TSCPLUS_VARS(), // 5
 		TAB_MAP_FLAGS(),
 		TAB_EQUIPPLUS(),
 		LOAD_PROFILE(),
 		LOAD_EXE(),
-		SAVE(),
+		SAVE(), // 10
 		SAVE_AS(),
 		SETTINGS(),
 		ABOUT(),
 		QUIT(),
-		NIKU_EDIT(),
+		NIKU_EDIT(), // 15
 		NEW_PROFILE(),
 		MCI_SETTINGS(),
 		UNLOAD_PROFILE(),
 		UNLOAD_EXE(),
-		PLUS_CHANGE_SLOT(),
+		PLUS_CHANGE_SLOT(), // 20
 		RUN_EXE();
 
-		private int id;
+		private final int id;
+
+		Icon() {
+			id = lastIconID++;
+		}
 
 		public int id() {
 			return id;
 		}
-	}
-
-	static {
-		int id = 0;
-		for (Icon icon : Icon.values())
-			icon.id = id++;
 	}
 
 	public static ImageIcon getIcon(Icon icon) {

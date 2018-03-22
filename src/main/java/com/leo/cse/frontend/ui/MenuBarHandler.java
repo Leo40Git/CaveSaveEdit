@@ -24,6 +24,7 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.Resources.Icon;
 
 /**
  * Builds and handles the menu bar.
@@ -98,21 +99,21 @@ public class MenuBarHandler implements ActionListener {
 		mFileItem = new JMenuItem("New Profile");
 		setAction(mFileItem, ACTION_FILE_NEW_PROFILE);
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_DOWN_MASK));
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.NEW_PROFILE));
+		mFileItem.setIcon(Resources.getIcon(Icon.NEW_PROFILE));
 		mFile.add(mFileItem);
 		mFileItem = new JMenuItem("Load Profile");
 		setAction(mFileItem, ACTION_FILE_LOAD_PROFILE);
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK));
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.LOAD_PROFILE));
+		mFileItem.setIcon(Resources.getIcon(Icon.LOAD_PROFILE));
 		mFile.add(mFileItem);
 		mFile_ChangeSlot = mFileItem = new JMenuItem("Change Slot");
 		setAction(mFileItem, ACTION_FILE_CHANGE_SLOT);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.PLUS_CHANGE_SLOT));
+		mFileItem.setIcon(Resources.getIcon(Icon.PLUS_CHANGE_SLOT));
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile_UnloadProfile = mFileItem = new JMenuItem("Unload Profile");
 		setAction(mFileItem, ACTION_FILE_UNLOAD_PROFILE);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.UNLOAD_PROFILE));
+		mFileItem.setIcon(Resources.getIcon(Icon.UNLOAD_PROFILE));
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile.addSeparator();
@@ -122,16 +123,16 @@ public class MenuBarHandler implements ActionListener {
 		mFileItem = new JMenuItem("Load Game/Mod");
 		setAction(mFileItem, ACTION_FILE_LOAD_EXE);
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.LOAD_EXE));
+		mFileItem.setIcon(Resources.getIcon(Icon.LOAD_EXE));
 		mFile.add(mFileItem);
 		mFile_RunExe = mFileItem = new JMenuItem("Run Game/Mod");
 		setAction(mFileItem, ACTION_FILE_RUN_EXE);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.RUN_EXE));
+		mFileItem.setIcon(Resources.getIcon(Icon.RUN_EXE));
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile_UnloadExe = mFileItem = new JMenuItem("Unload Game/Mod");
 		setAction(mFileItem, ACTION_FILE_UNLOAD_EXE);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.UNLOAD_EXE));
+		mFileItem.setIcon(Resources.getIcon(Icon.UNLOAD_EXE));
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile.addSeparator();
@@ -141,13 +142,13 @@ public class MenuBarHandler implements ActionListener {
 		mFile_Save = mFileItem = new JMenuItem("Save");
 		setAction(mFileItem, ACTION_FILE_SAVE);
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK));
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.SAVE));
+		mFileItem.setIcon(Resources.getIcon(Icon.SAVE));
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile_SaveAs = mFileItem = new JMenuItem("Save As...");
 		setAction(mFileItem, ACTION_FILE_SAVE_AS);
 		mFileItem.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.SAVE_AS));
+		mFileItem.setIcon(Resources.getIcon(Icon.SAVE_AS));
 		mFileItem.setEnabled(false);
 		mFile.add(mFileItem);
 		mFile.addSeparator();
@@ -156,15 +157,15 @@ public class MenuBarHandler implements ActionListener {
 
 		mFileItem = new JMenuItem("Settings");
 		setAction(mFileItem, ACTION_FILE_SETTINGS);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.SETTINGS));
+		mFileItem.setIcon(Resources.getIcon(Icon.SETTINGS));
 		mFile.add(mFileItem);
 		mFileItem = new JMenuItem("About");
 		setAction(mFileItem, ACTION_FILE_ABOUT);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.ABOUT));
+		mFileItem.setIcon(Resources.getIcon(Icon.ABOUT));
 		mFile.add(mFileItem);
 		mFileItem = new JMenuItem("Quit");
 		setAction(mFileItem, ACTION_FILE_QUIT);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.QUIT));
+		mFileItem.setIcon(Resources.getIcon(Icon.QUIT));
 		mFile.add(mFileItem);
 		/*
 		mFile.addSeparator();
@@ -173,7 +174,7 @@ public class MenuBarHandler implements ActionListener {
 		
 		mFileItem = new JMenuItem("Generate profile map");
 		setAction(mFileItem, ACTION_FILE_GEN_PROF_MAP);
-		mFileItem.setIcon(Resources.getIcon(Resources.Icon.EMPTY));
+		mFileItem.setIcon(Resources.getIcon(Icon.EMPTY));
 		mFile.add(mFileItem);
 		*/
 		mb.add(mFile);
