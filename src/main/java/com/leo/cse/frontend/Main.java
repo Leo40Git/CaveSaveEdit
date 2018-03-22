@@ -8,12 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,6 +36,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
@@ -51,6 +51,8 @@ import com.leo.cse.frontend.ui.panels.EditorPanel;
 public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static final long serialVersionUID = -5073541927297432013L;
+
+	public static final Logger LOGGER = LogManager.getLogger("CSE");
 
 	public static final Dimension WINDOW_SIZE = new Dimension(1024, 760);
 	public static final Version VERSION = new Version("4.0");
@@ -233,35 +235,6 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				window.setTitle("CaveSaveEdit - " + prof.getAbsolutePath() + (ProfileManager.isModified() ? "*" : ""));
 		} else
 			window.setTitle("CaveSaveEdit");
-	}
-
-	private static class FNCPrintStream extends PrintStream {
-
-		private PrintStream consoleOut;
-
-		public FNCPrintStream(OutputStream file, boolean err) throws FileNotFoundException {
-			super(file);
-			if (err)
-				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.err));
-			else
-				consoleOut = new PrintStream(new FileOutputStream(FileDescriptor.out));
-		}
-
-		@Override
-		public void write(int b) {
-			synchronized (this) {
-				super.write(b);
-				consoleOut.write(b);
-			}
-		}
-
-		@Override
-		public void write(byte[] buf, int off, int len) {
-			synchronized (this) {
-				super.write(buf, off, len);
-				consoleOut.write(buf, off, len);
-			}
-		}
 	}
 
 	public static class InitLoadFrame extends JDialog {
@@ -456,32 +429,22 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		return loadFrame;
 	}
 
+	private static PrintStream createLoggingRedirector(final PrintStream stream, final Level level) {
+		return new PrintStream(stream) {
+			public void print(final String string) {
+				LOGGER.printf(level, string);
+			}
+		};
+	}
+
 	public static void main(String[] args) {
 		if (GraphicsEnvironment.isHeadless()) {
 			System.out.println("Headless mode is enabled!\nCaveSaveEdit cannot run in headless mode!");
 			System.exit(0);
 		}
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
-		File log = new File("cse.log");
-		if (log.exists())
-			log.delete();
-		try {
-			log.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		FileOutputStream logOut = null;
-		try {
-			logOut = new FileOutputStream(log);
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
-		try {
-			System.setOut(new FNCPrintStream(logOut, false));
-			System.setErr(new FNCPrintStream(logOut, true));
-		} catch (FileNotFoundException e1) {
-			System.exit(1);
-		}
+		System.setOut(createLoggingRedirector(System.out, Level.INFO));
+		System.setErr(createLoggingRedirector(System.err, Level.ERROR));
 		Config.init();
 		final String nolaf = "nolaf";
 		if (new File(System.getProperty("user.dir") + "/" + nolaf).exists())

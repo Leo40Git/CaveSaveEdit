@@ -28,12 +28,12 @@ public class Resources {
 	public static BufferedImage nikuIcon, nikuPunc;
 
 	public static void loadWindow() throws IOException {
-		appIcon = ImageIO.read(Resources.class.getResourceAsStream("icon.png"));
+		appIcon = ImageIO.read(Resources.class.getResourceAsStream("/icon.png"));
 	}
 
 	public static void loadUI() throws IOException, FontFormatException {
 		loadFonts();
-		ui = ImageIO.read(Resources.class.getResourceAsStream("ui.png"));
+		ui = ImageIO.read(Resources.class.getResourceAsStream("/ui.png"));
 		loadImages();
 	}
 

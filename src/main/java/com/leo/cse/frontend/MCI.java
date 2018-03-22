@@ -180,14 +180,14 @@ public class MCI {
 	}
 
 	public static void readDefault() throws Exception {
-		read0(MCI.class.getResourceAsStream("default.mci"), new File("default.mci"));
+		read0(MCI.class.getResourceAsStream("/default.mci"), new File("default.mci"));
 		validate();
 		defaultCx = cx;
 		defaultScope = scope;
 	}
 
 	public static void readPlus() throws Exception {
-		read0(MCI.class.getResourceAsStream("plus.mci"), new File("plus.mci"));
+		read0(MCI.class.getResourceAsStream("/plus.mci"), new File("plus.mci"));
 		plus = true;
 		validate();
 	}
