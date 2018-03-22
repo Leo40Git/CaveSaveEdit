@@ -12,7 +12,7 @@
 			<PatternLayout pattern="${sd:pattern}" />
 			<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
 		</Console>
-		<File name="File" fileName="ostbm.log">
+		<File name="File" fileName="cse.log">
 			<PatternLayout pattern="${sd:pattern}" />
 			<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY" />
 		</File>
