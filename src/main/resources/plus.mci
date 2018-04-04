@@ -24,6 +24,9 @@ function getGraphicsResolution() {
 function getProfileClass() {
     return "com.leo.cse.backend.profile.PlusProfile";
 }
+function getSaveEvent() {
+	return 16;
+}
 // Array of map names
 function getMapNames() {
     return [ "Credits", "Arthur's House (Normal)", "Egg Corridor",

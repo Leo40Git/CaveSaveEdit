@@ -158,6 +158,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			SaveEditorPanel.panel.setLoading(true);
 		window.repaint();
 		Thread exeLoadThread = new Thread(() -> {
+			boolean succ = true;
 			try {
 				ExeData.load(file);
 			} catch (Exception e) {
@@ -165,11 +166,18 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				System.err.println("Executable loading failed.");
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
-				return;
-			} finally {
+				succ = false;
+			}
+			if (succ) {
 				System.out.println("loaded exe " + ExeData.getBase());
 				if (record)
 					Config.set(Config.KEY_LAST_MOD, file.getAbsolutePath());
+				String pExt = ExeData.getExeString(ExeData.STRING_PROFILE_NAME);
+				int pExtD = pExt.lastIndexOf('.');
+				if (pExtD > -1) {
+					pExt = pExt.substring(pExtD + 1, pExt.length());
+					SaveEditorPanel.panel.setProfileExt(pExt);
+				}
 				SwingUtilities.invokeLater(() -> {
 					window.repaint();
 				});

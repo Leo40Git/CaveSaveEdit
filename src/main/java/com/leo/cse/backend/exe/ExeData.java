@@ -4,6 +4,8 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -89,6 +91,8 @@ public class ExeData {
 	public static final String LOADNAME_NPC_TBL_HITBOX = "hitbox";
 	public static final String LOADNAME_NPC_TBL_DISPLAYBOX = "display box";
 	public static final String EVENT_MAP_DATA = "load.map.data";
+	public static final String EVENT_GRAPHICS = "load.gfx";
+	public static final String EVENT_GRAPHICS_RSRC = "load.gfx.rsrc";
 	public static final String EVENT_MAP_INFO = "load.map.info";
 	public static final String LOADNAME_MAP_INFO_PXA = "tileset definition";
 	public static final String LOADNAME_MAP_INFO_IMAGES = "images";
@@ -144,8 +148,6 @@ public class ExeData {
 		ExeData.encoding = encoding;
 	}
 
-	private static int rsrcPtr;
-
 	/**
 	 * Base pointer for the ".rdata" segment in the executable. Used to read
 	 * {@linkplain #exeStrings the executable strings}.
@@ -173,6 +175,10 @@ public class ExeData {
 	 * Pointer to name for the "npc.tbl" file.
 	 */
 	private static final int NPC_TBL_PTR = 0x3AB;
+	/**
+	 * Pointer to name for the "PIXEL" resource file.
+	 */
+	private static final int PIXEL_PTR = 0x4E8;
 	/**
 	 * Pointer to name for the "MyChar" graphics file.
 	 */
@@ -238,6 +244,10 @@ public class ExeData {
 	 */
 	private static final int PXM_TAG_PTR = 0x67C;
 	/**
+	 * Pointer to the profile name.
+	 */
+	private static final int PROFILE_NAME_PTR = 0x700;
+	/**
 	 * Pointer to the profile header.
 	 */
 	private static final int PROFILE_HEADER_PTR = 0x70C;
@@ -290,10 +300,10 @@ public class ExeData {
 	 * Array of pointers which point to string values.
 	 */
 	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, CREDIT_PTR, NPC_TBL_PTR,
-			MYCHAR_PTR, TITLE_PTR, ARMSIMAGE_PTR, ARMS_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR, NPCSYM_PTR,
-			NPCREGU_PTR, TEXTBOX_PTR, CARET_PTR, BULLET_PTR, FACE_PTR, FADE_PTR, LOADING_PTR, PXM_TAG_PTR,
-			PROFILE_HEADER_PTR, PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR, PXA_EXT_PTR,
-			PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR, HEAD_PTR };
+			PIXEL_PTR, MYCHAR_PTR, TITLE_PTR, ARMSIMAGE_PTR, ARMS_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR,
+			NPCSYM_PTR, NPCREGU_PTR, TEXTBOX_PTR, CARET_PTR, BULLET_PTR, FACE_PTR, FADE_PTR, LOADING_PTR, PXM_TAG_PTR,
+			PROFILE_NAME_PTR, PROFILE_HEADER_PTR, PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR,
+			PXA_EXT_PTR, PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR, HEAD_PTR };
 
 	/**
 	 * Name for "ArmsItem.tsc".
@@ -311,6 +321,10 @@ public class ExeData {
 	 * Name for the "npc.tbl" file.
 	 */
 	public static final int STRING_NPC_TBL;
+	/**
+	 * Name for the "PIXEL" resource file.
+	 */
+	public static final int STRING_PIXEL;
 	/**
 	 * Name for the "MyChar" graphics file.
 	 */
@@ -376,6 +390,10 @@ public class ExeData {
 	 */
 	public static final int STRING_PXM_TAG;
 	/**
+	 * Name for the profile.
+	 */
+	public static final int STRING_PROFILE_NAME;
+	/**
 	 * The profile header.
 	 */
 	public static final int STRING_PROFILE_HEADER;
@@ -431,6 +449,7 @@ public class ExeData {
 		STRING_IMG_EXT = Arrays.binarySearch(STRING_POINTERS, IMG_EXT_PTR);
 		STRING_CREDIT = Arrays.binarySearch(STRING_POINTERS, CREDIT_PTR);
 		STRING_NPC_TBL = Arrays.binarySearch(STRING_POINTERS, NPC_TBL_PTR);
+		STRING_PIXEL = Arrays.binarySearch(STRING_POINTERS, PIXEL_PTR);
 		STRING_MYCHAR = Arrays.binarySearch(STRING_POINTERS, MYCHAR_PTR);
 		STRING_TITLE = Arrays.binarySearch(STRING_POINTERS, TITLE_PTR);
 		STRING_ARMSIMAGE = Arrays.binarySearch(STRING_POINTERS, ARMSIMAGE_PTR);
@@ -447,6 +466,7 @@ public class ExeData {
 		STRING_FADE = Arrays.binarySearch(STRING_POINTERS, FADE_PTR);
 		STRING_LOADING = Arrays.binarySearch(STRING_POINTERS, LOADING_PTR);
 		STRING_PXM_TAG = Arrays.binarySearch(STRING_POINTERS, PXM_TAG_PTR);
+		STRING_PROFILE_NAME = Arrays.binarySearch(STRING_POINTERS, PROFILE_NAME_PTR);
 		STRING_PROFILE_HEADER = Arrays.binarySearch(STRING_POINTERS, PROFILE_HEADER_PTR);
 		STRING_PROFILE_FLAGH = Arrays.binarySearch(STRING_POINTERS, PROFILE_FLAGH_PTR);
 		STRING_STAGESELECT = Arrays.binarySearch(STRING_POINTERS, STAGESELECT_PTR);
@@ -565,6 +585,20 @@ public class ExeData {
 	 */
 	private static File base;
 	/**
+	 * Data buffer.
+	 */
+	private static ByteBuffer dataBuf;
+	/**
+	 * Array of the loaded executable's PE headers.
+	 * 
+	 * @see ExeSec
+	 */
+	private static ExeSec[] headers;
+	/**
+	 * ".rsrc" segment information.
+	 */
+	private static ResourceInfo rsrcInfo;
+	/**
 	 * The "data" directory.
 	 */
 	private static File dataDir;
@@ -598,6 +632,10 @@ public class ExeData {
 	 * "Title" graphics file.
 	 */
 	private static File title;
+	/**
+	 * "PIXEL" resource file.
+	 */
+	private static File pixel;
 	/**
 	 * "MyChar" graphics file.
 	 */
@@ -723,7 +761,7 @@ public class ExeData {
 			loadRsrc();
 			loadMapInfo();
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			loaded = false;
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_FAILURE, -1, -1);
 			throw e;
@@ -756,7 +794,7 @@ public class ExeData {
 			loadMapInfo();
 			loadGraphics();
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			loaded = false;
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_FAILURE, -1, -1);
 			throw e;
@@ -839,10 +877,6 @@ public class ExeData {
 			return tag;
 		}
 
-		public void setTag(String t) {
-			tag = t;
-		}
-
 		public int getPos() {
 			return rAddr;
 		}
@@ -861,6 +895,26 @@ public class ExeData {
 
 		public int getLenV() {
 			return vSize;
+		}
+
+		public int getRelocP() {
+			return pReloc;
+		}
+
+		public int getLineP() {
+			return pLine;
+		}
+
+		public short getNumReloc() {
+			return numReloc;
+		}
+
+		public short getNumLine() {
+			return numLine;
+		}
+
+		public int getAttrib() {
+			return attrib;
 		}
 
 		ExeSec(ByteBuffer in, FileChannel f) {
@@ -889,25 +943,6 @@ public class ExeData {
 				err.printStackTrace();
 			}
 		}
-
-		public ByteBuffer toBuf() {
-			ByteBuffer retVal = ByteBuffer.allocate(0x28);
-			retVal.order(ByteOrder.nativeOrder());
-
-			byte[] tagDat = java.util.Arrays.copyOf(tag.getBytes(), 8);
-			retVal.put(tagDat);
-			retVal.putInt(vSize);
-			retVal.putInt(vAddr);
-			retVal.putInt(rSize);
-			retVal.putInt(rAddr);
-			retVal.putInt(pReloc);
-			retVal.putInt(pLine);
-			retVal.putShort(numReloc);
-			retVal.putShort(numLine);
-			retVal.putInt(attrib);
-			retVal.flip();
-			return retVal;
-		}
 	}
 
 	/**
@@ -921,7 +956,25 @@ public class ExeData {
 		FileInputStream inStream;
 		FileChannel inChan;
 		inStream = new FileInputStream(base);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buf = new byte[512];
+		while (inStream.available() > 0) {
+			int l = inStream.read(buf);
+			baos.write(buf, 0, l);
+		}
+		dataBuf = ByteBuffer.wrap(baos.toByteArray());
+		// NOTE: The ByteBuffer doesn't get advanced, hence the use of no-side-effects
+		// functions like getInt(address).
+		// If you do something that advances it,
+		// use a position(0) to deal with that.
+		dataBuf.order(ByteOrder.LITTLE_ENDIAN);
+		rsrcInfo = getResources(dataBuf);
+		if (rsrcInfo == null) {
+			inStream.close();
+			throw new IOException("Could not find .rsrc segment!");
+		}
 		inChan = inStream.getChannel();
+		inChan.position(0);
 		// read PE header
 		ByteBuffer peHead = ByteBuffer.allocate(0x208);
 		peHead.order(ByteOrder.nativeOrder());
@@ -937,7 +990,7 @@ public class ExeData {
 		// read each segment
 		Vector<ByteBuffer> sections = new Vector<>();
 		inChan.position(0x208);
-		int rdataSec = -1, rsrcSec = -1;
+		int rdataSec = -1;
 		for (int i = 0; i < numSection; i++) {
 			ByteBuffer nuBuf = ByteBuffer.allocate(0x28);
 			nuBuf.order(ByteOrder.nativeOrder());
@@ -947,22 +1000,15 @@ public class ExeData {
 			String segStr = new String(nuBuf.array());
 			if (segStr.contains(".rdata"))
 				rdataSec = i;
-			else if (segStr.contains(".rsrc"))
-				rsrcSec = i;
 		}
-		ExeSec[] headers = new ExeSec[sections.size()];
-		for (int i = 0; i < sections.size(); i++) {
+		headers = new ExeSec[sections.size()];
+		for (int i = 0; i < sections.size(); i++)
 			headers[i] = new ExeSec(sections.get(i), inChan);
-		}
 		inStream.close();
 		if (rdataSec == -1)
 			throw new IOException("Could not find .rdata segment!");
-		if (rsrcSec == -1)
-			throw new IOException("Could not find .rsrc segment!");
 		rdataPtr = headers[rdataSec].getPos();
-		rsrcPtr = headers[rsrcSec].getPos();
 		System.out.println("rdataPtr=0x" + Integer.toHexString(rdataPtr).toUpperCase());
-		System.out.println("rsrcPtr=0x" + Integer.toHexString(rsrcPtr).toUpperCase());
 	}
 
 	/**
@@ -1304,7 +1350,7 @@ public class ExeData {
 				uBuf.get(buffer, 0, 0x23);
 				newMap.setMapName(StrTools.CString(buffer, encoding));
 				mapdata.add(newMap);
-				notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps);
+				notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
 			} // for each map
 		} else { // exe has been edited probably
 			if (secHeaders[mapSec].contains(".csmap")) {
@@ -1346,7 +1392,7 @@ public class ExeData {
 					uBuf.get(buffer, 0, 0x23);
 					newMap.setMapName(StrTools.CString(buffer, encoding));
 					mapdata.add(newMap);
-					notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps);
+					notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
 				} // for each map
 			} else {
 				// sue's workshop
@@ -1388,7 +1434,7 @@ public class ExeData {
 					uBuf.get(buffer, 0, 0x23);
 					newMap.setMapName(StrTools.CString(buffer));
 					mapdata.add(newMap);
-					notifyListeners(false, EVENT_MAP_DATA, null, nMaps++, numMaps);
+					notifyListeners(false, EVENT_MAP_DATA, null, nMaps++, numMaps - 1);
 				} // for each map
 			}
 		}
@@ -1435,6 +1481,7 @@ public class ExeData {
 			dBuf.get(buf32);
 			newMap.setMapName(StrTools.CString(buf32, encoding));
 			mapdata.add(newMap);
+			notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
 		}
 		inChan.close();
 		inStream.close();
@@ -1554,6 +1601,7 @@ public class ExeData {
 	private static void loadGraphics() throws IOException {
 		if (graphicsResolution <= 0)
 			graphicsResolution = 1;
+		notifyListeners(false, EVENT_GRAPHICS, null, -1, -1);
 		title = loadGraphic(STRING_TITLE);
 		myChar = loadGraphic(STRING_MYCHAR);
 		armsImage = loadGraphic(STRING_ARMSIMAGE);
@@ -1577,66 +1625,173 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadRsrc() throws IOException {
-		// setup I/O stuff
-		FileInputStream inStream;
-		FileChannel inChan;
-		inStream = new FileInputStream(base);
-		inChan = inStream.getChannel();
-		ByteBuffer uBuf = ByteBuffer.allocate(2);
-		uBuf.order(ByteOrder.LITTLE_ENDIAN);
-		inChan.position(rsrcPtr + 12);
-		inChan.read(uBuf);
-		uBuf.flip();
-		short nameNum = uBuf.getShort();
-		uBuf.clear();
-		inChan.read(uBuf);
-		uBuf.flip();
-		short idNum = uBuf.getShort();
-		ByteBuffer uBuf4 = ByteBuffer.allocate(4);
-		uBuf4.order(ByteOrder.LITTLE_ENDIAN);
-		// read name entries
-		for (int i = 0; i < nameNum; i++) {
-			System.out.println(
-					"Reading name entry " + i + " (at 0x" + Long.toHexString(inChan.position()).toUpperCase() + "):");
-			inChan.read(uBuf4);
-			uBuf4.flip();
-			int nameOffset = uBuf4.getInt();
-			System.out.println("nameOffset=0x" + Integer.toHexString(nameOffset).toUpperCase());
-			uBuf4.clear();
-			inChan.read(uBuf4);
-			uBuf4.flip();
-			int otherThing = uBuf4.getInt();
-			if ((otherThing & (1 << 31)) == 0)
-				// "other thing" is data entry offset
-				System.out.println("dataEntryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
-			else {
-				// "other thing" is subdirectory offset
-				otherThing ^= 1 << 31; // unset high bit
-				System.out.println("subdirectoryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+		notifyListeners(false, EVENT_GRAPHICS_RSRC, null, -1, -1);
+		// Start finding information
+		DirectoryEntry bitmap = findDirectory(dataBuf, rsrcInfo,
+				DirectoryEntry.getEntries(dataBuf, rsrcInfo, rsrcInfo.offset),
+				"2/" + getExeString(STRING_PIXEL) + "/**");
+		ByteArrayInputStream bais = new ByteArrayInputStream(
+				transformBitmap(pullData(dataBuf, rsrcInfo, bitmap.fileOffset)));
+		BufferedImage bi = ImageIO.read(bais);
+		imageMap.put((pixel = new File("PIXEL")), bi);
+	}
+
+	private static byte[] transformBitmap(byte[] bytes) {
+		byte[] bt = new byte[bytes.length + 14];
+		// Input buffer, used to get some details
+		ByteBuffer bb1 = ByteBuffer.wrap(bytes);
+		bb1.order(ByteOrder.LITTLE_ENDIAN);
+		int hdrSize = bb1.getInt(0);
+		int palSize = 4 << (bb1.getShort(0xE) & 0xFFFF);
+		if (hdrSize >= 40) {
+			int otherPalSize = 4 * bb1.getInt(0x20);
+			if (otherPalSize != 0)
+				palSize = otherPalSize;
+		}
+		int start = 14 + hdrSize + palSize;
+
+		ByteBuffer bb = ByteBuffer.wrap(bt);
+		bb.order(ByteOrder.LITTLE_ENDIAN);
+		bb.put((byte) 'B');
+		bb.put((byte) 'M');
+		bb.putInt(bt.length);
+		bb.put((byte) 20);
+		bb.put((byte) 'K');
+		bb.put((byte) 'D');
+		bb.put((byte) 'C');
+		bb.putInt(start);
+		bb.put(bytes);
+		return bt;
+	}
+
+	private static byte[] pullData(ByteBuffer bb, ResourceInfo ri, int fileOffset) {
+		int addr = bb.getInt(fileOffset) + ri.rvaOffset;
+		int size = bb.getInt(fileOffset + 4);
+		dumpHex("FINADR", addr);
+		bb.position(addr);
+		byte[] data = new byte[size];
+		bb.get(data);
+		bb.position(0);
+		return data;
+	}
+
+	private static DirectoryEntry findDirectory(ByteBuffer bb, ResourceInfo ri, DirectoryEntry[] entries, String s) {
+		int idx = s.lastIndexOf('/');
+		if (idx != -1) {
+			DirectoryEntry de = findDirectory(bb, ri, entries, s.substring(0, idx));
+			if (!de.directory)
+				return de;
+			entries = DirectoryEntry.getEntries(bb, ri, de.fileOffset);
+			s = s.substring(idx + 1);
+		}
+		for (DirectoryEntry de : entries) {
+			System.out.println(s + " : " + de);
+			if (s.equals("*"))
+				return de;
+			if (s.equals("**")) {
+				if (de.directory)
+					return findDirectory(bb, ri, DirectoryEntry.getEntries(bb, ri, de.fileOffset), "**");
+				return de;
+			}
+			if (de.name == null) {
+				if (Integer.toString(de.id).equals(s))
+					return de;
+			} else if (de.name.equals(s)) {
+				return de;
 			}
 		}
-		// read ID entries
-		for (int i = 0; i < idNum; i++) {
-			System.out.println(
-					"Reading ID entry " + i + " (at 0x" + Long.toHexString(inChan.position()).toUpperCase() + "):");
-			inChan.read(uBuf4);
-			uBuf4.flip();
-			int id = uBuf4.getInt();
-			System.out.println("id=0x" + Integer.toHexString(id).toUpperCase());
-			uBuf4.clear();
-			inChan.read(uBuf4);
-			uBuf4.flip();
-			int otherThing = uBuf4.getInt();
-			if ((otherThing & (1 << 31)) == 0)
-				// "other thing" is data entry offset
-				System.out.println("dataEntryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
-			else {
-				// "other thing" is subdirectory offset
-				otherThing ^= 1 << 31; // unset high bit
-				System.out.println("subdirectoryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+		return null;
+	}
+
+	private static void dumpHex(String rvaofs, int rvaOffset) {
+		System.out.print(rvaofs);
+		System.out.print(": 0x");
+		System.out.println(Integer.toHexString(rvaOffset));
+	}
+
+	public static ResourceInfo getResources(ByteBuffer bb) {
+		int view = bb.getInt(0x3C);
+		view += 0x04; // enter IMAGE_FILE_HEADER
+		int sectionCount = bb.getShort(view + 2) & 0xFFFF;
+		int toSkipOH = bb.getShort(view + 0x10) & 0xFFFF;
+		view += 0x14; // enter IMAGE_OPTIONAL_HEADER
+		int resourcesRVA = bb.getInt(view + 0x70);
+		// Now we need to calculate offset & rvaOffset
+		view += toSkipOH; // enter section headers
+		for (int i = 0; i < sectionCount; i++) {
+			int vSize = bb.getInt(view + 8);
+			int rva = bb.getInt(view + 0x0C);
+			int fileAddr = bb.getInt(view + 0x14);
+			if ((resourcesRVA >= rva) && (resourcesRVA < (rva + vSize))) {
+				ResourceInfo ri = new ResourceInfo();
+				ri.rvaOffset = fileAddr - rva;
+				ri.offset = resourcesRVA + ri.rvaOffset;
+				return ri;
 			}
+			view += 0x28;
 		}
-		inStream.close();
+		return null;
+	}
+
+	public static class ResourceInfo {
+		// offset is what to modify an rsrc offset by to turn it into a file offset.
+		// In other words, it's the file address of the resource section
+		// rvaOffset is what to modify an RVA by to turn it into a file offset.
+		public int offset, rvaOffset;
+	}
+
+	public static class DirectoryEntry {
+		// May be NULL - See ID in this case
+		public String name;
+		public int id;
+		// The position in the file of the target
+		public int fileOffset;
+		public boolean directory;
+
+		public static DirectoryEntry[] getEntries(ByteBuffer bb, ResourceInfo ri, int view) {
+			dumpHex("ENTER-FA", view);
+			int namedCount = bb.getShort(view + 0x0C) & 0xFFFF;
+			int idCount = bb.getShort(view + 0x0E) & 0xFFFF;
+			view += 0x10;
+			DirectoryEntry[] entries = new DirectoryEntry[namedCount + idCount];
+			for (int i = 0; i < entries.length; i++) {
+				entries[i] = new DirectoryEntry(bb, ri, view);
+				view += 8;
+			}
+			return entries;
+		}
+
+		@Override
+		public String toString() {
+			String ts = name;
+			if (ts == null)
+				ts = Integer.toString(id);
+			ts += " = " + Integer.toHexString(fileOffset) + " " + directory;
+			return ts;
+		}
+
+		// Parses a specific directory entry.
+		public DirectoryEntry(ByteBuffer bb, ResourceInfo ri, int view) {
+			id = bb.getInt(view);
+			if (id < 0) {
+				int strStart = ri.offset + (id ^ 0x80000000);
+				name = pullString(bb, strStart);
+			}
+			fileOffset = bb.getInt(view + 4);
+			if (fileOffset < 0) {
+				fileOffset ^= 0x80000000;
+				directory = true;
+			}
+			fileOffset += ri.offset;
+		}
+
+		public static String pullString(ByteBuffer bb, int strStart) {
+			int count = bb.getShort(strStart) & 0xFFFF;
+			String s = "";
+			for (int i = 0; i < count; i++)
+				s += (char) (bb.getShort(strStart + 2 + (i * 2)) & 0xFFFF);
+			return s;
+		}
 	}
 
 	/**
@@ -1892,6 +2047,15 @@ public class ExeData {
 	}
 
 	/**
+	 * Gets the amount of strings loaded from the executable.
+	 * 
+	 * @return amount of strings from executable
+	 */
+	public static int getExeStringAmount() {
+		return exeStrings.length;
+	}
+
+	/**
 	 * Gets a string loaded from the executable.
 	 * 
 	 * @param id
@@ -1919,6 +2083,15 @@ public class ExeData {
 	 */
 	public static File getBase() {
 		return base;
+	}
+
+	/**
+	 * Gets the executable's PE headers.
+	 * 
+	 * @return headers
+	 */
+	public static ExeSec[] getHeaders() {
+		return headers;
 	}
 
 	/**
@@ -1973,6 +2146,10 @@ public class ExeData {
 	 */
 	public static File getTitle() {
 		return title;
+	}
+
+	public static File getPixel() {
+		return pixel;
 	}
 
 	/**

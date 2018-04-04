@@ -127,6 +127,7 @@ public class MCI {
 			tmp.put("Game.FPS", invokeFunction(tcx, tscope, "getFPS"));
 			tmp.put("Game.GraphicsResolution", invokeFunction(tcx, tscope, "getGraphicsResolution"));
 			tmp.put("Game.ProfileClass", invokeFunction(tcx, tscope, "getProfileClass"));
+			tmp.put("Game.SaveEvent", invokeFunction(tcx, tscope, "getSaveEvent"));
 			// Special support
 			Object oss = invokeFunction(tcx, tscope, "getSpecials");
 			if (oss instanceof NativeArray) {

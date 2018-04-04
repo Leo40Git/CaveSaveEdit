@@ -186,6 +186,8 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			int tilesetNum = e.getInfo().getTileset();
 			if (tilesetNum == 0) // title
 				srcImg = ExeData.getImage(ExeData.getTitle());
+			else if (tilesetNum == 1) // PIXEL
+				srcImg = ExeData.getImage(ExeData.getPixel());
 			else if (tilesetNum == 6) // fade
 				srcImg = ExeData.getImage(ExeData.getFade());
 			else if (tilesetNum == 2) // map tileset
@@ -208,9 +210,9 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				srcImg = ExeData.getImage(ExeData.getCaret());
 			else if (tilesetNum == 20) // npc sym
 				srcImg = ExeData.getImage(ExeData.getNpcSym());
-			else if (tilesetNum == 21)
+			else if (tilesetNum == 21) // map npc sheet 1
 				srcImg = ExeData.getImage(mapInfo.getNpcSheet1());
-			else if (tilesetNum == 22)
+			else if (tilesetNum == 22) // map npc sheet 2
 				srcImg = ExeData.getImage(mapInfo.getNpcSheet2());
 			else if (tilesetNum == 23) // npc regu
 				srcImg = ExeData.getImage(ExeData.getNpcRegu());
@@ -218,7 +220,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				srcImg = ExeData.getImage(ExeData.getTextBox());
 			else if (tilesetNum == 27) // face
 				srcImg = ExeData.getImage(ExeData.getFace());
-			else if (tilesetNum == 28)
+			else if (tilesetNum == 28) // map background
 				srcImg = ExeData.getImage(mapInfo.getBgImage());
 			else
 				srcImg = null;

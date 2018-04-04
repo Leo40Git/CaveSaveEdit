@@ -24,6 +24,9 @@ function getGraphicsResolution() {
 function getProfileClass() {
     return "com.leo.cse.backend.profile.NormalProfile";
 }
+function getSaveEvent() {
+	return 16;
+}
 // Special support
 function getSpecials() {
     return [];
