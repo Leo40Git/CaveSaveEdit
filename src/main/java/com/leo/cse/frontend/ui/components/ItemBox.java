@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
@@ -20,23 +19,13 @@ public class ItemBox extends DefineBox {
 		super(x, y, width, height, new Supplier<Integer>() {
 			@Override
 			public Integer get() {
-				try {
-					return (Integer) ProfileManager.getField(NormalProfile.FIELD_ITEMS, itemId);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
-				return 0;
+				return (Integer) ProfileManager.getField(NormalProfile.FIELD_ITEMS, itemId);
 			}
 		}, new Function<Integer, Integer>() {
 			@Override
 			public Integer apply(Integer t) {
-				try {
-					ProfileManager.setField(NormalProfile.FIELD_ITEMS, itemId, t);
-					return t;
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
-				return -1;
+				ProfileManager.setField(NormalProfile.FIELD_ITEMS, itemId, t);
+				return t;
 			}
 		}, "Item", "item " + (itemId + 1));
 	}

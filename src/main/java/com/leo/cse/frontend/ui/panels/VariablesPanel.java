@@ -1,11 +1,8 @@
 package com.leo.cse.frontend.ui.panels;
 
 import java.awt.Dimension;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
@@ -34,27 +31,11 @@ public class VariablesPanel extends Panel {
 				final int vi2 = varId + 1;
 				compList.add(new Label("V" + FrontUtils.padLeft(Integer.toString(varId), "0", 3) + ":", j * width + 2,
 						22 + i * 17));
-				compList.add(new ShortBox(j * width + 40, 24 + i * 17, width - 44, 16, new Supplier<Short>() {
-					@Override
-					public Short get() {
-						try {
-							return (Short) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, vi2);
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return 0;
-					}
-				}, new Function<Short, Short>() {
-					@Override
-					public Short apply(Short t) {
-						try {
-							ProfileManager.setField(NormalProfile.FIELD_VARIABLES, vi2, t);
-							return t;
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return -1;
-					}
+				compList.add(new ShortBox(j * width + 40, 24 + i * 17, width - 44, 16, () -> {
+					return (Short) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, vi2);
+				}, t -> {
+					ProfileManager.setField(NormalProfile.FIELD_VARIABLES, vi2, t);
+					return t;
 				}, "variable " + varId));
 				varId++;
 			}
@@ -73,27 +54,11 @@ public class VariablesPanel extends Panel {
 					break;
 				final int vi2 = varId;
 				compList.add(new Label(pvl[label] + (labelWater ? " (W):" : ":"), j * width + 2, 300 + i * 16));
-				compList.add(new ShortBox(j * width + 2, 316 + i * 16, width - 6, 16, new Supplier<Short>() {
-					@Override
-					public Short get() {
-						try {
-							return (Short) ProfileManager.getField(NormalProfile.FIELD_PHYSICS_VARIABLES, vi2);
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return 0;
-					}
-				}, new Function<Short, Short>() {
-					@Override
-					public Short apply(Short t) {
-						try {
-							ProfileManager.setField(NormalProfile.FIELD_PHYSICS_VARIABLES, vi2, t);
-							return t;
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return -1;
-					}
+				compList.add(new ShortBox(j * width + 2, 316 + i * 16, width - 6, 16, () -> {
+					return (Short) ProfileManager.getField(NormalProfile.FIELD_PHYSICS_VARIABLES, vi2);
+				}, t -> {
+					ProfileManager.setField(NormalProfile.FIELD_PHYSICS_VARIABLES, vi2, t);
+					return t;
 				}, (labelWater ? "underwater " : "") + pvl[label].toLowerCase()));
 				varId++;
 				label++;
@@ -104,32 +69,13 @@ public class VariablesPanel extends Panel {
 			}
 		}
 		compList.add(new Label("(W) - Underwater physics variable", 4, 362));
-		compList.add(
-				new BooleanBox("Water doesn't cause splash and trigger air timer", false, 4, 386, new Supplier<Boolean>() {
-
-					@Override
-					public Boolean get() {
-						try {
-							Short val = (Short) ProfileManager.getField(NormalProfile.FIELD_PHYSICS_VARIABLES, 16);
-							return (val == 1 ? true : false);
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return false;
-
-					}
-				}, new Function<Boolean, Boolean>() {
-					@Override
-					public Boolean apply(Boolean t) {
-						try {
-							ProfileManager.setField(NormalProfile.FIELD_PHYSICS_VARIABLES, 16, (t ? 1 : 0));
-							return t;
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return false;
-					}
-				}));
+		compList.add(new BooleanBox("Water doesn't cause splash and trigger air timer", false, 4, 386, () -> {
+			Short val = (Short) ProfileManager.getField(NormalProfile.FIELD_PHYSICS_VARIABLES, 16);
+			return (val == 1 ? true : false);
+		}, t -> {
+			ProfileManager.setField(NormalProfile.FIELD_PHYSICS_VARIABLES, 16, (t ? 1 : 0));
+			return t;
+		}));
 	}
 
 }

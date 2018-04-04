@@ -2,7 +2,7 @@
 A Java-based Cave Story profile editor, complete with mod support.
 # How to Compile
 First off, CaveSaveEdit will only compile on Java 8 without modifications to the map sorting functions in `com.leo.cse.frontend.FrontUtils` and a few other places where lambdas are used.  
-CSE has a dependency on [Rhino](https://github.com/mozilla/rhino). Versions 1_7R5 and 1.7.7.2 have been confirmed to work, although other versions might work as well.  
+CSE has a dependency on [Rhino](https://github.com/mozilla/rhino). Versions 1_7R5, 1.7.7.2 and 1.7.8 have been confirmed to work, although other versions might work as well.  
 There is only one `main` method, located in `com.leo.cse.frontend.Main`.  
 This is an Eclipse project, although I believe IntelliJ can import Eclipse projects natively.  
 # How to Use

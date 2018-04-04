@@ -17,8 +17,6 @@ import com.leo.cse.backend.exe.MapInfo;
 import com.leo.cse.backend.exe.MapInfo.PxeEntry;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.PlusProfile;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
-import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
 import com.leo.cse.backend.profile.ProfileListener;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
@@ -44,15 +42,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	private short playerHoverX, playerHoverY;
 
 	private int getMap() {
-		try {
-			Object obj = ProfileManager.getField(NormalProfile.FIELD_MAP);
-			if (obj == null)
-				return -1;
-			return (Integer) obj;
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
-		return 0;
+		Object obj = ProfileManager.getField(NormalProfile.FIELD_MAP);
+		if (obj == null)
+			return -1;
+		return (Integer) obj;
 	}
 
 	public MapView(int x, int y, Supplier<Boolean> gSup) {
@@ -179,21 +172,13 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			short flagID = e.getFlagID();
 			if ((flags & 0x0800) != 0) {
 				// Appear once flagID set
-				try {
-					if (!(boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flagID))
-						return;
-				} catch (ProfileFieldException e1) {
-					e1.printStackTrace();
-				}
+				if (!(boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flagID))
+					return;
 			}
 			if ((flags & 0x4000) != 0) {
 				// No Appear if flagID set
-				try {
-					if (!(boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flagID))
-						return;
-				} catch (ProfileFieldException e1) {
-					e1.printStackTrace();
-				}
+				if ((boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flagID))
+					return;
 			}
 			BufferedImage srcImg;
 			int tilesetNum = e.getInfo().getTileset();
@@ -268,28 +253,24 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
 		int dir = 0;
 		long costume = 0;
-		try {
-			dir = ((Integer) ProfileManager.getField(NormalProfile.FIELD_DIRECTION) == 2 ? 1 : 0);
-			if (MCI.getSpecial("VarHack"))
-				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, 6);
-			if (MCI.getSpecial("MimHack"))
-				costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
-			else {
-				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
-				if (ProfileManager.getType() == PlusProfile.class) {
-					int curSec = (Integer) ProfileManager.callMethod(PlusProfile.METHOD_GET_ACTIVE_FILE);
-					if (curSec > 2)
-						costume += 10;
-					int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
-					while (diff > 5)
-						diff -= 5;
-					if (diff % 2 == 1)
-						diff--;
-					costume += diff;
-				}
+		dir = ((Integer) ProfileManager.getField(NormalProfile.FIELD_DIRECTION) == 2 ? 1 : 0);
+		if (MCI.getSpecial("VarHack"))
+			costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, 6);
+		if (MCI.getSpecial("MimHack"))
+			costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
+		else {
+			costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
+			if (ProfileManager.getType() == PlusProfile.class) {
+				int curSec = (Integer) ProfileManager.callMethod(PlusProfile.METHOD_GET_ACTIVE_FILE);
+				if (curSec > 2)
+					costume += 10;
+				int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
+				while (diff > 5)
+					diff -= 5;
+				if (diff % 2 == 1)
+					diff--;
+				costume += diff;
 			}
-		} catch (ProfileFieldException | ProfileMethodException e) {
-			e.printStackTrace();
 		}
 		int xPixel = playerPos[0];
 		if (drawType == DRAWTYPE_HOVER)
@@ -360,11 +341,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	}
 
 	public void updatePlayerPos() {
-		try {
-			playerPos = (Short[]) ProfileManager.getField(NormalProfile.FIELD_POSITION);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
+		playerPos = (Short[]) ProfileManager.getField(NormalProfile.FIELD_POSITION);
 	}
 
 	@Override
@@ -386,11 +363,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			Short[] pos = new Short[2];
 			pos[0] = (short) (x - this.x + camX);
 			pos[1] = (short) (y - this.y + camY);
-			try {
-				ProfileManager.setField(NormalProfile.FIELD_POSITION, pos);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			ProfileManager.setField(NormalProfile.FIELD_POSITION, pos);
 			updatePlayerPos();
 		}
 	}
@@ -428,11 +401,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		Short[] pos = new Short[2];
 		pos[0] = (short) px;
 		pos[1] = (short) py;
-		try {
-			ProfileManager.setField(NormalProfile.FIELD_POSITION, pos);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
+		ProfileManager.setField(NormalProfile.FIELD_POSITION, pos);
 		updatePlayerPos();
 		updateCamCoords();
 	}
@@ -460,11 +429,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			return;
 		if (mapInfo.hasMissingAssets())
 			return;
-		try {
-			ProfileManager.setField(NormalProfile.FIELD_POSITION, playerPos);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
+		ProfileManager.setField(NormalProfile.FIELD_POSITION, playerPos);
 		updateCamCoords();
 		ignoreClick = 1;
 		updateHover(px, py, true);

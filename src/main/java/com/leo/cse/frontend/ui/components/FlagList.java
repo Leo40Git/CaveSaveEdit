@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
@@ -74,7 +73,7 @@ public class FlagList extends Component {
 			this.id = id;
 			this.hover = hover;
 		}
-		
+
 		public Flag(int id) {
 			this(id, false);
 		}
@@ -93,7 +92,7 @@ public class FlagList extends Component {
 	}
 
 	protected List<Flag> shownFlags;
-	
+
 	protected void createShownFlags() {
 		if (shownFlags == null)
 			shownFlags = new ArrayList<>();
@@ -133,12 +132,8 @@ public class FlagList extends Component {
 			g.fillRect(x, y, 16, 16);
 			BufferedImage chkImage = Resources.checkboxDisabled;
 			if (isFlagValid(id))
-				try {
-					chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id) ? Resources.checkboxOn
-							: Resources.checkboxOff);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
+				chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id) ? Resources.checkboxOn
+						: Resources.checkboxOff);
 			g.drawImage(chkImage, x, y, null);
 			g.setColor(Main.lineColor);
 			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 4), x + 18, y - 2);
@@ -160,12 +155,8 @@ public class FlagList extends Component {
 			if (!isFlagValid(id))
 				continue;
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
-				try {
-					boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id);
-					ProfileManager.setField(NormalProfile.FIELD_FLAGS, id, !value);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
+				boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id);
+				ProfileManager.setField(NormalProfile.FIELD_FLAGS, id, !value);
 				break;
 			}
 			fy += 17;

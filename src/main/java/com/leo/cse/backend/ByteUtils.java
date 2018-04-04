@@ -128,7 +128,7 @@ public class ByteUtils {
 	public static String readString(byte[] data, int ptr, int length) {
 		return readString(data, ptr, length, StrTools.DEFAULT_ENCODING);
 	}
-	
+
 	/**
 	 * Reads an array of <code>byte</code>s from a byte array.
 	 * 
@@ -303,7 +303,7 @@ public class ByteUtils {
 		byte[] dc = value.getBytes();
 		System.arraycopy(dc, 0, data, ptr, value.length());
 	}
-	
+
 	/**
 	 * Writes an array of <code>byte</code>s to a byte array.
 	 * 
@@ -317,6 +317,10 @@ public class ByteUtils {
 	 *            shorts to write
 	 */
 	public static void writeBytes(byte[] data, int ptr, int off, byte[] value) {
+		if (off == 0) {
+			System.arraycopy(value, 0, data, ptr, value.length);
+			return;
+		}
 		for (int i = 0; i < value.length; i++) {
 			data[ptr] = value[i];
 			ptr += 1 + off;

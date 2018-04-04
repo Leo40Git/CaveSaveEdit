@@ -1,11 +1,8 @@
 package com.leo.cse.frontend.ui.panels;
 
 import java.awt.Dimension;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
@@ -25,132 +22,52 @@ public class InventoryPanel extends Panel {
 		final Dimension winSize = Main.WINDOW_SIZE;
 		final String l = "Selected";
 		int xx = 4;
-		compList.add(new RadioBoxes(xx + 32, 8, xx + (122 * 7), 7, new String[] { l, l, l, l, l, l, l },
-				new Supplier<Integer>() {
-					@Override
-					public Integer get() {
-						try {
-							return (Integer) ProfileManager.getField(NormalProfile.FIELD_CURRENT_WEAPON);
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return 0;
-					}
-				}, new Function<Integer, Integer>() {
-					@Override
-					public Integer apply(Integer t) {
-						try {
-							ProfileManager.setField(NormalProfile.FIELD_CURRENT_WEAPON, t);
-							return t;
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
-						return -1;
-					}
-				}, true, (Integer index) -> {
-					return true;
-				}));
+		compList.add(new RadioBoxes(xx + 32, 8, xx + (122 * 7), 7, new String[] { l, l, l, l, l, l, l }, () -> {
+			return (Integer) ProfileManager.getField(NormalProfile.FIELD_CURRENT_WEAPON);
+		}, t -> {
+			ProfileManager.setField(NormalProfile.FIELD_CURRENT_WEAPON, t);
+			return t;
+		}, true, (Integer index) -> {
+			return true;
+		}));
 		for (int i = 0; i < 7; i++) {
 			final int i2 = i;
 			compList.add(new WeaponBox(xx, 22, i));
 			compList.add(new Label("Level:", xx, 72));
-			compList.add(new IntegerBox(xx, 90, 120, 16, new Supplier<Integer>() {
-				@Override
-				public Integer get() {
-					try {
-						return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_LEVEL, i2);
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return 0;
-				}
-			}, new Function<Integer, Integer>() {
-				@Override
-				public Integer apply(Integer t) {
-					try {
-						ProfileManager.setField(NormalProfile.FIELD_WEAPON_LEVEL, i2, t);
-						return t;
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return -1;
-				}
+			compList.add(new IntegerBox(xx, 90, 120, 16, () -> {
+				return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_LEVEL, i2);
+			}, t -> {
+				ProfileManager.setField(NormalProfile.FIELD_WEAPON_LEVEL, i2, t);
+				return t;
 			}, "weapon " + (i + 1) + " level"));
 			compList.add(new Label("Extra EXP:", xx, 108));
-			compList.add(new IntegerBox(xx, 126, 120, 16, new Supplier<Integer>() {
-				@Override
-				public Integer get() {
-					try {
-						return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_EXP, i2);
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return 0;
-				}
-			}, new Function<Integer, Integer>() {
-				@Override
-				public Integer apply(Integer t) {
-					try {
-						ProfileManager.setField(NormalProfile.FIELD_WEAPON_EXP, i2, t);
-						return t;
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return -1;
-				}
+			compList.add(new IntegerBox(xx, 126, 120, 16, () -> {
+				return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_EXP, i2);
+			}, t -> {
+				ProfileManager.setField(NormalProfile.FIELD_WEAPON_EXP, i2, t);
+				return t;
 			}, "weapon " + (i + 1) + " extra EXP"));
 			compList.add(new Label("Ammo:", xx + 10, 144));
-			compList.add(new IntegerBox(xx + 10, 162, 110, 16, new Supplier<Integer>() {
-				@Override
-				public Integer get() {
-					try {
-						return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_CURRENT_AMMO, i2);
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return 0;
-				}
-			}, new Function<Integer, Integer>() {
-				@Override
-				public Integer apply(Integer t) {
-					try {
-						ProfileManager.setField(NormalProfile.FIELD_WEAPON_CURRENT_AMMO, i2, t);
-						return t;
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return -1;
-				}
+			compList.add(new IntegerBox(xx + 10, 162, 110, 16, () -> {
+				return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_CURRENT_AMMO, i2);
+			}, t -> {
+				ProfileManager.setField(NormalProfile.FIELD_WEAPON_CURRENT_AMMO, i2, t);
+				return t;
 			}, "weapon " + (i + 1) + " current ammo"));
 			compList.add(new Label("/", xx + 2, 180));
-			compList.add(new IntegerBox(xx + 10, 180, 110, 16, new Supplier<Integer>() {
-				@Override
-				public Integer get() {
-					try {
-						return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_MAXIMUM_AMMO, i2);
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return 0;
-				}
-			}, new Function<Integer, Integer>() {
-				@Override
-				public Integer apply(Integer t) {
-					try {
-						ProfileManager.setField(NormalProfile.FIELD_WEAPON_MAXIMUM_AMMO, i2, t);
-						return t;
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return -1;
-				}
+			compList.add(new IntegerBox(xx + 10, 180, 110, 16, () -> {
+				return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_MAXIMUM_AMMO, i2);
+			}, t -> {
+				ProfileManager.setField(NormalProfile.FIELD_WEAPON_MAXIMUM_AMMO, i2, t);
+				return t;
 			}, "weapon " + (i + 1) + " maximum ammo"));
 			xx += 122;
 		}
 		int itemId = 0;
 		for (int i = 0; i < 6; i++) {
 			for (int j = 0; j < 5; j++) {
-				compList.add(new ItemBox(4 + j * (winSize.width / 5 - 1), 204 + i * 50, winSize.width / 5 - 4, 48, itemId));
+				compList.add(
+						new ItemBox(4 + j * (winSize.width / 5 - 1), 204 + i * 50, winSize.width / 5 - 4, 48, itemId));
 				itemId++;
 			}
 		}
@@ -158,102 +75,37 @@ public class InventoryPanel extends Panel {
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 8; j++) {
 				final int i2 = equipId;
-				compList.add(new BooleanBox("Equip." + equipId, true, 4 + (winSize.width / 3) * i, 506 + 18 * j,
-						new Supplier<Boolean>() {
-							@Override
-							public Boolean get() {
-								try {
-									return (Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, i2);
-								} catch (ProfileFieldException e) {
-									e.printStackTrace();
-								}
-								return false;
-							}
-						}, new Function<Boolean, Boolean>() {
-							@Override
-							public Boolean apply(Boolean t) {
-								try {
-									ProfileManager.setField(NormalProfile.FIELD_EQUIPS, i2, t);
-									return t;
-								} catch (ProfileFieldException e) {
-									e.printStackTrace();
-								}
-								return false;
-							}
-						}));
+				compList.add(new BooleanBox("Equip." + equipId, true, 4 + (winSize.width / 3) * i, 506 + 18 * j, () -> {
+					return (Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, i2);
+				}, t -> {
+					ProfileManager.setField(NormalProfile.FIELD_EQUIPS, i2, t);
+					return t;
+				}));
 				equipId++;
 			}
 		}
 		compList.add(new Label("Whimsical Star Count:", 4 + (winSize.width / 3) * 2, 505));
-		compList.add(new ShortBox(4 + (winSize.width / 3) * 2, 521, 120, 16, new Supplier<Short>() {
-			@Override
-			public Short get() {
-				try {
-					return (Short) ProfileManager.getField(NormalProfile.FIELD_STAR_COUNT);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
-				return 0;
-			}
-		}, new Function<Short, Short>() {
-			@Override
-			public Short apply(Short t) {
-				try {
-					ProfileManager.setField(NormalProfile.FIELD_STAR_COUNT, t);
-					return t;
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
-				return -1;
-			}
+		compList.add(new ShortBox(4 + (winSize.width / 3) * 2, 521, 120, 16, () -> {
+			return (Short) ProfileManager.getField(NormalProfile.FIELD_STAR_COUNT);
+		}, t -> {
+			ProfileManager.setField(NormalProfile.FIELD_STAR_COUNT, t);
+			return t;
 		}, "Whimsical Star count"));
 		if (!MCI.getSpecial("VarHack") && MCI.getSpecial("MimHack")) {
 			compList.add(new Label("<MIM Costume:", 4 + (winSize.width / 3) * 2, 539));
-			compList.add(new LongBox(4 + (winSize.width / 3) * 2, 555, 120, 16, new Supplier<Long>() {
-				@Override
-				public Long get() {
-					try {
-						return (Long) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return 0L;
-				}
-			}, new Function<Long, Long>() {
-				@Override
-				public Long apply(Long t) {
-					try {
-						ProfileManager.setField(NormalProfile.FIELD_MIM_COSTUME, t);
-						return t;
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return -1L;
-				}
+			compList.add(new LongBox(4 + (winSize.width / 3) * 2, 555, 120, 16, () -> {
+				return (Long) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
+			}, t -> {
+				ProfileManager.setField(NormalProfile.FIELD_MIM_COSTUME, t);
+				return t;
 			}, "<MIM costume"));
 		} else if (MCI.getSpecial("BuyHack")) {
 			compList.add(new Label("Amount of Cash:", 4 + (winSize.width / 3) * 2, 539));
-			compList.add(new LongBox(4 + (winSize.width / 3) * 2, 555, 120, 16, new Supplier<Long>() {
-				@Override
-				public Long get() {
-					try {
-						return (Long) ProfileManager.getField(NormalProfile.FIELD_CASH);
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return 0L;
-				}
-			}, new Function<Long, Long>() {
-				@Override
-				public Long apply(Long t) {
-					try {
-						ProfileManager.setField(NormalProfile.FIELD_CASH, t);
-						return t;
-					} catch (ProfileFieldException e) {
-						e.printStackTrace();
-					}
-					return -1L;
-				}
+			compList.add(new LongBox(4 + (winSize.width / 3) * 2, 555, 120, 16, () -> {
+				return (Long) ProfileManager.getField(NormalProfile.FIELD_CASH);
+			}, t -> {
+				ProfileManager.setField(NormalProfile.FIELD_CASH, t);
+				return t;
 			}, "amount of cash"));
 		}
 	}

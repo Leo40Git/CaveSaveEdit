@@ -76,6 +76,16 @@ public class ExeData {
 
 	public static final String EVENT_EXE_STRING = "load.exestr";
 	public static final String EVENT_NPC_TBL = "load.npctbl";
+	public static final String LOADNAME_NPC_TBL_FLAGS = "entity flags";
+	public static final String LOADNAME_NPC_TBL_HEALTH = "amount of health health";
+	public static final String LOADNAME_NPC_TBL_TILESET = "tileset to use";
+	public static final String LOADNAME_NPC_TBL_DEATHSND = "death sound";
+	public static final String LOADNAME_NPC_TBL_HURTSND = "hurt sound";
+	public static final String LOADNAME_NPC_TBL_SIZE = "smoke & dropped health/missile size";
+	public static final String LOADNAME_NPC_TBL_EXP = "experience dropped on defeat";
+	public static final String LOADNAME_NPC_TBL_DAMAGE = "amount of damage";
+	public static final String LOADNAME_NPC_TBL_HITBOX = "hitbox";
+	public static final String LOADNAME_NPC_TBL_DISPLAYBOX = "display box";
 	public static final String EVENT_MAP_DATA = "load.map.data";
 	public static final String EVENT_MAP_INFO = "load.map.info";
 	public static final String LOADNAME_MAP_INFO_PXA = "tileset definition";
@@ -132,17 +142,19 @@ public class ExeData {
 		ExeData.encoding = encoding;
 	}
 
+	private static int rsrcPtr;
+
 	/**
 	 * Base pointer for the ".rdata" segment in the executable. Used to read
 	 * {@linkplain #exeStrings the executable strings}.
 	 */
 	private static int rdataPtr;
 
-	// --------
-	// Pointers
-	// --------
-	// ...well, technically not actual pointers, but file positions
-	// Relative to rdataPtr!
+	// -------------
+	// Data Pointers
+	// -------------
+
+	// --!-- RELATIVE TO rdataPtr! --!--
 	/**
 	 * Pointer to file name for "ArmsItem.tsc".
 	 */
@@ -646,28 +658,20 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	public static void load(File file) throws IOException {
-		Thread exeLoad = new Thread(() -> {
-			File base = file;
-			if (base == null)
-				base = new File(ProfileManager.getFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName")
-						+ ".exe");
-			if (!base.exists())
-				return;
-			try {
-				load0(base);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.err.println("EXE loading failed.");
-				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
-						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
-			}
-			try {
-				Thread.currentThread().join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}, "ExeLoad");
-		exeLoad.start();
+		File base = file;
+		if (base == null)
+			base = new File(ProfileManager.getLoadedFile().getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName")
+					+ ".exe");
+		if (!base.exists())
+			return;
+		try {
+			load0(base);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("EXE loading failed.");
+			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
+					"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	/**
@@ -700,6 +704,7 @@ public class ExeData {
 		plusMode = false;
 		try {
 			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
+			locateSegments();
 			loadExeStrings();
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
@@ -712,8 +717,9 @@ public class ExeData {
 			loadNpcTbl();
 			fillMapdata();
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
-			loadMapInfo();
 			loadGraphics();
+			loadRsrc();
+			loadMapInfo();
 			notifyListeners(false, EVENT_POSTLOAD, null, -1, -1);
 		} catch (IOException e) {
 			loaded = false;
@@ -901,17 +907,13 @@ public class ExeData {
 	}
 
 	/**
-	 * Loads strings from the executable.
+	 * Locate the executable segments.
 	 * 
 	 * @throws IOException
-	 *             if an I/O error occurs.
+	 *             if an I/O exception occurs.
 	 */
-	private static void loadExeStrings() throws IOException {
-		String name = base.getName();
-		String ext = name.substring(name.length() - 3, name.length());
-		if (!"exe".equals(ext))
-			throw new IOException("Base file is not an executable!");
-		// locate .rdata segment
+	private static void locateSegments() throws IOException {
+		// setup I/O stuff
 		FileInputStream inStream;
 		FileChannel inChan;
 		inStream = new FileInputStream(base);
@@ -929,10 +931,9 @@ public class ExeData {
 		uBuf.flip();
 		int numSection = uBuf.getShort();
 		// read each segment
-		// find the .rdata segment
 		Vector<ByteBuffer> sections = new Vector<>();
 		inChan.position(0x208);
-		int rdataSec = -1;
+		int rdataSec = -1, rsrcSec = -1;
 		for (int i = 0; i < numSection; i++) {
 			ByteBuffer nuBuf = ByteBuffer.allocate(0x28);
 			nuBuf.order(ByteOrder.nativeOrder());
@@ -942,17 +943,42 @@ public class ExeData {
 			String segStr = new String(nuBuf.array());
 			if (segStr.contains(".rdata"))
 				rdataSec = i;
+			else if (segStr.contains(".rsrc"))
+				rsrcSec = i;
 		}
 		ExeSec[] headers = new ExeSec[sections.size()];
 		for (int i = 0; i < sections.size(); i++) {
 			headers[i] = new ExeSec(sections.get(i), inChan);
 		}
-		if (rdataSec == -1) {
-			inStream.close();
+		inStream.close();
+		if (rdataSec == -1)
 			throw new IOException("Could not find .rdata segment!");
-		}
+		if (rsrcSec == -1)
+			throw new IOException("Could not find .rsrc segment!");
 		rdataPtr = headers[rdataSec].getPos();
+		rsrcPtr = headers[rsrcSec].getPos();
 		System.out.println("rdataPtr=0x" + Integer.toHexString(rdataPtr).toUpperCase());
+		System.out.println("rsrcPtr=0x" + Integer.toHexString(rsrcPtr).toUpperCase());
+	}
+
+	/**
+	 * Loads strings from the executable.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void loadExeStrings() throws IOException {
+		String name = base.getName();
+		String ext = name.substring(name.length() - 3, name.length());
+		if (!"exe".equals(ext))
+			throw new IOException("Base file is not an executable!");
+		// setup I/O stuff
+		FileInputStream inStream;
+		FileChannel inChan;
+		inStream = new FileInputStream(base);
+		inChan = inStream.getChannel();
+		ByteBuffer uBuf = ByteBuffer.allocate(2);
+		uBuf.order(ByteOrder.LITTLE_ENDIAN);
 		// read the text
 		exeStrings = new String[STRING_POINTERS.length];
 		byte[] buffer = new byte[0x10];
@@ -1087,6 +1113,7 @@ public class ExeData {
 		flagDat = new short[calculated_npcs];
 		for (int i = 0; i < flagDat.length; i++) {
 			flagDat[i] = dBuf.getShort();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_FLAGS, i, calculated_npcs - 1);
 		}
 
 		// read health section
@@ -1097,6 +1124,7 @@ public class ExeData {
 		healthDat = new short[calculated_npcs];
 		for (int i = 0; i < healthDat.length; i++) {
 			healthDat[i] = dBuf.getShort();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_HEALTH, i, calculated_npcs - 1);
 		}
 
 		// read tileset section
@@ -1104,28 +1132,44 @@ public class ExeData {
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		tilesetDat = dBuf.array();
+		tilesetDat = new byte[calculated_npcs];
+		for (int i = 0; i < tilesetDat.length; i++) {
+			tilesetDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_TILESET, i, calculated_npcs - 1);
+		}
 
 		// read death sound section
 		dBuf = ByteBuffer.allocate(calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		deathDat = dBuf.array();
+		deathDat = new byte[calculated_npcs];
+		for (int i = 0; i < deathDat.length; i++) {
+			deathDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DEATHSND, i, calculated_npcs - 1);
+		}
 
 		// read hurt sound section
 		dBuf = ByteBuffer.allocate(calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		hurtDat = dBuf.array();
+		hurtDat = new byte[calculated_npcs];
+		for (int i = 0; i < hurtDat.length; i++) {
+			hurtDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_HURTSND, i, calculated_npcs - 1);
+		}
 
 		// read size section
 		dBuf = ByteBuffer.allocate(calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		sizeDat = dBuf.array();
+		sizeDat = new byte[calculated_npcs];
+		for (int i = 0; i < sizeDat.length; i++) {
+			sizeDat[i] = dBuf.get();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_SIZE, i, calculated_npcs - 1);
+		}
 
 		// read experience section
 		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
@@ -1135,6 +1179,7 @@ public class ExeData {
 		expDat = new int[calculated_npcs];
 		for (int i = 0; i < expDat.length; i++) {
 			expDat[i] = dBuf.getInt();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_EXP, i, calculated_npcs - 1);
 		}
 
 		// read damage section
@@ -1145,21 +1190,34 @@ public class ExeData {
 		damageDat = new int[calculated_npcs];
 		for (int i = 0; i < damageDat.length; i++) {
 			damageDat[i] = dBuf.getInt();
+			notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DAMAGE, i, calculated_npcs - 1);
 		}
 
+		int npcId = 0;
 		// read hitbox section
 		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		hitboxDat = dBuf.array();
+		hitboxDat = new byte[4 * calculated_npcs];
+		for (int i = 0; i < hitboxDat.length; i++) {
+			hitboxDat[i] = dBuf.get();
+			if (i % 4 == 0)
+				notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_HITBOX, npcId++, calculated_npcs - 1);
+		}
 
+		npcId = 0;
 		// read display box section
 		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		displayDat = dBuf.array();
+		displayDat = new byte[4 * calculated_npcs];
+		for (int i = 0; i < displayDat.length; i++) {
+			displayDat[i] = dBuf.get();
+			if (i % 4 == 0)
+				notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DISPLAYBOX, npcId++, calculated_npcs);
+		}
 		// finished reading file
 		inChan.close();
 		inStream.close();
@@ -1490,7 +1548,7 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadGraphics() throws IOException {
-		if (graphicsResolution < 0)
+		if (graphicsResolution <= 0)
 			graphicsResolution = 1;
 		title = loadGraphic(STRING_TITLE);
 		myChar = loadGraphic(STRING_MYCHAR);
@@ -1506,6 +1564,75 @@ public class ExeData {
 		face = loadGraphic(STRING_FACE);
 		fade = loadGraphic(STRING_FADE);
 		loading = loadGraphic(STRING_LOADING);
+	}
+
+	/**
+	 * Load resources from the executable.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void loadRsrc() throws IOException {
+		// setup I/O stuff
+		FileInputStream inStream;
+		FileChannel inChan;
+		inStream = new FileInputStream(base);
+		inChan = inStream.getChannel();
+		ByteBuffer uBuf = ByteBuffer.allocate(2);
+		uBuf.order(ByteOrder.LITTLE_ENDIAN);
+		inChan.position(rsrcPtr + 12);
+		inChan.read(uBuf);
+		uBuf.flip();
+		short nameNum = uBuf.getShort();
+		uBuf.clear();
+		inChan.read(uBuf);
+		uBuf.flip();
+		short idNum = uBuf.getShort();
+		ByteBuffer uBuf4 = ByteBuffer.allocate(4);
+		uBuf4.order(ByteOrder.LITTLE_ENDIAN);
+		// read name entries
+		for (int i = 0; i < nameNum; i++) {
+			System.out.println(
+					"Reading name entry " + i + " (at 0x" + Long.toHexString(inChan.position()).toUpperCase() + "):");
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int nameOffset = uBuf4.getInt();
+			System.out.println("nameOffset=0x" + Integer.toHexString(nameOffset).toUpperCase());
+			uBuf4.clear();
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int otherThing = uBuf4.getInt();
+			if ((otherThing & (1 << 31)) == 0)
+				// "other thing" is data entry offset
+				System.out.println("dataEntryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			else {
+				// "other thing" is subdirectory offset
+				otherThing ^= 1 << 31; // unset high bit
+				System.out.println("subdirectoryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			}
+		}
+		// read ID entries
+		for (int i = 0; i < idNum; i++) {
+			System.out.println(
+					"Reading ID entry " + i + " (at 0x" + Long.toHexString(inChan.position()).toUpperCase() + "):");
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int id = uBuf4.getInt();
+			System.out.println("id=0x" + Integer.toHexString(id).toUpperCase());
+			uBuf4.clear();
+			inChan.read(uBuf4);
+			uBuf4.flip();
+			int otherThing = uBuf4.getInt();
+			if ((otherThing & (1 << 31)) == 0)
+				// "other thing" is data entry offset
+				System.out.println("dataEntryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			else {
+				// "other thing" is subdirectory offset
+				otherThing ^= 1 << 31; // unset high bit
+				System.out.println("subdirectoryOffset=0x" + Integer.toHexString(otherThing).toUpperCase());
+			}
+		}
+		inStream.close();
 	}
 
 	/**

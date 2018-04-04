@@ -15,8 +15,6 @@ import javax.swing.JOptionPane;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
-import com.leo.cse.backend.profile.IProfile.ProfileMethodException;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.ProfileManager;
@@ -58,34 +56,15 @@ public class PlusSlots extends Component {
 			g.setColor(Main.lineColor);
 			g.setFont(Resources.font);
 			FrontUtils.drawString(g, Integer.toUnsignedString(section + 1), x + 248, y);
-			boolean exists = false;
-			try {
-				exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, section);
-			} catch (ProfileMethodException e) {
-				e.printStackTrace();
-			}
+			boolean exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, section);
 			if (!exists) {
 				FrontUtils.drawString(g, "New", x + 4, y + 58);
 				return;
 			}
-			try {
-				ProfileManager.callMethod(PlusProfile.METHOD_PUSH_ACTIVE_FILE, section);
-			} catch (ProfileMethodException e) {
-				e.printStackTrace();
-			}
-			int wepx = 0, wepnum = 0;
-			try {
-				wepnum = (Integer) ProfileManager.getField(NormalProfile.FIELD_CURRENT_WEAPON);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			ProfileManager.callMethod(PlusProfile.METHOD_PUSH_ACTIVE_FILE, section);
+			int wepx = 0, wepnum = (Integer) ProfileManager.getField(NormalProfile.FIELD_CURRENT_WEAPON);
 			for (int i = 0; i < 7; i++) {
-				int wep = 0;
-				try {
-					wep = (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_ID, wepnum);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
+				int wep = (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_ID, wepnum);
 				wepnum++;
 				if (wepnum > 6)
 					wepnum = 0;
@@ -94,14 +73,8 @@ public class PlusSlots extends Component {
 				g.drawImage(imgCache[IC_WEPS + wep - 1], x + 4 + (34 * wepx), y + 4, null);
 				wepx++;
 			}
-
-			short maxHP = 1, curHP = 0;
-			try {
-				maxHP = (short) ProfileManager.getField(NormalProfile.FIELD_MAXIMUM_HEALTH);
-				curHP = (short) ProfileManager.getField(NormalProfile.FIELD_CURRENT_HEALTH);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			short maxHP = (short) ProfileManager.getField(NormalProfile.FIELD_MAXIMUM_HEALTH);
+			short curHP = (short) ProfileManager.getField(NormalProfile.FIELD_CURRENT_HEALTH);
 			g.drawImage(imgCache[IC_HP_BAR], x + 4, y + 40, null);
 			int curHPTen = curHP / 10;
 			if (curHPTen != 0)
@@ -109,39 +82,25 @@ public class PlusSlots extends Component {
 			g.drawImage(imgCache[IC_NUMBERS + (curHP % 10)], x + 36, y + 40, null);
 			if (maxHP > 0)
 				g.drawImage(imgCache[IC_HP_FILL], x + 52, y + 42, (int) (78 * (curHP / (float) maxHP)), 10, null);
-			long unix = 0;
-			try {
-				unix = (long) ProfileManager.getField(PlusProfile.FIELD_MODIFY_DATE);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			long unix = (long) ProfileManager.getField(PlusProfile.FIELD_MODIFY_DATE);
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTimeInMillis(unix * 1000);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
 			dateFormat.setCalendar(cal);
 			FrontUtils.drawString(g, dateFormat.format(cal.getTime()), x + 4, y + 58);
 			int map = 0;
-			try {
-				map = (int) ProfileManager.getField(NormalProfile.FIELD_MAP);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			map = (int) ProfileManager.getField(NormalProfile.FIELD_MAP);
 			MapInfo mi = ExeData.getMapInfo(map);
 			FrontUtils.drawString(g, mi.getMapName(), x + 4, y + 76);
-			long costume = 0;
-			try {
-				costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
-				if (section > 2)
-					costume += 10;
-				int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
-				while (diff > 5)
-					diff -= 5;
-				if (diff % 2 == 1)
-					diff--;
-				costume += diff;
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
+			long costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);
+			if (section > 2)
+				costume += 10;
+			int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
+			while (diff > 5)
+				diff -= 5;
+			if (diff % 2 == 1)
+				diff--;
+			costume += diff;
 			int xPixel = x + 228, yPixel = y + 67;
 			int sourceX1 = 0;
 			int sourceY1 = (int) (64 * costume);
@@ -164,11 +123,7 @@ public class PlusSlots extends Component {
 			}
 			g.drawImage(ExeData.getImage(ExeData.getMyChar()), xPixel, yPixel, xPixel + Math.abs(sourceX2 - sourceX1),
 					yPixel + Math.abs(sourceY2 - sourceY1), sourceX1, sourceY1, sourceX2, sourceY2, null);
-			try {
-				ProfileManager.callMethod(PlusProfile.METHOD_POP_ACTIVE_FILE);
-			} catch (ProfileMethodException e) {
-				e.printStackTrace();
-			}
+			ProfileManager.callMethod(PlusProfile.METHOD_POP_ACTIVE_FILE);
 		}
 
 		private void updateImageCache() {
@@ -208,11 +163,7 @@ public class PlusSlots extends Component {
 		super("PlusSlots", 0, 0, 536, 398);
 		this.dialog = dialog;
 		curSec = -1;
-		try {
-			curSec = (int) ProfileManager.callMethod(PlusProfile.METHOD_GET_ACTIVE_FILE);
-		} catch (ProfileMethodException e) {
-			e.printStackTrace();
-		}
+		curSec = (int) ProfileManager.callMethod(PlusProfile.METHOD_GET_ACTIVE_FILE);
 		comps = new ArrayList<>();
 		addComponent(new Label("Normal Files", 4, 2));
 		addComponent(new PlusSlot(0, 4, 20));
@@ -289,26 +240,18 @@ public class PlusSlots extends Component {
 	}
 
 	private void deleteFile() {
-		try {
-			if (srcSec == curSec)
-				SaveEditorPanel.panel.setGotProfile(false);
-			ProfileManager.callMethod(PlusProfile.METHOD_DELETE_FILE, srcSec);
-			mode = MODE_NORMAL;
-			srcSec = -1;
-		} catch (ProfileMethodException e) {
-			e.printStackTrace();
-		}
+		if (srcSec == curSec)
+			SaveEditorPanel.panel.setGotProfile(false);
+		ProfileManager.callMethod(PlusProfile.METHOD_DELETE_FILE, srcSec);
+		mode = MODE_NORMAL;
+		srcSec = -1;
 	}
 
 	private void pasteFile() {
-		try {
-			ProfileManager.callMethod(PlusProfile.METHOD_CLONE_FILE, srcSec, dstSec);
-			mode = MODE_NORMAL;
-			srcSec = -1;
-			dstSec = -1;
-		} catch (ProfileMethodException e) {
-			e.printStackTrace();
-		}
+		ProfileManager.callMethod(PlusProfile.METHOD_CLONE_FILE, srcSec, dstSec);
+		mode = MODE_NORMAL;
+		srcSec = -1;
+		dstSec = -1;
 	}
 
 	@Override
@@ -322,32 +265,25 @@ public class PlusSlots extends Component {
 			}
 		}
 		if (srcSec != -1) {
+			boolean exists;
 			switch (mode) {
 			case MODE_NORMAL:
-				try {
-					boolean exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, srcSec);
-					if (!exists)
-						ProfileManager.callMethod(PlusProfile.METHOD_NEW_FILE, srcSec);
-					ProfileManager.callMethod(PlusProfile.METHOD_SET_ACTIVE_FILE, srcSec);
-				} catch (ProfileMethodException e) {
-					e.printStackTrace();
-				}
+				exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, srcSec);
+				if (!exists)
+					ProfileManager.callMethod(PlusProfile.METHOD_NEW_FILE, srcSec);
+				ProfileManager.callMethod(PlusProfile.METHOD_SET_ACTIVE_FILE, srcSec);
 				SaveEditorPanel.panel.setGotProfile(true);
 				dialog.requestClose();
 				break;
 			case MODE_DELETE:
-				try {
-					boolean exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, srcSec);
-					if (exists) {
-						SaveEditorPanel.panel.addDialogBox(new ConfirmDialog("Confirm file deletion",
-								"Are you sure you want to delete file " + (srcSec + 1) + "?", (Boolean t) -> {
-									if (t)
-										deleteFile();
-								}));
+				exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, srcSec);
+				if (exists) {
+					SaveEditorPanel.panel.addDialogBox(new ConfirmDialog("Confirm file deletion",
+							"Are you sure you want to delete file " + (srcSec + 1) + "?", (Boolean t) -> {
+								if (t)
+									deleteFile();
+							}));
 
-					}
-				} catch (ProfileMethodException e) {
-					e.printStackTrace();
 				}
 				break;
 			case MODE_COPY:
@@ -356,21 +292,17 @@ public class PlusSlots extends Component {
 			case MODE_PASTE:
 				if (dstSec < 0 || dstSec == srcSec)
 					break;
-				try {
-					boolean exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, dstSec);
-					if (exists) {
-						SaveEditorPanel.panel.addDialogBox(
-								new ConfirmDialog("Confirm file overwrite", "Are you sure you want to overwrite file "
-										+ (dstSec + 1) + " with file " + (srcSec + 1) + "?", (Boolean t) -> {
-											if (t)
-												pasteFile();
-										}));
+				exists = (boolean) ProfileManager.callMethod(PlusProfile.METHOD_FILE_EXISTS, dstSec);
+				if (exists) {
+					SaveEditorPanel.panel.addDialogBox(
+							new ConfirmDialog("Confirm file overwrite", "Are you sure you want to overwrite file "
+									+ (dstSec + 1) + " with file " + (srcSec + 1) + "?", (Boolean t) -> {
+										if (t)
+											pasteFile();
+									}));
 
-					} else
-						pasteFile();
-				} catch (ProfileMethodException e) {
-					e.printStackTrace();
-				}
+				} else
+					pasteFile();
 				break;
 			default:
 				System.out.println("Unknown mode " + mode);

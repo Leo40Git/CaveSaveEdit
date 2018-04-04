@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
@@ -18,7 +17,7 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class MapFlagList extends Component {
-	
+
 	public static final String DESC_NONE = "(unknown map)";
 
 	public static String getMapFlagName(int id) {
@@ -113,12 +112,8 @@ public class MapFlagList extends Component {
 			g.fillRect(x, y, 16, 16);
 			BufferedImage chkImage = Resources.checkboxDisabled;
 			if (isMapFlagValid(id))
-				try {
-					chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id) ? Resources.checkboxOn
-							: Resources.checkboxOff);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
+				chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id) ? Resources.checkboxOn
+						: Resources.checkboxOff);
 			g.drawImage(chkImage, x, y, null);
 			g.setColor(Main.lineColor);
 			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 3), x + 18, y - 2);
@@ -140,12 +135,8 @@ public class MapFlagList extends Component {
 			if (!isMapFlagValid(id))
 				continue;
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
-				try {
-					boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id);
-					ProfileManager.setField(NormalProfile.FIELD_MAP_FLAGS, id, !value);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
+				boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id);
+				ProfileManager.setField(NormalProfile.FIELD_MAP_FLAGS, id, !value);
 				break;
 			}
 			fy += 17;

@@ -6,10 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.leo.cse.backend.ByteUtils;
+import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
 
 public class NormalProfile extends Profile {
 
-	public static final String EVENT_DATA_MODIFIED = "data.modified";
 	/**
 	 * Map field.
 	 */
@@ -114,11 +114,20 @@ public class NormalProfile extends Profile {
 	 * Amount of cash "field". A field for this doesn't actually exist.
 	 */
 	public static final String FIELD_CASH = "cash";
-
+	/**
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
+	 * EQ+ variables.
+	 */
 	public static final String FIELD_EQP_VARIABLES = "eqp.variables";
-
+	/**
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
+	 * EQ+ "true" modifiers.
+	 */
 	public static final String FIELD_EQP_MODS_TRUE = "eqp.mods.true";
-
+	/**
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
+	 * EQ+ "false" modifiers.
+	 */
 	public static final String FIELD_EQP_MODS_FALSE = "eqp.mods.false";
 
 	/**
@@ -185,9 +194,9 @@ public class NormalProfile extends Profile {
 	public void save(File file) throws IOException {
 		if (data == null)
 			return;
-		// back up file just in case
 		File backup = null;
 		if (file.exists()) {
+			// back up file just in case
 			backup = new File(file.getAbsolutePath() + ".bkp");
 			if (backup.exists()) {
 				backup.delete();
@@ -198,26 +207,37 @@ public class NormalProfile extends Profile {
 				fis.read(data);
 				fos.write(data);
 			}
-		} else {
+		} else
+			// create file to write to
 			file.createNewFile();
-		}
 		// start writing
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (backup != null) {
-				System.err.println("Error while saving profile! Recovering backup.");
+				// attempt to recover
+				System.err.println("Error while saving profile! Attempting to recover backup.");
+				e.printStackTrace();
 				try (FileOutputStream fos = new FileOutputStream(file);
 						FileInputStream fis = new FileInputStream(backup)) {
 					byte[] data = new byte[FILE_LENGTH];
 					fis.read(data);
 					fos.write(data);
+				} catch (Exception e2) {
+					System.err.println("Error while recovering backup!");
+					e2.printStackTrace();
 				}
 			}
 		}
 		// set loaded file
 		loadedFile = file;
+	}
+
+	@Override
+	public void unload() {
+		data = null;
+		loadedFile = null;
 	}
 
 	protected void setupFields() {
@@ -254,7 +274,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Long;
 				}
 
@@ -264,7 +284,7 @@ public class NormalProfile extends Profile {
 					for (int i = 7968; i < 7995; i++)
 						try {
 							if ((boolean) getField(FIELD_FLAGS, i))
-								ret |= (long) Math.pow(2, i - 7968);
+								ret |= 1 << (i - 7968);
 						} catch (ProfileFieldException e) {
 							e.printStackTrace();
 						}
@@ -276,7 +296,7 @@ public class NormalProfile extends Profile {
 					long v = (Long) value;
 					for (int i = 7968; i < 7995; i++)
 						try {
-							setField(FIELD_FLAGS, i, (v & (long) Math.pow(2, i - 7968)) != 0);
+							setField(FIELD_FLAGS, i, (v & (1 << (i - 7968))) != 0);
 						} catch (ProfileFieldException e) {
 							e.printStackTrace();
 						}
@@ -306,7 +326,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Short;
 				}
 
@@ -334,7 +354,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Short;
 				}
 
@@ -383,7 +403,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Integer;
 				}
 
@@ -402,6 +422,36 @@ public class NormalProfile extends Profile {
 		}
 	}
 
+	protected void makeFieldBool(String name, int ptr) {
+		try {
+			addField(name, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Boolean.class;
+				}
+
+				@Override
+				public boolean acceptsValue(int index, Object value) {
+					return value instanceof Boolean;
+				}
+
+				@Override
+				public Object getValue(int index) {
+					byte flag = data[correctPointer(ptr)];
+					return (flag == 0 ? false : true);
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					byte flag = (byte) ((Boolean) value ? 1 : 0);
+					data[correctPointer(ptr)] = flag;
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected void makeFieldBools(String name, int length, int off, int ptr) {
 		try {
 			addField(name, new ProfileField() {
@@ -411,7 +461,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Boolean;
 				}
 
@@ -463,7 +513,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Byte;
 				}
 
@@ -512,7 +562,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Integer;
 				}
 
@@ -561,7 +611,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Long;
 				}
 
@@ -589,7 +639,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Boolean;
 				}
 
@@ -638,7 +688,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public boolean acceptsValue(Object value) {
+				public boolean acceptsValue(int index, Object value) {
 					return value instanceof Short[];
 				}
 

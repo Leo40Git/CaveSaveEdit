@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.MapInfo;
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
@@ -24,27 +23,11 @@ public class MapBox extends DefineBox {
 	private Map<Integer, String> map;
 
 	public MapBox(int x, int y, int width, int height, Supplier<Boolean> sSup) {
-		super(x, y, width, height, new Supplier<Integer>() {
-			@Override
-			public Integer get() {
-				try {
-					return (Integer) ProfileManager.getField(NormalProfile.FIELD_MAP);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
-				return 0;
-			}
-		}, new Function<Integer, Integer>() {
-			@Override
-			public Integer apply(Integer t) {
-				try {
-					ProfileManager.setField(NormalProfile.FIELD_MAP, t);
-					return t;
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
-				return -1;
-			}
+		super(x, y, width, height, () -> {
+			return (Integer) ProfileManager.getField(NormalProfile.FIELD_MAP);
+		}, (Integer t) -> {
+			ProfileManager.setField(NormalProfile.FIELD_MAP, t);
+			return t;
 		}, sSup, "Map", "map");
 	}
 

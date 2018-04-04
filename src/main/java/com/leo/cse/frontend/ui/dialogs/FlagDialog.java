@@ -4,7 +4,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.components.BooleanBox;
 import com.leo.cse.frontend.ui.components.FlagList;
@@ -33,19 +32,10 @@ public class FlagDialog extends BaseDialog {
 		}, "flag ID", 4));
 		addComponent(new Label("State:", 76, 2));
 		BooleanBox flagBox = new BooleanBox("", false, 106, 4, () -> {
-			try {
-				return (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flag);
-			} catch (ProfileFieldException e) {
-				e.printStackTrace();
-			}
-			return false;
+			return (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flag);
 		}, (Boolean newVal) -> {
 			if (FlagList.isFlagValid(flag)) {
-				try {
-					ProfileManager.setField(NormalProfile.FIELD_FLAGS, flag, newVal);
-				} catch (ProfileFieldException e) {
-					e.printStackTrace();
-				}
+				ProfileManager.setField(NormalProfile.FIELD_FLAGS, flag, newVal);
 				return newVal;
 			}
 			return false;

@@ -31,7 +31,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
-import com.leo.cse.backend.profile.IProfile.ProfileFieldException;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.ProfileListener;
@@ -519,8 +518,7 @@ public class SaveEditorPanel extends JPanel
 					g2d.fillRect(x + 22, y + 38, (int) (257 * prog), 13);
 				}
 				if (progSubload.active) {
-					FrontUtils.drawStringCentered(g2d, progSubload.toString(), x + width / 2,
-							y + 54, false, false);
+					FrontUtils.drawStringCentered(g2d, progSubload.toString(), x + width / 2, y + 54, false, false);
 				}
 			}
 		} else {
@@ -725,11 +723,7 @@ public class SaveEditorPanel extends JPanel
 
 	private void setSavedFlag() {
 		// force save flag to be on
-		try {
-			ProfileManager.setField(NormalProfile.FIELD_FLAGS, 431, true);
-		} catch (ProfileFieldException e) {
-			e.printStackTrace();
-		}
+		ProfileManager.setField(NormalProfile.FIELD_FLAGS, 431, true);
 	}
 
 	private void saveProfile() {
