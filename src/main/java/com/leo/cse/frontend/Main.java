@@ -48,7 +48,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	public static final Logger LOGGER = LogManager.getLogger("CSE");
 
-	public static final Dimension WINDOW_SIZE = new Dimension(867, 686);
+	public static final Dimension WINDOW_SIZE = new Dimension(870, 718);
 	public static final Version VERSION = new Version("4.0");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
@@ -124,8 +124,6 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
 		setIconImage(Resources.icon);
-		setUndecorated(true);
-		setBackground(new Color(0, 0, 0, 0));
 	}
 
 	private void initPanel() {
@@ -137,12 +135,9 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		addMouseWheelListener(sep);
 		ProfileManager.addListener(sep);
 		ExeData.addListener(sep);
-		Dimension winSize = new Dimension(WINDOW_SIZE);
-		winSize.width += 32;
-		winSize.height += 48;
-		setMaximumSize(winSize);
-		setMinimumSize(winSize);
-		setPreferredSize(winSize);
+		setMaximumSize(WINDOW_SIZE);
+		setMinimumSize(WINDOW_SIZE);
+		setPreferredSize(WINDOW_SIZE);
 		pack();
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -158,6 +153,40 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		return getActualSize(true);
 	}
 
+	public static void loadExe(File file, boolean record) {
+		if (SaveEditorPanel.panel != null)
+			SaveEditorPanel.panel.setLoading(true);
+		window.repaint();
+		Thread exeLoadThread = new Thread(() -> {
+			try {
+				ExeData.load(file);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("Executable loading failed.");
+				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
+						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
+				return;
+			} finally {
+				System.out.println("loaded exe " + ExeData.getBase());
+				if (record)
+					Config.set(Config.KEY_LAST_MOD, file.getAbsolutePath());
+				SwingUtilities.invokeLater(() -> {
+					window.repaint();
+				});
+			}
+			try {
+				Thread.currentThread().join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}, "ExeLoad");
+		exeLoadThread.start();
+	}
+
+	public static void loadExe(File file) {
+		loadExe(file, true);
+	}
+
 	public static void loadProfile(File file, boolean record) {
 		if (SaveEditorPanel.panel != null)
 			SaveEditorPanel.panel.setLoading(true);
@@ -169,15 +198,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 					// unload existing exe
 					ExeData.unload();
 					// try to load exe
-					try {
-						ExeData.load(newExe);
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.err.println("EXE loading failed.");
-						JOptionPane.showMessageDialog(Main.window,
-								"An error occured while loading the executable:\n" + e, "Could not load executable!",
-								JOptionPane.ERROR_MESSAGE);
-					}
+					loadExe(newExe, false);
 				}
 			}
 			try {
@@ -191,7 +212,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			} finally {
 				System.out.println("loaded profile " + ProfileManager.getLoadedFile());
 				if (record)
-					Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
+					Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
 				SwingUtilities.invokeLater(() -> {
 					window.repaint();
 				});

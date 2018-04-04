@@ -12,7 +12,7 @@ public class Config {
 	public static final long BUILD = 1;
 
 	public static final String KEY_CONFIG_BUILD = "config_build";
-	public static final String KEY_LAST_PROFIE = "last_profile";
+	public static final String KEY_LAST_PROFILE = "last_profile";
 	public static final String KEY_LAST_MCI_FILE = "last_defines";
 	public static final String KEY_LAST_MOD = "last_mod";
 	public static final String KEY_LAST_NIKU = "last_niku";

@@ -42,7 +42,9 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	private short playerHoverX, playerHoverY;
 
 	private int getMap() {
-		Object obj = ProfileManager.getField(NormalProfile.FIELD_MAP);
+		Object obj = null;
+		if (ProfileManager.isLoaded())
+			obj = ProfileManager.getField(NormalProfile.FIELD_MAP);
 		if (obj == null)
 			return -1;
 		return (Integer) obj;

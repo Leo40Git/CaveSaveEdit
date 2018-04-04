@@ -72,6 +72,8 @@ public class ExeData {
 	public static final String EVENT_PRELOAD = "load.pre";
 	public static final String EVENT_LOAD = "load.during";
 	public static final String EVENT_POSTLOAD = "load.post";
+	public static final String LOADNAME_POSTLOAD_SUCCESS = "success";
+	public static final String LOADNAME_POSTLOAD_FAILURE = "failure";
 	public static final String EVENT_UNLOAD = "load.un";
 
 	public static final String EVENT_EXE_STRING = "load.exestr";
@@ -720,9 +722,10 @@ public class ExeData {
 			loadGraphics();
 			loadRsrc();
 			loadMapInfo();
-			notifyListeners(false, EVENT_POSTLOAD, null, -1, -1);
+			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
 		} catch (IOException e) {
 			loaded = false;
+			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_FAILURE, -1, -1);
 			throw e;
 		}
 		loaded = true;
@@ -752,9 +755,10 @@ public class ExeData {
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
 			loadMapInfo();
 			loadGraphics();
-			notifyListeners(false, EVENT_POSTLOAD, null, -1, -1);
+			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
 		} catch (IOException e) {
 			loaded = false;
+			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_FAILURE, -1, -1);
 			throw e;
 		}
 		loaded = true;

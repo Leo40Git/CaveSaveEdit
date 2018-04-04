@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -62,7 +61,7 @@ public class SaveEditorPanel extends JPanel
 
 	private static final long serialVersionUID = 3503710885336468231L;
 
-	public static final int OFFSET_X = 16, OFFSET_Y = 32;
+	public static final int OFFSET_X = 0, OFFSET_Y = 0;
 
 	static class MenuBarItem {
 		private String label;
@@ -241,7 +240,6 @@ public class SaveEditorPanel extends JPanel
 	private EditorPanel[] tabs;
 	private List<MenuBar> menuBars;
 
-	private boolean quitHover;
 	private int menubarHover = -1;
 	private int tabHover = -1;
 	private int currentMenubar = -1;
@@ -425,27 +423,10 @@ public class SaveEditorPanel extends JPanel
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		// window shadow
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setBackground(new Color(0, 0, 0, 0));
 		g2d.clearRect(0, 0, getWidth(), getHeight());
-		FrontUtils.drawNineSlice(g2d, Resources.shadow, 0, 0, getWidth(), getHeight());
-		// window title
-		for (int xx = 16; xx < getWidth() - 16; xx += 3) {
-			g.drawImage(Resources.drag, xx, 16, null);
-			g.drawImage(Resources.drag, xx, 24, null);
-		}
-		g.setColor(Color.white);
-		g.setFont(Resources.font);
-		FrontUtils.drawString(g, Main.window.getTitle(), 18, 16);
-		g.drawLine(getWidth() - 33, 17, getWidth() - 33, 32);
-		if (quitHover)
-			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
-		else
-			g.setColor(Main.COLOR_BG);
-		g.fillRect(getWidth() - 32, 17, 16, 16);
-		g.drawImage(Resources.icons[6], getWidth() - 32, 17, this);
 		final Dimension winSize = Main.window.getActualSize();
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		final Rectangle compViewport = new Rectangle(0, 0, winSize2.width, winSize2.height);
@@ -626,7 +607,7 @@ public class SaveEditorPanel extends JPanel
 			if (sel == JOptionPane.CANCEL_OPTION)
 				return;
 		}
-		File dir = new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir")));
+		File dir = new File(Config.get(Config.KEY_LAST_PROFILE, System.getProperty("user.dir")));
 		if (!dir.exists())
 			dir = new File(System.getProperty("user.dir"));
 		int returnVal = FrontUtils.openFileChooser("Open profile", new FileNameExtensionFilter("Profile Files", "dat"),
@@ -665,27 +646,7 @@ public class SaveEditorPanel extends JPanel
 						"Game/mod base file \"" + base.getName() + "\" does not exist!", "Executable does not exist",
 						JOptionPane.ERROR_MESSAGE);
 		}
-		loading = true;
-		Main.window.repaint();
-		final File base2 = base;
-		SwingUtilities.invokeLater(() -> {
-			try {
-				ExeData.load(base2);
-			} catch (IOException e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
-						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
-				return;
-			} finally {
-				Config.set(Config.KEY_LAST_MOD, base2.getAbsolutePath());
-				addComponents();
-				SwingUtilities.invokeLater(() -> {
-					loading = false;
-					Main.window.repaint();
-				});
-			}
-		});
-
+		Main.loadExe(base);
 	}
 
 	private void runExe() {
@@ -747,7 +708,7 @@ public class SaveEditorPanel extends JPanel
 		if (!canSave())
 			return;
 		int returnVal = FrontUtils.openFileChooser("Save profile", new FileNameExtensionFilter("Profile Files", "dat"),
-				new File(Config.get(Config.KEY_LAST_PROFIE, System.getProperty("user.dir"))), false, true);
+				new File(Config.get(Config.KEY_LAST_PROFILE, System.getProperty("user.dir"))), false, true);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = FrontUtils.getSelectedFile();
 			if (file.exists()) {
@@ -766,13 +727,12 @@ public class SaveEditorPanel extends JPanel
 						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 				return;
 			} finally {
-				Config.set(Config.KEY_LAST_PROFIE, file.getAbsolutePath());
+				Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
 			}
 		}
 	}
 
 	private boolean dragLeftMouse;
-	private int dragInitialX, dragInitialY;
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -783,9 +743,6 @@ public class SaveEditorPanel extends JPanel
 			return;
 		}
 		dragLeftMouse = true;
-		int px = e.getX(), py = e.getY();
-		dragInitialX = px;
-		dragInitialY = py;
 	}
 
 	@Override
@@ -795,9 +752,6 @@ public class SaveEditorPanel extends JPanel
 		if (e.getButton() != MouseEvent.BUTTON1)
 			return;
 		dragLeftMouse = false;
-		draggingWindow = false;
-		firstDragEvent = true;
-		onQuit = false;
 		notDraggingComps = false;
 		int px = e.getX(), py = e.getY();
 		if (py < OFFSET_Y && px >= getWidth() - 33 && px < getWidth() - 17) {
@@ -925,31 +879,15 @@ public class SaveEditorPanel extends JPanel
 	}
 
 	private Map<IDraggable, Boolean> lastDragged;
-	private boolean draggingWindow = false, notDraggingComps = false, firstDragEvent = false, onQuit = false;
+	private boolean notDraggingComps = false;
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		boolean isFDE = firstDragEvent;
-		firstDragEvent = false;
 		if (!dragLeftMouse)
 			return;
 		int px = e.getX(), py = e.getY();
-		if (px >= getWidth() - 33 && !draggingWindow)
-			onQuit = true;
-		else
-			onQuit = false;
 		if (lastDragged == null)
 			lastDragged = new HashMap<IDraggable, Boolean>();
-		if (lastDragged.isEmpty() && !onQuit && (isFDE || draggingWindow)) {
-			if (px > 14 && px < getWidth() - 14 && py > 14 && py < OFFSET_Y) {
-				draggingWindow = true;
-				int wx = Main.window.getX(), wy = Main.window.getY();
-				int moveX = px - dragInitialX;
-				int moveY = py - dragInitialY;
-				Main.window.setLocation(wx + moveX, wy + moveY);
-				return;
-			}
-		}
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
@@ -995,9 +933,6 @@ public class SaveEditorPanel extends JPanel
 	private void mouseMoved(int px, int py) {
 		if (loading)
 			return;
-		quitHover = false;
-		if (py < OFFSET_Y && px >= getWidth() - 33 && px < getWidth() - 17)
-			quitHover = true;
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
@@ -1166,7 +1101,7 @@ public class SaveEditorPanel extends JPanel
 			progLoad.title = "Reading game strings";
 			break;
 		case ExeData.EVENT_NPC_TBL:
-			progLoad.title = "Reading entity definitions";
+			progLoad.title = "Reading entity definitions for %s";
 			break;
 		case ExeData.EVENT_MAP_DATA:
 			progLoad.title = "Reading data for map:";
