@@ -22,7 +22,7 @@ public class WarpsPanel extends Panel {
 			compList.add(new DefineBox(xx + 238, yy + 17, 120, 16, (Supplier<Integer>) () -> {
 				return (Integer) ProfileManager.getField(NormalProfile.FIELD_WARP_LOCATION, i2);
 			}, (Function<Integer, Integer>) t -> {
-				ProfileManager.setField(NormalProfile.FIELD_WARP_LOCATION, i2);
+				ProfileManager.setField(NormalProfile.FIELD_WARP_LOCATION, i2, t);
 				return t;
 			}, "WarpLoc", "warp " + (i + 1) + " location", () -> true));
 		}
