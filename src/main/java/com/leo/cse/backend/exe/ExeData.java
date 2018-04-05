@@ -1613,7 +1613,7 @@ public class ExeData {
 		fade = loadGraphic(STRING_FADE);
 		loading = loadGraphic(STRING_LOADING);
 	}
-	
+
 	// ".rsrc" segment code starts here
 	// thanks to @20kdc for basically writing this for me
 
@@ -1640,8 +1640,7 @@ public class ExeData {
 		String pixelName = getExeString(STRING_PIXEL);
 		// Start finding information
 		DirectoryEntry bitmap = findDirectory(dataBuf, rsrcInfo,
-				DirectoryEntry.getEntries(dataBuf, rsrcInfo, rsrcInfo.offset),
-				"2/" + pixelName + "/**");
+				DirectoryEntry.getEntries(dataBuf, rsrcInfo, rsrcInfo.offset), "2/" + pixelName + "/**");
 		ByteArrayInputStream bais = new ByteArrayInputStream(
 				transformBitmap(pullData(dataBuf, rsrcInfo, bitmap.fileOffset)));
 		BufferedImage bi = ImageIO.read(bais);
@@ -1654,14 +1653,30 @@ public class ExeData {
 		ByteBuffer bb1 = ByteBuffer.wrap(bytes);
 		bb1.order(ByteOrder.LITTLE_ENDIAN);
 		int hdrSize = bb1.getInt(0);
-		int palSize = 4 << (bb1.getShort(0xE) & 0xFFFF);
-		if (hdrSize >= 40) {
-			int otherPalSize = 4 * bb1.getInt(0x20);
-			if (otherPalSize != 0)
-				palSize = otherPalSize;
+		if (hdrSize < 40)
+			throw new RuntimeException("Expected BITMAPINFOHEADER, got BITMAPCOREHEADER");
+		int actWidth = bb1.getInt(0x04);
+		int actHeight = bb1.getInt(0x08);
+		if (actHeight < 0)
+			actHeight = -actHeight;
+		int planes = bb1.getShort(0x0C) & 0xFFFF;
+		int bpp = bb1.getShort(0x0E) & 0xFFFF;
+		//
+		int imgRowBits = actWidth * bpp;
+		int imgRowSize = ((Math.max(imgRowBits, 1) + 31) / 32) * 4;
+		int imgDataSize = planes * actHeight * imgRowSize;
+		int compressionMethod = bb1.getInt(0x10);
+		if (compressionMethod != 0) {
+			imgDataSize = bb1.getInt(0x14);
+			dumpHex("IDS", imgDataSize);
+		} else {
+			dumpHex("W", actWidth);
+			dumpHex("PL", planes);
+			dumpHex("BPP", bpp);
+			dumpHex("IRS", imgRowSize);
+			dumpHex("IDS", imgDataSize);
 		}
-		int start = 14 + hdrSize + palSize;
-
+		int start = bt.length - imgDataSize;
 		ByteBuffer bb = ByteBuffer.wrap(bt);
 		bb.order(ByteOrder.LITTLE_ENDIAN);
 		bb.put((byte) 'B');
@@ -1803,7 +1818,7 @@ public class ExeData {
 			return s;
 		}
 	}
-	
+
 	// ".rsrc" segment code ends here
 
 	/**

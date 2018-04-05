@@ -143,19 +143,19 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				int yPixel = yy * 32 - 16;
 				int tile = map[l][i][j];
 				int pxa = mapInfo.calcPxa(tile);
-				if (pxa >= 0x20 && pxa <= 0x3F) {
+				if (pxa >= 0x20 && pxa <= 0x3F || pxa >= 0x81 && pxa <= 0xFF) {
 					// no draw
 					continue;
-				} else if (pxa == 0x43) {
-					// draw breakable tile
+				}
+				// draw normal tile
+				int sourceX = (tile % setWidth) * 32;
+				int sourceY = (tile / setWidth) * 32;
+				g.drawImage(tileset, xPixel, yPixel, xPixel + 32, yPixel + 32, sourceX, sourceY, sourceX + 32,
+						sourceY + 32, null);
+				if (pxa == 0x43) {
+					// draw breakable tile on top of normal tile
 					g.drawImage(ExeData.getImage(ExeData.getNpcSym()), xPixel, yPixel, xPixel + 32, yPixel + 32, 512,
 							96, 544, 128, null);
-				} else {
-					// draw normal tile
-					int sourceX = (tile % setWidth) * 32;
-					int sourceY = (tile / setWidth) * 32;
-					g.drawImage(tileset, xPixel, yPixel, xPixel + 32, yPixel + 32, sourceX, sourceY, sourceX + 32,
-							sourceY + 32, null);
 				}
 				xx++;
 			}
