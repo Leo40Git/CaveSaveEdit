@@ -7,10 +7,13 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class Resources {
 
@@ -18,6 +21,18 @@ public class Resources {
 	}
 
 	public static Font fontB, font, fontS, fontL;
+
+	private static final Map<BufferedImage, ImageIcon> iconCache = new HashMap<>();
+
+	public static ImageIcon createIconFromImage(BufferedImage image) {
+		if (image == null)
+			return null;
+		if (iconCache.containsKey(image))
+			return iconCache.get(image);
+		ImageIcon icon = new ImageIcon(image);
+		iconCache.put(image, icon);
+		return icon;
+	}
 
 	// base images
 	public static List<BufferedImage> appIcons;

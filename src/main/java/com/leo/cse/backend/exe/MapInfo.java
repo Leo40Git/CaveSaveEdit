@@ -541,7 +541,13 @@ public class MapInfo {
 		return pxeList.iterator();
 	}
 
-	public TSCFile getTSCFile() {
+	/**
+	 * Gets the map's TSC file.
+	 * 
+	 * @return TSC file
+	 * @see com.leo.cse.backend.tsc.TSCFile
+	 */
+	public TSCFile getTSC() {
 		return tscFile;
 	}
 

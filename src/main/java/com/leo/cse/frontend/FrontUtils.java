@@ -36,6 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -50,8 +51,12 @@ import javax.swing.filechooser.FileFilter;
 public class FrontUtils {
 
 	public static String showSelectionDialog(Component parent, String title, String[] selections,
-			String initialSelection) {
+			String initialSelection, DefaultListCellRenderer listRender) {
 		JList<String> list = new JList<String>(selections);
+		if (listRender != null) {
+			list.setBackground(Main.COLOR_BG);
+			list.setCellRenderer(listRender);
+		}
 		JScrollPane scrollpane = new JScrollPane();
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
@@ -75,9 +80,19 @@ public class FrontUtils {
 		return ret;
 	}
 
+	public static String showSelectionDialog(Component parent, String title, String[] selections,
+			String initialSelection) {
+		return showSelectionDialog(parent, title, selections, initialSelection, null);
+	}
+
+	public static String showSelectionDialog(Component parent, String title, Collection<String> selections,
+			String initialSelection, DefaultListCellRenderer listRender) {
+		return showSelectionDialog(parent, title, selections.toArray(new String[] {}), initialSelection, listRender);
+	}
+
 	public static String showSelectionDialog(Component parent, String title, Collection<String> selections,
 			String initialSelection) {
-		return showSelectionDialog(parent, title, selections.toArray(new String[] {}), initialSelection);
+		return showSelectionDialog(parent, title, selections.toArray(new String[] {}), initialSelection, null);
 	}
 
 	public static void downloadFile(String url, File dest) throws IOException {

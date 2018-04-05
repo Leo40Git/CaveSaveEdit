@@ -801,7 +801,7 @@ public class ProfileManager {
 	 * @throws ProfileFieldException
 	 *             if a field-related exception occurs.
 	 */
-	public static void setField(String field, int index, Object value, boolean addUndo) {
+	private static void setField(String field, int index, Object value, boolean addUndo) {
 		if (impl == null)
 			return;
 		Class<?> type = getFieldType(field);

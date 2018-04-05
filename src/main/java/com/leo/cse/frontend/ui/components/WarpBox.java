@@ -3,6 +3,7 @@ package com.leo.cse.frontend.ui.components;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
@@ -12,6 +13,8 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
 public class WarpBox extends DefineBox {
+	
+	public static final BufferedImage WARP_BLANK = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
 
 	public WarpBox(int x, int y, int width, int height, int warpId) {
 		super(x, y, width, height, () -> {
@@ -50,6 +53,17 @@ public class WarpBox extends DefineBox {
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		if (ExeData.isLoaded()) {
+			if (iSup == null)
+				iSup = t -> {
+					if (t == 0)
+						return WARP_BLANK;
+					int sourceX = (t % 8) * 64;
+					int sourceY = (t / 8) * 32;
+					return ExeData.getImage(ExeData.getStageImage()).getSubimage(sourceX, sourceY, 64, 32);
+				};
+		} else
+			iSup = null;
 		super.onClick(x, y, shiftDown, ctrlDown);
 	}
 

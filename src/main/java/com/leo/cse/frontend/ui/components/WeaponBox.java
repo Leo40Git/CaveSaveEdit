@@ -3,6 +3,7 @@ package com.leo.cse.frontend.ui.components;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
@@ -12,6 +13,8 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
 public class WeaponBox extends DefineBox {
+
+	public static BufferedImage armsBlank;
 
 	public WeaponBox(int x, int y, int weaponId) {
 		super(x, y, 120, 48, () -> {
@@ -52,6 +55,19 @@ public class WeaponBox extends DefineBox {
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		int wepSize = MCI.getInteger("Game.ArmsImageSize", 32);
+		armsBlank = new BufferedImage(wepSize, wepSize, BufferedImage.TYPE_INT_ARGB);
+		if (ExeData.isLoaded()) {
+			if (iSup == null)
+				iSup = t -> {
+					if (t == 0)
+						return armsBlank;
+					int ystart = MCI.getInteger("Game.ArmsImageYStart", 0),
+							size = MCI.getInteger("Game.ArmsImageSize", 32);
+					return ExeData.getImage(ExeData.getArmsImage()).getSubimage(t * size, ystart, size, size);
+				};
+		} else
+			iSup = null;
 		super.onClick(x, y, shiftDown, ctrlDown);
 	}
 

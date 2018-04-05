@@ -817,9 +817,8 @@ public class SaveEditorPanel extends JPanel
 				break;
 			}
 		SavePoint selPoint = results.get(selResult);
-		ProfileManager.setField(NormalProfile.FIELD_MAP, selPoint.map);
-		ProfileManager.setField(NormalProfile.FIELD_POSITION,
-				new Short[] { (short) (selPoint.x * 32), (short) (selPoint.y * 32) });
+		ProfileManager.setField(NormalProfile.FIELD_MAP_AND_POSITION,
+				new Integer[] { selPoint.map, selPoint.x * 32, selPoint.y * 32 });
 	}
 
 	private boolean dragLeftMouse;

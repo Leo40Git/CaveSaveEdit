@@ -816,7 +816,7 @@ public class ExeData {
 	}
 
 	/**
-	 * Unloads the executable.
+	 * Unloads the currently loaded executable.
 	 */
 	public static void unload() {
 		exeStrings = null;
@@ -1655,28 +1655,12 @@ public class ExeData {
 		int hdrSize = bb1.getInt(0);
 		if (hdrSize < 40)
 			throw new RuntimeException("Expected BITMAPINFOHEADER, got BITMAPCOREHEADER");
-		int actWidth = bb1.getInt(0x04);
-		int actHeight = bb1.getInt(0x08);
-		if (actHeight < 0)
-			actHeight = -actHeight;
-		int planes = bb1.getShort(0x0C) & 0xFFFF;
+		int palSize = bb1.getInt(0x20) * 4;
 		int bpp = bb1.getShort(0x0E) & 0xFFFF;
-		//
-		int imgRowBits = actWidth * bpp;
-		int imgRowSize = ((Math.max(imgRowBits, 1) + 31) / 32) * 4;
-		int imgDataSize = planes * actHeight * imgRowSize;
-		int compressionMethod = bb1.getInt(0x10);
-		if (compressionMethod != 0) {
-			imgDataSize = bb1.getInt(0x14);
-			dumpHex("IDS", imgDataSize);
-		} else {
-			dumpHex("W", actWidth);
-			dumpHex("PL", planes);
-			dumpHex("BPP", bpp);
-			dumpHex("IRS", imgRowSize);
-			dumpHex("IDS", imgDataSize);
-		}
-		int start = bt.length - imgDataSize;
+		if (palSize == 0)
+			if (bpp <= 8)
+				palSize = 4 << bpp;
+		int start = 14 + hdrSize + palSize;
 		ByteBuffer bb = ByteBuffer.wrap(bt);
 		bb.order(ByteOrder.LITTLE_ENDIAN);
 		bb.put((byte) 'B');

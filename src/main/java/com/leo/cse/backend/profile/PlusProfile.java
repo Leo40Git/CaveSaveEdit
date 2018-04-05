@@ -119,9 +119,15 @@ public class PlusProfile extends NormalProfile {
 		// be returned as-is
 		if (ptr > SECTION_LENGTH * 6)
 			return ptr;
+		// make sure pointer is in correct section
+		while (ptr > SECTION_LENGTH)
+			ptr -= SECTION_LENGTH;
 		return curSection * SECTION_LENGTH + ptr;
 	}
 
+	/**
+	 * Initializes and registers fields and methods.
+	 */
 	public PlusProfile() {
 		super(false);
 		secQueue = new ArrayList<>();
@@ -129,12 +135,18 @@ public class PlusProfile extends NormalProfile {
 		setupMethodsPlus();
 	}
 
+	/**
+	 * Initializes and registers fields exclusive to Cave Story+.
+	 */
 	protected void setupFieldsPlus() {
 		makeFieldLong(FIELD_MODIFY_DATE, 0x608);
 		makeFieldShort(FIELD_DIFFICULTY, 0x610);
 		makeFieldBool(FIELD_BEAT_HELL, 0x1F04C);
 	}
 
+	/**
+	 * Initializes and registers methods exclusive to Cave Story+.
+	 */
 	protected void setupMethodsPlus() {
 		try {
 			addMethod(METHOD_CLONE_FILE, new ProfileMethod() {
@@ -221,7 +233,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int secToChk = (int) args[0];
 					int ptr = secToChk * SECTION_LENGTH;
 					// check header
@@ -240,7 +252,7 @@ public class PlusProfile extends NormalProfile {
 
 				@Override
 				public Class<?>[] getArgTypes() {
-					return null;
+					return ProfileMethod.NO_ARGS;
 				}
 
 				@Override
@@ -249,7 +261,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					return curSection;
 				}
 
@@ -267,7 +279,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					curSection = (int) args[0];
 					return null;
 				}
@@ -286,7 +298,7 @@ public class PlusProfile extends NormalProfile {
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int newSec = (int) args[0];
 					secQueue.add(curSection);
 					curSection = newSec;
@@ -298,20 +310,20 @@ public class PlusProfile extends NormalProfile {
 
 				@Override
 				public Class<?>[] getArgTypes() {
-					return null;
+					return ProfileMethod.NO_ARGS;
 				}
 
 				@Override
 				public Class<?> getRetType() {
-					return null;
+					return Integer.class;
 				}
 
 				@Override
-				public Object call(FieldChangeRecorder fmcr, Object... args) {
+				public Object call(FieldChangeRecorder fcr, Object... args) {
 					if (secQueue.isEmpty())
 						return null;
 					curSection = secQueue.remove(0);
-					return null;
+					return curSection;
 				}
 
 			});

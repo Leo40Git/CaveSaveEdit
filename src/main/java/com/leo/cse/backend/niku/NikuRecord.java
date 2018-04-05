@@ -13,22 +13,64 @@ import javax.swing.undo.UndoableEdit;
 
 import com.leo.cse.backend.ByteUtils;
 
+/**
+ * Stores information for a Nikumaru/290 Counter record.
+ * 
+ * @author Leo
+ *
+ */
 public class NikuRecord {
 
+	/**
+	 * Modified flag. If <code>true</code>, record data has been modified since the
+	 * last save.
+	 */
 	private static boolean modified;
 
+	/**
+	 * Checks if the record has been modified since the last save.
+	 * 
+	 * @return <code>true</code> if record has been modified, <code>false</code>
+	 *         otherwise.
+	 */
 	public static boolean isModified() {
 		return modified;
 	}
 
+	/**
+	 * Manages undoing and redoing record edits.
+	 */
 	private static UndoManager undoMan;
 
+	/**
+	 * Represents an edit to the record data.
+	 * 
+	 * @author Leo
+	 *
+	 */
 	static class NikuEdit implements UndoableEdit {
 
+		/**
+		 * The record's old value.
+		 */
 		private int oldValue;
+		/**
+		 * The record's new value.
+		 */
 		private int newValue;
+		/**
+		 * If <code>true</code>, this edit has been undone and thus can be redone.
+		 */
 		private boolean hasBeenUndone;
 
+		/**
+		 * Constructs a new <code>NikuEdit</code>.
+		 * 
+		 * @param oldValue
+		 *            the record's old value
+		 * @param newValue
+		 *            the record's new value
+		 */
 		public NikuEdit(int oldValue, int newValue) {
 			this.oldValue = oldValue;
 			this.newValue = newValue;
@@ -94,8 +136,24 @@ public class NikuRecord {
 
 	}
 
+	/**
+	 * Checks if the undo manager exists.
+	 * 
+	 * @return <code>true</code> if undo manager exists, <code>false</code>
+	 *         otherwise
+	 */
+	private static boolean undoManExists() {
+		return file != null && undoMan != null;
+	}
+
+	/**
+	 * Checks if an edit can be undone.
+	 * 
+	 * @return <code>true</code> if an edit can be undone, <code>false</code>
+	 *         otherwise
+	 */
 	public static boolean canUndo() {
-		if (undoMan == null)
+		if (!undoManExists())
 			return false;
 		return undoMan.canUndo();
 	}
@@ -109,8 +167,14 @@ public class NikuRecord {
 		undoMan.undo();
 	}
 
+	/**
+	 * Checks if an edit can be redone.
+	 * 
+	 * @return <code>true</code> if an edit can be redone, <code>false</code>
+	 *         otherwise
+	 */
 	public static boolean canRedo() {
-		if (undoMan == null)
+		if (!undoManExists())
 			return false;
 		return undoMan.canRedo();
 	}
@@ -124,23 +188,53 @@ public class NikuRecord {
 		undoMan.redo();
 	}
 
+	/**
+	 * The record's current value.
+	 */
 	private static int value;
+	/**
+	 * The currently loaded file.
+	 */
 	private static File file;
 
+	/**
+	 * Gets the currently loaded file.
+	 * 
+	 * @return currently loaded file, or <code>null</code> if none is loaded
+	 */
 	public static File getFile() {
 		return file;
 	}
 
+	/**
+	 * "Loaded" flag. If <code>true</code>, a record has been loaded.
+	 */
 	private static boolean loaded;
 
+	/**
+	 * Checks if a record is currently loaded.
+	 * 
+	 * @return <code>true</code> if a record is loaded, <code>false</code>
+	 *         otherwise.
+	 */
 	public static boolean isLoaded() {
 		return loaded;
 	}
 
+	/**
+	 * Converts a byte into it's unsigned equivalent.
+	 * 
+	 * @param b
+	 *            signed byte
+	 * @return unsigned byte
+	 */
 	private static byte unsigned(byte b) {
 		return (byte) (b & 0xFF);
 	}
 
+	/**
+	 * Creates a new record.
+	 */
 	public static void create() {
 		value = 0;
 		file = null;
@@ -149,6 +243,14 @@ public class NikuRecord {
 		undoMan = new UndoManager();
 	}
 
+	/**
+	 * Loads a record.
+	 * 
+	 * @param file
+	 *            record file
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void load(File src) throws IOException {
 		int[] result = new int[4];
 		byte[] buf = new byte[20];
@@ -182,6 +284,14 @@ public class NikuRecord {
 		undoMan = new UndoManager();
 	}
 
+	/**
+	 * Saves a record.
+	 * 
+	 * @param file
+	 *            file to save to
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
 	public static void save(File dest) throws IOException {
 		if (dest == null)
 			dest = file;
@@ -212,6 +322,9 @@ public class NikuRecord {
 		modified = false;
 	}
 
+	/**
+	 * Unloads the currently loaded record.
+	 */
 	public static void unload() {
 		file = null;
 		loaded = false;
@@ -219,12 +332,16 @@ public class NikuRecord {
 		modified = false;
 		undoMan = null;
 	}
-
+	
+	/**
+	 * Gets
+	 * @return
+	 */
 	public static int getValue() {
 		return value;
 	}
 
-	public static void setValue(int value, boolean addUndo) {
+	private static void setValue(int value, boolean addUndo) {
 		if (value < 0)
 			value = 0;
 		if (value > 299999)
