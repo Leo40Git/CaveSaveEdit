@@ -106,6 +106,10 @@ public class FlagList extends Component {
 				shownFlags.add(new Flag(i));
 	}
 
+	public void recalculateHeight() {
+		height = (shownFlags.size() + 1) * 24;
+	}
+
 	public FlagList(Supplier<Boolean> huSup, Supplier<Boolean> hsSup) {
 		super("FlagList", 0, 0, Main.WINDOW_SIZE.width, 0);
 		this.huSup = huSup;
@@ -115,13 +119,21 @@ public class FlagList extends Component {
 
 	@Override
 	public void render(Graphics g, Rectangle viewport) {
-		height = shownFlags.size() * 17 + 1;
+		recalculateHeight();
+		g.setColor(Main.lineColor);
 		final int x = 4;
-		int y = 1;
+		g.setFont(Resources.fontS);
+		FrontUtils.drawString(g, "State", x - 2, 4);
 		g.setFont(Resources.font);
+		g.drawLine(x + 20, 0, x + 20, height);
+		FrontUtils.drawString(g, "ID", x + 24, 2);
+		g.drawLine(x + 50, 0, x + 50, height);
+		FrontUtils.drawString(g, "Description", x + 54, 2);
+		int y = 28;
+		g.drawLine(0, y - 4, viewport.width, y - 4);
 		for (Flag flag : shownFlags) {
 			if (y + 16 < viewport.getY()) {
-				y += 17;
+				y += 24;
 				continue;
 			}
 			int id = flag.getId();
@@ -136,20 +148,21 @@ public class FlagList extends Component {
 						: Resources.checkboxOff);
 			g.drawImage(chkImage, x, y, null);
 			g.setColor(Main.lineColor);
-			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 4), x + 18, y - 2);
-			FrontUtils.drawString(g, getFlagDesc(id), x + 46, y - 2);
-			y += 17;
+			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 4), x + 24, y - 2);
+			FrontUtils.drawString(g, getFlagDesc(id), x + 54, y - 2);
+			y += 24;
 			if (y > viewport.getY() + viewport.getHeight())
 				break;
+			g.drawLine(0, y - 4, viewport.width, y - 4);
 		}
 	}
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		calculateShownFlags();
-		height = shownFlags.size() * 17 + 1;
+		recalculateHeight();
 		final int fx = 4;
-		int fy = 1;
+		int fy = 28;
 		for (Flag flag : shownFlags) {
 			int id = flag.getId();
 			if (!isFlagValid(id))
@@ -159,7 +172,7 @@ public class FlagList extends Component {
 				ProfileManager.setField(NormalProfile.FIELD_FLAGS, id, !value);
 				break;
 			}
-			fy += 17;
+			fy += 24;
 		}
 	}
 
@@ -167,15 +180,15 @@ public class FlagList extends Component {
 	public void updateHover(int x, int y, boolean hover) {
 		super.updateHover(x, y, hover);
 		calculateShownFlags();
-		height = shownFlags.size() * 17 + 1;
+		recalculateHeight();
 		final int fx = 4;
-		int fy = 1;
+		int fy = 28;
 		for (Flag flag : shownFlags) {
 			boolean fHover = false;
-			if (hover && FrontUtils.pointInRectangle(x, y - 17, fx, fy, 16, 16))
+			if (hover && FrontUtils.pointInRectangle(x, y - 18, fx, fy, 16, 16))
 				fHover = true;
 			flag.setHover(fHover);
-			fy += 17;
+			fy += 24;
 		}
 	}
 

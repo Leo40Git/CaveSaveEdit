@@ -22,13 +22,18 @@ public class MapBox extends DefineBox {
 
 	private Map<Integer, String> map;
 
+	public MapBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
+			Supplier<Boolean> sSup) {
+		super(x, y, width, height, vSup, update, sSup, "Map", "map");
+	}
+
 	public MapBox(int x, int y, int width, int height, Supplier<Boolean> sSup) {
-		super(x, y, width, height, () -> {
+		this(x, y, width, height, () -> {
 			return (Integer) ProfileManager.getField(NormalProfile.FIELD_MAP);
 		}, (Integer t) -> {
 			ProfileManager.setField(NormalProfile.FIELD_MAP, t);
 			return t;
-		}, sSup, "Map", "map");
+		}, sSup);
 	}
 
 	@Override

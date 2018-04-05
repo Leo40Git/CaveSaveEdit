@@ -585,10 +585,6 @@ public class ExeData {
 	 */
 	private static File base;
 	/**
-	 * Data buffer.
-	 */
-	private static ByteBuffer dataBuf;
-	/**
 	 * Array of the loaded executable's PE headers.
 	 * 
 	 * @see ExeSec
@@ -962,7 +958,7 @@ public class ExeData {
 			int l = inStream.read(buf);
 			baos.write(buf, 0, l);
 		}
-		dataBuf = ByteBuffer.wrap(baos.toByteArray());
+		ByteBuffer dataBuf = ByteBuffer.wrap(baos.toByteArray());
 		// NOTE: The ByteBuffer doesn't get advanced, hence the use of no-side-effects
 		// functions like getInt(address).
 		// If you do something that advances it,
@@ -1617,6 +1613,9 @@ public class ExeData {
 		fade = loadGraphic(STRING_FADE);
 		loading = loadGraphic(STRING_LOADING);
 	}
+	
+	// ".rsrc" segment code starts here
+	// thanks to @20kdc for basically writing this for me
 
 	/**
 	 * Load resources from the executable.
@@ -1625,15 +1624,28 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadRsrc() throws IOException {
+		// setup I/O stuff
+		FileInputStream inStream;
+		inStream = new FileInputStream(base);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buf = new byte[512];
+		while (inStream.available() > 0) {
+			int l = inStream.read(buf);
+			baos.write(buf, 0, l);
+		}
+		inStream.close();
+		ByteBuffer dataBuf = ByteBuffer.wrap(baos.toByteArray());
+		dataBuf.order(ByteOrder.LITTLE_ENDIAN);
 		notifyListeners(false, EVENT_GRAPHICS_RSRC, null, -1, -1);
+		String pixelName = getExeString(STRING_PIXEL);
 		// Start finding information
 		DirectoryEntry bitmap = findDirectory(dataBuf, rsrcInfo,
 				DirectoryEntry.getEntries(dataBuf, rsrcInfo, rsrcInfo.offset),
-				"2/" + getExeString(STRING_PIXEL) + "/**");
+				"2/" + pixelName + "/**");
 		ByteArrayInputStream bais = new ByteArrayInputStream(
 				transformBitmap(pullData(dataBuf, rsrcInfo, bitmap.fileOffset)));
 		BufferedImage bi = ImageIO.read(bais);
-		imageMap.put((pixel = new File("PIXEL")), bi);
+		imageMap.put((pixel = new File(pixelName)), bi);
 	}
 
 	private static byte[] transformBitmap(byte[] bytes) {
@@ -1704,9 +1716,7 @@ public class ExeData {
 	}
 
 	private static void dumpHex(String rvaofs, int rvaOffset) {
-		System.out.print(rvaofs);
-		System.out.print(": 0x");
-		System.out.println(Integer.toHexString(rvaOffset));
+		System.out.println(rvaofs + ": 0x" + Integer.toHexString(rvaOffset));
 	}
 
 	public static ResourceInfo getResources(ByteBuffer bb) {
@@ -1793,6 +1803,8 @@ public class ExeData {
 			return s;
 		}
 	}
+	
+	// ".rsrc" segment code ends here
 
 	/**
 	 * Attempts to add an image to the repository.

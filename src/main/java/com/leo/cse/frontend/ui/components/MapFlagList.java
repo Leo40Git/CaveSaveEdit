@@ -87,6 +87,10 @@ public class MapFlagList extends Component {
 			if (isMapFlagValid(i))
 				shownFlags.add(new MapFlag(i));
 	}
+	
+	public void recalculateHeight() {
+		height = (shownFlags.size() + 1) * 24;
+	}
 
 	public MapFlagList() {
 		super("MapFlagList", 0, 0, Main.WINDOW_SIZE.width, 0);
@@ -95,13 +99,21 @@ public class MapFlagList extends Component {
 
 	@Override
 	public void render(Graphics g, Rectangle viewport) {
-		height = shownFlags.size() * 17 + 1;
+		recalculateHeight();
+		g.setColor(Main.lineColor);
 		final int x = 4;
-		int y = 1;
+		g.setFont(Resources.fontS);
+		FrontUtils.drawString(g, "State", x - 2, 4);
 		g.setFont(Resources.font);
+		g.drawLine(x + 20, 0, x + 20, height);
+		FrontUtils.drawString(g, "ID", x + 24, 2);
+		g.drawLine(x + 44, 0, x + 44, height);
+		FrontUtils.drawString(g, "Map Name", x + 48, 2);
+		int y = 28;
+		g.drawLine(0, y - 4, viewport.width, y - 4);
 		for (MapFlag flag : shownFlags) {
 			if (y + 16 < viewport.getY()) {
-				y += 17;
+				y += 24;
 				continue;
 			}
 			int id = flag.getId();
@@ -116,20 +128,21 @@ public class MapFlagList extends Component {
 						: Resources.checkboxOff);
 			g.drawImage(chkImage, x, y, null);
 			g.setColor(Main.lineColor);
-			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 3), x + 18, y - 2);
-			FrontUtils.drawString(g, getMapFlagName(id), x + 40, y - 2);
-			y += 17;
+			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 3), x + 24, y - 2);
+			FrontUtils.drawString(g, getMapFlagName(id), x + 48, y - 2);
+			y += 24;
 			if (y > viewport.getY() + viewport.getHeight())
 				break;
+			g.drawLine(0, y - 4, viewport.width, y - 4);
 		}
 	}
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		calculateShownFlags();
-		height = shownFlags.size() * 17 + 1;
+		recalculateHeight();
 		final int fx = 4;
-		int fy = 1;
+		int fy = 28;
 		for (MapFlag flag : shownFlags) {
 			int id = flag.getId();
 			if (!isMapFlagValid(id))
@@ -139,7 +152,7 @@ public class MapFlagList extends Component {
 				ProfileManager.setField(NormalProfile.FIELD_MAP_FLAGS, id, !value);
 				break;
 			}
-			fy += 17;
+			fy += 24;
 		}
 	}
 
@@ -147,15 +160,15 @@ public class MapFlagList extends Component {
 	public void updateHover(int x, int y, boolean hover) {
 		super.updateHover(x, y, hover);
 		calculateShownFlags();
-		height = shownFlags.size() * 17 + 1;
+		recalculateHeight();
 		final int fx = 4;
-		int fy = 1;
+		int fy = 28;
 		for (MapFlag flag : shownFlags) {
 			boolean fHover = false;
-			if (hover && FrontUtils.pointInRectangle(x, y - 17, fx, fy, 16, 16))
+			if (hover && FrontUtils.pointInRectangle(x, y - 18, fx, fy, 16, 16))
 				fHover = true;
 			flag.setHover(fHover);
-			fy += 17;
+			fy += 24;
 		}
 	}
 

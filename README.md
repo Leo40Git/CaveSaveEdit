@@ -18,7 +18,7 @@ Want to share MCI files you have created or obtain MCI files that other people h
 This editor only works with vanilla profiles, meaning that any mod with custom profiles (i.e. any of txin's mods excluding The Ultimate Challenge) will **not** work.  
 You _can_ edit save files with modified extensions, just change the file filter on the "open profile" window to "All files" and you're good.
 # Credits
-- **Noxid ([@taedixon](https://github.com/taedixon)):** Executable related code (classes in `com.leo.cse.backend.exe`), taken with~~out~~ permission from **[Booster's Lab](https://github.com/taedixon/boosters-lab)**.
-- **20kdc ([@20kdc](https://github.com/20kdc)):** ".rsrc" segment-related code in ExeData
-- **zxin ([@zxinmine](https://github.com/zxinmine)):** UI sprites (`ui.png` and `shadow.png`) 
-- **Carrotlord:** StrTools class (`com.leo.cse.backend.StrTools`)
+- **Noxid ([@taedixon](https://github.com/taedixon), [@Noxid](https://www.cavestory.org/forums/members/noxid.863)):** Executable related code (classes in `com.leo.cse.backend.exe`), taken with~~out~~ permission from **[Booster's Lab](https://github.com/taedixon/boosters-lab)**.
+- **20kdc ([@20kdc](https://github.com/20kdc), [@gamemanj](https://www.cavestory.org/forums/members/gamemanj.7022)):** ".rsrc" segment-related code in ExeData
+- **zxin ([@zxinmine](https://github.com/zxinmine), [@zxin](https://www.cavestory.org/forums/members/zxin.7232)):** UI sprites (`ui.png` and `shadow.png`) 
+- **Carrotlord ([@Carrotlord](https://www.cavestory.org/forums/members/carrotlord.1111)):** StrTools class (`com.leo.cse.backend.StrTools`)

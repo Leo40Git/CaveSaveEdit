@@ -1,8 +1,5 @@
 package com.leo.cse.frontend.ui.dialogs;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.components.BooleanBox;
@@ -17,18 +14,10 @@ public class FlagDialog extends BaseDialog {
 	public FlagDialog() {
 		super("Set flag...", 720, 58);
 		addComponent(new Label("Flag ID:", 4, 2));
-		addComponent(new ShortBox(44, 4, 28, 16, new Supplier<Short>() {
-			@Override
-			public Short get() {
-				return flag;
-			}
-		}, new Function<Short, Short>() {
-			@Override
-			public Short apply(Short t) {
-				t = (short) Math.max(0, Math.min(7999, t));
-				flag = t;
-				return t;
-			}
+		addComponent(new ShortBox(44, 4, 28, 16, () -> flag, t -> {
+			t = (short) Math.max(0, Math.min(7999, t));
+			flag = t;
+			return t;
 		}, "flag ID", 4));
 		addComponent(new Label("State:", 76, 2));
 		BooleanBox flagBox = new BooleanBox("", false, 106, 4, () -> {

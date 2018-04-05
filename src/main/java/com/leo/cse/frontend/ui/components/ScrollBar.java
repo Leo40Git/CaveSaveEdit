@@ -15,6 +15,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 
 	protected int scrollbarY;
 	protected boolean scrolling;
+	protected static final int ELEM_UP = 0, ELEM_DOWN = 1, ELEM_BAR = 2;
 	protected int hover;
 
 	public ScrollBar(int x, int y, int height) {
@@ -102,11 +103,11 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 		x -= this.x;
 		y -= this.y + 17;
 		if (y <= width)
-			this.hover = 0;
+			this.hover = ELEM_UP;
 		else if (y > height - width)
-			this.hover = 1;
+			this.hover = ELEM_DOWN;
 		else if (x > 2 && x <= 18 && y > scrollbarY && y <= scrollbarY + 16)
-			this.hover = 2;
+			this.hover = ELEM_BAR;
 		else
 			this.hover = -1;
 	}
@@ -119,7 +120,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 		g.drawLine(x, y + width, x + width, y + width);
 		g.drawLine(x, y + height - width, x + width, y + height - width);
 		if (enabled.get()) {
-			if (hover == 2) {
+			if (hover == ELEM_BAR) {
 				g.setColor(lc2);
 				g.fillRect(x + 2, scrollbarY, 16, 16);
 				g.setColor(Main.lineColor);
@@ -131,13 +132,13 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 			FrontUtils.drawCheckeredGrid(g, x + 7, y + height - width + 7, 7, 7);
 			g.setColor(Main.lineColor);
 		}
-		if (hover == 0) {
+		if (hover == ELEM_UP) {
 			g.setColor(lc2);
 			g.fillRect(x, y, width, width);
 			g.setColor(Main.lineColor);
 		}
 		g.drawImage(Resources.arrowUp, x + 6, y + 6, null);
-		if (hover == 1) {
+		if (hover == ELEM_DOWN) {
 			g.setColor(lc2);
 			g.fillRect(x, y + height - width, width, width);
 			g.setColor(Main.lineColor);

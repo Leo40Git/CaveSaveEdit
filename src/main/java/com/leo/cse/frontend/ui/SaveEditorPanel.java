@@ -30,7 +30,6 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.leo.cse.backend.exe.EntityData;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.exe.MapInfo;
@@ -400,54 +399,7 @@ public class SaveEditorPanel extends JPanel
 			addDialogBox(new NikuEditDialog());
 		}));
 		mbiTools.add(new MenuBarItem("Search for Save Points", Resources.icons[15], () -> {
-			final int saveEvent = MCI.getInteger("Game.SaveEvent", 16);
-			List<SavePoint> results = new LinkedList<>();
-			int mapNum = ExeData.getMapInfoCount();
-			for (int i = 0; i < mapNum; i++) {
-				MapInfo map = ExeData.getMapInfo(i);
-				Iterator<PxeEntry> entities = map.getPxeIterator();
-				while (entities.hasNext()) {
-					PxeEntry entity = entities.next();
-					short entityType = entity.getType();
-					EntityData entityInfo = ExeData.getEntityInfo(entityType);
-					int entityFlags = entity.getFlags();
-					entityFlags |= entityInfo.getFlags();
-					if ((entityFlags & 0x2000) == 0)
-						// if entity cannot be interacted with, continue
-						continue;
-					if (entity.getEvent() != saveEvent)
-						// if entity's event is not the save event, continue
-						continue;
-					results.add(new SavePoint(i, entity.getX(), entity.getY()));
-				}
-			}
-			if (results.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "No Save Points found.", "Search for Save Points",
-						JOptionPane.INFORMATION_MESSAGE);
-				return;
-			}
-			String[] resultStr = new String[results.size()];
-			for (int i = 0; i < resultStr.length; i++) {
-				SavePoint point = results.get(i);
-				int eMap = point.map;
-				MapInfo eMapI = ExeData.getMapInfo(eMap);
-				int eX = point.x, eY = point.y;
-				resultStr[i] = "(" + eX + ", " + eY + ") in map " + eMap + " (" + eMapI.getFileName() + " - "
-						+ eMapI.getMapName() + ")";
-			}
-			String sel = FrontUtils.showSelectionDialog(this, "Select Save Point to go to", resultStr, resultStr[0]);
-			if (sel == null)
-				return;
-			int selResult = -1;
-			for (int i = 0; i < resultStr.length; i++)
-				if (resultStr[i].equals(sel)) {
-					selResult = i;
-					break;
-				}
-			SavePoint selPoint = results.get(selResult);
-			ProfileManager.setField(NormalProfile.FIELD_MAP, selPoint.map);
-			ProfileManager.setField(NormalProfile.FIELD_POSITION,
-					new Short[] { (short) (selPoint.x * 32), (short) (selPoint.y * 32) });
+			jumpToSavePoint();
 		}, () -> {
 			return ExeData.isLoaded() && ExeData.doLoadNpc();
 		}));
@@ -819,6 +771,55 @@ public class SaveEditorPanel extends JPanel
 				Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
 			}
 		}
+	}
+
+	private void jumpToSavePoint() {
+		final int saveEvent = MCI.getInteger("Game.SaveEvent", 16);
+		List<SavePoint> results = new LinkedList<>();
+		int mapNum = ExeData.getMapInfoCount();
+		for (int i = 0; i < mapNum; i++) {
+			MapInfo map = ExeData.getMapInfo(i);
+			Iterator<PxeEntry> entities = map.getPxeIterator();
+			while (entities.hasNext()) {
+				PxeEntry entity = entities.next();
+				if (entity.getEvent() != saveEvent)
+					// if entity's event is not the save event, continue
+					continue;
+				int entityFlags = entity.getFlags();
+				entityFlags |= entity.getInfo().getFlags();
+				if ((entityFlags & 0x2000) == 0)
+					// if entity cannot be interacted with, continue
+					continue;
+				results.add(new SavePoint(i, entity.getX(), entity.getY()));
+			}
+		}
+		if (results.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "No Save Points found.", "Search for Save Points",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		String[] resultStr = new String[results.size()];
+		for (int i = 0; i < resultStr.length; i++) {
+			SavePoint point = results.get(i);
+			int eMap = point.map;
+			MapInfo eMapI = ExeData.getMapInfo(eMap);
+			int eX = point.x, eY = point.y;
+			resultStr[i] = "(" + eX + ", " + eY + ") in map " + eMap + " (" + eMapI.getFileName() + " - "
+					+ eMapI.getMapName() + ")";
+		}
+		String sel = FrontUtils.showSelectionDialog(this, "Select Save Point to go to", resultStr, resultStr[0]);
+		if (sel == null)
+			return;
+		int selResult = -1;
+		for (int i = 0; i < resultStr.length; i++)
+			if (resultStr[i].equals(sel)) {
+				selResult = i;
+				break;
+			}
+		SavePoint selPoint = results.get(selResult);
+		ProfileManager.setField(NormalProfile.FIELD_MAP, selPoint.map);
+		ProfileManager.setField(NormalProfile.FIELD_POSITION,
+				new Short[] { (short) (selPoint.x * 32), (short) (selPoint.y * 32) });
 	}
 
 	private boolean dragLeftMouse;

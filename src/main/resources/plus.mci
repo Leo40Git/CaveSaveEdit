@@ -236,10 +236,10 @@ function getFlagDescriptions() {
     flagDesc[0565] = "Curly and Mimiga children not in Curly (sand zone residence)   I don't understand how the Curly fight sets this…";
     flagDesc[0580] = "ITEM - Hajime";
     flagDesc[0581] = "ITEM - Curly's Underwear";
-    flagDesc[0590] = "Gave 1st Puppy to Jenka (note: says \"Arf!\"";
-    flagDesc[0591] = "Gave 2nd Puppy to Jenka (note: says \"Arf arf!\"";
-    flagDesc[0592] = "Gave 3rd Puppy to Jenka (note: says \"Arf arf arf!\"";
-    flagDesc[0593] = "Gave 4th Puppy to Jenka (note: says \"Booop.\"";
+    flagDesc[0590] = "Gave 1st Puppy to Jenka (note: says \"Arf!\")";
+    flagDesc[0591] = "Gave 2nd Puppy to Jenka (note: says \"Arf arf!\")";
+    flagDesc[0592] = "Gave 3rd Puppy to Jenka (note: says \"Arf arf arf!\")";
+    flagDesc[0593] = "Gave 4th Puppy to Jenka (note: says \"Booop.\")";
     flagDesc[0594] = "Gave 5th Puppy to Jenka (note: says \"Five!\", but you don't get a chance to talk to it)";
     flagDesc[0595] = "Balrog stole storehouse key";
     flagDesc[0596] = "Jenka stood up after Balrog's attack";

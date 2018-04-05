@@ -21,14 +21,14 @@ public class MapFlagsPanel extends Panel {
 		super();
 		final Dimension winSize = Main.WINDOW_SIZE;
 		flagList = new MapFlagList();
-		flagListWrap = new ScrollWrapper(flagList, 0, 0, winSize.width - 21, winSize.height - 55);
+		flagListWrap = new ScrollWrapper(flagList, 0, 0, winSize.width - 27, winSize.height - 86);
 		compList.add(flagListWrap);
-		compList.add(new Line(0, winSize.height - 54, winSize.width - 21, 0));
-		compList.add(new Button("Set map flag...", 2, winSize.height - 52, 130, 16, () -> {
+		compList.add(new Line(0, winSize.height - 85, winSize.width - 21, 0));
+		compList.add(new Button("Set map flag...", 4, winSize.height - 82, 130, 16, () -> {
 			SaveEditorPanel.panel.addDialogBox(new MapFlagDialog());
 		}));
-		compList.add(new Label("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", 562,
-				winSize.height - 54));
+		compList.add(new Label("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", 560,
+				winSize.height - 84));
 	}
 
 	@Override

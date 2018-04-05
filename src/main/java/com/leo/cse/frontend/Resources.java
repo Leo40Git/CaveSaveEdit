@@ -1,12 +1,14 @@
 package com.leo.cse.frontend;
 
-import static com.leo.cse.frontend.FrontUtils.generateMask;
+import static com.leo.cse.frontend.FrontUtils.*;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -16,12 +18,14 @@ public class Resources {
 	}
 
 	public static Font fontB, font, fontS, fontL;
-	
+
 	// base images
-	public static BufferedImage icon;
+	public static List<BufferedImage> appIcons;
+	public static final int APPICON_32 = 0, APPICON_64 = 1;
+	private static final String[] APPICON_SIZE = new String[] { "32", "64" };
 	public static BufferedImage shadow;
 	public static BufferedImage ui;
-	
+
 	// colored images
 	public static BufferedImage checkboxOff, checkboxOn, checkboxDisabled;
 	public static BufferedImage radioOff, radioOn, radioDisabled;
@@ -29,17 +33,19 @@ public class Resources {
 	public static BufferedImage dialogClose;
 	public static BufferedImage arrowDown, arrowUp;
 	public static BufferedImage grid;
-	
+
 	// uncolored images
 	public static BufferedImage drag;
 	public static BufferedImage[] editorTabIcons, icons;
-	
+
 	// niku counter
 	public static BufferedImage[] nikuNumbers;
 	public static BufferedImage nikuIcon, nikuPunc;
-	
+
 	public static void loadWindow() throws IOException {
-		icon = ImageIO.read(Resources.class.getResourceAsStream("/icon.png"));
+		appIcons = new LinkedList<>();
+		for (int i = 0; i < APPICON_SIZE.length; i++)
+			appIcons.add(ImageIO.read(Resources.class.getResource("/appicon" + APPICON_SIZE[i] + ".png")));
 		shadow = ImageIO.read(Resources.class.getResource("/shadow.png"));
 	}
 

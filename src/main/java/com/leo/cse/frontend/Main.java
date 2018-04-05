@@ -48,7 +48,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	public static final Logger LOGGER = LogManager.getLogger("CSE");
 
-	public static final Dimension WINDOW_SIZE = new Dimension(870, 718);
+	public static final Dimension WINDOW_SIZE = new Dimension(870, 734);
 	public static final Version VERSION = new Version("4.0");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
@@ -123,7 +123,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ConfirmCloseWindowListener());
 		setTitle(this);
-		setIconImage(Resources.icon);
+		setIconImages(Resources.appIcons);
 	}
 
 	private void initPanel() {
@@ -283,7 +283,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 		public LoadFrame() {
 			final Dimension win = new Dimension(232, 112);
-			setIconImage(Resources.icon);
+			setIconImages(Resources.appIcons);
 			setPreferredSize(win);
 			setMaximumSize(win);
 			setMinimumSize(win);

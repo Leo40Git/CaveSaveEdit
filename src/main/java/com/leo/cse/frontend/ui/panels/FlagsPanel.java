@@ -1,7 +1,6 @@
 package com.leo.cse.frontend.ui.panels;
 
 import java.awt.Dimension;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.leo.cse.frontend.Main;
@@ -23,44 +22,27 @@ public class FlagsPanel extends Panel {
 	public FlagsPanel() {
 		super();
 		final Dimension winSize = Main.WINDOW_SIZE;
-		final Supplier<Boolean> huSup = new Supplier<Boolean>() {
-			@Override
-			public Boolean get() {
-				return SaveEditorPanel.hideUndefinedFlags;
-			}
-		}, hsSup = new Supplier<Boolean>() {
-			@Override
-			public Boolean get() {
-				return SaveEditorPanel.hideSystemFlags;
-			}
-		};
+		final Supplier<Boolean> huSup = () -> SaveEditorPanel.hideUndefinedFlags,
+				hsSup = () -> SaveEditorPanel.hideSystemFlags;
 		flagList = new FlagList(huSup, hsSup);
-		flagListWrap = new ScrollWrapper(flagList, 0, 0, winSize.width - 21, winSize.height - 55);
+		flagListWrap = new ScrollWrapper(flagList, 0, 0, winSize.width - 27, winSize.height - 86);
 		compList.add(flagListWrap);
-		compList.add(new Line(0, winSize.height - 54, winSize.width - 21, 0));
-		compList.add(new BooleanBox("Hide undefined flags?", false, 2, winSize.height - 52, huSup,
-				new Function<Boolean, Boolean>() {
-					@Override
-					public Boolean apply(Boolean t) {
-						SaveEditorPanel.hideUndefinedFlags = t;
-						flagList.calculateShownFlags();
-						return t;
-					}
-				}));
-		compList.add(
-				new BooleanBox("Hide system flags?", false, 132, winSize.height - 52, hsSup, new Function<Boolean, Boolean>() {
-					@Override
-					public Boolean apply(Boolean t) {
-						SaveEditorPanel.hideSystemFlags = t;
-						flagList.calculateShownFlags();
-						return t;
-					}
-				}));
-		compList.add(new Button("Set flag...", 262, winSize.height - 52, 130, 16, () -> {
+		compList.add(new Line(0, winSize.height - 85, winSize.width - 21, 0));
+		compList.add(new BooleanBox("Hide undefined flags?", false, 4, winSize.height - 82, huSup, t -> {
+			SaveEditorPanel.hideUndefinedFlags = t;
+			flagList.calculateShownFlags();
+			return t;
+		}));
+		compList.add(new BooleanBox("Hide system flags?", false, 134, winSize.height - 82, hsSup, t -> {
+			SaveEditorPanel.hideSystemFlags = t;
+			flagList.calculateShownFlags();
+			return t;
+		}));
+		compList.add(new Button("Set flag...", 262, winSize.height - 82, 130, 16, () -> {
 			SaveEditorPanel.panel.addDialogBox(new FlagDialog());
 		}));
-		compList.add(new Label("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", 562,
-				winSize.height - 54));
+		compList.add(new Label("Shift - x10 scroll, Control - x100 scroll, Shift+Ctrl - x1000 scroll", 560,
+				winSize.height - 84));
 	}
 
 	@Override

@@ -62,7 +62,8 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 	public void render(Graphics g, Rectangle viewport) {
 		final int wsWidth = wrapped.getWidth(), wsHeight = wrapped.getHeight();
 		final int scrollOff = (int) ((height - wsHeight) * scrollbar.getValue());
-		final Rectangle wViewport = new Rectangle(wrapped.getX(), wrapped.getY() - scrollOff, width, height);
+		final Rectangle wViewport = new Rectangle(wrapped.getX(), wrapped.getY() - scrollOff,
+				width - scrollbar.getWidth(), height);
 		if (wrapSurf == null)
 			wrapSurf = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D wg = (Graphics2D) wrapSurf.getGraphics();

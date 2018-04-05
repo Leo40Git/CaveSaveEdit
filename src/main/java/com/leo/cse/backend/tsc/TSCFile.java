@@ -49,7 +49,7 @@ public class TSCFile {
 		for (String line : lines) {
 			if (line.startsWith("#")) {
 				// new event
-				if (currentEvent > 0 && eventBuf != null)
+				if (currentEvent > 0)
 					events.put(currentEvent, eventBuf);
 				currentEvent = Integer.parseUnsignedInt(line.substring(1, 5));
 				eventBuf = null;

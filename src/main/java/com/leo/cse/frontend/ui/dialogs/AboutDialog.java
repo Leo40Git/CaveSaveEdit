@@ -10,7 +10,7 @@ public class AboutDialog extends BaseDialog {
 
 	public AboutDialog() {
 		super("About CaveSaveEdit v" + Main.VERSION, 422, 106);
-		addComponent(new Icon(Resources.icon, 4, 4));
+		addComponent(new Icon(Resources.appIcons.get(Resources.APPICON_32), 4, 4));
 		addComponent(new Label("CaveSaveEdit version " + Main.VERSION + "\nWritten by Leo40Story"
 				+ "\nBased on Kapow's profile specs (http://www.cavestory.org/guides/profile.txt)"
 				+ "\nUI sprites by zxin" + "\nEarly testers: zxin and gamemanj/20kdc", 38, 0));
