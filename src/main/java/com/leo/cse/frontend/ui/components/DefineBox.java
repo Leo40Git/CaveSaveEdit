@@ -86,7 +86,7 @@ public class DefineBox extends IntegerBox {
 			map = FrontUtils.sortMapByValue(map);
 		for (Map.Entry<Integer, String> entry : map.entrySet())
 			entry.setValue(entry.getKey() + " - " + entry.getValue());
-		DefaultListCellRenderer listRender = new DefaultListCellRenderer();
+		DefaultListCellRenderer listRender = null;
 		if (iSup != null)
 			listRender = new DefineListCellRenderer(type, iSup);
 		String nVal = FrontUtils.showSelectionDialog(Main.window, "Select " + description, map.values(),

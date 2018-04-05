@@ -1901,7 +1901,8 @@ public class ExeData {
 	public static BufferedImage getImage(File key) {
 		if (key == null)
 			return null;
-		key = ResUtils.newFile(key.getAbsolutePath());
+		if (key.exists())
+			key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key);
 		System.err.println("Key not found for getImage");
