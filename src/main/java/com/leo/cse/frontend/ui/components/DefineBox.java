@@ -119,7 +119,6 @@ public class DefineBox extends IntegerBox {
 				boolean cellHasFocus) {
 			if (!(value instanceof String))
 				throw new RuntimeException();
-			System.out.println("DefineListCellRenderer");
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			String nVal = (String) value;
 			nVal = nVal.substring(nVal.indexOf('-') + 2);
