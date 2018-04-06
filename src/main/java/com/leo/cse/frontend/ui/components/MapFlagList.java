@@ -87,7 +87,7 @@ public class MapFlagList extends Component {
 			if (isMapFlagValid(i))
 				shownFlags.add(new MapFlag(i));
 	}
-	
+
 	public void recalculateHeight() {
 		height = (shownFlags.size() + 1) * 24;
 	}

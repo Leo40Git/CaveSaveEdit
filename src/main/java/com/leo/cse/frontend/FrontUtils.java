@@ -26,7 +26,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +51,7 @@ public class FrontUtils {
 
 	public static String showSelectionDialog(Component parent, String title, String[] selections,
 			String initialSelection, DefaultListCellRenderer listRender) {
-		JList<String> list = new JList<String>(selections);
+		JList<String> list = new JList<>(selections);
 		if (listRender != null) {
 			list.setBackground(Main.COLOR_BG);
 			list.setCellRenderer(listRender);
@@ -66,6 +65,7 @@ public class FrontUtils {
 		String ret = null;
 		final boolean[] dc = new boolean[1];
 		list.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() > 1) {
 					dc[0] = true;
@@ -207,15 +207,13 @@ public class FrontUtils {
 	// end code from stack overflow
 
 	public static <K> Map<K, String> sortStringMapByValue(Map<K, String> map, Function<String, String> processor) {
-		List<Map.Entry<K, String>> list = new LinkedList<Map.Entry<K, String>>(map.entrySet());
-		Collections.sort(list, new Comparator<Map.Entry<K, String>>() {
-			public int compare(Map.Entry<K, String> o1, Map.Entry<K, String> o2) {
-				String s1 = processor.apply(o1.getValue());
-				String s2 = processor.apply(o2.getValue());
-				return s1.compareTo(s2);
-			}
+		List<Map.Entry<K, String>> list = new LinkedList<>(map.entrySet());
+		Collections.sort(list, (o1, o2) -> {
+			String s1 = processor.apply(o1.getValue());
+			String s2 = processor.apply(o2.getValue());
+			return s1.compareTo(s2);
 		});
-		Map<K, String> result = new LinkedHashMap<K, String>();
+		Map<K, String> result = new LinkedHashMap<>();
 		for (Map.Entry<K, String> entry : list) {
 			result.put(entry.getKey(), entry.getValue());
 		}
@@ -340,7 +338,7 @@ public class FrontUtils {
 
 	/**
 	 * Shows a modal color chooser dialog and blocks until the dialog is closed.
-	 * 
+	 *
 	 * @param component
 	 *            the parent component for the dialog; may be null
 	 * @param title

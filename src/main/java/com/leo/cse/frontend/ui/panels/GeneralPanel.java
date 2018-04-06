@@ -26,9 +26,9 @@ import com.leo.cse.frontend.ui.components.ShortBox;
 public class GeneralPanel extends Panel {
 
 	private MapView mp;
-	
+
 	private Calendar modifyDate;
-	
+
 	private void updateTime() {
 		long time = modifyDate.getTime().getTime() / 1000;
 		if (time < 0)

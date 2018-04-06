@@ -2,7 +2,7 @@ package com.leo.cse.backend.profile;
 
 /**
  * Listens to modifications to the currently loaded profile.
- * 
+ *
  * @author Leo
  * @see ProfileManager
  */
@@ -10,7 +10,7 @@ public interface ProfileListener {
 
 	/**
 	 * Invoked when a field in the profile is changed.
-	 * 
+	 *
 	 * @param field
 	 *            field being modified
 	 * @param id

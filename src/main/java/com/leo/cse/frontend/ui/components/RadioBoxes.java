@@ -13,7 +13,7 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class RadioBoxes extends Component {
-	
+
 	class RadioBox extends Component {
 
 		private String label;
@@ -22,7 +22,8 @@ public class RadioBoxes extends Component {
 		private boolean small;
 		private Function<Integer, Boolean> check;
 
-		public RadioBox(String label, int x, int y, RadioBoxes parent, int id, boolean small, Function<Integer, Boolean> check) {
+		public RadioBox(String label, int x, int y, RadioBoxes parent, int id, boolean small,
+				Function<Integer, Boolean> check) {
 			super(label, x, y, (small ? 8 : 16), (small ? 8 : 16));
 			this.label = label;
 			this.parent = parent;
@@ -78,7 +79,7 @@ public class RadioBoxes extends Component {
 		this.labels = labels;
 		this.sSup = sSup;
 		this.update = update;
-		radioBoxes = new ArrayList<RadioBox>();
+		radioBoxes = new ArrayList<>();
 		for (int i = 0; i < number; i++)
 			radioBoxes.add(new RadioBox(this.labels[i], x + i * (this.width / number), y, this, i, small, check));
 	}
@@ -108,7 +109,7 @@ public class RadioBoxes extends Component {
 			}
 		}
 	}
-	
+
 	@Override
 	public void updateHover(int x, int y, boolean hover) {
 		super.updateHover(x, y, hover);

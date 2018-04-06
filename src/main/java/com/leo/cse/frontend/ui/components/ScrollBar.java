@@ -30,7 +30,7 @@ public class ScrollBar extends Component implements IDraggable, IScrollable {
 	public float getValue() {
 		float sby = scrollbarY;
 		sby -= y + 2 + width;
-		sby = (float) sby / (height - width * 3);
+		sby = sby / (height - width * 3);
 		return sby;
 	}
 

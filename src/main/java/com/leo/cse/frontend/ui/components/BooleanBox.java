@@ -13,13 +13,14 @@ import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
 public class BooleanBox extends Component {
-	
+
 	private boolean labelIsMCI, missingMCI;
 	private String label;
 	private Supplier<Boolean> vSup;
 	private Function<Boolean, Boolean> update;
 
-	public BooleanBox(String label, boolean labelIsMCI, int x, int y, Supplier<Boolean> vSup, Function<Boolean, Boolean> update) {
+	public BooleanBox(String label, boolean labelIsMCI, int x, int y, Supplier<Boolean> vSup,
+			Function<Boolean, Boolean> update) {
 		super(label, x, y, 15, 15);
 		this.label = label;
 		this.labelIsMCI = labelIsMCI;

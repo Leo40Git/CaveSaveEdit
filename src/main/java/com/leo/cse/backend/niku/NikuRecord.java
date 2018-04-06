@@ -15,7 +15,7 @@ import com.leo.cse.backend.ByteUtils;
 
 /**
  * Stores information for a Nikumaru/290 Counter record.
- * 
+ *
  * @author Leo
  *
  */
@@ -29,7 +29,7 @@ public class NikuRecord {
 
 	/**
 	 * Checks if the record has been modified since the last save.
-	 * 
+	 *
 	 * @return <code>true</code> if record has been modified, <code>false</code>
 	 *         otherwise.
 	 */
@@ -44,7 +44,7 @@ public class NikuRecord {
 
 	/**
 	 * Represents an edit to the record data.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
@@ -65,7 +65,7 @@ public class NikuRecord {
 
 		/**
 		 * Constructs a new <code>NikuEdit</code>.
-		 * 
+		 *
 		 * @param oldValue
 		 *            the record's old value
 		 * @param newValue
@@ -138,7 +138,7 @@ public class NikuRecord {
 
 	/**
 	 * Checks if the undo manager exists.
-	 * 
+	 *
 	 * @return <code>true</code> if undo manager exists, <code>false</code>
 	 *         otherwise
 	 */
@@ -148,7 +148,7 @@ public class NikuRecord {
 
 	/**
 	 * Checks if an edit can be undone.
-	 * 
+	 *
 	 * @return <code>true</code> if an edit can be undone, <code>false</code>
 	 *         otherwise
 	 */
@@ -169,7 +169,7 @@ public class NikuRecord {
 
 	/**
 	 * Checks if an edit can be redone.
-	 * 
+	 *
 	 * @return <code>true</code> if an edit can be redone, <code>false</code>
 	 *         otherwise
 	 */
@@ -199,7 +199,7 @@ public class NikuRecord {
 
 	/**
 	 * Gets the currently loaded file.
-	 * 
+	 *
 	 * @return currently loaded file, or <code>null</code> if none is loaded
 	 */
 	public static File getFile() {
@@ -213,7 +213,7 @@ public class NikuRecord {
 
 	/**
 	 * Checks if a record is currently loaded.
-	 * 
+	 *
 	 * @return <code>true</code> if a record is loaded, <code>false</code>
 	 *         otherwise.
 	 */
@@ -223,7 +223,7 @@ public class NikuRecord {
 
 	/**
 	 * Converts a byte into it's unsigned equivalent.
-	 * 
+	 *
 	 * @param b
 	 *            signed byte
 	 * @return unsigned byte
@@ -245,7 +245,7 @@ public class NikuRecord {
 
 	/**
 	 * Loads a record.
-	 * 
+	 *
 	 * @param file
 	 *            record file
 	 * @throws IOException
@@ -286,7 +286,7 @@ public class NikuRecord {
 
 	/**
 	 * Saves a record.
-	 * 
+	 *
 	 * @param file
 	 *            file to save to
 	 * @throws IOException
@@ -332,9 +332,10 @@ public class NikuRecord {
 		modified = false;
 		undoMan = null;
 	}
-	
+
 	/**
 	 * Gets
+	 * 
 	 * @return
 	 */
 	public static int getValue() {

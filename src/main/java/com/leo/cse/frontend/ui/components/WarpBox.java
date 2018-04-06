@@ -13,7 +13,7 @@ import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
 public class WarpBox extends DefineBox {
-	
+
 	public static final BufferedImage WARP_BLANK = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
 
 	public WarpBox(int x, int y, int width, int height, int warpId) {

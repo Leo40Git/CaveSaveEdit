@@ -16,7 +16,7 @@ public abstract class Profile {
 
 	/**
 	 * Represents a field in the profile.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
@@ -26,14 +26,14 @@ public abstract class Profile {
 		 * Gets the type of the field.<br />
 		 * <i>This cannot return <code>null</code>,</i> obviously. That'd be like having
 		 * a <code>void</code> Java field.
-		 * 
+		 *
 		 * @return field type
 		 */
 		public Class<?> getType();
 
 		/**
 		 * Checks if the field accepts this value.
-		 * 
+		 *
 		 * @param index
 		 *            index to check against (or -1 if {@linkplain #hasIndexes()
 		 *            the field is indexless})
@@ -46,7 +46,7 @@ public abstract class Profile {
 
 		/**
 		 * Gets the field's value.
-		 * 
+		 *
 		 * @param index
 		 *            index to get value from (or -1 if {@linkplain #hasIndexes() the
 		 *            field is indexless})
@@ -56,7 +56,7 @@ public abstract class Profile {
 
 		/**
 		 * Sets the field's value.
-		 * 
+		 *
 		 * @param index
 		 *            index to set (or -1 if {@linkplain #hasIndexes() the field is
 		 *            indexless})
@@ -67,7 +67,7 @@ public abstract class Profile {
 
 		/**
 		 * Checks if the field is indexed.
-		 * 
+		 *
 		 * @return <code>true</code> if has indexes, <code>false</code> otherwise.
 		 */
 		public default boolean hasIndexes() {
@@ -76,7 +76,7 @@ public abstract class Profile {
 
 		/**
 		 * Gets the minimum index of the field.
-		 * 
+		 *
 		 * @return minimum index of the field (or -1 if {@linkplain #hasIndexes() the
 		 *         field is indexless})
 		 */
@@ -86,7 +86,7 @@ public abstract class Profile {
 
 		/**
 		 * Gets the maximum index of the field
-		 * 
+		 *
 		 * @return maximum index of the field (or -1 if {@linkplain #hasIndexes() the
 		 *         field is indexless})
 		 */
@@ -99,7 +99,7 @@ public abstract class Profile {
 	/**
 	 * Represents a profile method - basically a function that does whatever to the
 	 * profile. Can also take arguments.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
@@ -118,7 +118,7 @@ public abstract class Profile {
 		 * the returned array.<br />
 		 * <i>This cannot return <code>null</code>.</i> Methods without arguments will
 		 * return a 0-length array when this method is called.
-		 * 
+		 *
 		 * @return array of argument types
 		 */
 		public default Class<?>[] getArgTypes() {
@@ -129,7 +129,7 @@ public abstract class Profile {
 		 * Gets the method's return value type.<br />
 		 * This can also return <code>null</code>, which is equivalent to a Java
 		 * <code>void</code> method in that it doesn't return anything.
-		 * 
+		 *
 		 * @return type of method return value, or <code>null</code> if method doesn't
 		 *         return anything
 		 */
@@ -139,7 +139,7 @@ public abstract class Profile {
 
 		/**
 		 * Invokes the method.
-		 * 
+		 *
 		 * @param fcr
 		 *            field change recorder
 		 * @param args
@@ -172,7 +172,7 @@ public abstract class Profile {
 
 	/**
 	 * Loads a profile.
-	 * 
+	 *
 	 * @param file
 	 *            file to load
 	 * @throws IOException
@@ -182,7 +182,7 @@ public abstract class Profile {
 
 	/**
 	 * Save a profile.
-	 * 
+	 *
 	 * @param file
 	 *            file to save to
 	 * @throws IOException
@@ -197,7 +197,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the loaded file.
-	 * 
+	 *
 	 * @return loaded file, or <code>null</code> if no file is loaded
 	 */
 	public File getLoadedFile() {
@@ -206,7 +206,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the profile header.
-	 * 
+	 *
 	 * @return profile header
 	 */
 	public String getHeader() {
@@ -215,7 +215,7 @@ public abstract class Profile {
 
 	/**
 	 * Sets the profile header for validation.
-	 * 
+	 *
 	 * @param header
 	 *            new profile header
 	 */
@@ -225,7 +225,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the flag section header.
-	 * 
+	 *
 	 * @return flag header
 	 */
 	public String getFlagHeader() {
@@ -234,7 +234,7 @@ public abstract class Profile {
 
 	/**
 	 * Sets the flag section header for validation.
-	 * 
+	 *
 	 * @param flagH
 	 *            new flag header
 	 */
@@ -271,7 +271,7 @@ public abstract class Profile {
 
 	/**
 	 * Registers a new field.
-	 * 
+	 *
 	 * @param fieldName
 	 *            name to register field as
 	 * @param field
@@ -294,7 +294,7 @@ public abstract class Profile {
 
 	/**
 	 * Registers a new method.
-	 * 
+	 *
 	 * @param methodName
 	 *            name to register method as
 	 * @param method
@@ -318,7 +318,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets all registered field names.
-	 * 
+	 *
 	 * @return all field names
 	 */
 	public List<String> getAllFields() {
@@ -327,7 +327,7 @@ public abstract class Profile {
 
 	/**
 	 * Checks if a field exists.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return <code>true</code> if it exists, <code>false</code> otherwise
@@ -341,7 +341,7 @@ public abstract class Profile {
 	/**
 	 * Like {@link #hasField(String)}, but throws an exception if the field doesn't
 	 * exist.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @throws ProfileFieldException
@@ -354,7 +354,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets a field's value type.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return the field's type
@@ -368,7 +368,7 @@ public abstract class Profile {
 
 	/**
 	 * Checks if a field has indexes.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return <code>true</code> if it has indexes, <code>false</code> otherwise
@@ -382,7 +382,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the minimum index of a field.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return minimum field index
@@ -399,7 +399,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the maximum index of a field.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return maximum field index
@@ -416,7 +416,7 @@ public abstract class Profile {
 
 	/**
 	 * Checks if a field accepts a value.
-	 * 
+	 *
 	 * @param field
 	 *            field to check against
 	 * @param index
@@ -440,7 +440,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets a field's value.
-	 * 
+	 *
 	 * @param field
 	 *            field to get
 	 * @param index
@@ -462,7 +462,7 @@ public abstract class Profile {
 
 	/**
 	 * Sets a field's value.
-	 * 
+	 *
 	 * @param field
 	 *            field to set
 	 * @param index
@@ -485,7 +485,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets all registered method names.
-	 * 
+	 *
 	 * @return all method names
 	 */
 	public List<String> getAllMethods() {
@@ -494,7 +494,7 @@ public abstract class Profile {
 
 	/**
 	 * Checks if a method exists.
-	 * 
+	 *
 	 * @param method
 	 *            method to check
 	 * @return <code>true</code> if it exists, <code>false</code> otherwise
@@ -508,7 +508,7 @@ public abstract class Profile {
 	/**
 	 * Like {@link #hasMethod(String)}, but throws an exception if the field doesn't
 	 * exist.
-	 * 
+	 *
 	 * @param method
 	 *            method to check
 	 * @throws ProfileMethodException
@@ -521,7 +521,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the number of arguments a method requires.
-	 * 
+	 *
 	 * @param method
 	 *            method to check
 	 * @return number of arguments for method
@@ -538,7 +538,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the types of arguments a method requires.
-	 * 
+	 *
 	 * @param method
 	 *            method to check
 	 * @return types of arguments for method
@@ -552,7 +552,7 @@ public abstract class Profile {
 
 	/**
 	 * Gets the type of the value a method returns.
-	 * 
+	 *
 	 * @param method
 	 *            method to check
 	 * @return return type of method
@@ -566,11 +566,18 @@ public abstract class Profile {
 
 	/**
 	 * Invokes a method.
-	 * @param method method to invoke
-	 * @param fcr field change recorder to pass to method
-	 * @param args arguments to pass to method, or <code>null</code> if it doesn't require any arguments
-	 * @return return value of method, or <code>null</code> if it doesn't return anything
-	 * @throws ProfileMethodException if a method-related exception occurs.
+	 * 
+	 * @param method
+	 *            method to invoke
+	 * @param fcr
+	 *            field change recorder to pass to method
+	 * @param args
+	 *            arguments to pass to method, or <code>null</code> if it doesn't
+	 *            require any arguments
+	 * @return return value of method, or <code>null</code> if it doesn't return
+	 *         anything
+	 * @throws ProfileMethodException
+	 *             if a method-related exception occurs.
 	 */
 	public Object callMethod(String method, FieldChangeRecorder fcr, Object... args) throws ProfileMethodException {
 		assertHasMethod(method);

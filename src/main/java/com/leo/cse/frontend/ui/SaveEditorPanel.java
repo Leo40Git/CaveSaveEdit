@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -852,8 +853,8 @@ public class SaveEditorPanel extends JPanel
 		py -= i.top + OFFSET_Y;
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		final int mod = e.getModifiersEx();
-		final boolean shift = (mod & MouseEvent.SHIFT_DOWN_MASK) == MouseEvent.SHIFT_DOWN_MASK,
-				ctrl = (mod & MouseEvent.CTRL_DOWN_MASK) == MouseEvent.CTRL_DOWN_MASK;
+		final boolean shift = (mod & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK,
+				ctrl = (mod & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
 		if (!dBoxes.isEmpty()) {
 			// dialog box
 			Dialog dBox = dBoxes.get(0);
@@ -947,8 +948,8 @@ public class SaveEditorPanel extends JPanel
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
 		final int mod = e.getModifiersEx();
-		final boolean shift = (mod & MouseWheelEvent.SHIFT_DOWN_MASK) != 0,
-				ctrl = (mod & MouseWheelEvent.CTRL_DOWN_MASK) != 0;
+		final boolean shift = (mod & InputEvent.SHIFT_DOWN_MASK) != 0,
+				ctrl = (mod & InputEvent.CTRL_DOWN_MASK) != 0;
 		if (!dBoxes.isEmpty()) {
 			dBoxes.get(0).onScroll(e.getWheelRotation(), shift, ctrl);
 		} else {
@@ -976,7 +977,7 @@ public class SaveEditorPanel extends JPanel
 			return;
 		int px = e.getX(), py = e.getY();
 		if (lastDragged == null)
-			lastDragged = new HashMap<IDraggable, Boolean>();
+			lastDragged = new HashMap<>();
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
@@ -1104,8 +1105,8 @@ public class SaveEditorPanel extends JPanel
 	public void keyReleased(KeyEvent e) {
 		int code = e.getKeyCode();
 		int mods = e.getModifiersEx();
-		boolean shift = (mods & KeyEvent.SHIFT_DOWN_MASK) != 0;
-		boolean ctrl = (mods & KeyEvent.CTRL_DOWN_MASK) != 0;
+		boolean shift = (mods & InputEvent.SHIFT_DOWN_MASK) != 0;
+		boolean ctrl = (mods & InputEvent.CTRL_DOWN_MASK) != 0;
 		if (code == KeyEvent.VK_ESCAPE) {
 			Main.close();
 		}

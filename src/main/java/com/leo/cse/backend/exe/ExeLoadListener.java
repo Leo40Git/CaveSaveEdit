@@ -2,7 +2,7 @@ package com.leo.cse.backend.exe;
 
 /**
  * Listens to game/mod data being loaded and unloaded.
- * 
+ *
  * @author Leo
  * @see ExeData
  */
@@ -10,7 +10,7 @@ public interface ExeLoadListener {
 
 	/**
 	 * Invoked when an event occurs.
-	 * 
+	 *
 	 * @param event
 	 *            event name
 	 * @param loadName
@@ -24,7 +24,7 @@ public interface ExeLoadListener {
 
 	/**
 	 * Invoked when a sub-event occurs.
-	 * 
+	 *
 	 * @param event
 	 *            event name
 	 * @param loadName

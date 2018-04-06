@@ -57,7 +57,7 @@ public class NikuEditDialog extends BaseDialog {
 				"Scroll to add/remove seconds\nShift+scroll to add/remove minutes\nCtrl+scroll to add/remove tenths of seconds\nClick to enter number",
 				112, 79, true));
 	}
-	
+
 	private void newNiku() {
 		if (NikuRecord.isLoaded() && NikuRecord.isModified()) {
 			int sel = JOptionPane.showConfirmDialog(Main.window,

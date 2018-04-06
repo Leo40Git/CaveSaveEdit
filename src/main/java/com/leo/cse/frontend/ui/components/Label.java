@@ -19,7 +19,7 @@ public class Label extends Component {
 		this.text = text;
 		this.center = center;
 	}
-	
+
 	public Label(Supplier<String> textSup, int x, int y, boolean center) {
 		super(textSup.get(), x, y, 0, 0);
 		this.textSup = textSup;
@@ -29,7 +29,7 @@ public class Label extends Component {
 	public Label(String text, int x, int y) {
 		this(text, x, y, false);
 	}
-	
+
 	public Label(Supplier<String> textSup, int x, int y) {
 		this(textSup, x, y, false);
 	}

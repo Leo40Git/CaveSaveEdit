@@ -151,7 +151,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Initializes and registers fields.
-	 * 
+	 *
 	 * @param extFields
 	 *            "extended fields" flag. if <code>true</code>, special support
 	 *            fields will also be registered
@@ -340,7 +340,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Corrects a pointer to data somewhere in the profile.
-	 * 
+	 *
 	 * @param ptr
 	 *            pointer to correct
 	 * @return corrected pointer
@@ -352,7 +352,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>byte</code> field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param ptr
@@ -403,7 +403,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>byte</code> array field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param length
@@ -464,7 +464,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>short</code> field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param ptr
@@ -500,7 +500,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>short</code> array field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param length
@@ -561,7 +561,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>int</code> field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param ptr
@@ -598,7 +598,7 @@ public class NormalProfile extends Profile {
 	/**
 	 * Creates a <code>boolean</code> field, with a byte representing a boolean: 0
 	 * being <code>false</code>, and anything else being <code>true</code>.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param ptr
@@ -638,7 +638,7 @@ public class NormalProfile extends Profile {
 	 * Creates a <code>boolean</code> array field, with a byte representing each
 	 * boolean: 0
 	 * being <code>false</code>, and anything else being <code>true</code>.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param length
@@ -702,7 +702,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>int</code> array field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param length
@@ -763,7 +763,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>long</code> field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param ptr
@@ -799,7 +799,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a <code>long</code> array field.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param length
@@ -860,7 +860,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates a bitflag field. Every 8 bitflags take up one byte.
-	 * 
+	 *
 	 * @param name
 	 *            name of field
 	 * @param length
@@ -919,7 +919,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates {@linkplain #FIELD_MAP_AND_POSITION the map & position "field"}.
-	 * 
+	 *
 	 * @param mapPtr
 	 *            pointer to map field
 	 * @param xPtr
@@ -970,7 +970,7 @@ public class NormalProfile extends Profile {
 
 	/**
 	 * Creates {@linkplain #FIELD_POSITION the position "field"}.
-	 * 
+	 *
 	 * @param xPtr
 	 *            pointer to X position field
 	 * @param yPtr

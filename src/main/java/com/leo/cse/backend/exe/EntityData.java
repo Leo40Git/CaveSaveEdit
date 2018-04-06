@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 
 /**
  * Stores information for a npc.tbl entry, plus the entity's framerect.
- * 
+ *
  * @author Leo
  *
  */
@@ -17,7 +17,7 @@ public class EntityData {
 
 	/**
 	 * Gets the entity's ID.
-	 * 
+	 *
 	 * @return entity ID
 	 */
 	public int getID() {
@@ -31,7 +31,7 @@ public class EntityData {
 
 	/**
 	 * Gets the entity's HP.
-	 * 
+	 *
 	 * @return entity HP
 	 */
 	public int getHP() {
@@ -45,7 +45,7 @@ public class EntityData {
 
 	/**
 	 * Gets the entity's display rectangle.
-	 * 
+	 *
 	 * @return entity display rect
 	 */
 	public Rectangle getDisplay() {
@@ -59,7 +59,7 @@ public class EntityData {
 
 	/**
 	 * Gets the entity's hitbox.
-	 * 
+	 *
 	 * @return entity hitbox
 	 */
 	public Rectangle getHit() {
@@ -73,7 +73,7 @@ public class EntityData {
 
 	/**
 	 * Gets the entity's tileset ID.
-	 * 
+	 *
 	 * @return entity tileset ID
 	 */
 	public int getTileset() {
@@ -87,7 +87,7 @@ public class EntityData {
 
 	/**
 	 * Gets the amount of EXP this entity drops on death.
-	 * 
+	 *
 	 * @return entity EXP drops
 	 */
 	public int getXP() {
@@ -101,7 +101,7 @@ public class EntityData {
 
 	/**
 	 * Gets the amount of damage this entity deals.
-	 * 
+	 *
 	 * @return entity damage
 	 */
 	public int getDmg() {
@@ -115,7 +115,7 @@ public class EntityData {
 
 	/**
 	 * Get the entity's flags.
-	 * 
+	 *
 	 * @return entity flags
 	 */
 	public int getFlags() {
@@ -129,7 +129,7 @@ public class EntityData {
 
 	/**
 	 * Get the entity's "death" sound.
-	 * 
+	 *
 	 * @return entity death sound
 	 */
 	public int getDeath() {
@@ -143,7 +143,7 @@ public class EntityData {
 
 	/**
 	 * Get the entity's "hurt" sound.
-	 * 
+	 *
 	 * @return entity hurt sound
 	 */
 	public int getHurt() {
@@ -157,7 +157,7 @@ public class EntityData {
 
 	/**
 	 * Gets the amount of smoke this entity creates on death.
-	 * 
+	 *
 	 * @return entity smoke amount
 	 */
 	public int getSize() {
@@ -166,19 +166,19 @@ public class EntityData {
 
 	/**
 	 * Creates a blank npc.tbl entry.
-	 * 
+	 *
 	 * @param num
 	 *            entity ID
 	 */
 	EntityData(int num) {
-		this.tbl_hitbox = new Rectangle(4, 4, 4, 4);
-		this.tbl_display = new Rectangle(8, 8, 8, 8);
+		tbl_hitbox = new Rectangle(4, 4, 4, 4);
+		tbl_display = new Rectangle(8, 8, 8, 8);
 		entityNum = num;
 	}
 
 	/**
 	 * Creates a npc.tbl entry.
-	 * 
+	 *
 	 * @param num
 	 *            entity ID
 	 * @param dam
@@ -219,7 +219,7 @@ public class EntityData {
 
 	/**
 	 * Clones an npc.tbl entry from another entry.
-	 * 
+	 *
 	 * @param other
 	 *            source entry
 	 */

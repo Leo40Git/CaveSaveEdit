@@ -33,7 +33,7 @@ public class Config {
 			config = Preferences.userNodeForPackage(Main.class);
 		config.putLong(KEY_CONFIG_BUILD, BUILD);
 	}
-	
+
 	public static void wipe() {
 		try {
 			config.removeNode();

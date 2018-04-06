@@ -40,7 +40,7 @@ public class PlusProfile extends NormalProfile {
 
 	/**
 	 * Clones one file to another.
-	 * 
+	 *
 	 * @param A0
 	 *            {@link Integer}, slot to duplicate.
 	 * @param A1
@@ -50,7 +50,7 @@ public class PlusProfile extends NormalProfile {
 
 	/**
 	 * Creates a new file.
-	 * 
+	 *
 	 * @param A0
 	 *            {@link Integer}, slot to initialize.
 	 */
@@ -58,7 +58,7 @@ public class PlusProfile extends NormalProfile {
 
 	/**
 	 * Deletes a file.
-	 * 
+	 *
 	 * @param A0
 	 *            {@link Integer}, slot to clear.
 	 */
@@ -66,7 +66,7 @@ public class PlusProfile extends NormalProfile {
 
 	/**
 	 * Checks if a file exists.
-	 * 
+	 *
 	 * @param A0
 	 *            {@link Integer}, slot to check.
 	 * @return {@link Boolean}, <code>true</code> if slot is filled,
@@ -76,14 +76,14 @@ public class PlusProfile extends NormalProfile {
 
 	/**
 	 * Gets the currently active file.
-	 * 
+	 *
 	 * @return {@link Integer}, currently selected slot.
 	 */
 	public static final String METHOD_GET_ACTIVE_FILE = "file.active.get";
 
 	/**
 	 * Sets the currently active file.
-	 * 
+	 *
 	 * @param A0
 	 *            {@link Integer}, slot to select.
 	 */
@@ -91,7 +91,7 @@ public class PlusProfile extends NormalProfile {
 
 	/**
 	 * Pushes a new active file.
-	 * 
+	 *
 	 * @param A0
 	 *            {@link Integer}, slot to select.
 	 */

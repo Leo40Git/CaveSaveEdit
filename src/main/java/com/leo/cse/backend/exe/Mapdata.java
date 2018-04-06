@@ -6,7 +6,7 @@ package com.leo.cse.backend.exe;
  * Stores abstract information for a map. An instance of {@link MapInfo} should
  * be used
  * for loading maps.
- * 
+ *
  * @author Leo
  *
  */
@@ -47,7 +47,7 @@ public class Mapdata {
 
 	/**
 	 * Creates a new empty map.
-	 * 
+	 *
 	 * @param mapNum
 	 *            map ID
 	 */
@@ -61,7 +61,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's ID.
-	 * 
+	 *
 	 * @return map ID
 	 */
 	public int getMapNum() {
@@ -70,7 +70,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's ID.
-	 * 
+	 *
 	 * @param mapNum
 	 *            new map ID
 	 */
@@ -80,7 +80,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's tileset.
-	 * 
+	 *
 	 * @return tileset
 	 */
 	public String getTileset() {
@@ -89,7 +89,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's tileset.
-	 * 
+	 *
 	 * @param tileset
 	 *            new tileset
 	 */
@@ -99,7 +99,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's file name.
-	 * 
+	 *
 	 * @return file name
 	 */
 	public String getFileName() {
@@ -108,7 +108,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's file name.
-	 * 
+	 *
 	 * @param fileName
 	 *            new file name
 	 */
@@ -118,7 +118,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's scroll type.
-	 * 
+	 *
 	 * @return scroll type
 	 */
 	public int getScrollType() {
@@ -127,7 +127,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's scroll type.
-	 * 
+	 *
 	 * @param scrollType
 	 *            new scroll type
 	 */
@@ -137,7 +137,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's background image.
-	 * 
+	 *
 	 * @return background image
 	 */
 	public String getBgName() {
@@ -146,7 +146,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's background image.
-	 * 
+	 *
 	 * @param bgName
 	 *            new background image
 	 */
@@ -156,7 +156,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's 1st NPC sheet.
-	 * 
+	 *
 	 * @return 1st NPC sheet
 	 */
 	public String getNpcSheet1() {
@@ -165,7 +165,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's 1st NPC sheet.
-	 * 
+	 *
 	 * @param npcSheet1
 	 *            new 1st NPC sheet
 	 */
@@ -175,7 +175,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's 2nd NPC sheet.
-	 * 
+	 *
 	 * @return 2nd NPC sheet
 	 */
 	public String getNpcSheet2() {
@@ -184,7 +184,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's 2nd NPC sheet.
-	 * 
+	 *
 	 * @param npcSheet2
 	 *            new 2nd NPC sheet
 	 */
@@ -194,7 +194,7 @@ public class Mapdata {
 
 	/**
 	 * Gets the map's name.
-	 * 
+	 *
 	 * @return display name
 	 */
 	public String getMapName() {
@@ -203,7 +203,7 @@ public class Mapdata {
 
 	/**
 	 * Sets the map's name.
-	 * 
+	 *
 	 * @param mapName
 	 *            new display name
 	 */

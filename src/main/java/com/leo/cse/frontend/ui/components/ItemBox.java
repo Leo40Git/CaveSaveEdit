@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.profile.NormalProfile;
@@ -19,17 +17,9 @@ public class ItemBox extends DefineBox {
 	public static final BufferedImage ITEM_BLANK = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
 
 	public ItemBox(int x, int y, int width, int height, int itemId) {
-		super(x, y, width, height, new Supplier<Integer>() {
-			@Override
-			public Integer get() {
-				return (Integer) ProfileManager.getField(NormalProfile.FIELD_ITEMS, itemId);
-			}
-		}, new Function<Integer, Integer>() {
-			@Override
-			public Integer apply(Integer t) {
-				ProfileManager.setField(NormalProfile.FIELD_ITEMS, itemId, t);
-				return t;
-			}
+		super(x, y, width, height, () -> (Integer) ProfileManager.getField(NormalProfile.FIELD_ITEMS, itemId), t -> {
+			ProfileManager.setField(NormalProfile.FIELD_ITEMS, itemId, t);
+			return t;
 		}, "Item", "item " + (itemId + 1));
 	}
 

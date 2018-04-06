@@ -72,7 +72,7 @@ public class MapBox extends DefineBox {
 	}
 
 	private void loadMap() {
-		map = new HashMap<Integer, String>();
+		map = new HashMap<>();
 		if (ExeData.isLoaded()) {
 			for (int i = 0; i < ExeData.getMapInfoCount(); i++) {
 				MapInfo mi = ExeData.getMapInfo(i);
@@ -84,14 +84,11 @@ public class MapBox extends DefineBox {
 				map.put(entry.getKey(), entry.getKey() + " - " + entry.getValue());
 		}
 		if (sSup.get())
-			map = FrontUtils.sortStringMapByValue(map, new Function<String, String>() {
-				@Override
-				public String apply(String t) {
-					int i = t.lastIndexOf('-');
-					if (i < 0)
-						return t;
-					return t.substring(i + 1, t.length() - 1);
-				}
+			map = FrontUtils.sortStringMapByValue(map, t -> {
+				int i = t.lastIndexOf('-');
+				if (i < 0)
+					return t;
+				return t.substring(i + 1, t.length() - 1);
 			});
 		for (Map.Entry<Integer, String> entry : map.entrySet())
 			entry.setValue(entry.getKey() + " - " + entry.getValue());

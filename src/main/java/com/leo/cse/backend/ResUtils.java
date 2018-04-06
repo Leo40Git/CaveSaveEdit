@@ -12,7 +12,7 @@ import com.leo.cse.backend.exe.ExeData;
 // from it
 /**
  * Utility methods for loading resources.
- * 
+ *
  * @author Leo
  *
  */
@@ -26,7 +26,7 @@ public class ResUtils {
 
 	/**
 	 * Filters an image so that any black pixels are turned into transparent pixels.
-	 * 
+	 *
 	 * @param src
 	 *            source image
 	 * @return filtered image
@@ -47,7 +47,7 @@ public class ResUtils {
 
 	/**
 	 * Gets a graphics file using the image extension loaded from the executable.
-	 * 
+	 *
 	 * @param directory
 	 *            file directory
 	 * @param name
@@ -64,7 +64,7 @@ public class ResUtils {
 
 	/**
 	 * Gets a graphics file using the image extension loaded from the executable.
-	 * 
+	 *
 	 * @param name
 	 *            file name
 	 * @return graphics file
@@ -79,7 +79,7 @@ public class ResUtils {
 	/**
 	 * Maps lower case strings to their case insensitive File
 	 */
-	private static final Map<String, File> insensitiveFileHandlerCache = new HashMap<String, File>();
+	private static final Map<String, File> insensitiveFileHandlerCache = new HashMap<>();
 
 	/**
 	 * Case insensitive file handler. Cannot return <code>null</code>
@@ -136,7 +136,7 @@ public class ResUtils {
 
 	/**
 	 * Attempts to get CS+'s "base" folder.
-	 * 
+	 *
 	 * @param currentLoc
 	 *            current location
 	 * @return location of CS+'s "base" folder

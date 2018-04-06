@@ -15,7 +15,7 @@ import com.leo.cse.frontend.Main;
 
 /**
  * Stores information for a profile.
- * 
+ *
  * @author Leo
  *
  */
@@ -23,7 +23,7 @@ public class ProfileManager {
 
 	/**
 	 * Exception from accessing profile fields.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
@@ -39,7 +39,7 @@ public class ProfileManager {
 
 	/**
 	 * Exception from accessing profile methods.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
@@ -55,14 +55,14 @@ public class ProfileManager {
 
 	/**
 	 * Used to record field changes from executing methods.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
 	interface FieldChangeRecorder {
 		/**
 		 * Record a change.
-		 * 
+		 *
 		 * @param field
 		 *            field name
 		 * @param index
@@ -104,7 +104,7 @@ public class ProfileManager {
 
 	/**
 	 * Sets the implementation class for profiles.
-	 * 
+	 *
 	 * @param className
 	 *            name of new implementation class
 	 */
@@ -136,7 +136,7 @@ public class ProfileManager {
 	 * Gets the current profile implementation type.<br>
 	 * Note that if this is <b>not</b>
 	 * equal to {@link #implClass}, something has gone wrong.
-	 * 
+	 *
 	 * @return type of current profile implementation
 	 */
 	public static Class<? extends Profile> getType() {
@@ -158,7 +158,7 @@ public class ProfileManager {
 
 	/**
 	 * Adds a listener.
-	 * 
+	 *
 	 * @param l
 	 *            listener
 	 */
@@ -170,7 +170,7 @@ public class ProfileManager {
 
 	/**
 	 * Removes a listener.
-	 * 
+	 *
 	 * @param l
 	 *            listener
 	 */
@@ -182,7 +182,7 @@ public class ProfileManager {
 
 	/**
 	 * Notifies all listeners of a field being modified.
-	 * 
+	 *
 	 * @param field
 	 *            field that was modified
 	 * @param id
@@ -206,7 +206,7 @@ public class ProfileManager {
 
 	/**
 	 * Represents an edit to a field in the profile.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
@@ -235,7 +235,7 @@ public class ProfileManager {
 
 		/**
 		 * Constructs a new <code>ProfileEdit</code>.
-		 * 
+		 *
 		 * @param field
 		 *            the name of the field that was modified
 		 * @param index
@@ -321,7 +321,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if the undo manager exists.
-	 * 
+	 *
 	 * @return <code>true</code> if undo manager exists, <code>false</code>
 	 *         otherwise.
 	 */
@@ -331,7 +331,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if an edit can be undone.
-	 * 
+	 *
 	 * @return <code>true</code> if an edit can be undone, <code>false</code>
 	 *         otherwise
 	 */
@@ -352,7 +352,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if an edit can be redone.
-	 * 
+	 *
 	 * @return <code>true</code> if an edit can be redone, <code>false</code>
 	 *         otherwise
 	 */
@@ -412,7 +412,7 @@ public class ProfileManager {
 
 	/**
 	 * Loads a profile.
-	 * 
+	 *
 	 * @param file
 	 *            profile to load
 	 * @throws IOException
@@ -437,7 +437,7 @@ public class ProfileManager {
 
 	/**
 	 * Loads a profile.
-	 * 
+	 *
 	 * @param path
 	 *            path to profile to load
 	 * @throws IOException
@@ -449,7 +449,7 @@ public class ProfileManager {
 
 	/**
 	 * Reloads an already-loaded profile.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -462,7 +462,7 @@ public class ProfileManager {
 
 	/**
 	 * Saves a profile.
-	 * 
+	 *
 	 * @param file
 	 *            file to save to
 	 * @throws IOException
@@ -479,7 +479,7 @@ public class ProfileManager {
 
 	/**
 	 * Saves a profile.
-	 * 
+	 *
 	 * @param file
 	 *            path to file to save to
 	 * @throws IOException
@@ -491,7 +491,7 @@ public class ProfileManager {
 
 	/**
 	 * Saves a profile to the file it was loaded from.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -515,7 +515,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets the currently loaded file.
-	 * 
+	 *
 	 * @return currently loaded file, or <code>null</code> if none is loaded
 	 */
 	public static File getLoadedFile() {
@@ -526,7 +526,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if a file is currently loaded.
-	 * 
+	 *
 	 * @return <code>true</code> if a file is loaded, <code>false</code> otherwise.
 	 */
 	public static boolean isLoaded() {
@@ -535,7 +535,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if the file has been modified since the last save.
-	 * 
+	 *
 	 * @return <code>true</code> if file has been modified, <code>false</code>
 	 *         otherwise.
 	 */
@@ -549,7 +549,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets the profile header.
-	 * 
+	 *
 	 * @return profile header
 	 */
 	public static String getHeader() {
@@ -560,7 +560,7 @@ public class ProfileManager {
 
 	/**
 	 * Sets the profile header for validating profiles.
-	 * 
+	 *
 	 * @param header
 	 *            new profile header
 	 */
@@ -572,7 +572,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets the flag section header.
-	 * 
+	 *
 	 * @return flag header
 	 */
 	public static String getFlagHeader() {
@@ -583,7 +583,7 @@ public class ProfileManager {
 
 	/**
 	 * Sets the flag section header for validating profiles.
-	 * 
+	 *
 	 * @param flagH
 	 *            new flag header
 	 */
@@ -601,7 +601,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if a field exists.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return <code>true</code> if it exists, <code>false</code> otherwise
@@ -622,7 +622,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets a field's value type.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return the field's type
@@ -643,7 +643,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if a field has indexes.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return <code>true</code> if it has indexes, <code>false</code> otherwise
@@ -664,7 +664,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets the minimum index of a field.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return minimum field index
@@ -685,7 +685,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets the maximum index of a field.
-	 * 
+	 *
 	 * @param field
 	 *            field to check
 	 * @return maximum field index
@@ -706,7 +706,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if a field accepts a value.
-	 * 
+	 *
 	 * @param field
 	 *            field to check against
 	 * @param index
@@ -732,7 +732,7 @@ public class ProfileManager {
 
 	/**
 	 * Checks if a field accepts a value.
-	 * 
+	 *
 	 * @param field
 	 *            field to check against
 	 * @param value
@@ -748,7 +748,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets a field's value.
-	 * 
+	 *
 	 * @param field
 	 *            field to get
 	 * @param index
@@ -773,7 +773,7 @@ public class ProfileManager {
 
 	/**
 	 * Gets a field's value.
-	 * 
+	 *
 	 * @param field
 	 *            field to get
 	 * @return value of the field
@@ -786,7 +786,7 @@ public class ProfileManager {
 
 	/**
 	 * Sets a field's value.
-	 * 
+	 *
 	 * @param field
 	 *            field to set
 	 * @param index
@@ -851,7 +851,7 @@ public class ProfileManager {
 
 	/**
 	 * Sets a field's value.
-	 * 
+	 *
 	 * @param field
 	 *            field to set
 	 * @param index
@@ -869,7 +869,7 @@ public class ProfileManager {
 
 	/**
 	 * Sets a field's value.
-	 * 
+	 *
 	 * @param field
 	 *            field to set
 	 * @param value
@@ -940,12 +940,7 @@ public class ProfileManager {
 			return null;
 		Object ret = null;
 		try {
-			ret = impl.callMethod(method, new FieldChangeRecorder() {
-				@Override
-				public void addChange(String field, int index, Object oldVal, Object newVal) {
-					notifyListeners(field, index, oldVal, newVal);
-				}
-			}, args);
+			ret = impl.callMethod(method, (field, index, oldVal, newVal) -> notifyListeners(field, index, oldVal, newVal), args);
 		} catch (ProfileMethodException e) {
 			throw new RuntimeException(e);
 		}

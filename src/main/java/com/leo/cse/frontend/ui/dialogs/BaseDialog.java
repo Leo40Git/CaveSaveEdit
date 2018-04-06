@@ -52,7 +52,7 @@ public class BaseDialog extends Dialog {
 	protected int getWindowY() {
 		return getWindowY(true);
 	}
-	
+
 	public void requestClose() {
 		wantsToClose = true;
 	}
@@ -130,7 +130,7 @@ public class BaseDialog extends Dialog {
 			comp.updateHover(x, y, hover);
 		}
 	}
-	
+
 	@Override
 	public void onKey(int code, boolean shift, boolean ctrl) {
 	}

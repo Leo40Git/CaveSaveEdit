@@ -5,7 +5,7 @@ public class Version implements Comparable<Version> {
 	private String version;
 
 	public final String get() {
-		return this.version;
+		return version;
 	}
 
 	public Version(String version) {
@@ -20,7 +20,7 @@ public class Version implements Comparable<Version> {
 	public int compareTo(Version that) {
 		if (that == null)
 			return 1;
-		String[] thisParts = this.get().split("\\.");
+		String[] thisParts = get().split("\\.");
 		String[] thatParts = that.get().split("\\.");
 		int length = Math.max(thisParts.length, thatParts.length);
 		for (int i = 0; i < length; i++) {
@@ -42,9 +42,9 @@ public class Version implements Comparable<Version> {
 			return false;
 		if (this.getClass() != that.getClass())
 			return false;
-		return this.compareTo((Version) that) == 0;
+		return compareTo((Version) that) == 0;
 	}
-	
+
 	@Override
 	public String toString() {
 		return version;

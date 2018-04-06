@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  * String utility methods.
- * 
+ *
  * @author Carrotlord
  *
  */

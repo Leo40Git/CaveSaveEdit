@@ -13,7 +13,7 @@ import com.leo.cse.frontend.ui.components.ScrollWrapper;
 import com.leo.cse.frontend.ui.dialogs.MapFlagDialog;
 
 public class MapFlagsPanel extends Panel {
-	
+
 	private MapFlagList flagList;
 	private ScrollWrapper flagListWrap;
 

@@ -243,10 +243,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				int srcX2 = frameRect.width;
 				int srcY2 = frameRect.height;
 				Rectangle dest = e.getDrawArea();
-				int dstX = (int) (dest.x + offset.x);
-				int dstY = (int) (dest.y + offset.y);
-				g.drawImage(srcImg, dstX, dstY, dstX + dest.width, dstY + dest.height, (int) srcX, (int) srcY,
-						(int) srcX2, (int) srcY2, null);
+				int dstX = dest.x + offset.x;
+				int dstY = dest.y + offset.y;
+				g.drawImage(srcImg, dstX, dstY, dstX + dest.width, dstY + dest.height, srcX, srcY,
+						srcX2, srcY2, null);
 			}
 		}
 	}

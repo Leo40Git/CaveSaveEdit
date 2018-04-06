@@ -281,10 +281,10 @@ public class MCI {
 	}
 
 	public static Map<Integer, String> getAll(String type) {
-		Map<Integer, String> ret = new HashMap<Integer, String>();
+		Map<Integer, String> ret = new HashMap<>();
 		for (Map.Entry<String, Object> entry : mci.entrySet())
 			if (entry.getKey().startsWith(type + ".")) {
-				String key = (String) entry.getKey();
+				String key = entry.getKey();
 				String id = key.substring(key.lastIndexOf('.') + 1);
 				try {
 					ret.put(Integer.parseInt(id), (String) entry.getValue());

@@ -56,16 +56,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static final Color COLOR_BG_B = COLOR_BG.brighter();
 	public static final Color COLOR_BG_B2 = COLOR_BG_B.brighter();
 
-	public static final Supplier<Boolean> TRUE_SUPPLIER = new Supplier<Boolean>() {
-		public Boolean get() {
-			return true;
-		}
-	};
-	public static final Supplier<Boolean> FALSE_SUPPLIER = new Supplier<Boolean>() {
-		public Boolean get() {
-			return false;
-		}
-	};
+	public static final Supplier<Boolean> TRUE_SUPPLIER = () -> true;
+	public static final Supplier<Boolean> FALSE_SUPPLIER = () -> false;
 
 	public static Main window;
 	public static Color lineColor;
@@ -264,7 +256,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 			public LoadFramePanel(Color trans, Dimension win) {
 				this.trans = trans;
-				this.size = win;
+				size = win;
 			}
 
 			@Override
@@ -393,6 +385,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static PrintStream createLoggingRedirector(final PrintStream stream, final Level level) {
 		return new PrintStream(stream) {
+			@Override
 			public void print(final String string) {
 				LOGGER.printf(level, string);
 			}

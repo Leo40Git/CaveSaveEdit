@@ -17,7 +17,7 @@ import com.leo.cse.backend.tsc.TSCFile;
 // from it
 /**
  * Stores information for loaded maps.
- * 
+ *
  * @author Leo
  *
  */
@@ -44,13 +44,13 @@ public class MapInfo {
 	protected int[][][] map;
 	/**
 	 * The map's tileset file.
-	 * 
+	 *
 	 * @see ExeData#getImage(File)
 	 */
 	private File tileset;
 	/**
 	 * The map's background image file.
-	 * 
+	 *
 	 * @see ExeData#getImage(File)
 	 */
 	private File bgImage;
@@ -64,13 +64,13 @@ public class MapInfo {
 	private int scrollType;
 	/**
 	 * The map's 1st NPC sheet file.
-	 * 
+	 *
 	 * @see ExeData#getImage(File)
 	 */
 	private File npcSheet1;
 	/**
 	 * The map's 2nd NPC sheet file.
-	 * 
+	 *
 	 * @see ExeData#getImage(File)
 	 */
 	private File npcSheet2;
@@ -80,13 +80,13 @@ public class MapInfo {
 	private String mapName;
 	/**
 	 * The map's PXA file.
-	 * 
+	 *
 	 * @see ExeData#getPxa(File)
 	 */
 	private File pxaFile;
 	/**
 	 * List of the map's entities.
-	 * 
+	 *
 	 * @see PxeEntry
 	 */
 	private LinkedList<PxeEntry> pxeList;
@@ -94,7 +94,7 @@ public class MapInfo {
 
 	/**
 	 * Loads a map and it's resources.
-	 * 
+	 *
 	 * @param d
 	 *            source map data
 	 */
@@ -116,7 +116,7 @@ public class MapInfo {
 
 	/**
 	 * Loads image resources for a map.
-	 * 
+	 *
 	 * @param d
 	 *            source map data
 	 * @param directory
@@ -150,7 +150,7 @@ public class MapInfo {
 
 	/**
 	 * Loads a map.
-	 * 
+	 *
 	 * @param d
 	 *            source map data
 	 */
@@ -209,7 +209,7 @@ public class MapInfo {
 
 	/**
 	 * Calculates a tile's type.
-	 * 
+	 *
 	 * @param tileNum
 	 *            tile ID
 	 * @return tile type
@@ -229,7 +229,7 @@ public class MapInfo {
 
 	/**
 	 * Loads the entities of a map.
-	 * 
+	 *
 	 * @param d
 	 *            source map data
 	 */
@@ -291,7 +291,7 @@ public class MapInfo {
 
 	/**
 	 * Stores information about an entity.
-	 * 
+	 *
 	 * @author Leo
 	 *
 	 */
@@ -361,7 +361,7 @@ public class MapInfo {
 
 		/**
 		 * Creates a new entity.
-		 * 
+		 *
 		 * @param pxeX
 		 *            x position
 		 * @param pxeY
@@ -390,7 +390,7 @@ public class MapInfo {
 
 		/**
 		 * Gets the entity's draw area.
-		 * 
+		 *
 		 * @return draw area
 		 */
 		public Rectangle getDrawArea() {
@@ -422,7 +422,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's width.
-	 * 
+	 *
 	 * @return width
 	 */
 	public int getMapX() {
@@ -431,7 +431,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's height.
-	 * 
+	 *
 	 * @return height
 	 */
 	public int getMapY() {
@@ -440,7 +440,7 @@ public class MapInfo {
 
 	/**
 	 * Get the map's ID.
-	 * 
+	 *
 	 * @return map ID
 	 */
 	public int getMapNumber() {
@@ -449,7 +449,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map tiles. For indexes, see {@link #map}.
-	 * 
+	 *
 	 * @return map tiles
 	 * @see #map
 	 */
@@ -459,7 +459,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's tileset.
-	 * 
+	 *
 	 * @return tileset
 	 */
 	public File getTileset() {
@@ -468,7 +468,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's background image.
-	 * 
+	 *
 	 * @return background image
 	 */
 	public File getBgImage() {
@@ -477,7 +477,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's file name.
-	 * 
+	 *
 	 * @return file name
 	 */
 	public String getFileName() {
@@ -486,7 +486,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's scroll type.
-	 * 
+	 *
 	 * @return scroll type
 	 */
 	public int getScrollType() {
@@ -495,7 +495,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's 1st NPC sheet.
-	 * 
+	 *
 	 * @return 1st NPC sheet
 	 */
 	public File getNpcSheet1() {
@@ -504,7 +504,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's 2nd NPC sheet.
-	 * 
+	 *
 	 * @return 2nd NPC sheet
 	 */
 	public File getNpcSheet2() {
@@ -513,7 +513,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's name.
-	 * 
+	 *
 	 * @return display name
 	 */
 	public String getMapName() {
@@ -522,7 +522,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's PXA file.
-	 * 
+	 *
 	 * @return PXA file
 	 */
 	public File getPxaFile() {
@@ -531,7 +531,7 @@ public class MapInfo {
 
 	/**
 	 * Gets an iterator over the map's entities.
-	 * 
+	 *
 	 * @return iterator over elements of entity list
 	 * @see #pxeList
 	 */
@@ -543,7 +543,7 @@ public class MapInfo {
 
 	/**
 	 * Gets the map's TSC file.
-	 * 
+	 *
 	 * @return TSC file
 	 * @see com.leo.cse.backend.tsc.TSCFile
 	 */
@@ -553,7 +553,7 @@ public class MapInfo {
 
 	/**
 	 * Checks if there are missing assets.
-	 * 
+	 *
 	 * @return <code>true</code> if there are missing assets, <code>false</code>
 	 *         otherwise.
 	 */
@@ -564,7 +564,7 @@ public class MapInfo {
 
 	/**
 	 * Returns a readable list of missing assets. Useful for reporting errors.
-	 * 
+	 *
 	 * @return list of missing assets, or an empty string if there are no missing
 	 *         assets
 	 */

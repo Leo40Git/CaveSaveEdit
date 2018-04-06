@@ -6,7 +6,7 @@ import java.util.Vector;
 
 /**
  * Utilities for reading from and writing to byte arrays.
- * 
+ *
  * @author Leo
  *
  */
@@ -25,7 +25,7 @@ public class ByteUtils {
 
 	/**
 	 * Converts an array of bytes into a <code>long</code>.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @return converted long
@@ -38,7 +38,7 @@ public class ByteUtils {
 
 	/**
 	 * Converts an array of bytes into a <code>short</code>.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @return converted short
@@ -51,7 +51,7 @@ public class ByteUtils {
 
 	/**
 	 * Converts an array of bytes into an <code>int</code>.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @return converted integer
@@ -64,7 +64,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes bytes from an array into {@linkplain #BB the byte buffer}.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -80,7 +80,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads a <code>String</code> from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -116,7 +116,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads a <code>String</code> from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -131,7 +131,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads an array of <code>byte</code>s from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -154,7 +154,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads a <code>short</code> from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -168,7 +168,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads an array of <code>short</code>s from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -187,7 +187,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads an <code>int</code> from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -201,7 +201,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads an array of <code>int</code>s from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -220,7 +220,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads a <code>long</code> from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -234,7 +234,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads an array of <code>long</code>s from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -253,7 +253,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads an array of <code>boolean</code>s from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -276,7 +276,7 @@ public class ByteUtils {
 
 	/**
 	 * Reads bytes from {@linkplain #BB the byte buffer} into an array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -291,7 +291,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes a <code>String</code> to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -306,7 +306,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes an array of <code>byte</code>s to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -329,7 +329,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes a <code>short</code> to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -345,7 +345,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes an array of <code>short</code>s to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -364,7 +364,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes an <code>int</code> to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -380,7 +380,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes an array of <code>int</code>s to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -399,7 +399,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes a <code>long</code> to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -415,7 +415,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes an array of <code>long</code>s to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr
@@ -434,7 +434,7 @@ public class ByteUtils {
 
 	/**
 	 * Writes an array of <code>boolean</code>s to a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            byte array
 	 * @param ptr

@@ -70,15 +70,15 @@ public class TSCFile {
 	public String getScript() {
 		return script;
 	}
-	
+
 	public Set<Integer> getEventIDs() {
 		return events.keySet();
 	}
-	
+
 	public Map<Integer, String> getEvents() {
 		return events;
 	}
-	
+
 	public String getEvent(int number) {
 		return events.get(number);
 	}

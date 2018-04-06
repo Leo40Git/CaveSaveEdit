@@ -35,7 +35,7 @@ import com.leo.cse.frontend.Main;
 // from it
 /**
  * Stores information for a mod executable.
- * 
+ *
  * @author Leo
  *
  */
@@ -55,7 +55,7 @@ public class ExeData {
 
 	/**
 	 * Attaches a load listener.
-	 * 
+	 *
 	 * @param l
 	 *            listener
 	 */
@@ -106,7 +106,7 @@ public class ExeData {
 
 	/**
 	 * Notifies all listeners of an event.
-	 * 
+	 *
 	 * @param notifyType
 	 *            event type
 	 * @see #NOTIFY_PRELOAD
@@ -131,7 +131,7 @@ public class ExeData {
 
 	/**
 	 * Gets the encoding to use to read strings.
-	 * 
+	 *
 	 * @return encoding
 	 */
 	public static String getEncoding() {
@@ -140,7 +140,7 @@ public class ExeData {
 
 	/**
 	 * Sets the encoding to use to read strings.
-	 * 
+	 *
 	 * @param encoding
 	 *            new encoding
 	 */
@@ -489,7 +489,7 @@ public class ExeData {
 
 	/**
 	 * Checks if the current "executable" is a stage.tbl file.
-	 * 
+	 *
 	 * @return <code>true</code> if in CS+ mode, <code>false</code> otherwise
 	 */
 	public static boolean isPlusMode() {
@@ -504,7 +504,7 @@ public class ExeData {
 
 	/**
 	 * Checks if NPC files will be loaded.
-	 * 
+	 *
 	 * @return <code>true</code> if will be loaded, <code>false</code> otherwise.
 	 */
 	public static boolean doLoadNpc() {
@@ -513,7 +513,7 @@ public class ExeData {
 
 	/**
 	 * Enables or disables NPC file loading.
-	 * 
+	 *
 	 * @param loadNpc
 	 *            <code>true</code> to enable, <code>false</code> to disable.
 	 */
@@ -529,7 +529,7 @@ public class ExeData {
 
 	/**
 	 * Checks if TSC files will be loaded.
-	 * 
+	 *
 	 * @return <code>true</code> if will be loaded, <code>false</code> otherwise.
 	 */
 	public static boolean doLoadTSC() {
@@ -538,7 +538,7 @@ public class ExeData {
 
 	/**
 	 * Enables or disables TSC file loading.
-	 * 
+	 *
 	 * @param loadNpc
 	 *            <code>true</code> to enable, <code>false</code> to disable.
 	 */
@@ -553,7 +553,7 @@ public class ExeData {
 
 	/**
 	 * Gets the graphics resolution.
-	 * 
+	 *
 	 * @return graphics resolution
 	 */
 	public static int getGraphicsResolution() {
@@ -562,7 +562,7 @@ public class ExeData {
 
 	/**
 	 * Sets the graphics resolution.
-	 * 
+	 *
 	 * @param graphicsResolution
 	 *            new graphics resolution
 	 */
@@ -572,7 +572,7 @@ public class ExeData {
 
 	/**
 	 * Array of strings loaded from the executable.
-	 * 
+	 *
 	 * @see #STRING_POINTERS
 	 */
 	private static String[] exeStrings;
@@ -586,7 +586,7 @@ public class ExeData {
 	private static File base;
 	/**
 	 * Array of the loaded executable's PE headers.
-	 * 
+	 *
 	 * @see ExeSec
 	 */
 	private static ExeSec[] headers;
@@ -600,19 +600,19 @@ public class ExeData {
 	private static File dataDir;
 	/**
 	 * List of npc.tbl entries.
-	 * 
+	 *
 	 * @see EntityData
 	 */
 	private static Vector<EntityData> entityList;
 	/**
 	 * List of map data.
-	 * 
+	 *
 	 * @see Mapdata
 	 */
 	private static Vector<Mapdata> mapdata;
 	/**
 	 * List of map information.
-	 * 
+	 *
 	 * @see MapInfo
 	 */
 	private static Vector<MapInfo> mapInfo;
@@ -687,7 +687,7 @@ public class ExeData {
 
 	/**
 	 * Loads an executable.
-	 * 
+	 *
 	 * @param file
 	 *            executable file
 	 * @throws IOException
@@ -712,7 +712,7 @@ public class ExeData {
 
 	/**
 	 * Reloads the current executable.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -724,7 +724,7 @@ public class ExeData {
 
 	/**
 	 * Loads the executable.
-	 * 
+	 *
 	 * @param base
 	 *            executable file
 	 * @throws IOException
@@ -745,11 +745,11 @@ public class ExeData {
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
 			dataDir = new File(base.getParent() + getExeString(STRING_DATA_FOLDER));
-			entityList = new Vector<EntityData>();
-			mapdata = new Vector<Mapdata>();
-			mapInfo = new Vector<MapInfo>();
-			imageMap = new HashMap<File, BufferedImage>();
-			pxaMap = new HashMap<File, byte[]>();
+			entityList = new Vector<>();
+			mapdata = new Vector<>();
+			mapInfo = new Vector<>();
+			imageMap = new HashMap<>();
+			pxaMap = new HashMap<>();
 			loadNpcTbl();
 			fillMapdata();
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
@@ -767,7 +767,7 @@ public class ExeData {
 
 	/**
 	 * Loads mapdata from a stage.tbl file.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -779,11 +779,11 @@ public class ExeData {
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
 			dataDir = base.getParentFile();
-			entityList = new Vector<EntityData>();
-			mapdata = new Vector<Mapdata>();
-			mapInfo = new Vector<MapInfo>();
-			imageMap = new HashMap<File, BufferedImage>();
-			pxaMap = new HashMap<File, byte[]>();
+			entityList = new Vector<>();
+			mapdata = new Vector<>();
+			mapInfo = new Vector<>();
+			imageMap = new HashMap<>();
+			pxaMap = new HashMap<>();
 			loadNpcTbl();
 			fillMapdataPlus();
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
@@ -943,7 +943,7 @@ public class ExeData {
 
 	/**
 	 * Locate the executable segments.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O exception occurs.
 	 */
@@ -1009,7 +1009,7 @@ public class ExeData {
 
 	/**
 	 * Loads strings from the executable.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1090,9 +1090,9 @@ public class ExeData {
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_LOADING, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PXM_TAG] = "PXM";
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXM_TAG, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PROFILE_HEADER] = PlusProfile.DEFAULT_HEADER;
+		exeStrings[STRING_PROFILE_HEADER] = NormalProfile.DEFAULT_HEADER;
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_HEADER, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PROFILE_FLAGH] = PlusProfile.DEFAULT_FLAGH;
+		exeStrings[STRING_PROFILE_FLAGH] = NormalProfile.DEFAULT_FLAGH;
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_FLAGH, STRING_POINTERS.length - 1);
 		exeStrings[STRING_STAGESELECT] = "StageSelect.tsc";
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_STAGESELECT, STRING_POINTERS.length - 1);
@@ -1118,7 +1118,7 @@ public class ExeData {
 
 	/**
 	 * Loads the "npc.tbl" file.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1281,7 +1281,7 @@ public class ExeData {
 
 	/**
 	 * Loads map data.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1440,7 +1440,7 @@ public class ExeData {
 
 	/**
 	 * Loads map data from a "stage.tbl" file.
-	 * 
+	 *
 	 * @exception IOException
 	 *                if an I/O error occurs.
 	 */
@@ -1516,7 +1516,7 @@ public class ExeData {
 
 	/**
 	 * Loads an image.
-	 * 
+	 *
 	 * @param srcFile
 	 *            source file
 	 * @param trans
@@ -1553,7 +1553,7 @@ public class ExeData {
 
 	/**
 	 * Loads an image.
-	 * 
+	 *
 	 * @param srcFile
 	 *            source image
 	 * @return filtered image
@@ -1566,7 +1566,7 @@ public class ExeData {
 
 	/**
 	 * Loads a graphics file.
-	 * 
+	 *
 	 * @param name
 	 *            file name
 	 * @return file that was loaded
@@ -1579,7 +1579,7 @@ public class ExeData {
 
 	/**
 	 * Loads a graphics file.
-	 * 
+	 *
 	 * @param strid
 	 *            executable string id to get file name from
 	 * @return file that was loaded
@@ -1590,7 +1590,7 @@ public class ExeData {
 
 	/**
 	 * Loads graphics files.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1619,7 +1619,7 @@ public class ExeData {
 
 	/**
 	 * Load resources from the executable.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1807,7 +1807,7 @@ public class ExeData {
 
 	/**
 	 * Attempts to add an image to the repository.
-	 * 
+	 *
 	 * @param srcFile
 	 *            image to load
 	 */
@@ -1817,7 +1817,7 @@ public class ExeData {
 
 	/**
 	 * Attempts to add an image to the repository.
-	 * 
+	 *
 	 * @param srcFile
 	 *            image to load
 	 */
@@ -1838,7 +1838,7 @@ public class ExeData {
 
 	/**
 	 * If the file exists in the repository, replace. If not, load it anyway.
-	 * 
+	 *
 	 * @param srcFile
 	 *            image to load
 	 */
@@ -1848,7 +1848,7 @@ public class ExeData {
 
 	/**
 	 * If the file exists in the repository, replace. If not, load it anyway.
-	 * 
+	 *
 	 * @param srcFile
 	 *            image to load
 	 */
@@ -1865,7 +1865,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image's graphics instance.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image graphics
@@ -1882,7 +1882,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image's graphics instance.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image graphics
@@ -1893,7 +1893,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image
@@ -1912,7 +1912,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image
@@ -1923,7 +1923,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image's height.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image height
@@ -1941,7 +1941,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image's height.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image height
@@ -1952,7 +1952,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image's width.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image width
@@ -1970,7 +1970,7 @@ public class ExeData {
 
 	/**
 	 * Gets an image's width.
-	 * 
+	 *
 	 * @param key
 	 *            image file
 	 * @return image width
@@ -1981,7 +1981,7 @@ public class ExeData {
 
 	/**
 	 * Attempts to add a PXA file to the repository.
-	 * 
+	 *
 	 * @param srcFile
 	 *            source file
 	 * @return PXA data
@@ -2026,7 +2026,7 @@ public class ExeData {
 
 	/**
 	 * Attempts to add a PXA file to the repository.
-	 * 
+	 *
 	 * @param srcFile
 	 *            source file
 	 * @return PXA data
@@ -2037,7 +2037,7 @@ public class ExeData {
 
 	/**
 	 * Gets PXA data from the repository.
-	 * 
+	 *
 	 * @param srcFile
 	 *            source file
 	 * @return PXA data
@@ -2049,7 +2049,7 @@ public class ExeData {
 
 	/**
 	 * Gets PXA data from the repository.
-	 * 
+	 *
 	 * @param srcFile
 	 *            source file
 	 * @return PXA data
@@ -2060,7 +2060,7 @@ public class ExeData {
 
 	/**
 	 * Gets the amount of strings loaded from the executable.
-	 * 
+	 *
 	 * @return amount of strings from executable
 	 */
 	public static int getExeStringAmount() {
@@ -2069,7 +2069,7 @@ public class ExeData {
 
 	/**
 	 * Gets a string loaded from the executable.
-	 * 
+	 *
 	 * @param id
 	 *            index
 	 * @return string from executable
@@ -2080,7 +2080,7 @@ public class ExeData {
 
 	/**
 	 * Checks if an executable is currently loaded.
-	 * 
+	 *
 	 * @return <code>true</code> if executable is loaded, <code>false</code>
 	 *         otherwise.
 	 */
@@ -2090,7 +2090,7 @@ public class ExeData {
 
 	/**
 	 * Gets the base file - the executable.
-	 * 
+	 *
 	 * @return base file
 	 */
 	public static File getBase() {
@@ -2099,7 +2099,7 @@ public class ExeData {
 
 	/**
 	 * Gets the executable's PE headers.
-	 * 
+	 *
 	 * @return headers
 	 */
 	public static ExeSec[] getHeaders() {
@@ -2108,7 +2108,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "data" directory.
-	 * 
+	 *
 	 * @return data directory
 	 */
 	public static File getDataDir() {
@@ -2117,7 +2117,7 @@ public class ExeData {
 
 	/**
 	 * Gets a {@link MapInfo} instance for a map.
-	 * 
+	 *
 	 * @param num
 	 *            map ID
 	 * @return map information
@@ -2133,7 +2133,7 @@ public class ExeData {
 
 	/**
 	 * Gets the amount of loaded maps.
-	 * 
+	 *
 	 * @return amount of maps
 	 */
 	public static int getMapInfoCount() {
@@ -2142,7 +2142,7 @@ public class ExeData {
 
 	/**
 	 * Gets a npc.tbl entry for an entity type.
-	 * 
+	 *
 	 * @param entityType
 	 *            entity type
 	 * @return npc.tbl entry
@@ -2153,7 +2153,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "Title" graphics file.
-	 * 
+	 *
 	 * @return Title file
 	 */
 	public static File getTitle() {
@@ -2166,7 +2166,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "MyChar" graphics file.
-	 * 
+	 *
 	 * @return MyChar file
 	 */
 	public static File getMyChar() {
@@ -2175,7 +2175,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "ArmsImage" graphics file.
-	 * 
+	 *
 	 * @return ArmsImage file
 	 */
 	public static File getArmsImage() {
@@ -2184,7 +2184,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "Arms" graphics file.
-	 * 
+	 *
 	 * @return Arms file
 	 */
 	public static File getArms() {
@@ -2193,7 +2193,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "ItemImage" graphics file.
-	 * 
+	 *
 	 * @return ItemImage file
 	 */
 	public static File getItemImage() {
@@ -2202,7 +2202,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "StageImage" graphics file.
-	 * 
+	 *
 	 * @return StageImage file
 	 */
 	public static File getStageImage() {
@@ -2211,7 +2211,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "NpcSym" graphics file.
-	 * 
+	 *
 	 * @return NpcSym file
 	 */
 	public static File getNpcSym() {
@@ -2220,7 +2220,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "NpcRegu" graphics file.
-	 * 
+	 *
 	 * @return NpcRegu file
 	 */
 	public static File getNpcRegu() {
@@ -2229,7 +2229,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "TextBox" graphics file.
-	 * 
+	 *
 	 * @return TextBox file
 	 */
 	public static File getTextBox() {
@@ -2238,7 +2238,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "Caret" graphics file.
-	 * 
+	 *
 	 * @return Caret file
 	 */
 	public static File getCaret() {
@@ -2247,7 +2247,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "Bullet" graphics file.
-	 * 
+	 *
 	 * @return Bullet file
 	 */
 	public static File getBullet() {
@@ -2256,7 +2256,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "Face" graphics file.
-	 * 
+	 *
 	 * @return Face file
 	 */
 	public static File getFace() {
@@ -2265,7 +2265,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "Fade" graphics file.
-	 * 
+	 *
 	 * @return Fade file
 	 */
 	public static File getFade() {
@@ -2274,7 +2274,7 @@ public class ExeData {
 
 	/**
 	 * Gets the "Loading" graphics file.
-	 * 
+	 *
 	 * @return Loading file
 	 */
 	public static File getLoading() {
