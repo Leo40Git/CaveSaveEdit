@@ -26,7 +26,6 @@ import javax.swing.JOptionPane;
 import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.profile.NormalProfile;
-import com.leo.cse.backend.profile.PlusProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
