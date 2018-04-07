@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 import javax.swing.BoxLayout;
@@ -61,6 +62,9 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	public static Main window;
 	public static Color lineColor;
+	
+	private static Thread repaintThread;
+	private static AtomicBoolean keepRepainting;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
@@ -86,6 +90,12 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 					"Quit CaveSaveEditor?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (sel != JOptionPane.YES_OPTION)
 				return;
+		}
+		keepRepainting.set(false);
+		try {
+			repaintThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		if (reboot) {
 			window.dispose();
@@ -460,8 +470,9 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				if (p.exists())
 					loadProfile(p, false);
 			});
-			Thread rrThread = new Thread(() -> {
-				while (true) {
+			keepRepainting = new AtomicBoolean(true);
+			repaintThread = new Thread(() -> {
+				while (keepRepainting.get()) {
 					window.repaint();
 					try {
 						Thread.sleep(10);
@@ -469,8 +480,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 						e.printStackTrace();
 					}
 				}
-			}, "RepaintRequest");
-			rrThread.start();
+			}, "repaint");
+			repaintThread.start();
 		});
 	}
 
