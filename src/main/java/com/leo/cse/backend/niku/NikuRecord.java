@@ -222,17 +222,6 @@ public class NikuRecord {
 	}
 
 	/**
-	 * Converts a byte into it's unsigned equivalent.
-	 *
-	 * @param b
-	 *            signed byte
-	 * @return unsigned byte
-	 */
-	private static byte unsigned(byte b) {
-		return (byte) (b & 0xFF);
-	}
-
-	/**
 	 * Creates a new record.
 	 */
 	public static void create() {
@@ -258,7 +247,7 @@ public class NikuRecord {
 		fis.read(buf);
 		fis.close();
 		for (int i = 0; i < 4; i++) {
-			byte key = unsigned(buf[i + 16]);
+			int key = Byte.toUnsignedInt(buf[i + 16]);
 			System.out.println("result " + i + ": key=" + key);
 			int j = i * 4;
 			buf[j] = (byte) (buf[j] - key);
@@ -267,7 +256,7 @@ public class NikuRecord {
 			System.out.println("buf[" + (j + 1) + "]=" + buf[j + 1]);
 			buf[j + 2] = (byte) (buf[j + 2] - key);
 			System.out.println("buf[" + (j + 2) + "]=" + buf[j + 2]);
-			buf[j + 3] = (byte) (buf[j + 3] - (byte) (unsigned(key) / 2));
+			buf[j + 3] = (byte) (buf[j + 3] - key / 2);
 			System.out.println("buf[" + (j + 3) + "]=" + buf[j + 3]);
 			result[i] = ByteUtils.readInt(buf, j);
 		}
@@ -308,12 +297,12 @@ public class NikuRecord {
 		bufByte[18] = (byte) r.nextInt(0xFF);
 		bufByte[19] = (byte) r.nextInt(0xFF);
 		for (int i = 0; i < 4; i++) {
-			byte key = unsigned(bufByte[i + 16]);
+			int key = Byte.toUnsignedInt(bufByte[i + 16]);
 			int j = i * 4;
 			bufByte[j] = (byte) (bufByte[j] + key);
 			bufByte[j + 1] = (byte) (bufByte[j + 1] + key);
 			bufByte[j + 2] = (byte) (bufByte[j + 2] + key);
-			bufByte[j + 3] = (byte) (bufByte[j + 3] + (byte) (unsigned(key) / 2));
+			bufByte[j + 3] = (byte) (bufByte[j + 3] + key / 2);
 		}
 		FileOutputStream fos = new FileOutputStream(dest);
 		fos.write(bufByte);

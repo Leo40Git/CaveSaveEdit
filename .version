@@ -1,4 +1,7 @@
-4.0.1
+4.0.2
+HOTFIX 4.0.2:
+- Fix weapon & warp fields being completely off
+- Fix 290.rec editor outputting "corrupt" records
 HOTFIX 4.0.1:
 - Fix app hanging when loading mod without profile
 - Fix flag editor setting the wrong flag when undefined/system flags are shown

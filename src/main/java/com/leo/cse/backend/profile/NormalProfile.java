@@ -275,14 +275,14 @@ public class NormalProfile extends Profile {
 		makeFieldInt(FIELD_CURRENT_WEAPON, 0x024);
 		makeFieldFlags(FIELD_EQUIPS, 16, 0x02C);
 		makeFieldInt(FIELD_TIME_PLAYED, 0x034);
-		makeFieldInts(FIELD_WEAPON_ID, 7, Integer.BYTES * 5, 0x038);
-		makeFieldInts(FIELD_WEAPON_LEVEL, 7, Integer.BYTES * 5, 0x03C);
-		makeFieldInts(FIELD_WEAPON_EXP, 7, Integer.BYTES * 5, 0x040);
-		makeFieldInts(FIELD_WEAPON_MAXIMUM_AMMO, 7, Integer.BYTES * 5, 0x044);
-		makeFieldInts(FIELD_WEAPON_CURRENT_AMMO, 7, Integer.BYTES * 5, 0x048);
+		makeFieldInts(FIELD_WEAPON_ID, 7, Integer.BYTES * 4, 0x038);
+		makeFieldInts(FIELD_WEAPON_LEVEL, 7, Integer.BYTES * 4, 0x03C);
+		makeFieldInts(FIELD_WEAPON_EXP, 7, Integer.BYTES * 4, 0x040);
+		makeFieldInts(FIELD_WEAPON_MAXIMUM_AMMO, 7, Integer.BYTES * 4, 0x044);
+		makeFieldInts(FIELD_WEAPON_CURRENT_AMMO, 7, Integer.BYTES * 4, 0x048);
 		makeFieldInts(FIELD_ITEMS, 30, 0, 0x0D8);
-		makeFieldInts(FIELD_WARP_ID, 7, Integer.BYTES * 2, 0x158);
-		makeFieldInts(FIELD_WARP_LOCATION, 7, Integer.BYTES * 2, 0x15C);
+		makeFieldInts(FIELD_WARP_ID, 7, Integer.BYTES, 0x158);
+		makeFieldInts(FIELD_WARP_LOCATION, 7, Integer.BYTES, 0x15C);
 		makeFieldBools(FIELD_MAP_FLAGS, 128, 0, 0x196);
 		makeFieldFlags(FIELD_FLAGS, 8000, 0x21C);
 	}
