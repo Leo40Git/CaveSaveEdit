@@ -165,8 +165,10 @@ public class FlagList extends Component {
 		int fy = 28;
 		for (Flag flag : shownFlags) {
 			int id = flag.getId();
-			if (!isFlagValid(id))
+			if (!isFlagValid(id)) {
+				fy += 24;
 				continue;
+			}
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
 				boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id);
 				ProfileManager.setField(NormalProfile.FIELD_FLAGS, id, !value);

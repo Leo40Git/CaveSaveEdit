@@ -145,8 +145,10 @@ public class MapFlagList extends Component {
 		int fy = 28;
 		for (MapFlag flag : shownFlags) {
 			int id = flag.getId();
-			if (!isMapFlagValid(id))
+			if (!isMapFlagValid(id)) {
+				fy += 24;
 				continue;
+			}
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
 				boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id);
 				ProfileManager.setField(NormalProfile.FIELD_MAP_FLAGS, id, !value);

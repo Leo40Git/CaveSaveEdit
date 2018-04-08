@@ -1208,6 +1208,7 @@ public class SaveEditorPanel extends JPanel
 		case ExeData.EVENT_POSTLOAD:
 			progLoad.active = false;
 			progSubload.active = false;
+			loading = false;
 			break;
 		default:
 			break;

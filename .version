@@ -1,4 +1,7 @@
-4.0
+4.0.1
+HOTFIX 4.0.1:
+- Fix app hanging when loading mod without profile
+- Fix flag editor setting the wrong flag when undefined/system flags are shown
 Update 4.0 - The Awaited Update:
 - The map preview will now display entities from the PIXEL bitmap! Thanks to 20kdc for basically writing this feature
 - Added a "Search for Save Point" tool which allows you to jump to any save point
