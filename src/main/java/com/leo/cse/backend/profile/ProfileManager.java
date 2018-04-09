@@ -823,6 +823,8 @@ public class ProfileManager {
 		System.out.println("setting field " + fieldStr + " to " + valueStr);
 		Object oldValue = getField(field, index);
 		boolean different = false;
+		if (oldValue == null || value == null)
+			different = true;
 		if (compType == null)
 			different = !type.cast(oldValue).equals(type.cast(value));
 		else {
@@ -940,7 +942,11 @@ public class ProfileManager {
 			return null;
 		Object ret = null;
 		try {
-			ret = impl.callMethod(method, (field, index, oldVal, newVal) -> notifyListeners(field, index, oldVal, newVal), args);
+			ret = impl.callMethod(method, (field, index, oldVal, newVal) -> {
+				notifyListeners(field, index, oldVal, newVal);
+				if (ProfileManager.EVENT_DATA_MODIFIED.equals(field))
+					modified = true;
+			}, args);
 		} catch (ProfileMethodException e) {
 			throw new RuntimeException(e);
 		}

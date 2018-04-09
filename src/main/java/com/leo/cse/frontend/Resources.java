@@ -80,7 +80,7 @@ public class Resources {
 	private static void loadImages() {
 		reloadColorImages();
 		drag = ui.getSubimage(40, 8, 3, 8);
-		editorTabIcons = new BufferedImage[7];
+		editorTabIcons = new BufferedImage[8];
 		for (int i = 0; i < editorTabIcons.length; i++)
 			editorTabIcons[i] = ui.getSubimage(i * 16, 16, 16, 16);
 		icons = new BufferedImage[16];

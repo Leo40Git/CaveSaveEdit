@@ -53,6 +53,7 @@ import com.leo.cse.frontend.ui.dialogs.Dialog;
 import com.leo.cse.frontend.ui.dialogs.NikuEditDialog;
 import com.leo.cse.frontend.ui.dialogs.PlusSlotDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
+import com.leo.cse.frontend.ui.panels.CSPlusPanel;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
@@ -204,7 +205,8 @@ public class SaveEditorPanel extends JPanel
 		FLAGS("Flags", 3),
 		MAP_FLAGS("Map Flags", 5),
 		VARIABLES("Variables", 4),
-		EQUIP_PLUS("Equip+", 6);
+		EQUIP_PLUS("Equip+", 6),
+		CS_PLUS("Cave Story+", 7);
 
 		String label;
 		int icon;
@@ -405,25 +407,33 @@ public class SaveEditorPanel extends JPanel
 			return ExeData.isLoaded() && ExeData.doLoadNpc();
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean plus = ExeData.isPlusMode(), var = plus && MCI.getSpecial("VarHack"),
-				eqp = plus && MCI.getSpecial("EquipPlusHack");
-		tabs = new EditorPanel[(var ? 6 : 5)];
+		boolean plus = ExeData.isPlusMode(), var = !plus && MCI.getSpecial("VarHack"),
+				eqp = !var && MCI.getSpecial("EquipPlusHack");
+		int tabCount = 5;
+		if (plus || var)
+			tabCount++;
+		/// TODO Add Equip+ support
+		/*
+		if (eqp)
+			tabCount++;
+		*/
+		tabs = new EditorPanel[tabCount];
 		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
 		tabs[2] = new EditorPanel(EditorTab.WARPS, new WarpsPanel());
 		tabs[3] = new EditorPanel(EditorTab.FLAGS, new FlagsPanel());
+		tabs[4] = new EditorPanel(EditorTab.MAP_FLAGS, new MapFlagsPanel());
+		if (var)
+			tabs[5] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
 		/// TODO Add Equip+ support
 		/*
-		if (eqp)
-			tabs[4] = new EditorPanel(EditorTab.EQUIP_PLUS, new EquipPlusPanel());
-		else
+		else if (eqp)
+			tabs[5] = new EditorPanel(EditorTab.EQUIP_PLUS, new EquipPlusPanel());
 		*/
-		tabs[4] = new EditorPanel(EditorTab.MAP_FLAGS, new MapFlagsPanel());
-		if (var && !eqp)
-			tabs[5] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
-		int tabNum = tabs.length - 1;
-		if (currentTab > tabNum)
-			currentTab = tabNum;
+		else if (plus)
+			tabs[5] = new EditorPanel(EditorTab.CS_PLUS, new CSPlusPanel());
+		if (currentTab > tabCount)
+			currentTab = tabCount;
 		progLoad = new LoadProgress();
 		progSubload = new LoadProgress();
 	}

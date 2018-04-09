@@ -24,7 +24,7 @@ import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 
 public class GeneralPanel extends Panel {
-	
+
 	public static Calendar modifyDate;
 
 	private MapView mp;
@@ -125,29 +125,31 @@ public class GeneralPanel extends Panel {
 		}, "time played"));
 		compList.add(new Label("(resets at " + (4294967295l / MCI.getInteger("Game.FPS", 50)) + ")", 216, 124));
 		if (ProfileManager.getType() == PlusProfile.class) {
-			// difficulty
-			compList.add(new Label("Difficulty:", 4, 144));
-			compList.add(new RadioBoxes(54, 144, 176, 3, new String[] { "Original", "Easy", "Hard" }, () -> {
-				int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
-				while (diff > 5)
-					diff -= 5;
-				if (diff % 2 == 1)
-					diff--;
-				return diff / 2;
-			}, (Integer t) -> {
-				short diff = (short) (t * 2);
-				ProfileManager.setField(PlusProfile.FIELD_DIFFICULTY, diff);
-				return t;
-			}, false, (Integer id) -> {
-				return true;
-			}));
-			// beat hell
-			compList.add(new BooleanBox("Beaten Bloodstained Sanctuary?", false, 234, 144, () -> {
-				return (Boolean) ProfileManager.getField(PlusProfile.FIELD_BEAT_HELL);
-			}, (Boolean t) -> {
-				ProfileManager.setField(PlusProfile.FIELD_BEAT_HELL, t);
-				return t;
-			}));
+			if (((int) ProfileManager.callMethod(PlusProfile.METHOD_GET_ACTIVE_FILE)) < 3) {
+				// difficulty
+				compList.add(new Label("Difficulty:", 4, 144));
+				compList.add(new RadioBoxes(54, 144, 176, 3, new String[] { "Original", "Easy", "Hard" }, () -> {
+					int diff = (Short) ProfileManager.getField(PlusProfile.FIELD_DIFFICULTY);
+					while (diff > 5)
+						diff -= 5;
+					if (diff % 2 == 1)
+						diff--;
+					return diff / 2;
+				}, (Integer t) -> {
+					short diff = (short) (t * 2);
+					ProfileManager.setField(PlusProfile.FIELD_DIFFICULTY, diff);
+					return t;
+				}, false, (Integer id) -> {
+					return true;
+				}));
+				// beat hell
+				compList.add(new BooleanBox("Beaten Bloodstained Sanctuary?", false, 234, 144, () -> {
+					return (Boolean) ProfileManager.getField(PlusProfile.FIELD_BEAT_HELL);
+				}, (Boolean t) -> {
+					ProfileManager.setField(PlusProfile.FIELD_BEAT_HELL, t);
+					return t;
+				}));
+			}
 			// modify date
 			modifyDate = new GregorianCalendar();
 			modifyDate.setTimeInMillis(0);

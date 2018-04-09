@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.leo.cse.backend.ByteUtils;
 import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
+import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager.ProfileMethodException;
 
 public class PlusProfile extends NormalProfile {
@@ -34,10 +35,14 @@ public class PlusProfile extends NormalProfile {
 	public static final String FIELD_DIFFICULTY = "difficulty";
 
 	/**
-	 * Used slots. First 8 bits are for normal slots, last 8 bits are for Curly
-	 * Story slots.
+	 * Used normal slots.
 	 */
-	public static final String FIELD_USED_SLOTS = "used_slots";
+	public static final String FIELD_USED_SLOTS_NORMAL = "used_slots.normal";
+	
+	/**
+	 * Used Curly Story slots.
+	 */
+	public static final String FIELD_USED_SLOTS_CURLY = "used_slots.curly";
 
 	/**
 	 * Music volume. Goes from 1-10 (0 is the same as 1 and 10+ is earrape
@@ -187,7 +192,8 @@ public class PlusProfile extends NormalProfile {
 	protected void setupFieldsPlus() {
 		makeFieldLong(FIELD_MODIFY_DATE, 0x608);
 		makeFieldShort(FIELD_DIFFICULTY, 0x610);
-		makeFieldFlags(FIELD_USED_SLOTS, 0x1F020, 16);
+		makeFieldFlags(FIELD_USED_SLOTS_NORMAL, 3, 0x1F020);
+		makeFieldFlags(FIELD_USED_SLOTS_CURLY, 3, 0x1F021);
 		makeFieldLong(FIELD_MUSIC_VOLUME, 0x1F1040);
 		makeFieldLong(FIELD_SOUND_VOLUME, 0x1F1044);
 		makeFieldByte(FIELD_SOUNDTRACK_TYPE, 0x1F1049);
@@ -223,6 +229,24 @@ public class PlusProfile extends NormalProfile {
 					int srcSec = (int) args[0];
 					int dstSec = (int) args[1];
 					System.arraycopy(data, srcSec * SECTION_LENGTH, data, dstSec * SECTION_LENGTH, SECTION_LENGTH);
+					String field = FIELD_USED_SLOTS_NORMAL;
+					if (dstSec > 2) {
+						int oldSec = curSection;
+						curSection = dstSec;
+						try {
+							setField(FIELD_DIFFICULTY, -1, (short) 0);
+						} catch (ProfileFieldException e) {
+							e.printStackTrace();
+						}
+						curSection = oldSec;
+						dstSec -= 3;
+						field = FIELD_USED_SLOTS_CURLY;
+					}
+					try {
+						setField(field, dstSec, true);
+					} catch (ProfileFieldException e) {
+						e.printStackTrace();
+					}
 					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
@@ -248,6 +272,16 @@ public class PlusProfile extends NormalProfile {
 					ByteUtils.writeString(newData, 0, header);
 					ByteUtils.writeString(newData, 0x218, flagH);
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
+					String field = FIELD_USED_SLOTS_NORMAL;
+					if (secToReplace > 2) {
+						secToReplace -= 3;
+						field = FIELD_USED_SLOTS_CURLY;
+					}
+					try {
+						setField(field, secToReplace, true);
+					} catch (ProfileFieldException e) {
+						e.printStackTrace();
+					}
 					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
@@ -270,6 +304,16 @@ public class PlusProfile extends NormalProfile {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
+					String field = FIELD_USED_SLOTS_NORMAL;
+					if (secToReplace > 2) {
+						secToReplace -= 3;
+						field = FIELD_USED_SLOTS_CURLY;
+					}
+					try {
+						setField(field, secToReplace, false);
+					} catch (ProfileFieldException e) {
+						e.printStackTrace();
+					}
 					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
 				}
@@ -290,16 +334,18 @@ public class PlusProfile extends NormalProfile {
 				@Override
 				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int secToChk = (int) args[0];
-					int ptr = secToChk * SECTION_LENGTH;
-					// check header
-					String profHeader = ByteUtils.readString(data, ptr, header.length());
-					if (!header.equals(profHeader))
-						return false;
-					// check flag header
-					String profFlagH = ByteUtils.readString(data, ptr + 0x218, flagH.length());
-					if (!flagH.equals(profFlagH))
-						return false;
-					return true;
+					String field = FIELD_USED_SLOTS_NORMAL;
+					if (secToChk > 2) {
+						secToChk -= 3;
+						field = FIELD_USED_SLOTS_CURLY;
+					}
+					boolean exists = false;
+					try {
+						exists = (boolean) getField(field, secToChk);
+					} catch (ProfileFieldException e) {
+						e.printStackTrace();
+					}
+					return exists;
 				}
 
 			});
