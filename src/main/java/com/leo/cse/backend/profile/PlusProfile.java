@@ -34,9 +34,57 @@ public class PlusProfile extends NormalProfile {
 	public static final String FIELD_DIFFICULTY = "difficulty";
 
 	/**
+	 * Used slots. First 8 bits are for normal slots, last 8 bits are for Curly
+	 * Story slots.
+	 */
+	public static final String FIELD_USED_SLOTS = "used_slots";
+
+	/**
+	 * Music volume. Goes from 1-10 (0 is the same as 1 and 10+ is earrape
+	 * territory).
+	 */
+	public static final String FIELD_MUSIC_VOLUME = "music_volume";
+
+	/**
+	 * Sound volume. Goes from 1-10 (0 is the same as 1 and 10+ is earrape
+	 * territory).
+	 */
+	public static final String FIELD_SOUND_VOLUME = "sound_volume";
+
+	/**
+	 * Soundtrack type. 0/1 for Remastered, 2 for Original, 3 for New.
+	 */
+	public static final String FIELD_SOUNDTRACK_TYPE = "soundtrack_typee";
+
+	/**
+	 * Graphics style. 0 for New, 1 for Original.
+	 */
+	public static final String FIELD_GRAPHICS_STYLE = "graphics_style";
+
+	/**
+	 * Language. 0 for English, 1 for Japanese.
+	 */
+	public static final String FIELD_LANGUAGE = "language";
+
+	/**
 	 * "Beat Bloodstained Sanctuary" flag. Unlocks Sanctuary Time Attack.
 	 */
 	public static final String FIELD_BEAT_HELL = "beat_hell";
+
+	/**
+	 * Best Bloodstained Sanctuary time.
+	 */
+	public static final String FIELD_BEST_HELL_TIME = "best_hell_time";
+
+	/**
+	 * "Jukebox unlocked" flag.
+	 */
+	public static final String FIELD_JUKEBOX_UNLOCK = "jukebox_unlock";
+
+	/**
+	 * Best challenge/mod times. Slots 8+ don't have a "best time" index.
+	 */
+	public static final String FIELD_BEST_MOD_TIMES = "best_mod_times";
 
 	/**
 	 * Clones one file to another.
@@ -139,7 +187,16 @@ public class PlusProfile extends NormalProfile {
 	protected void setupFieldsPlus() {
 		makeFieldLong(FIELD_MODIFY_DATE, 0x608);
 		makeFieldShort(FIELD_DIFFICULTY, 0x610);
-		makeFieldBool(FIELD_BEAT_HELL, 0x1F04C);
+		makeFieldFlags(FIELD_USED_SLOTS, 0x1F020, 16);
+		makeFieldLong(FIELD_MUSIC_VOLUME, 0x1F1040);
+		makeFieldLong(FIELD_SOUND_VOLUME, 0x1F1044);
+		makeFieldByte(FIELD_SOUNDTRACK_TYPE, 0x1F1049);
+		makeFieldByte(FIELD_GRAPHICS_STYLE, 0x1F104A);
+		makeFieldByte(FIELD_LANGUAGE, 0x1F104B);
+		makeFieldBool(FIELD_BEAT_HELL, 0x1F04C, false);
+		makeFieldLong(FIELD_BEST_HELL_TIME, 0x1F1054);
+		makeFieldBool(FIELD_JUKEBOX_UNLOCK, 0x1F105B, true);
+		makeFieldLongs(FIELD_BEST_MOD_TIMES, 6, 0, 0x1F105C);
 	}
 
 	/**

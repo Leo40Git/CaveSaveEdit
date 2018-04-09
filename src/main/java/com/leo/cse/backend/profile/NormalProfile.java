@@ -284,7 +284,7 @@ public class NormalProfile extends Profile {
 		makeFieldInts(FIELD_ITEMS, 30, 0, 0x0D8);
 		makeFieldInts(FIELD_WARP_ID, 7, Integer.BYTES, 0x158);
 		makeFieldInts(FIELD_WARP_LOCATION, 7, Integer.BYTES, 0x15C);
-		makeFieldBools(FIELD_MAP_FLAGS, 128, 0, 0x196);
+		makeFieldBools(FIELD_MAP_FLAGS, 128, 0, 0x196, false);
 		makeFieldFlags(FIELD_FLAGS, 8000, 0x21C);
 	}
 
@@ -597,8 +597,10 @@ public class NormalProfile extends Profile {
 	 *            name of field
 	 * @param ptr
 	 *            pointer to field in profile
+	 * @param type
+	 *            <code>true</code> for sign bit, <code>false</code> for 0/1
 	 */
-	protected void makeFieldBool(String name, int ptr) {
+	protected void makeFieldBool(String name, int ptr, boolean type) {
 		try {
 			addField(name, new ProfileField() {
 				@Override
@@ -614,12 +616,18 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					byte flag = data[ptrCorrector.apply(ptr)];
-					return (flag == 0 ? false : true);
+					if (type)
+						return Byte.toUnsignedInt(flag) > 0x7F;
+					return flag == 0;
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					byte flag = (byte) ((Boolean) value ? 1 : 0);
+					byte flag = 0;
+					if (type)
+						flag = (byte) ((Boolean) value ? 0xFF : 0x7F);
+					else
+						flag = (byte) ((Boolean) value ? 1 : 0);
 					data[ptrCorrector.apply(ptr)] = flag;
 				}
 			});
@@ -641,8 +649,10 @@ public class NormalProfile extends Profile {
 	 *            offset between each element in bytes
 	 * @param ptr
 	 *            pointer to first element in profile
+	 * @param type
+	 *            <code>true</code> for sign bit, <code>false</code> for 0/1
 	 */
-	protected void makeFieldBools(String name, int length, int off, int ptr) {
+	protected void makeFieldBools(String name, int length, int off, int ptr, boolean type) {
 		try {
 			addField(name, new ProfileField() {
 				@Override
@@ -659,13 +669,21 @@ public class NormalProfile extends Profile {
 				public Object getValue(int index) {
 					byte[] ret = new byte[length];
 					ByteUtils.readBytes(data, ptrCorrector.apply(ptr), off, ret);
-					return (ret[index] == 0 ? false : true);
+					byte flag = ret[index];
+					if (type)
+						return Byte.toUnsignedInt(flag) > 0x7F;
+					return flag == 0;
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
+					boolean valBool = (Boolean) value;
 					byte actualVal = 0;
-					if ((Boolean) value)
+					if (type) {
+						actualVal = 0x7F;
+						if (valBool)
+							actualVal = (byte) 0xFF;
+					} else if (valBool)
 						actualVal = 1;
 					int cptr = ptrCorrector.apply(ptr);
 					byte[] vals = new byte[length];

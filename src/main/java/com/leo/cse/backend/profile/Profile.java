@@ -293,6 +293,8 @@ public abstract class Profile {
 	protected void addField(String fieldName, ProfileField field) throws ProfileFieldException {
 		if (fieldName == null)
 			throw new ProfileFieldException("fieldName == null!");
+		if (fieldName.isEmpty())
+			throw new ProfileFieldException("fieldName cannot be empty!");
 		if (fields.containsKey(fieldName))
 			throw new ProfileFieldException("Field " + fieldName + " is already defined!");
 		if (field == null)
@@ -316,6 +318,8 @@ public abstract class Profile {
 	protected void addMethod(String methodName, ProfileMethod method) throws ProfileMethodException {
 		if (methodName == null)
 			throw new ProfileMethodException("methodName == null!");
+		if (methodName.isEmpty())
+			throw new ProfileMethodException("methodName cannot be empty!");
 		if (methods.containsKey(methodName))
 			throw new ProfileMethodException("Method " + methodName + " is already defined!");
 		if (method == null)
