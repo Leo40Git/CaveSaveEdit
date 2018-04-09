@@ -24,10 +24,10 @@ import com.leo.cse.frontend.ui.components.RadioBoxes;
 import com.leo.cse.frontend.ui.components.ShortBox;
 
 public class GeneralPanel extends Panel {
+	
+	public static Calendar modifyDate;
 
 	private MapView mp;
-
-	private Calendar modifyDate;
 
 	private void updateTime() {
 		long time = modifyDate.getTime().getTime() / 1000;
@@ -149,9 +149,8 @@ public class GeneralPanel extends Panel {
 				return t;
 			}));
 			// modify date
-			long unix = (long) ProfileManager.getField(PlusProfile.FIELD_MODIFY_DATE);
 			modifyDate = new GregorianCalendar();
-			modifyDate.setTimeInMillis(unix * 1000);
+			modifyDate.setTimeInMillis(0);
 			final int dateLoc = winSize.width / 2 + 40;
 			compList.add(new Label("Last modified at:", dateLoc, 4));
 			compList.add(new ShortBox(dateLoc, 24, 16, 16, () -> {

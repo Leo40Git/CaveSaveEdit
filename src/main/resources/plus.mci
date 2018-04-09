@@ -7,7 +7,7 @@ function getAuthor() {
 }
 // Game information
 function getExeName() {
-    return null;
+    return "";
 }
 function getArmsImageYStart() {
     return 0;

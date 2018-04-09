@@ -62,7 +62,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	public static Main window;
 	public static Color lineColor;
-	
+
 	private static Thread repaintThread;
 	private static AtomicBoolean keepRepainting;
 
@@ -395,9 +395,105 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static PrintStream createLoggingRedirector(final PrintStream stream, final Level level) {
 		return new PrintStream(stream) {
-			@Override
-			public void print(final String string) {
+			private void write(String string) {
 				LOGGER.printf(level, string);
+			}
+
+			@Override
+			public void print(String s) {
+				if (s == null)
+					s = "null";
+				write(s);
+			}
+
+			@Override
+			public void print(boolean b) {
+				write(b ? "true" : "false");
+			}
+
+			@Override
+			public void print(char[] s) {
+				write(new String(s));
+			}
+
+			@Override
+			public void print(int i) {
+				write(String.valueOf(i));
+			}
+
+			@Override
+			public void print(float f) {
+				write(String.valueOf(f));
+			}
+
+			@Override
+			public void print(char c) {
+				write(String.valueOf(c));
+			}
+
+			@Override
+			public void print(double d) {
+				write(String.valueOf(d));
+			}
+
+			@Override
+			public void print(long l) {
+				write(String.valueOf(l));
+			}
+
+			@Override
+			public void print(Object obj) {
+				write(String.valueOf(obj));
+			}
+
+			@Override
+			public void println(String x) {
+				print(x);
+			}
+
+			@Override
+			public void println() {
+				return;
+			}
+
+			@Override
+			public void println(boolean x) {
+				print(x);
+			}
+
+			@Override
+			public void println(char x) {
+				print(x);
+			}
+
+			@Override
+			public void println(char[] x) {
+				print(x);
+			}
+
+			@Override
+			public void println(double x) {
+				print(x);
+			}
+
+			@Override
+			public void println(float x) {
+				print(x);
+			}
+
+			@Override
+			public void println(int x) {
+				print(x);
+			}
+
+			@Override
+			public void println(long x) {
+				print(x);
+			}
+
+			@Override
+			public void println(Object x) {
+				print(x);
 			}
 		};
 	}
@@ -465,11 +561,12 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			loadFrame.dispose();
 			window.setVisible(true);
 			window.requestFocus();
-			SwingUtilities.invokeLater(() -> {
-				File p = new File(System.getProperty("user.dir") + "/Profile.dat");
-				if (p.exists())
-					loadProfile(p, false);
-			});
+			if (Config.getBoolean(Config.KEY_AUTOLOAD_PROFILE, true))
+				SwingUtilities.invokeLater(() -> {
+					File p = new File(System.getProperty("user.dir") + "/Profile.dat");
+					if (p.exists())
+						loadProfile(p, false);
+				});
 			keepRepainting = new AtomicBoolean(true);
 			repaintThread = new Thread(() -> {
 				while (keepRepainting.get()) {

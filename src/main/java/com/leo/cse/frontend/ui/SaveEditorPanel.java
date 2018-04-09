@@ -514,7 +514,7 @@ public class SaveEditorPanel extends JPanel
 				c = !c;
 			}
 			if (progLoad.active) {
-				final int width = 320, height = 100;
+				final int width = 480, height = 100;
 				final int x = winSize.width / 2 - width / 2, y = winSize.height / 2 - height / 2;
 				FrontUtils.drawNineSlice(g, Resources.shadow, x - 16, y - 16, width + 32, height + 32);
 				g2d.setColor(Main.COLOR_BG);
@@ -525,9 +525,11 @@ public class SaveEditorPanel extends JPanel
 				if (progLoad.idMax > 1) {
 					String idStr = progLoad.id + "/" + progLoad.idMax;
 					FrontUtils.drawStringCentered(g2d, idStr, x + width / 2, y + 18, false, false);
-					g2d.drawRect(x + 20, y + 36, 260, 16);
+					final int progY = 36, progWidth = 260, progHeight = 16;
+					g2d.drawRect(x + width / 2 - progWidth / 2, y + progY, progWidth, progHeight);
 					float prog = progLoad.id / (float) progLoad.idMax;
-					g2d.fillRect(x + 22, y + 38, (int) (257 * prog), 13);
+					g2d.fillRect(x + width / 2 - progWidth / 2 + 2, y + progY + 2, (int) ((progWidth - 3) * prog),
+							progHeight - 3);
 				}
 				if (progSubload.active)
 					FrontUtils.drawStringCentered(g2d, progSubload.toString(), x + width / 2, y + 54, false, false);
@@ -655,8 +657,8 @@ public class SaveEditorPanel extends JPanel
 		MOD_FILE_FILTERS[0] = new FileNameExtensionFilter("Executables (*.exe)", "exe");
 		MOD_FILE_FILTERS[1] = new FileFilter() {
 			@Override
-			public boolean accept(File arg0) {
-				if (arg0.getName().equalsIgnoreCase("stage.tbl"))
+			public boolean accept(File f) {
+				if (f.isDirectory() || f.getName().equalsIgnoreCase("stage.tbl"))
 					return true;
 				return false;
 			}
@@ -890,16 +892,20 @@ public class SaveEditorPanel extends JPanel
 			List<MenuBarItem> items = mb.getItems();
 			final int mWidth = 280;
 			int mY = 17;
+			boolean close = true;
 			for (MenuBarItem item : items) {
 				if (FrontUtils.pointInRectangle(px, py, mX, mY, mWidth, 21)) {
 					item.setHover(true);
 					if (item.isEnabled())
 						item.onClick();
+					else
+						close = false;
 					break;
 				}
 				mY += 22;
 			}
-			currentMenubar = -1;
+			if (close)
+				currentMenubar = -1;
 		} else if (py >= winSize2.height - 18 && ProfileManager.isLoaded()) {
 			// editor tabs
 			int tn = tabs.length;
@@ -948,8 +954,7 @@ public class SaveEditorPanel extends JPanel
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
 		final int mod = e.getModifiersEx();
-		final boolean shift = (mod & InputEvent.SHIFT_DOWN_MASK) != 0,
-				ctrl = (mod & InputEvent.CTRL_DOWN_MASK) != 0;
+		final boolean shift = (mod & InputEvent.SHIFT_DOWN_MASK) != 0, ctrl = (mod & InputEvent.CTRL_DOWN_MASK) != 0;
 		if (!dBoxes.isEmpty()) {
 			dBoxes.get(0).onScroll(e.getWheelRotation(), shift, ctrl);
 		} else {
@@ -983,13 +988,13 @@ public class SaveEditorPanel extends JPanel
 		py -= i.top + OFFSET_Y;
 		if (!dBoxes.isEmpty()) {
 			notDraggingComps = true;
-			mouseMoved(px, py + OFFSET_Y);
+			mouseMoved(px, py + OFFSET_Y, false);
 			return;
 		}
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		if (py <= 17 || currentMenubar != -1 || py >= winSize2.height - 18) {
 			notDraggingComps = true;
-			mouseMoved(px, py + OFFSET_Y);
+			mouseMoved(px, py + OFFSET_Y, false);
 			return;
 		}
 		if (loading || !ProfileManager.isLoaded() || notDraggingComps)
@@ -1017,15 +1022,17 @@ public class SaveEditorPanel extends JPanel
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		mouseMoved(e.getX(), e.getY());
+		mouseMoved(e.getX(), e.getY(), true);
 	}
 
-	private void mouseMoved(int px, int py) {
+	private void mouseMoved(int px, int py, boolean applyInsets) {
 		if (loading)
 			return;
-		final Insets i = Main.window.getInsets();
-		px -= i.left + OFFSET_X;
-		py -= i.top + OFFSET_Y;
+		if (applyInsets) {
+			final Insets i = Main.window.getInsets();
+			px -= i.left + OFFSET_X;
+			py -= i.top + OFFSET_Y;
+		}
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		menubarHover = -1;
 		tabHover = -1;
@@ -1166,13 +1173,13 @@ public class SaveEditorPanel extends JPanel
 	public void onChange(String field, int id, Object oldValue, Object newValue) {
 		if (ProfileManager.EVENT_LOAD.equals(field)) {
 			if (ProfileManager.getType() == PlusProfile.class) {
-				gotProfile = false;
+				setGotProfile(false);
 				addDialogBox(new PlusSlotDialog(false));
 			} else
-				gotProfile = true;
+				setGotProfile(true);
 			setLoading(false);
 		} else if (ProfileManager.EVENT_UNLOAD.equals(field)) {
-			gotProfile = false;
+			setGotProfile(false);
 			setLoading(false);
 		}
 	}

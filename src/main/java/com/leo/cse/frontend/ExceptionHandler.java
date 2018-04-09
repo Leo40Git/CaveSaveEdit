@@ -8,6 +8,7 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
 
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
+		t.interrupt();
 		System.err.println("Uncaught exception in thread \"" + t.getName() + "\":");
 		e.printStackTrace();
 		JOptionPane.showMessageDialog(null, "An uncaught exception has occured in thread \"" + t.getName() + "\":\n" + e

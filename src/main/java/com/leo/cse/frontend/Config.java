@@ -25,6 +25,7 @@ public class Config {
 	public static final String KEY_ENCODING = "encoding";
 	public static final String KEY_SKIP_UPDATE_CHECK = "skip_update_check";
 	public static final String KEY_AUTOLOAD_EXE = "autoload_exe";
+	public static final String KEY_AUTOLOAD_PROFILE = "autoload_profile";
 
 	private static Preferences config;
 

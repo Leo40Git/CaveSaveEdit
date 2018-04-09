@@ -26,6 +26,7 @@ import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
 import com.leo.cse.frontend.ui.dialogs.BaseDialog;
 import com.leo.cse.frontend.ui.dialogs.ConfirmDialog;
+import com.leo.cse.frontend.ui.panels.GeneralPanel;
 
 public class PlusSlots extends Component {
 
@@ -273,6 +274,8 @@ public class PlusSlots extends Component {
 					ProfileManager.callMethod(PlusProfile.METHOD_NEW_FILE, srcSec);
 				ProfileManager.callMethod(PlusProfile.METHOD_SET_ACTIVE_FILE, srcSec);
 				SaveEditorPanel.panel.setGotProfile(true);
+				GeneralPanel.modifyDate
+						.setTimeInMillis((long) ProfileManager.getField(PlusProfile.FIELD_MODIFY_DATE) * 1000);
 				dialog.requestClose();
 				break;
 			case MODE_DELETE:

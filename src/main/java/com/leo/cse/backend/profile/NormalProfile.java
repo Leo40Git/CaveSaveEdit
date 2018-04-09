@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.function.Function;
 
 import com.leo.cse.backend.ByteUtils;
 import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
@@ -339,16 +340,9 @@ public class NormalProfile extends Profile {
 	}
 
 	/**
-	 * Corrects a pointer to data somewhere in the profile.
-	 *
-	 * @param ptr
-	 *            pointer to correct
-	 * @return corrected pointer
+	 * Function to correct pointers.
 	 */
-	protected int correctPointer(int ptr) {
-		// regular CS profiles don't need any pointer correction
-		return ptr;
-	}
+	protected Function<Integer, Integer> ptrCorrector = t -> t;
 
 	/**
 	 * Creates a <code>byte</code> field.
@@ -373,12 +367,12 @@ public class NormalProfile extends Profile {
 
 				@Override
 				public Object getValue(int index) {
-					return data[correctPointer(ptr)];
+					return data[ptrCorrector.apply(ptr)];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					data[correctPointer(ptr)] = (Byte) value;
+					data[ptrCorrector.apply(ptr)] = (Byte) value;
 				}
 
 				@Override
@@ -387,7 +381,7 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public int getMinumumIndex() {
+				public int getMinimumIndex() {
 					return -1;
 				}
 
@@ -429,13 +423,13 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					byte[] ret = new byte[length];
-					ByteUtils.readBytes(data, correctPointer(ptr), off, ret);
+					ByteUtils.readBytes(data, ptrCorrector.apply(ptr), off, ret);
 					return ret[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					int cptr = correctPointer(ptr);
+					int cptr = ptrCorrector.apply(ptr);
 					byte[] vals = new byte[length];
 					ByteUtils.readBytes(data, cptr, off, vals);
 					vals[index] = (Byte) value;
@@ -448,13 +442,13 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public int getMinumumIndex() {
+				public int getMinimumIndex() {
 					return 0;
 				}
 
 				@Override
 				public int getMaximumIndex() {
-					return length;
+					return length - 1;
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -485,12 +479,12 @@ public class NormalProfile extends Profile {
 
 				@Override
 				public Object getValue(int index) {
-					return ByteUtils.readShort(data, correctPointer(ptr));
+					return ByteUtils.readShort(data, ptrCorrector.apply(ptr));
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					ByteUtils.writeShort(data, correctPointer(ptr), (Short) value);
+					ByteUtils.writeShort(data, ptrCorrector.apply(ptr), (Short) value);
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -526,13 +520,13 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					short[] ret = new short[length];
-					ByteUtils.readShorts(data, correctPointer(ptr), off, ret);
+					ByteUtils.readShorts(data, ptrCorrector.apply(ptr), off, ret);
 					return ret[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					int cptr = correctPointer(ptr);
+					int cptr = ptrCorrector.apply(ptr);
 					short[] vals = new short[length];
 					ByteUtils.readShorts(data, cptr, off, vals);
 					vals[index] = (Short) value;
@@ -545,13 +539,13 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public int getMinumumIndex() {
+				public int getMinimumIndex() {
 					return 0;
 				}
 
 				@Override
 				public int getMaximumIndex() {
-					return length;
+					return length - 1;
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -582,12 +576,12 @@ public class NormalProfile extends Profile {
 
 				@Override
 				public Object getValue(int index) {
-					return ByteUtils.readInt(data, correctPointer(ptr));
+					return ByteUtils.readInt(data, ptrCorrector.apply(ptr));
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					ByteUtils.writeInt(data, correctPointer(ptr), (Integer) value);
+					ByteUtils.writeInt(data, ptrCorrector.apply(ptr), (Integer) value);
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -619,14 +613,14 @@ public class NormalProfile extends Profile {
 
 				@Override
 				public Object getValue(int index) {
-					byte flag = data[correctPointer(ptr)];
+					byte flag = data[ptrCorrector.apply(ptr)];
 					return (flag == 0 ? false : true);
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
 					byte flag = (byte) ((Boolean) value ? 1 : 0);
-					data[correctPointer(ptr)] = flag;
+					data[ptrCorrector.apply(ptr)] = flag;
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -664,7 +658,7 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					byte[] ret = new byte[length];
-					ByteUtils.readBytes(data, correctPointer(ptr), off, ret);
+					ByteUtils.readBytes(data, ptrCorrector.apply(ptr), off, ret);
 					return (ret[index] == 0 ? false : true);
 				}
 
@@ -673,7 +667,7 @@ public class NormalProfile extends Profile {
 					byte actualVal = 0;
 					if ((Boolean) value)
 						actualVal = 1;
-					int cptr = correctPointer(ptr);
+					int cptr = ptrCorrector.apply(ptr);
 					byte[] vals = new byte[length];
 					ByteUtils.readBytes(data, cptr, off, vals);
 					vals[index] = actualVal;
@@ -686,13 +680,13 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public int getMinumumIndex() {
+				public int getMinimumIndex() {
 					return 0;
 				}
 
 				@Override
 				public int getMaximumIndex() {
-					return length;
+					return length - 1;
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -728,13 +722,13 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					int[] ret = new int[length];
-					ByteUtils.readInts(data, correctPointer(ptr), off, ret);
+					ByteUtils.readInts(data, ptrCorrector.apply(ptr), off, ret);
 					return ret[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					int cptr = correctPointer(ptr);
+					int cptr = ptrCorrector.apply(ptr);
 					int[] vals = new int[length];
 					ByteUtils.readInts(data, cptr, off, vals);
 					vals[index] = (Integer) value;
@@ -747,13 +741,13 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public int getMinumumIndex() {
+				public int getMinimumIndex() {
 					return 0;
 				}
 
 				@Override
 				public int getMaximumIndex() {
-					return length;
+					return length - 1;
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -784,12 +778,12 @@ public class NormalProfile extends Profile {
 
 				@Override
 				public Object getValue(int index) {
-					return ByteUtils.readLong(data, correctPointer(ptr));
+					return ByteUtils.readLong(data, ptrCorrector.apply(ptr));
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					ByteUtils.writeLong(data, correctPointer(ptr), (Long) value);
+					ByteUtils.writeLong(data, ptrCorrector.apply(ptr), (Long) value);
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -825,13 +819,13 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					long[] ret = new long[length];
-					ByteUtils.readLongs(data, correctPointer(ptr), off, ret);
+					ByteUtils.readLongs(data, ptrCorrector.apply(ptr), off, ret);
 					return ret[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					int cptr = correctPointer(ptr);
+					int cptr = ptrCorrector.apply(ptr);
 					long[] vals = new long[length];
 					ByteUtils.readLongs(data, cptr, off, vals);
 					vals[index] = (Long) value;
@@ -844,13 +838,13 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public int getMinumumIndex() {
+				public int getMinimumIndex() {
 					return 0;
 				}
 
 				@Override
 				public int getMaximumIndex() {
-					return length;
+					return length - 1;
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -884,13 +878,13 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					boolean[] vals = new boolean[length];
-					ByteUtils.readFlags(data, correctPointer(ptr), vals);
+					ByteUtils.readFlags(data, ptrCorrector.apply(ptr), vals);
 					return vals[index];
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
-					int cptr = correctPointer(ptr);
+					int cptr = ptrCorrector.apply(ptr);
 					boolean[] vals = new boolean[length];
 					ByteUtils.readFlags(data, cptr, vals);
 					vals[index] = (Boolean) value;
@@ -903,13 +897,13 @@ public class NormalProfile extends Profile {
 				}
 
 				@Override
-				public int getMinumumIndex() {
+				public int getMinimumIndex() {
 					return 0;
 				}
 
 				@Override
 				public int getMaximumIndex() {
-					return length;
+					return length - 1;
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -946,8 +940,8 @@ public class NormalProfile extends Profile {
 				public Object getValue(int index) {
 					Integer[] ret = new Integer[3];
 					ret[0] = ByteUtils.readInt(data, mapPtr);
-					ret[1] = (int) ByteUtils.readShort(data, correctPointer(xPtr));
-					ret[2] = (int) ByteUtils.readShort(data, correctPointer(yPtr));
+					ret[1] = (int) ByteUtils.readShort(data, ptrCorrector.apply(xPtr));
+					ret[2] = (int) ByteUtils.readShort(data, ptrCorrector.apply(yPtr));
 					return ret;
 				}
 
@@ -959,8 +953,8 @@ public class NormalProfile extends Profile {
 				public void setValue(int index, Object value) {
 					Integer[] vals = (Integer[]) value;
 					ByteUtils.writeInt(data, mapPtr, vals[0]);
-					ByteUtils.writeShort(data, correctPointer(xPtr), int2Short(vals[1]));
-					ByteUtils.writeShort(data, correctPointer(yPtr), int2Short(vals[2]));
+					ByteUtils.writeShort(data, ptrCorrector.apply(xPtr), int2Short(vals[1]));
+					ByteUtils.writeShort(data, ptrCorrector.apply(yPtr), int2Short(vals[2]));
 				}
 			});
 		} catch (ProfileFieldException e) {
@@ -994,16 +988,16 @@ public class NormalProfile extends Profile {
 				@Override
 				public Object getValue(int index) {
 					Short[] ret = new Short[2];
-					ret[0] = ByteUtils.readShort(data, correctPointer(xPtr));
-					ret[1] = ByteUtils.readShort(data, correctPointer(yPtr));
+					ret[0] = ByteUtils.readShort(data, ptrCorrector.apply(xPtr));
+					ret[1] = ByteUtils.readShort(data, ptrCorrector.apply(yPtr));
 					return ret;
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
 					Short[] vals = (Short[]) value;
-					ByteUtils.writeShort(data, correctPointer(xPtr), vals[0]);
-					ByteUtils.writeShort(data, correctPointer(yPtr), vals[1]);
+					ByteUtils.writeShort(data, ptrCorrector.apply(xPtr), vals[0]);
+					ByteUtils.writeShort(data, ptrCorrector.apply(yPtr), vals[1]);
 				}
 			});
 		} catch (ProfileFieldException e) {

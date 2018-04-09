@@ -1057,6 +1057,8 @@ public class ExeData {
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_CREDIT, STRING_POINTERS.length - 1);
 		exeStrings[STRING_NPC_TBL] = "npc.tbl";
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPC_TBL, STRING_POINTERS.length - 1);
+		exeStrings[STRING_PIXEL] = ""; // not needed
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PIXEL, STRING_POINTERS.length - 1);
 		exeStrings[STRING_MYCHAR] = "MyChar";
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_MYCHAR, STRING_POINTERS.length - 1);
 		exeStrings[STRING_TITLE] = "Title";
@@ -1089,6 +1091,8 @@ public class ExeData {
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_LOADING, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PXM_TAG] = "PXM";
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXM_TAG, STRING_POINTERS.length - 1);
+		exeStrings[STRING_PROFILE_NAME] = "Profile.dat";
+		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_NAME, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PROFILE_HEADER] = NormalProfile.DEFAULT_HEADER;
 		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_HEADER, STRING_POINTERS.length - 1);
 		exeStrings[STRING_PROFILE_FLAGH] = NormalProfile.DEFAULT_FLAGH;

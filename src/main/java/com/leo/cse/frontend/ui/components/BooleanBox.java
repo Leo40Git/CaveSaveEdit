@@ -30,20 +30,20 @@ public class BooleanBox extends Component {
 
 	@Override
 	public void render(Graphics g, Rectangle viewport) {
-		if (hover)
-			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
-		else
-			g.setColor(Main.COLOR_BG);
-		g.fillRect(x, y, getWidth(), getHeight());
 		String t = label;
 		if (labelIsMCI) {
-			t = MCI.get(t);
-			if (label.equals(t)) {
+			t = MCI.getNullable(t);
+			if (t == null) {
 				missingMCI = true;
 				return;
 			} else
 				missingMCI = false;
 		}
+		if (hover)
+			g.setColor(new Color(Main.lineColor.getRed(), Main.lineColor.getGreen(), Main.lineColor.getBlue(), 31));
+		else
+			g.setColor(Main.COLOR_BG);
+		g.fillRect(x, y, getWidth(), getHeight());
 		g.setColor(Main.lineColor);
 		g.setFont(Resources.font);
 		BufferedImage chkImage = (vSup.get() ? Resources.checkboxOn : Resources.checkboxOff);

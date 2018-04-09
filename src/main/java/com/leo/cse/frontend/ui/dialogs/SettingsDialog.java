@@ -23,7 +23,7 @@ public class SettingsDialog extends BaseDialog {
 	private static final byte[] TEST_STRING = new byte[] { (byte) 'T', (byte) 'e', (byte) 's', (byte) 't' };
 
 	public SettingsDialog() {
-		super("Settings", 300, 104);
+		super("Settings", 300, 144);
 		addComponent(new Button("MCI Settings", Resources.icons[9], 4, 4, 292, 17, () -> {
 			SaveEditorPanel.panel.addDialogBox(new MCIDialog());
 		}));
@@ -51,14 +51,20 @@ public class SettingsDialog extends BaseDialog {
 			});
 			return newVal;
 		}));
-		addComponent(new BooleanBox("Autoload game/mod next to profile?", false, 96, 43, () -> {
+		addComponent(new BooleanBox("Autoload game/mod next to profile?", false, 4, 63, () -> {
 			return Config.getBoolean(Config.KEY_AUTOLOAD_EXE, true);
 		}, (Boolean newVal) -> {
 			Config.setBoolean(Config.KEY_AUTOLOAD_EXE, newVal);
 			return newVal;
 		}));
-		addComponent(new Label("Encoding:", 4, 62));
-		addComponent(new StringBox(54, 63, 242, 17, () -> {
+		addComponent(new BooleanBox("Autoload profile on start?", false, 4, 83, () -> {
+			return Config.getBoolean(Config.KEY_AUTOLOAD_PROFILE, true);
+		}, (Boolean newVal) -> {
+			Config.setBoolean(Config.KEY_AUTOLOAD_PROFILE, newVal);
+			return newVal;
+		}));
+		addComponent(new Label("Encoding:", 4, 102));
+		addComponent(new StringBox(54, 103, 242, 17, () -> {
 			return ExeData.getEncoding();
 		}, (String newVal) -> {
 			try {
@@ -75,7 +81,7 @@ public class SettingsDialog extends BaseDialog {
 			}
 			return newVal;
 		}, "encoding"));
-		addComponent(new Button("Wipe Settings", 4, 83, 292, 17, () -> {
+		addComponent(new Button("Wipe Settings", 4, 123, 292, 17, () -> {
 			int sel = JOptionPane.showConfirmDialog(Main.window,
 					"Are you sure you want to wipe all settings?\nThis will restart the editor WITHOUT saving changes!",
 					"Wipe Settings?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);

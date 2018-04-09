@@ -80,7 +80,7 @@ public abstract class Profile {
 		 * @return minimum index of the field (or -1 if {@linkplain #hasIndexes() the
 		 *         field is indexless})
 		 */
-		public default int getMinumumIndex() {
+		public default int getMinimumIndex() {
 			return -1;
 		}
 
@@ -92,6 +92,17 @@ public abstract class Profile {
 		 */
 		public default int getMaximumIndex() {
 			return -1;
+		}
+
+		/**
+		 * Checks if an index is valid.
+		 * 
+		 * @param index
+		 *            index to check
+		 * @return <code>true</code> if index is valid, <code>false</code> otherwise
+		 */
+		public default boolean isValidIndex(int index) {
+			return index >= getMinimumIndex() && index <= getMaximumIndex();
 		}
 
 	}
@@ -394,7 +405,7 @@ public abstract class Profile {
 		ProfileField fieldObj = fields.get(field);
 		if (!fieldObj.hasIndexes())
 			throw new ProfileFieldException("Field " + field + " is not indexed!");
-		return fieldObj.getMinumumIndex();
+		return fieldObj.getMinimumIndex();
 	}
 
 	/**
@@ -455,8 +466,8 @@ public abstract class Profile {
 		assertHasField(field);
 		ProfileField fieldObj = fields.get(field);
 		if (fieldObj.hasIndexes())
-			if (index < fieldObj.getMinumumIndex() || index > fieldObj.getMaximumIndex())
-				throw new ProfileFieldException("Index " + index + " is out of bounds for field!");
+			if (!fieldObj.isValidIndex(index))
+				throw new ProfileFieldException("Index " + index + " is invalid for field!");
 		return fieldObj.getValue(index);
 	}
 
@@ -478,7 +489,7 @@ public abstract class Profile {
 		assertHasField(field);
 		ProfileField fieldObj = fields.get(field);
 		if (fieldObj.hasIndexes())
-			if (index < fieldObj.getMinumumIndex() || index > fieldObj.getMaximumIndex())
+			if (index < fieldObj.getMinimumIndex() || index > fieldObj.getMaximumIndex())
 				throw new ProfileFieldException("Index " + index + " is out of bounds for field " + field + "!");
 		fieldObj.setValue(index, value);
 	}
