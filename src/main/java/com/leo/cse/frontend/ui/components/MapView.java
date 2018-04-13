@@ -107,10 +107,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		lastMap = getMap();
 		drawBackground(sg);
 		sg.translate(-camX, -camY);
-		drawTiles(sg, 1);
+		drawTiles(sg, 0);
 		drawEntities(sg);
 		drawMyChar(sg, DRAWTYPE_NORMAL);
-		drawTiles(sg, 2);
+		drawTiles(sg, 1);
 		drawMyChar(sg, DRAWTYPE_TRANS);
 		if (hover && ignoreClick != 2)
 			drawMyChar(sg, DRAWTYPE_HOVER);

@@ -731,11 +731,27 @@ public class ExeData {
 	 */
 	private static void load0(File base) throws IOException {
 		ExeData.base = base;
-		if (base.getName().endsWith(".tbl")) {
+		String baseExt = base.getName();
+		int dp = baseExt.lastIndexOf('.');
+		if (dp == -1)
+			throw new IOException("Can't load file with no extension as an executable!");
+		baseExt = baseExt.substring(dp + 1);
+		if (baseExt.equals("tbl"))
 			// assume stage.tbl
 			loadPlus();
-			return;
-		}
+		else if (baseExt.equals("exe"))
+			loadVanilla();
+		else
+			throw new IOException("Can't load file with extension \"" + baseExt + "\" as an executable!");
+	}
+
+	/**
+	 * Loads mapdata from an executable.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void loadVanilla() throws IOException {
 		plusMode = false;
 		try {
 			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
@@ -1251,21 +1267,20 @@ public class ExeData {
 		hitboxDat = new byte[4 * calculated_npcs];
 		for (int i = 0; i < hitboxDat.length; i++) {
 			hitboxDat[i] = dBuf.get();
-			if (i % 4 == 0)
+			if (i != 0 && i % 4 == 0)
 				notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_HITBOX, npcId++, calculated_npcs - 1);
 		}
 
 		npcId = 0;
 		// read display box section
-		dBuf = ByteBuffer.allocate(4 * calculated_npcs);
-		dBuf.order(ByteOrder.LITTLE_ENDIAN);
+		dBuf.clear();
 		inChan.read(dBuf);
 		dBuf.flip();
 		displayDat = new byte[4 * calculated_npcs];
 		for (int i = 0; i < displayDat.length; i++) {
 			displayDat[i] = dBuf.get();
-			if (i % 4 == 0)
-				notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DISPLAYBOX, npcId++, calculated_npcs);
+			if (i != 0 && i % 4 == 0)
+				notifyListeners(false, EVENT_NPC_TBL, LOADNAME_NPC_TBL_DISPLAYBOX, npcId++, calculated_npcs - 1);
 		}
 		// finished reading file
 		inChan.close();

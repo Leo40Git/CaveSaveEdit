@@ -54,6 +54,7 @@ import com.leo.cse.frontend.ui.dialogs.NikuEditDialog;
 import com.leo.cse.frontend.ui.dialogs.PlusSlotDialog;
 import com.leo.cse.frontend.ui.dialogs.SettingsDialog;
 import com.leo.cse.frontend.ui.panels.CSPlusPanel;
+import com.leo.cse.frontend.ui.panels.EquipPlusPanel;
 import com.leo.cse.frontend.ui.panels.FlagsPanel;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;
 import com.leo.cse.frontend.ui.panels.InventoryPanel;
@@ -407,16 +408,12 @@ public class SaveEditorPanel extends JPanel
 			return ExeData.isLoaded() && ExeData.doLoadNpc();
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean plus = ExeData.isPlusMode(), var = !plus && MCI.getSpecial("VarHack"),
-				eqp = !var && MCI.getSpecial("EquipPlusHack");
+		boolean plus = ExeData.isPlusMode();
+		boolean var = !plus && MCI.getSpecial("VarHack");
+		boolean eqp = !var && MCI.getSpecial("EquipPlusHack");
 		int tabCount = 5;
-		if (plus || var)
+		if (plus || var || eqp)
 			tabCount++;
-		/// TODO Add Equip+ support
-		/*
-		if (eqp)
-			tabCount++;
-		*/
 		tabs = new EditorPanel[tabCount];
 		tabs[0] = new EditorPanel(EditorTab.GENERAL, new GeneralPanel());
 		tabs[1] = new EditorPanel(EditorTab.INVENTORY, new InventoryPanel());
@@ -425,11 +422,8 @@ public class SaveEditorPanel extends JPanel
 		tabs[4] = new EditorPanel(EditorTab.MAP_FLAGS, new MapFlagsPanel());
 		if (var)
 			tabs[5] = new EditorPanel(EditorTab.VARIABLES, new VariablesPanel());
-		/// TODO Add Equip+ support
-		/*
 		else if (eqp)
 			tabs[5] = new EditorPanel(EditorTab.EQUIP_PLUS, new EquipPlusPanel());
-		*/
 		else if (plus)
 			tabs[5] = new EditorPanel(EditorTab.CS_PLUS, new CSPlusPanel());
 		if (currentTab > tabCount)

@@ -23,6 +23,9 @@ import com.leo.cse.backend.tsc.TSCFile;
  */
 public class MapInfo {
 
+	/**
+	 * Abstract map data.
+	 */
 	private Mapdata d;
 	/**
 	 * Width of the map, in tiles.
@@ -104,26 +107,29 @@ public class MapInfo {
 		scrollType = d.getScrollType();
 		mapName = d.getMapName();
 		File directory = ExeData.getDataDir();
-		setupFiles(d, directory);
+		setupFiles(directory);
 		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
 		String pxa = ExeData.getExeString(ExeData.STRING_PXA_EXT);
 		pxaFile = new File(String.format(pxa, directory + "/" + stage, d.getTileset()));
 	}
 
+	/**
+	 * Loads the PXA file for this map.
+	 */
 	public void loadPXA() {
 		ExeData.addPxa(pxaFile);
 	}
 
 	/**
-	 * Loads image resources for a map.
+	 * Locates image resources for this map.
 	 *
 	 * @param d
 	 *            source map data
 	 * @param directory
 	 *            data directory
 	 */
-	private void setupFiles(Mapdata d, File directory) {
-		// load each image resource
+	private void setupFiles(File directory) {
+		// locate each image resource
 		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
 		String npc = ExeData.getExeString(ExeData.STRING_NPC_FOLDER);
 		String prt = ExeData.getExeString(ExeData.STRING_PRT_PREFIX);
@@ -139,6 +145,9 @@ public class MapInfo {
 				ResUtils.getGraphicsFile(directory.toString(), String.format(npcP, npc, d.getNpcSheet2())));
 	}
 
+	/**
+	 * Loads image resources for this map.
+	 */
 	public void loadImages() {
 		ExeData.addImage(tileset);
 		ExeData.addImage(bgImage);
@@ -149,10 +158,7 @@ public class MapInfo {
 	}
 
 	/**
-	 * Loads a map.
-	 *
-	 * @param d
-	 *            source map data
+	 * Loads this map's layout file.
 	 */
 	public void loadMap() {
 		// load the map data
@@ -196,14 +202,14 @@ public class MapInfo {
 			mapY = 16;
 			mapBuf = ByteBuffer.allocate(mapY * mapX);
 		}
-		map = new int[4][mapY][mapX];
+		map = new int[2][mapY][mapX];
 		for (int y = 0; y < mapY; y++)
 			for (int x = 0; x < mapX; x++) {
 				int tile = 0xFF & mapBuf.get();
 				if (calcPxa(tile) > 0x20)
-					map[2][y][x] = tile;
-				else
 					map[1][y][x] = tile;
+				else
+					map[0][y][x] = tile;
 			}
 	}
 
