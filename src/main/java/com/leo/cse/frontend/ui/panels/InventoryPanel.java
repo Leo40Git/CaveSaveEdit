@@ -6,14 +6,14 @@ import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.IntegerBox;
-import com.leo.cse.frontend.ui.components.ItemBox;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.LongBox;
-import com.leo.cse.frontend.ui.components.RadioBoxes;
-import com.leo.cse.frontend.ui.components.ShortBox;
-import com.leo.cse.frontend.ui.components.WeaponBox;
+import com.leo.cse.frontend.ui.components.box.BooleanBox;
+import com.leo.cse.frontend.ui.components.box.IntegerBox;
+import com.leo.cse.frontend.ui.components.box.ItemBox;
+import com.leo.cse.frontend.ui.components.box.LongBox;
+import com.leo.cse.frontend.ui.components.box.RadioBoxes;
+import com.leo.cse.frontend.ui.components.box.ShortBox;
+import com.leo.cse.frontend.ui.components.box.WeaponBox;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class InventoryPanel extends Panel {
 

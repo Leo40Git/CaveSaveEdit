@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.box;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,6 +11,7 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.ui.components.Component;
 
 public class BooleanBox extends Component {
 

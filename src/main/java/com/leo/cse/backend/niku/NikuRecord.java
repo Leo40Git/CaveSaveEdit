@@ -323,14 +323,23 @@ public class NikuRecord {
 	}
 
 	/**
-	 * Gets
+	 * Gets the record's current value.
 	 * 
-	 * @return
+	 * @return value
 	 */
 	public static int getValue() {
 		return value;
 	}
 
+	/**
+	 * Sets the record's value.
+	 * 
+	 * @param value
+	 *            new value
+	 * @param addUndo
+	 *            <code>true</code> to add change to the
+	 *            {@linkplain #undoMan undo manager}, <code>false</code> otherwise
+	 */
 	private static void setValue(int value, boolean addUndo) {
 		if (value < 0)
 			value = 0;
@@ -344,22 +353,44 @@ public class NikuRecord {
 		NikuRecord.value = value;
 	}
 
+	/**
+	 * Sets the record's value.
+	 * @param value new value
+	 */
 	public static void setValue(int value) {
 		setValue(value, true);
 	}
 
+	/**
+	 * Gets the tenths of seconds.
+	 * @return tenths of seconds
+	 */
 	public static int getTenths() {
 		return (value / 5) % 10;
 	}
 
+	/**
+	 * Gets the seconds.
+	 * @return seconds
+	 */
 	public static int getSeconds() {
 		return (value / 50) % 60;
 	}
 
+	/**
+	 * Gets the minutes.
+	 * @return minutes
+	 */
 	public static int getMinutes() {
 		return value / 3000;
 	}
 
+	/**
+	 * Sets the time.
+	 * @param tens tenths of seconds
+	 * @param seconds seconds
+	 * @param minutes minutes
+	 */
 	public static void setTime(int tens, int seconds, int minutes) {
 		int value = tens * 5;
 		value += seconds * 50;
@@ -367,14 +398,26 @@ public class NikuRecord {
 		setValue(value);
 	}
 
+	/**
+	 * Sets the tenths of seconds.
+	 * @param tens tenths of seconds
+	 */
 	public static void setTenths(int tens) {
 		setTime(tens, getSeconds(), getMinutes());
 	}
 
+	/**
+	 * Sets the seconds.
+	 * @param seconds seconds
+	 */
 	public static void setSeconds(int seconds) {
 		setTime(getTenths(), seconds, getMinutes());
 	}
 
+	/**
+	 * Sets the minutes.
+	 * @param minutes minutes
+	 */
 	public static void setMinutes(int minutes) {
 		setTime(getTenths(), getSeconds(), minutes);
 	}

@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.list;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,75 +6,58 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
+import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.exe.MapInfo;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.ui.components.Component;
 
-public class FlagList extends Component {
+public class MapFlagList extends Component {
 
-	public static final String DESC_NONE = "(no description)";
-	public static final String DESC_ENGINE = "(engine flag)";
-	public static final String DESC_MIM = "(<MIM data)";
-	public static final String DESC_VAR = "(<VAR data)";
-	public static final String DESC_PHY = "(<PHY data)";
-	public static final String DESC_BUY = "(<BUY data)";
+	public static final String DESC_NONE = "(unknown map)";
 
-	public static String getFlagDesc(int id) {
-		if (id <= 10)
-			return DESC_ENGINE;
-		if (MCI.getSpecial("VarHack")) {
-			if (id >= 6000 && id <= 8000)
-				return DESC_VAR;
-			if (MCI.getSpecial("PhysVarHack"))
-				if (id >= 5632 && id <= 5888)
-					return DESC_PHY;
-		} else if (MCI.getSpecial("MimHack")) {
-			if (id >= 7968 && id <= 7993)
-				return DESC_MIM;
-		} else if (MCI.getSpecial("BuyHack")) {
-			if (id >= 7968 && id <= 7993)
-				return DESC_BUY;
-		}
-		String ret = MCI.getNullable("Flag", id);
-		return (ret == null ? DESC_NONE : ret);
+	public static String getMapFlagName(int id) {
+		String mapName = null;
+		if (ExeData.isLoaded()) {
+			if (isMapFlagValid(id)) {
+				MapInfo mi = ExeData.getMapInfo(id);
+				mapName = mi.getFileName() + " - " + mi.getMapName();
+			}
+		} else
+			mapName = MCI.get("Map", id);
+		if (mapName == null)
+			return DESC_NONE;
+		return mapName;
 	}
 
-	public static boolean isFlagValid(int id) {
-		if (id <= 10)
+	public static boolean isMapFlagValid(int id) {
+		if (id > 127)
 			return false;
-		if (MCI.getSpecial("VarHack")) {
-			boolean ret = (id < 5999 || id > 7999);
-			if (MCI.getSpecial("PhysVarHack"))
-				ret &= (id < 5632 || id > 5888);
-			return ret;
-		} else if (MCI.getSpecial("MimHack")) {
-			return (id < 7968 || id > 7993);
-		} else if (MCI.getSpecial("BuyHack")) {
-			return (id < 7968 || id > 7999);
+		if (ExeData.isLoaded()) {
+			if (ExeData.getMapInfoCount() - 1 < id)
+				return false;
+		} else {
+			if (MCI.getNullable("Map", id) == null)
+				return false;
 		}
-		if (id == MCI.getInteger("Flag.SaveID", 431))
-			return false;
 		return true;
 	}
 
-	protected Supplier<Boolean> huSup;
-	protected Supplier<Boolean> hsSup;
-
-	private static class Flag {
+	private static class MapFlag {
 		private int id;
 		private boolean hover;
 
-		public Flag(int id, boolean hover) {
+		public MapFlag(int id, boolean hover) {
 			this.id = id;
 			this.hover = hover;
 		}
 
-		public Flag(int id) {
+		public MapFlag(int id) {
 			this(id, false);
 		}
 
@@ -91,7 +74,7 @@ public class FlagList extends Component {
 		}
 	}
 
-	protected List<Flag> shownFlags;
+	protected List<MapFlag> shownFlags;
 
 	protected void createShownFlags() {
 		if (shownFlags == null)
@@ -101,19 +84,17 @@ public class FlagList extends Component {
 	public void calculateShownFlags() {
 		createShownFlags();
 		shownFlags.clear();
-		for (int i = 0; i < 8000; i++)
-			if ((!huSup.get() || !DESC_NONE.equals(getFlagDesc(i))) && (!hsSup.get() || isFlagValid(i)))
-				shownFlags.add(new Flag(i));
+		for (int i = 0; i < 127; i++)
+			if (isMapFlagValid(i))
+				shownFlags.add(new MapFlag(i));
 	}
 
 	public void recalculateHeight() {
 		height = (shownFlags.size() + 1) * 24;
 	}
 
-	public FlagList(Supplier<Boolean> huSup, Supplier<Boolean> hsSup) {
-		super("FlagList", 0, 0, Main.WINDOW_SIZE.width, 0);
-		this.huSup = huSup;
-		this.hsSup = hsSup;
+	public MapFlagList() {
+		super("MapFlagList", 0, 0, Main.WINDOW_SIZE.width, 0);
 		calculateShownFlags();
 	}
 
@@ -127,11 +108,11 @@ public class FlagList extends Component {
 		g.setFont(Resources.font);
 		g.drawLine(x + 20, 0, x + 20, height);
 		FrontUtils.drawString(g, "ID", x + 24, 2);
-		g.drawLine(x + 50, 0, x + 50, height);
-		FrontUtils.drawString(g, "Description", x + 54, 2);
+		g.drawLine(x + 44, 0, x + 44, height);
+		FrontUtils.drawString(g, "Map Name", x + 48, 2);
 		int y = 28;
 		g.drawLine(0, y - 4, viewport.width, y - 4);
-		for (Flag flag : shownFlags) {
+		for (MapFlag flag : shownFlags) {
 			if (y + 16 < viewport.getY()) {
 				y += 24;
 				continue;
@@ -143,13 +124,13 @@ public class FlagList extends Component {
 				g.setColor(Main.COLOR_BG);
 			g.fillRect(x, y, 16, 16);
 			BufferedImage chkImage = Resources.checkboxDisabled;
-			if (isFlagValid(id))
-				chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id) ? Resources.checkboxOn
+			if (isMapFlagValid(id))
+				chkImage = ((boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id) ? Resources.checkboxOn
 						: Resources.checkboxOff);
 			g.drawImage(chkImage, x, y, null);
 			g.setColor(Main.lineColor);
-			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 4), x + 24, y - 2);
-			FrontUtils.drawString(g, getFlagDesc(id), x + 54, y - 2);
+			FrontUtils.drawString(g, FrontUtils.padLeft(Integer.toUnsignedString(id), "0", 3), x + 24, y - 2);
+			FrontUtils.drawString(g, getMapFlagName(id), x + 48, y - 2);
 			y += 24;
 			if (y > viewport.getY() + viewport.getHeight())
 				break;
@@ -163,15 +144,15 @@ public class FlagList extends Component {
 		recalculateHeight();
 		final int fx = 4;
 		int fy = 28;
-		for (Flag flag : shownFlags) {
+		for (MapFlag flag : shownFlags) {
 			int id = flag.getId();
-			if (!isFlagValid(id)) {
+			if (!isMapFlagValid(id)) {
 				fy += 24;
 				continue;
 			}
 			if (FrontUtils.pointInRectangle(x, y, fx, fy, 16, 16)) {
-				boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, id);
-				ProfileManager.setField(NormalProfile.FIELD_FLAGS, id, !value);
+				boolean value = (boolean) ProfileManager.getField(NormalProfile.FIELD_MAP_FLAGS, id);
+				ProfileManager.setField(NormalProfile.FIELD_MAP_FLAGS, id, !value);
 				break;
 			}
 			fy += 24;
@@ -185,7 +166,7 @@ public class FlagList extends Component {
 		recalculateHeight();
 		final int fx = 4;
 		int fy = 28;
-		for (Flag flag : shownFlags) {
+		for (MapFlag flag : shownFlags) {
 			boolean fHover = false;
 			if (hover && FrontUtils.pointInRectangle(x, y - 18, fx, fy, 16, 16))
 				fHover = true;

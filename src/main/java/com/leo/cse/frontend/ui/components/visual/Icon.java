@@ -1,9 +1,11 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.visual;
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
+import com.leo.cse.frontend.ui.components.Component;
 
 public class Icon extends Component {
 

@@ -11,9 +11,9 @@ import com.leo.cse.backend.niku.NikuRecord;
 import com.leo.cse.frontend.Config;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.ui.components.Button;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.NikuEdit;
+import com.leo.cse.frontend.ui.components.box.Button;
+import com.leo.cse.frontend.ui.components.special.NikuEdit;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class NikuEditDialog extends BaseDialog {
 

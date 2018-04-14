@@ -93,6 +93,11 @@ public class MapInfo {
 	 * @see PxeEntry
 	 */
 	private LinkedList<PxeEntry> pxeList;
+	/**
+	 * Map's TSC script.
+	 * 
+	 * @see TSCFile
+	 */
 	private TSCFile tscFile;
 
 	/**
@@ -234,10 +239,7 @@ public class MapInfo {
 	}
 
 	/**
-	 * Loads the entities of a map.
-	 *
-	 * @param d
-	 *            source map data
+	 * Loads this map's entities.
 	 */
 	public void loadEntities() {
 		pxeList = new LinkedList<>();
@@ -283,6 +285,9 @@ public class MapInfo {
 		}
 	}
 
+	/**
+	 * Loads this map's TSC file.
+	 */
 	public void loadTSC() {
 		File directory = ExeData.getDataDir();
 		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);

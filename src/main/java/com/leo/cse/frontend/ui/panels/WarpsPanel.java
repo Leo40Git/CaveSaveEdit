@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
-import com.leo.cse.frontend.ui.components.DefineBox;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.WarpBox;
+import com.leo.cse.frontend.ui.components.box.DefineBox;
+import com.leo.cse.frontend.ui.components.box.WarpBox;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class WarpsPanel extends Panel {
 

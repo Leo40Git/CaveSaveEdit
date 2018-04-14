@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.box;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,17 +12,17 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
-public class WarpBox extends DefineBox {
+public class WeaponBox extends DefineBox {
 
-	public static final BufferedImage WARP_BLANK = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
+	public static BufferedImage armsBlank;
 
-	public WarpBox(int x, int y, int width, int height, int warpId) {
-		super(x, y, width, height, () -> {
-			return (Integer) ProfileManager.getField(NormalProfile.FIELD_WARP_ID, warpId);
+	public WeaponBox(int x, int y, int weaponId) {
+		super(x, y, 120, 48, () -> {
+			return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_ID, weaponId);
 		}, (Integer t) -> {
-			ProfileManager.setField(NormalProfile.FIELD_WARP_ID, warpId, t);
+			ProfileManager.setField(NormalProfile.FIELD_WEAPON_ID, weaponId, t);
 			return t;
-		}, "Warp", "warp " + warpId);
+		}, "Weapon", "weapon " + (weaponId + 1));
 	}
 
 	@Override
@@ -41,26 +41,30 @@ public class WarpBox extends DefineBox {
 			FrontUtils.drawCheckeredGrid(g, x + 1, y + 1, width - 1, height - 2);
 		}
 		g.setColor(Main.lineColor);
-		int warp = vSup.get();
-		FrontUtils.drawStringCentered(g, warp + " - " + MCI.get(type, warp), x + width / 2, y + 31, false, !bEnabled);
-		if (warp == 0)
+		int wep = vSup.get();
+		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 31, false, !bEnabled);
+		if (wep == 0)
 			return;
 		if (!ExeData.isLoaded())
 			return;
-		g.drawImage(ExeData.getImage(ExeData.getStageImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33,
-				64 * warp, 0, 64 * (warp + 1), 32, null);
+		int ystart = MCI.getInteger("Game.ArmsImageYStart", 0), size = MCI.getInteger("Game.ArmsImageSize", 32);
+		g.drawImage(ExeData.getImage(ExeData.getArmsImage()), x + width / 2 - size / 2, y - (size - 32) + 1,
+				x + width / 2 + size / 2, y - (size - 32) + size + 1, wep * size, ystart, (wep + 1) * size,
+				ystart + size, null);
 	}
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
+		int wepSize = MCI.getInteger("Game.ArmsImageSize", 32);
+		armsBlank = new BufferedImage(wepSize, wepSize, BufferedImage.TYPE_INT_ARGB);
 		if (ExeData.isLoaded()) {
 			if (iSup == null)
 				iSup = t -> {
 					if (t == 0)
-						return WARP_BLANK;
-					int sourceX = (t % 8) * 64;
-					int sourceY = (t / 8) * 32;
-					return ExeData.getImage(ExeData.getStageImage()).getSubimage(sourceX, sourceY, 64, 32);
+						return armsBlank;
+					int ystart = MCI.getInteger("Game.ArmsImageYStart", 0),
+							size = MCI.getInteger("Game.ArmsImageSize", 32);
+					return ExeData.getImage(ExeData.getArmsImage()).getSubimage(t * size, ystart, size, size);
 				};
 		} else
 			iSup = null;

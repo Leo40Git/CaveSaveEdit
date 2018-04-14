@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.special;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -24,6 +24,11 @@ import com.leo.cse.frontend.MCI.EntityExtras;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
+import com.leo.cse.frontend.ui.components.Component;
+import com.leo.cse.frontend.ui.components.box.Button;
+import com.leo.cse.frontend.ui.components.box.InputBox;
+import com.leo.cse.frontend.ui.components.visual.Label;
+import com.leo.cse.frontend.ui.components.visual.Line;
 import com.leo.cse.frontend.ui.dialogs.BaseDialog;
 import com.leo.cse.frontend.ui.dialogs.ConfirmDialog;
 import com.leo.cse.frontend.ui.panels.GeneralPanel;

@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.special;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,6 +12,8 @@ import com.leo.cse.backend.niku.NikuRecord;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
+import com.leo.cse.frontend.ui.components.Component;
+import com.leo.cse.frontend.ui.components.IScrollable;
 
 public class NikuEdit extends Component implements IScrollable {
 

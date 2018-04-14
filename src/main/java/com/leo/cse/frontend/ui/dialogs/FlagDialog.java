@@ -2,10 +2,10 @@ package com.leo.cse.frontend.ui.dialogs;
 
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
-import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.FlagList;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.ShortBox;
+import com.leo.cse.frontend.ui.components.box.BooleanBox;
+import com.leo.cse.frontend.ui.components.box.ShortBox;
+import com.leo.cse.frontend.ui.components.list.FlagList;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class FlagDialog extends BaseDialog {
 

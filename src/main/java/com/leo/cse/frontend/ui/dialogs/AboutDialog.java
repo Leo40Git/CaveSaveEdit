@@ -2,9 +2,9 @@ package com.leo.cse.frontend.ui.dialogs;
 
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
-import com.leo.cse.frontend.ui.components.Button;
-import com.leo.cse.frontend.ui.components.Icon;
-import com.leo.cse.frontend.ui.components.Label;
+import com.leo.cse.frontend.ui.components.box.Button;
+import com.leo.cse.frontend.ui.components.visual.Icon;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class AboutDialog extends BaseDialog {
 

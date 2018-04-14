@@ -2,8 +2,8 @@ package com.leo.cse.frontend.ui.dialogs;
 
 import java.util.function.Consumer;
 
-import com.leo.cse.frontend.ui.components.Button;
-import com.leo.cse.frontend.ui.components.Label;
+import com.leo.cse.frontend.ui.components.box.Button;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class ConfirmDialog extends BaseDialog {
 

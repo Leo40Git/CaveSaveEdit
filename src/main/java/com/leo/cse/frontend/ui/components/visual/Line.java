@@ -1,9 +1,10 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.visual;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.ui.components.Component;
 
 public class Line extends Component {
 

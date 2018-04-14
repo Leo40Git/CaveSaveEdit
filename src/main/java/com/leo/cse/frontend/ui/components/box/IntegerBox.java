@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.box;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -11,14 +11,14 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 
-public class ShortBox extends InputBox {
+public class IntegerBox extends InputBox {
 
-	private Supplier<Short> vSup;
-	private Function<Short, Short> update;
-	private String description;
-	private int padLength;
+	protected Supplier<Integer> vSup;
+	protected Function<Integer, Integer> update;
+	protected String description;
+	protected int padLength;
 
-	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update,
+	public IntegerBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
 			String description, int padLength) {
 		super(description, x, y, width, height);
 		this.vSup = vSup;
@@ -27,7 +27,7 @@ public class ShortBox extends InputBox {
 		this.padLength = padLength;
 	}
 
-	public ShortBox(int x, int y, int width, int height, Supplier<Short> vSup, Function<Short, Short> update,
+	public IntegerBox(int x, int y, int width, int height, Supplier<Integer> vSup, Function<Integer, Integer> update,
 			String description) {
 		this(x, y, width, height, vSup, update, description, -1);
 	}
@@ -35,7 +35,7 @@ public class ShortBox extends InputBox {
 	@Override
 	public void render(Graphics g, Rectangle viewport) {
 		super.render(g, viewport);
-		String str = Short.toString(vSup.get());
+		String str = Integer.toUnsignedString(vSup.get());
 		if (padLength > 0)
 			str = FrontUtils.padLeft(str, "0", padLength);
 		g.setFont(Resources.font);
@@ -46,14 +46,15 @@ public class ShortBox extends InputBox {
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!enabled.get())
 			return;
-		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":", vSup.get());
+		String nVal = JOptionPane.showInputDialog(Main.window, "Enter new value for " + description + ":",
+				Integer.toUnsignedString(vSup.get()));
 		if (nVal == null)
 			return;
 		try {
-			update.apply(Short.parseShort(nVal));
+			update.apply(Integer.parseUnsignedInt(nVal));
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(Main.window, "Input was not a valid number!", "Error while parsing input!",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(Main.window, "Input \"" + nVal + "\" was not a valid number!",
+					"Error while parsing input!", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

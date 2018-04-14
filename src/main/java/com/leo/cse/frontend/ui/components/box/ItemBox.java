@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.box;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,17 +12,15 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
-public class WeaponBox extends DefineBox {
+public class ItemBox extends DefineBox {
 
-	public static BufferedImage armsBlank;
+	public static final BufferedImage ITEM_BLANK = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
 
-	public WeaponBox(int x, int y, int weaponId) {
-		super(x, y, 120, 48, () -> {
-			return (Integer) ProfileManager.getField(NormalProfile.FIELD_WEAPON_ID, weaponId);
-		}, (Integer t) -> {
-			ProfileManager.setField(NormalProfile.FIELD_WEAPON_ID, weaponId, t);
+	public ItemBox(int x, int y, int width, int height, int itemId) {
+		super(x, y, width, height, () -> (Integer) ProfileManager.getField(NormalProfile.FIELD_ITEMS, itemId), t -> {
+			ProfileManager.setField(NormalProfile.FIELD_ITEMS, itemId, t);
 			return t;
-		}, "Weapon", "weapon " + (weaponId + 1));
+		}, "Item", "item " + (itemId + 1));
 	}
 
 	@Override
@@ -41,30 +39,28 @@ public class WeaponBox extends DefineBox {
 			FrontUtils.drawCheckeredGrid(g, x + 1, y + 1, width - 1, height - 2);
 		}
 		g.setColor(Main.lineColor);
-		int wep = vSup.get();
-		FrontUtils.drawStringCentered(g, wep + " - " + MCI.get(type, wep), x + width / 2, y + 31, false, !bEnabled);
-		if (wep == 0)
+		int item = vSup.get();
+		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 31, false, !bEnabled);
+		if (item == 0)
 			return;
 		if (!ExeData.isLoaded())
 			return;
-		int ystart = MCI.getInteger("Game.ArmsImageYStart", 0), size = MCI.getInteger("Game.ArmsImageSize", 32);
-		g.drawImage(ExeData.getImage(ExeData.getArmsImage()), x + width / 2 - size / 2, y - (size - 32) + 1,
-				x + width / 2 + size / 2, y - (size - 32) + size + 1, wep * size, ystart, (wep + 1) * size,
-				ystart + size, null);
+		int sourceX = (item % 8) * 64;
+		int sourceY = (item / 8) * 32;
+		g.drawImage(ExeData.getImage(ExeData.getItemImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33,
+				sourceX, sourceY, sourceX + 64, sourceY + 32, null);
 	}
 
 	@Override
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
-		int wepSize = MCI.getInteger("Game.ArmsImageSize", 32);
-		armsBlank = new BufferedImage(wepSize, wepSize, BufferedImage.TYPE_INT_ARGB);
 		if (ExeData.isLoaded()) {
 			if (iSup == null)
 				iSup = t -> {
 					if (t == 0)
-						return armsBlank;
-					int ystart = MCI.getInteger("Game.ArmsImageYStart", 0),
-							size = MCI.getInteger("Game.ArmsImageSize", 32);
-					return ExeData.getImage(ExeData.getArmsImage()).getSubimage(t * size, ystart, size, size);
+						return ITEM_BLANK;
+					int sourceX = (t % 8) * 64;
+					int sourceY = (t / 8) * 32;
+					return ExeData.getImage(ExeData.getItemImage()).getSubimage(sourceX, sourceY, 64, 32);
 				};
 		} else
 			iSup = null;

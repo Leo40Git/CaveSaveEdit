@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.special;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -25,6 +25,8 @@ import com.leo.cse.frontend.MCI.EntityExtras;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
+import com.leo.cse.frontend.ui.components.Component;
+import com.leo.cse.frontend.ui.components.IDraggable;
 
 public class MapView extends Component implements IDraggable, ProfileListener {
 
@@ -98,10 +100,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		setWidth = tileset.getWidth() / 32;
 		if (playerPos == null)
 			updatePlayerPos();
-		BufferedImage surf = new BufferedImage(640, height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage surf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D sg = (Graphics2D) surf.getGraphics();
 		sg.setColor(COLOR_NULL);
-		sg.fillRect(0, 0, 640, height);
+		sg.fillRect(0, 0, width, height);
 		if (getMap() != lastMap || ignoreClick == 0)
 			updateCamCoords();
 		lastMap = getMap();
@@ -260,7 +262,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		dir = ((Integer) ProfileManager.getField(NormalProfile.FIELD_DIRECTION) == 2 ? 1 : 0);
 		if (MCI.getSpecial("VarHack"))
 			costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_VARIABLES, 6);
-		if (MCI.getSpecial("MimHack"))
+		else if (MCI.getSpecial("MimHack"))
 			costume = (Integer) ProfileManager.getField(NormalProfile.FIELD_MIM_COSTUME);
 		else {
 			costume = ((Boolean) ProfileManager.getField(NormalProfile.FIELD_EQUIPS, 6) ? 1 : 0);

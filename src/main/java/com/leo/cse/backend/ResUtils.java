@@ -148,7 +148,9 @@ public class ResUtils {
 			System.out.println("getBaseFolder: currentLoc == null");
 			return null;
 		}
-
+		File curLocParent = currentLoc.getParentFile();
+		if (curLocParent != null && curLocParent.getName().equals("base"))
+			return curLocParent;
 		while (!currentLoc.getName().equals("mod")) {
 			place = "/" + currentLoc.getName() + place;
 			if (currentLoc.getParentFile() == null) {

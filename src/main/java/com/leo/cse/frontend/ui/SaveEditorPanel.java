@@ -1,6 +1,7 @@
 package com.leo.cse.frontend.ui;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -16,6 +17,8 @@ import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,6 +34,7 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
 import com.leo.cse.backend.exe.MapInfo;
@@ -699,20 +703,56 @@ public class SaveEditorPanel extends JPanel
 
 	private void runExe() {
 		if (ExeData.isPlusMode()) {
-			String path = System.getenv("programfiles(x86)");
-			if (path == null) {
-				path = System.getenv("programfiles");
-			}
-			try {
-				Runtime.getRuntime().exec(path + "/Steam/Steam.exe -applaunch 200900");
-			} catch (IOException e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Could not run game! The following exception occured:\n" + e,
-						"Could not run game", JOptionPane.ERROR_MESSAGE);
+			Runtime r = Runtime.getRuntime();
+			File mainDir = ResUtils.getBaseFolder(ExeData.getBase()).getParentFile().getParentFile();
+			File run = new File(mainDir + "/run.bat");
+			if (run.exists()) {
+				// launch script, run it
+				System.out.print("Attempting to run launch script at: " + run.getAbsolutePath());
+				try {
+					r.exec("\"" + run.getAbsolutePath() + "\"");
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, "Could not run game! The following exception occured:\n" + e1,
+							"Could not run game", JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				File api = new File(mainDir + "/steam_api.dll");
+				if (api.exists()) {
+					System.out.println("Steamworks API detected, launching via Steam browser protocol");
+					URI steamSite = null;
+					try {
+						steamSite = new URI("steam://run/200900");
+					} catch (URISyntaxException e1) {
+						e1.printStackTrace();
+					}
+					if (Desktop.isDesktopSupported())
+						try {
+							Desktop.getDesktop().browse(steamSite);
+						} catch (IOException e) {
+							System.out.println("Browse to steam site failed: I/O error");
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(null, "Failed to launch game via Steam...",
+									"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
+						}
+					else
+						JOptionPane.showMessageDialog(null, "Can't launch game via Steam!",
+								"Operation not supported...", JOptionPane.ERROR_MESSAGE);
+				} else {
+					System.out.println("Directly launching EXE: " + mainDir.getAbsolutePath() + "/CaveStory+.exe");
+					try {
+						r.exec("\"" + mainDir + "/CaveStory+.exe\"");
+					} catch (IOException e) {
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(this,
+								"Could not run game! The following exception occured:\n" + e, "Could not run game",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 		} else {
 			try {
-				Runtime.getRuntime().exec(ExeData.getBase().getAbsolutePath());
+				Runtime.getRuntime().exec("\"" + ExeData.getBase().getAbsolutePath() + "\"");
 			} catch (IOException e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Could not run game! The following exception occured:\n" + e,

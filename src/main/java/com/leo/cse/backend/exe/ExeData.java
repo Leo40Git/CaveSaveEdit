@@ -683,6 +683,10 @@ public class ExeData {
 	 * "Loading" graphics file.
 	 */
 	private static File loading;
+	/**
+	 * CS+ EXCLUSIVE - "UI" graphics file.
+	 */
+	private static File ui;
 
 	/**
 	 * Loads an executable.
@@ -746,7 +750,7 @@ public class ExeData {
 	}
 
 	/**
-	 * Loads mapdata from an executable.
+	 * Loads an executable as a mod.
 	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
@@ -781,7 +785,7 @@ public class ExeData {
 	}
 
 	/**
-	 * Loads mapdata from a stage.tbl file.
+	 * Loads a stage.tbl file as a mod.
 	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
@@ -804,6 +808,7 @@ public class ExeData {
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
 			loadMapInfo();
 			loadGraphics();
+			loadGraphicsPlus();
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
 		} catch (Exception e) {
 			loaded = false;
@@ -1023,6 +1028,19 @@ public class ExeData {
 	}
 
 	/**
+	 * Sets an EXE string and notifies listeners.
+	 * 
+	 * @param i
+	 *            index
+	 * @param s
+	 *            value
+	 */
+	private static void setExeString(int i, String s) {
+		exeStrings[i] = s;
+		notifyListeners(false, EVENT_EXE_STRING, null, i, exeStrings.length - 1);
+	}
+
+	/**
 	 * Loads strings from the executable.
 	 *
 	 * @throws IOException
@@ -1050,12 +1068,11 @@ public class ExeData {
 			inChan.read(uBuf);
 			uBuf.flip();
 			uBuf.get(buffer);
+			uBuf.clear();
 			String str = StrTools.CString(buffer, encoding);
 			// backslashes are Windows-only, so replace them with forward slashes
 			str = str.replaceAll("\\\\", "/");
-			exeStrings[i] = str;
-			uBuf.clear();
-			notifyListeners(false, EVENT_EXE_STRING, null, i, STRING_POINTERS.length - 1);
+			setExeString(i, str);
 		}
 		inStream.close();
 	}
@@ -1065,74 +1082,40 @@ public class ExeData {
 	 */
 	private static void initExeStringsPlus() {
 		exeStrings = new String[STRING_POINTERS.length];
-		exeStrings[STRING_ARMSITEM] = "ArmsItem.tsc";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ARMSITEM, STRING_POINTERS.length - 1);
-		exeStrings[STRING_IMG_EXT] = "%s/%s.bmp";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_IMG_EXT, STRING_POINTERS.length - 1);
-		exeStrings[STRING_CREDIT] = "Credit.tsc";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_CREDIT, STRING_POINTERS.length - 1);
-		exeStrings[STRING_NPC_TBL] = "npc.tbl";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPC_TBL, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PIXEL] = ""; // not needed
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PIXEL, STRING_POINTERS.length - 1);
-		exeStrings[STRING_MYCHAR] = "MyChar";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_MYCHAR, STRING_POINTERS.length - 1);
-		exeStrings[STRING_TITLE] = "Title";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_TITLE, STRING_POINTERS.length - 1);
-		exeStrings[STRING_ARMSIMAGE] = "ArmsImage";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ARMSIMAGE, STRING_POINTERS.length - 1);
-		exeStrings[STRING_ARMS] = "Arms";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ARMS, STRING_POINTERS.length - 1);
-		exeStrings[STRING_ITEMIMAGE] = "ItemImage";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_ITEMIMAGE, STRING_POINTERS.length - 1);
-		exeStrings[STRING_STAGEIMAGE] = "StageImage";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_STAGEIMAGE, STRING_POINTERS.length - 1);
-		exeStrings[STRING_NPCSYM] = "Npc/NpcSym";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPCSYM, STRING_POINTERS.length - 1);
-		exeStrings[STRING_NPCREGU] = "Npc/NpcRegu";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPCREGU, STRING_POINTERS.length - 1);
-		exeStrings[STRING_TEXTBOX] = "TextBox";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_TEXTBOX, STRING_POINTERS.length - 1);
-		exeStrings[STRING_CARET] = "Caret";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_CARET, STRING_POINTERS.length - 1);
-		exeStrings[STRING_BULLET] = "Bullet";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_BULLET, STRING_POINTERS.length - 1);
-		exeStrings[STRING_FACE] = "Face";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_FACE, STRING_POINTERS.length - 1);
-		exeStrings[STRING_FADE] = "Fade";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_FADE, STRING_POINTERS.length - 1);
-		exeStrings[STRING_DATA_FOLDER] = ""; // not needed
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_DATA_FOLDER, STRING_POINTERS.length - 1);
-		exeStrings[STRING_LOADING] = "Loading";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_LOADING, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PXM_TAG] = "PXM";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXM_TAG, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PROFILE_NAME] = "Profile.dat";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_NAME, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PROFILE_HEADER] = NormalProfile.DEFAULT_HEADER;
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_HEADER, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PROFILE_FLAGH] = NormalProfile.DEFAULT_FLAGH;
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PROFILE_FLAGH, STRING_POINTERS.length - 1);
-		exeStrings[STRING_STAGESELECT] = "StageSelect.tsc";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_STAGESELECT, STRING_POINTERS.length - 1);
-		exeStrings[STRING_STAGE_FOLDER] = "Stage";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_STAGE_FOLDER, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PRT_PREFIX] = "%s/Prt%s";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PRT_PREFIX, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PXA_EXT] = "%s/%s.pxa";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXA_EXT, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PXM_EXT] = "%s/%s.pxm";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXM_EXT, STRING_POINTERS.length - 1);
-		exeStrings[STRING_PXE_EXT] = "%s/%s.pxe";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_PXE_EXT, STRING_POINTERS.length - 1);
-		exeStrings[STRING_TSC_EXT] = "%s/%s.tsc";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_TSC_EXT, STRING_POINTERS.length - 1);
-		exeStrings[STRING_NPC_FOLDER] = "Npc";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPC_FOLDER, STRING_POINTERS.length - 1);
-		exeStrings[STRING_NPC_PREFIX] = "%s/Npc%s";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_NPC_PREFIX, STRING_POINTERS.length - 1);
-		exeStrings[STRING_HEAD] = "Head.tsc";
-		notifyListeners(false, EVENT_EXE_STRING, null, STRING_HEAD, STRING_POINTERS.length - 1);
+		setExeString(STRING_ARMSITEM, "ArmsItem.tsc");
+		setExeString(STRING_IMG_EXT, "%s/%s.bmp");
+		setExeString(STRING_CREDIT, "Credit.tsc");
+		setExeString(STRING_NPC_TBL, "npc.tbl");
+		setExeString(STRING_PIXEL, ""); // not needed
+		setExeString(STRING_MYCHAR, "MyChar");
+		setExeString(STRING_TITLE, "Title");
+		setExeString(STRING_ARMSIMAGE, "ArmsImage");
+		setExeString(STRING_ARMS, "Arms");
+		setExeString(STRING_ITEMIMAGE, "ItemImage");
+		setExeString(STRING_STAGEIMAGE, "StageImage");
+		setExeString(STRING_NPCSYM, "Npc/NpcSym");
+		setExeString(STRING_NPCREGU, "Npc/NpcRegu");
+		setExeString(STRING_TEXTBOX, "TextBox");
+		setExeString(STRING_CARET, "Caret");
+		setExeString(STRING_BULLET, "Bullet");
+		setExeString(STRING_FACE, "Face");
+		setExeString(STRING_FADE, "Fade");
+		setExeString(STRING_DATA_FOLDER, ""); // not needed
+		setExeString(STRING_LOADING, "Loading");
+		setExeString(STRING_PXM_TAG, "PXM");
+		setExeString(STRING_PROFILE_NAME, "Profile.dat");
+		setExeString(STRING_PROFILE_HEADER, NormalProfile.DEFAULT_HEADER);
+		setExeString(STRING_PROFILE_FLAGH, NormalProfile.DEFAULT_FLAGH);
+		setExeString(STRING_STAGESELECT, "StageSelect.tsc");
+		setExeString(STRING_STAGE_FOLDER, "Stage");
+		setExeString(STRING_PRT_PREFIX, "%s/Prt%s");
+		setExeString(STRING_PXA_EXT, "%s/%s.pxa");
+		setExeString(STRING_PXM_EXT, "%s/%s.pxm");
+		setExeString(STRING_PXE_EXT, "%s/%s.pxe");
+		setExeString(STRING_TSC_EXT, "%s/%s.tsc");
+		setExeString(STRING_NPC_FOLDER, "Npc");
+		setExeString(STRING_NPC_PREFIX, "%s/Npc%s");
+		setExeString(STRING_HEAD, "Head.tsc");
 	}
 
 	/**
@@ -1463,12 +1446,11 @@ public class ExeData {
 	 *                if an I/O error occurs.
 	 */
 	private static void fillMapdataPlus() throws IOException {
-		File stageTbl = new File(dataDir + "/stage.tbl"); // int maps array data
 		FileChannel inChan;
 		FileInputStream inStream;
-		inStream = new FileInputStream(stageTbl);
+		inStream = new FileInputStream(base);
 		inChan = inStream.getChannel();
-		int numMaps = (int) (stageTbl.length() / 229);
+		int numMaps = (int) (base.length() / 229);
 		ByteBuffer dBuf = ByteBuffer.allocate(numMaps * 229);
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
@@ -1630,6 +1612,16 @@ public class ExeData {
 		face = loadGraphic(STRING_FACE);
 		fade = loadGraphic(STRING_FADE);
 		loading = loadGraphic(STRING_LOADING);
+	}
+
+	/**
+	 * Loads CS+ exclusive graphics files.
+	 *
+	 * @throws IOException
+	 *             if an I/O error occurs.
+	 */
+	private static void loadGraphicsPlus() throws IOException {
+		ui = loadGraphic("UI");
 	}
 
 	// ".rsrc" segment code starts here
@@ -2297,6 +2289,15 @@ public class ExeData {
 	 */
 	public static File getLoading() {
 		return loading;
+	}
+
+	/**
+	 * Gets the "UI" graphics file.
+	 * 
+	 * @return UI file
+	 */
+	public static File getUI() {
+		return ui;
 	}
 
 }

@@ -189,8 +189,8 @@ public class MCI {
 
 	public static void readPlus() throws Exception {
 		read0(MCI.class.getResourceAsStream("/plus.mci"), new File("plus.mci"));
-		plus = true;
 		validate();
+		plus = true;
 	}
 
 	public static void read(File file) throws Exception {
@@ -209,6 +209,18 @@ public class MCI {
 		int res = getInteger("Game.GraphicsResolution", 1);
 		if (res <= 0)
 			throw new MCIException("Game.GraphicsResolution cannot be less than or equal to 0!");
+		boolean var = getSpecial("VarHack");
+		boolean phy = getSpecial("PhysVarHack");
+		if (!var && phy)
+			throw new MCIException("Special support: PhysVarHack requires VarHack!");
+		boolean mim = getSpecial("MimHack");
+		boolean buy = getSpecial("BuyHack");
+		if (var && mim)
+			throw new MCIException("Special support: VarHack is incompatible with MimHack!");
+		if (var && buy)
+			throw new MCIException("Special support: VarHack is incompatible with BuyHack!");
+		if (mim && buy)
+			throw new MCIException("Special support: MimHack is incompatible with BuyHack!");
 		ExeData.setGraphicsResolution(res);
 		ProfileManager.setClass(getNullable("Game.ProfileClass"));
 	}

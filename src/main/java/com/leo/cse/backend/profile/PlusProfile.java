@@ -38,7 +38,7 @@ public class PlusProfile extends NormalProfile {
 	 * Used normal slots.
 	 */
 	public static final String FIELD_USED_SLOTS_NORMAL = "used_slots.normal";
-	
+
 	/**
 	 * Used Curly Story slots.
 	 */
@@ -171,9 +171,8 @@ public class PlusProfile extends NormalProfile {
 	public PlusProfile() {
 		super(false);
 		ptrCorrector = ptr -> {
-			// there are variables beyond the 6 save files (FIELD_BEAT_HELL),
-			// so if the pointer is higher than (SECTION_LENGTH * 6), it should
-			// be returned as-is
+			// there are variables beyond the 6 save files, so if the pointer is higher than
+			// (SECTION_LENGTH * 6), it should be returned as-is
 			if (ptr > SECTION_LENGTH * 6)
 				return ptr;
 			// make sure pointer is in correct section

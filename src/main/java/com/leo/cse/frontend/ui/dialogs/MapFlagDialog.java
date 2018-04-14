@@ -3,10 +3,10 @@ package com.leo.cse.frontend.ui.dialogs;
 import com.leo.cse.backend.profile.NormalProfile;
 import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
-import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.MapBox;
-import com.leo.cse.frontend.ui.components.MapFlagList;
+import com.leo.cse.frontend.ui.components.box.BooleanBox;
+import com.leo.cse.frontend.ui.components.box.MapBox;
+import com.leo.cse.frontend.ui.components.list.MapFlagList;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class MapFlagDialog extends BaseDialog {
 

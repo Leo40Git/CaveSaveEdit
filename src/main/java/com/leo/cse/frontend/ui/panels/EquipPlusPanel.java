@@ -1,6 +1,6 @@
 package com.leo.cse.frontend.ui.panels;
 
-import com.leo.cse.frontend.ui.components.Label;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class EquipPlusPanel extends Panel {
 	

@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.box;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
+import com.leo.cse.frontend.ui.components.Component;
 
 public abstract class InputBox extends Component {
 

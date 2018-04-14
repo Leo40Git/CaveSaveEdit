@@ -354,7 +354,14 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 					if (result == JOptionPane.YES_OPTION) {
 						URI dlSite = new URI(DOWNLOAD_SITE);
 						if (Desktop.isDesktopSupported())
-							Desktop.getDesktop().browse(dlSite);
+							try {
+								Desktop.getDesktop().browse(dlSite);
+							} catch (IOException e) {
+								System.out.println("Browse to download site failed: I/O error");
+								e.printStackTrace();
+								JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
+										"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
+							}
 						else
 							JOptionPane.showMessageDialog(null,
 									"Sadly, we can't browse to the download site for you on this platform. :(\nHead to\n"
@@ -376,11 +383,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				JOptionPane.showMessageDialog(null,
 						"The update check has failed!\nAn exception occured while reading update check results:\n" + e,
 						"Update check failed", JOptionPane.ERROR_MESSAGE);
-			} catch (URISyntaxException e1) {
-				System.out.println("Browse to download site failed: bad URI syntax");
-				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
-						"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
 			} finally {
 				verFile.delete();
 			}

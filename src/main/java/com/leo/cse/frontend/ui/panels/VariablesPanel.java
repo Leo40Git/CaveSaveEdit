@@ -7,9 +7,9 @@ import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
-import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.ShortBox;
+import com.leo.cse.frontend.ui.components.box.BooleanBox;
+import com.leo.cse.frontend.ui.components.box.ShortBox;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class VariablesPanel extends Panel {
 

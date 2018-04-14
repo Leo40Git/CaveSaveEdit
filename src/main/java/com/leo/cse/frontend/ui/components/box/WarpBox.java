@@ -1,4 +1,4 @@
-package com.leo.cse.frontend.ui.components;
+package com.leo.cse.frontend.ui.components.box;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,15 +12,17 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 
-public class ItemBox extends DefineBox {
+public class WarpBox extends DefineBox {
 
-	public static final BufferedImage ITEM_BLANK = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
+	public static final BufferedImage WARP_BLANK = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
 
-	public ItemBox(int x, int y, int width, int height, int itemId) {
-		super(x, y, width, height, () -> (Integer) ProfileManager.getField(NormalProfile.FIELD_ITEMS, itemId), t -> {
-			ProfileManager.setField(NormalProfile.FIELD_ITEMS, itemId, t);
+	public WarpBox(int x, int y, int width, int height, int warpId) {
+		super(x, y, width, height, () -> {
+			return (Integer) ProfileManager.getField(NormalProfile.FIELD_WARP_ID, warpId);
+		}, (Integer t) -> {
+			ProfileManager.setField(NormalProfile.FIELD_WARP_ID, warpId, t);
 			return t;
-		}, "Item", "item " + (itemId + 1));
+		}, "Warp", "warp " + warpId);
 	}
 
 	@Override
@@ -39,16 +41,14 @@ public class ItemBox extends DefineBox {
 			FrontUtils.drawCheckeredGrid(g, x + 1, y + 1, width - 1, height - 2);
 		}
 		g.setColor(Main.lineColor);
-		int item = vSup.get();
-		FrontUtils.drawStringCentered(g, item + " - " + MCI.get(type, item), x + width / 2, y + 31, false, !bEnabled);
-		if (item == 0)
+		int warp = vSup.get();
+		FrontUtils.drawStringCentered(g, warp + " - " + MCI.get(type, warp), x + width / 2, y + 31, false, !bEnabled);
+		if (warp == 0)
 			return;
 		if (!ExeData.isLoaded())
 			return;
-		int sourceX = (item % 8) * 64;
-		int sourceY = (item / 8) * 32;
-		g.drawImage(ExeData.getImage(ExeData.getItemImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33,
-				sourceX, sourceY, sourceX + 64, sourceY + 32, null);
+		g.drawImage(ExeData.getImage(ExeData.getStageImage()), x + width / 2 - 32, y + 1, x + width / 2 + 32, y + 33,
+				64 * warp, 0, 64 * (warp + 1), 32, null);
 	}
 
 	@Override
@@ -57,10 +57,10 @@ public class ItemBox extends DefineBox {
 			if (iSup == null)
 				iSup = t -> {
 					if (t == 0)
-						return ITEM_BLANK;
+						return WARP_BLANK;
 					int sourceX = (t % 8) * 64;
 					int sourceY = (t / 8) * 32;
-					return ExeData.getImage(ExeData.getItemImage()).getSubimage(sourceX, sourceY, 64, 32);
+					return ExeData.getImage(ExeData.getStageImage()).getSubimage(sourceX, sourceY, 64, 32);
 				};
 		} else
 			iSup = null;

@@ -13,10 +13,10 @@ import com.leo.cse.frontend.FrontUtils;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.Resources;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
-import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.Button;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.StringBox;
+import com.leo.cse.frontend.ui.components.box.BooleanBox;
+import com.leo.cse.frontend.ui.components.box.Button;
+import com.leo.cse.frontend.ui.components.box.StringBox;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class SettingsDialog extends BaseDialog {
 

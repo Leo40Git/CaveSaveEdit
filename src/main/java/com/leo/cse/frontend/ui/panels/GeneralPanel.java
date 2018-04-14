@@ -13,15 +13,15 @@ import com.leo.cse.backend.profile.ProfileManager;
 import com.leo.cse.frontend.MCI;
 import com.leo.cse.frontend.Main;
 import com.leo.cse.frontend.ui.SaveEditorPanel;
-import com.leo.cse.frontend.ui.components.BooleanBox;
-import com.leo.cse.frontend.ui.components.Button;
-import com.leo.cse.frontend.ui.components.DefineBox;
-import com.leo.cse.frontend.ui.components.IntegerBox;
-import com.leo.cse.frontend.ui.components.Label;
-import com.leo.cse.frontend.ui.components.MapBox;
-import com.leo.cse.frontend.ui.components.MapView;
-import com.leo.cse.frontend.ui.components.RadioBoxes;
-import com.leo.cse.frontend.ui.components.ShortBox;
+import com.leo.cse.frontend.ui.components.box.BooleanBox;
+import com.leo.cse.frontend.ui.components.box.Button;
+import com.leo.cse.frontend.ui.components.box.DefineBox;
+import com.leo.cse.frontend.ui.components.box.IntegerBox;
+import com.leo.cse.frontend.ui.components.box.MapBox;
+import com.leo.cse.frontend.ui.components.box.RadioBoxes;
+import com.leo.cse.frontend.ui.components.box.ShortBox;
+import com.leo.cse.frontend.ui.components.special.MapView;
+import com.leo.cse.frontend.ui.components.visual.Label;
 
 public class GeneralPanel extends Panel {
 
