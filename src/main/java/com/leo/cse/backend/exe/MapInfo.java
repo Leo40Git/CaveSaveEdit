@@ -569,7 +569,8 @@ public class MapInfo {
 	 *         otherwise.
 	 */
 	public boolean hasMissingAssets() {
-		return ExeData.getImage(tileset) == null || ExeData.getImage(bgImage) == null || ExeData.doLoadNpc()
+		return map == null || ExeData.getImage(tileset) == null || ExeData.getImage(bgImage) == null || ExeData
+				.doLoadNpc()
 				&& (ExeData.getImage(npcSheet1) == null || ExeData.getImage(npcSheet2) == null || pxeList == null);
 	}
 
@@ -582,9 +583,9 @@ public class MapInfo {
 	public String getMissingAssets() {
 		if (!hasMissingAssets())
 			return "";
-		final String[] assetName = new String[] { "tileset", "background image", "NPC sheet 1", "NPC sheet 2",
-				"PXE file" };
-		final boolean[] assetStat = new boolean[] { ExeData.getImage(tileset) == null,
+		final String[] assetName = new String[] { "PXM file", "tileset", "background image", "NPC sheet 1",
+				"NPC sheet 2", "PXE file" };
+		final boolean[] assetStat = new boolean[] { map == null, ExeData.getImage(tileset) == null,
 				ExeData.getImage(bgImage) == null, ExeData.doLoadNpc() && ExeData.getImage(npcSheet1) == null,
 				ExeData.doLoadNpc() && ExeData.getImage(npcSheet2) == null, ExeData.doLoadNpc() && pxeList == null };
 		assert (assetName.length == assetStat.length);

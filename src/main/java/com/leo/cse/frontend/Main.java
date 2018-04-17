@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ConcurrentModificationException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -65,6 +66,18 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static Thread repaintThread;
 	private static AtomicBoolean keepRepainting;
+	
+	private static class ProfileLoadInstruction {
+		public File file;
+		public boolean record;
+		
+		public ProfileLoadInstruction(File file, boolean record) {
+			this.file = file;
+			this.record = record;
+		}
+	}
+	
+	private static ProfileLoadInstruction profLoadInstruct = null;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
 		@Override
@@ -198,6 +211,28 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static void loadExe(File file) {
 		loadExe(file, true);
 	}
+	
+	private static void loadProfile0(File file, boolean record) {
+		try {
+			ProfileManager.load(file);
+		} catch (ConcurrentModificationException e) {
+			// can be safely ignored
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Profile loading failed.");
+			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
+					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
+			return;
+		} finally {
+			System.out.println("loaded profile " + ProfileManager.getLoadedFile());
+			if (record)
+				Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
+			SwingUtilities.invokeLater(() -> {
+				window.repaint();
+			});
+		}
+	}
 
 	public static void loadProfile(File file, boolean record) {
 		if (SaveEditorPanel.panel != null)
@@ -205,6 +240,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		window.repaint();
 		SwingUtilities.invokeLater(() -> {
 			if (Config.getBoolean(Config.KEY_AUTOLOAD_EXE, true)) {
+				profLoadInstruct = new ProfileLoadInstruction(file, record);
 				File newExe = new File(file.getAbsoluteFile().getParent() + "/" + MCI.get("Game.ExeName") + ".exe");
 				if (newExe.exists()) {
 					// unload existing exe
@@ -212,23 +248,8 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 					// try to load exe
 					loadExe(newExe, false);
 				}
-			}
-			try {
-				ProfileManager.load(file);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.err.println("Profile loading failed.");
-				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
-						"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
-				return;
-			} finally {
-				System.out.println("loaded profile " + ProfileManager.getLoadedFile());
-				if (record)
-					Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
-				SwingUtilities.invokeLater(() -> {
-					window.repaint();
-				});
-			}
+			} else
+				loadProfile0(file, record);
 		});
 	}
 
@@ -610,10 +631,18 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				}
 			break;
 		case ExeData.EVENT_POSTLOAD:
-			try {
-				ProfileManager.reload();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (profLoadInstruct != null) {
+				final ProfileLoadInstruction profLoadInstruct2 = profLoadInstruct;
+				profLoadInstruct = null;
+				SwingUtilities.invokeLater(() -> {
+					loadProfile0(profLoadInstruct2.file, profLoadInstruct2.record);
+				});
+			} else {
+				try {
+					ProfileManager.reload();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			break;
 		default:

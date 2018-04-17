@@ -1302,7 +1302,7 @@ public class ExeData {
 		uBuf.flip();
 		int numSection = uBuf.getShort();
 		// read each segment
-		// find the .csmap or .swdata segment
+		// find the .blmap or .csmap or .swdata segment
 		int mapSec = -1;
 		String[] secHeaders = new String[numSection];
 		for (int i = 0; i < numSection; i++) {
@@ -1311,9 +1311,7 @@ public class ExeData {
 			inChan.read(uBuf);
 			uBuf.flip();
 			String segStr = new String(uBuf.array());
-			if (segStr.contains(".csmap"))
-				mapSec = i;
-			else if (segStr.contains(".swdata"))
+			if (segStr.contains(".blmap") || segStr.contains(".csmap") || segStr.contains(".swdata"))
 				mapSec = i;
 			secHeaders[i] = segStr;
 		}
@@ -1350,8 +1348,51 @@ public class ExeData {
 				notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
 			} // for each map
 		} else { // exe has been edited probably
-			if (secHeaders[mapSec].contains(".csmap")) {
-				// cave editor/booster's lab
+			if (secHeaders[mapSec].contains(".blmap")) {
+				// booster's lab
+				uBuf = ByteBuffer.allocate(4);
+				uBuf.order(ByteOrder.LITTLE_ENDIAN);
+				inChan.position(0x208 + 0x28 * mapSec + 0x10); // read the PE header
+				inChan.read(uBuf);
+				uBuf.clear();
+				inChan.read(uBuf);
+				uBuf.flip();
+				int pData = uBuf.getInt();
+				uBuf.clear();
+
+				inChan.position(pData);// seek to start of CS map data
+				inChan.read(uBuf);
+				uBuf.flip();
+				int numMaps = uBuf.getInt(); // get number of maps
+				for (int i = 0; i < numMaps; i++) {
+					// for each map
+					Mapdata newMap = new Mapdata(i);
+					uBuf = ByteBuffer.allocate(200);
+					uBuf.order(ByteOrder.LITTLE_ENDIAN);
+					inChan.read(uBuf);
+					uBuf.flip();
+					byte[] buffer = new byte[0x23];
+					uBuf.get(buffer, 0, 0x20);
+					newMap.setTileset(StrTools.CString(buffer, encoding));
+					uBuf.get(buffer, 0, 0x20);
+					newMap.setFileName(StrTools.CString(buffer, encoding));
+					int argh = uBuf.getInt();
+					newMap.setScrollType(argh & 0xFF);
+					uBuf.get(buffer, 0, 0x20);
+					newMap.setBgName(StrTools.CString(buffer, encoding));
+					uBuf.get(buffer, 0, 0x20);
+					newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
+					uBuf.get(buffer, 0, 0x20);
+					newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
+					// newMap.setBossNum(uBuf.get());
+					uBuf.get();
+					uBuf.get(buffer, 0, 0x23);
+					newMap.setMapName(StrTools.CString(buffer, encoding));
+					mapdata.add(newMap);
+					notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
+				} // for each map
+			} else if (secHeaders[mapSec].contains(".csmap")) {
+				// cave editor/old booster's lab
 				uBuf = ByteBuffer.allocate(4);
 				uBuf.order(ByteOrder.LITTLE_ENDIAN);
 				inChan.position(0x208 + 0x28 * mapSec + 0x10); // read the PE header

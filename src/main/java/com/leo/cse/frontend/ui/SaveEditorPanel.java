@@ -610,6 +610,8 @@ public class SaveEditorPanel extends JPanel
 		int tn = tabs.length;
 		int ti = 0;
 		for (int xx = -1; xx < winSize2.width; xx += winSize2.width / tn + 1) {
+			if (tabs[ti] == null)
+				continue;
 			final EditorTab t = tabs[ti].getTab();
 			if (ProfileManager.isLoaded() && ti == currentTab) {
 				g2d.setColor(Main.COLOR_BG);
