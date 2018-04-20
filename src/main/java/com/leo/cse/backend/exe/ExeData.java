@@ -148,16 +148,14 @@ public class ExeData {
 	}
 
 	/**
-	 * Base pointer for the ".rdata" segment in the executable. Used to read
-	 * {@linkplain #exeStrings the executable strings}.
+	 * The ".rdata" segment. Used to read {@linkplain #exeStrings the executable
+	 * strings}.
 	 */
-	private static int rdataPtr;
+	private static PEFile.Section rdataSection;
 
-	// -------------
-	// Data Pointers
-	// -------------
-
-	// --!-- RELATIVE TO rdataPtr! --!--
+	// ---------------
+	// .rdata Pointers
+	// ---------------
 	/**
 	 * Pointer to file name for "ArmsItem.tsc".
 	 */
@@ -481,10 +479,35 @@ public class ExeData {
 	}
 
 	/**
-	 * CS+ flag. If <code>true</code>, the currently loaded "executable" is in fact
-	 * a stage.tbl file.
+	 * Mod types.
+	 * 
+	 * @author Leo
+	 *
 	 */
-	private static boolean plusMode = false;
+	public enum ModType {
+		/**
+		 * Standard Cave Story executable.
+		 */
+		STANDARD,
+		/**
+		 * Cave Story+ stage.tbl file.
+		 */
+		PLUS;
+	}
+
+	/**
+	 * Type of currently loaded mod.
+	 */
+	private static ModType type = ModType.STANDARD;
+
+	/**
+	 * Gets the type of the currently loaded mod.
+	 * 
+	 * @return mod type
+	 */
+	public static ModType getType() {
+		return type;
+	}
 
 	/**
 	 * Checks if the current "executable" is a stage.tbl file.
@@ -492,7 +515,7 @@ public class ExeData {
 	 * @return <code>true</code> if in CS+ mode, <code>false</code> otherwise
 	 */
 	public static boolean isPlusMode() {
-		return plusMode;
+		return type == ModType.PLUS;
 	}
 
 	/**
@@ -584,11 +607,11 @@ public class ExeData {
 	 */
 	private static File base;
 	/**
-	 * Array of the loaded executable's PE headers.
+	 * PE data.
 	 *
-	 * @see ExeSec
+	 * @see PEFile
 	 */
-	private static ExeSec[] headers;
+	private static PEFile peData;
 	/**
 	 * ".rsrc" segment information.
 	 */
@@ -756,7 +779,7 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadVanilla() throws IOException {
-		plusMode = false;
+		type = ModType.STANDARD;
 		try {
 			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
 			locateSegments();
@@ -791,7 +814,7 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadPlus() throws IOException {
-		plusMode = true;
+		type = ModType.PLUS;
 		try {
 			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
 			initExeStringsPlus();
@@ -819,7 +842,7 @@ public class ExeData {
 	}
 
 	public static File correctFile(File src) {
-		if (!plusMode)
+		if (!isPlusMode())
 			return src;
 		if (src.exists())
 			return src;
@@ -857,108 +880,8 @@ public class ExeData {
 		System.gc();
 		ProfileManager.setHeader(NormalProfile.DEFAULT_HEADER);
 		ProfileManager.setFlagHeader(NormalProfile.DEFAULT_FLAGH);
-		plusMode = false;
+		type = ModType.STANDARD;
 		notifyListeners(false, EVENT_UNLOAD, null, -1, -1);
-	}
-
-	/**
-	 * PE segment descriptor
-	 * <p>
-	 * 0-7 tag<br>
-	 * 8-B virtual size<br>
-	 * C-F virtual address<br>
-	 * 10-13 size of raw data<br>
-	 * 14-17 raw data pointer<br>
-	 * 18-1B relocations pointer<br>
-	 * 1C-1F line numbers pointer<br>
-	 * 20-21 # of relocations<br>
-	 * 22-23 # of line #s<br>
-	 * 24-27 characteristics<br>
-	 */
-	static class ExeSec {
-		private String tag;
-		private int vSize;
-		private int vAddr;
-		private int rSize;
-		private int rAddr;
-		private int pReloc;
-		private int pLine;
-		private short numReloc;
-		private short numLine;
-		private int attrib;
-
-		private ByteBuffer data;
-
-		public String getTag() {
-			return tag;
-		}
-
-		public int getPos() {
-			return rAddr;
-		}
-
-		public int getLen() {
-			return rSize;
-		}
-
-		public int getPosV() {
-			return vAddr;
-		}
-
-		public ByteBuffer getData() {
-			return data;
-		}
-
-		public int getLenV() {
-			return vSize;
-		}
-
-		public int getRelocP() {
-			return pReloc;
-		}
-
-		public int getLineP() {
-			return pLine;
-		}
-
-		public short getNumReloc() {
-			return numReloc;
-		}
-
-		public short getNumLine() {
-			return numLine;
-		}
-
-		public int getAttrib() {
-			return attrib;
-		}
-
-		ExeSec(ByteBuffer in, FileChannel f) {
-			in.position(0);
-			byte[] tagArray = new byte[8];
-			in.get(tagArray);
-			tag = new String(tagArray);
-			tag = tag.replaceAll("\0", "");
-			vSize = in.getInt();
-			vAddr = in.getInt();
-			rSize = in.getInt();
-			rAddr = in.getInt();
-			pReloc = in.getInt();
-			pLine = in.getInt();
-			numReloc = in.getShort();
-			numLine = in.getShort();
-			attrib = in.getInt();
-
-			data = ByteBuffer.allocate(rSize);
-			data.order(ByteOrder.nativeOrder());
-			try {
-				f.position(rAddr);
-				f.read(data);
-				data.flip();
-			} catch (IOException err) {
-				err.printStackTrace();
-			}
-		}
 	}
 
 	/**
@@ -970,7 +893,6 @@ public class ExeData {
 	private static void locateSegments() throws IOException {
 		// setup I/O stuff
 		FileInputStream inStream;
-		FileChannel inChan;
 		inStream = new FileInputStream(base);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[512];
@@ -978,6 +900,7 @@ public class ExeData {
 			int l = inStream.read(buf);
 			baos.write(buf, 0, l);
 		}
+		inStream.close();
 		ByteBuffer dataBuf = ByteBuffer.wrap(baos.toByteArray());
 		// NOTE: The ByteBuffer doesn't get advanced, hence the use of no-side-effects
 		// functions like getInt(address).
@@ -985,46 +908,13 @@ public class ExeData {
 		// use a position(0) to deal with that.
 		dataBuf.order(ByteOrder.LITTLE_ENDIAN);
 		rsrcInfo = getResources(dataBuf);
-		if (rsrcInfo == null) {
-			inStream.close();
+		if (rsrcInfo == null)
 			throw new IOException("Could not find .rsrc segment!");
-		}
-		inChan = inStream.getChannel();
-		inChan.position(0);
-		// read PE header
-		ByteBuffer peHead = ByteBuffer.allocate(0x208);
-		peHead.order(ByteOrder.nativeOrder());
-		inChan.read(peHead);
-		peHead.flip();
-		ByteBuffer uBuf = ByteBuffer.allocate(2);
-		uBuf.order(ByteOrder.LITTLE_ENDIAN);
-		// find how many sections
-		inChan.position(0x116);
-		inChan.read(uBuf);
-		uBuf.flip();
-		int numSection = uBuf.getShort();
-		// read each segment
-		Vector<ByteBuffer> sections = new Vector<>();
-		inChan.position(0x208);
-		int rdataSec = -1;
-		for (int i = 0; i < numSection; i++) {
-			ByteBuffer nuBuf = ByteBuffer.allocate(0x28);
-			nuBuf.order(ByteOrder.nativeOrder());
-			inChan.read(nuBuf);
-			nuBuf.flip();
-			sections.add(nuBuf);
-			String segStr = new String(nuBuf.array());
-			if (segStr.contains(".rdata"))
-				rdataSec = i;
-		}
-		headers = new ExeSec[sections.size()];
-		for (int i = 0; i < sections.size(); i++)
-			headers[i] = new ExeSec(sections.get(i), inChan);
-		inStream.close();
+		dataBuf.position(0);
+		peData = new PEFile(dataBuf, 0x1000);
+		int rdataSec = peData.getSectionIndexByTag(".rdata");
 		if (rdataSec == -1)
 			throw new IOException("Could not find .rdata segment!");
-		rdataPtr = headers[rdataSec].getPos();
-		System.out.println("rdataPtr=0x" + Integer.toHexString(rdataPtr).toUpperCase());
 	}
 
 	/**
@@ -1052,29 +942,22 @@ public class ExeData {
 		if (!"exe".equals(ext))
 			throw new IOException("Base file is not an executable!");
 		// setup I/O stuff
-		FileInputStream inStream;
-		FileChannel inChan;
-		inStream = new FileInputStream(base);
-		inChan = inStream.getChannel();
 		ByteBuffer uBuf = ByteBuffer.allocate(2);
 		uBuf.order(ByteOrder.LITTLE_ENDIAN);
 		// read the text
 		exeStrings = new String[STRING_POINTERS.length];
 		byte[] buffer = new byte[0x10];
-		uBuf = ByteBuffer.allocate(0x10);
+		uBuf = ByteBuffer.wrap(buffer);
 		uBuf.order(ByteOrder.LITTLE_ENDIAN);
 		for (int i = 0; i < STRING_POINTERS.length; i++) {
-			inChan.position(rdataPtr + STRING_POINTERS[i]);
-			inChan.read(uBuf);
+			uBuf.put(rdataSection.rawData, STRING_POINTERS[i], buffer.length);
 			uBuf.flip();
-			uBuf.get(buffer);
-			uBuf.clear();
 			String str = StrTools.CString(buffer, encoding);
+			uBuf.clear();
 			// backslashes are Windows-only, so replace them with forward slashes
 			str = str.replaceAll("\\\\", "/");
 			setExeString(i, str);
 		}
-		inStream.close();
 	}
 
 	/**
@@ -1287,197 +1170,58 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void fillMapdata() throws IOException {
-		FileChannel inChan;
-
-		FileInputStream inStream;
-		inStream = new FileInputStream(base);
-		inChan = inStream.getChannel();
-
-		// the hard part
 		ByteBuffer uBuf = ByteBuffer.allocate(2);
 		uBuf.order(ByteOrder.LITTLE_ENDIAN);
-		// find how many sections
-		inChan.position(0x116);
-		inChan.read(uBuf);
-		uBuf.flip();
-		int numSection = uBuf.getShort();
-		// read each segment
-		// find the .blmap or .csmap or .swdata segment
-		int mapSec = -1;
-		String[] secHeaders = new String[numSection];
-		for (int i = 0; i < numSection; i++) {
-			uBuf = ByteBuffer.allocate(8);
-			inChan.position(0x208 + 0x28 * i);
-			inChan.read(uBuf);
-			uBuf.flip();
-			String segStr = new String(uBuf.array());
-			if (segStr.contains(".blmap") || segStr.contains(".csmap") || segStr.contains(".swdata"))
-				mapSec = i;
-			secHeaders[i] = segStr;
+		// find the .csmap or .swdata segment
+		PEFile.Section mapSec = null;
+		String mapSecTag = null;
+		for (int i = 0; i < peData.sections.size(); i++) {
+			PEFile.Section s = peData.sections.get(i);
+			String st = s.decodeTag();
+			if (st.equals(".csmap") || st.equals(".csmap")) {
+				mapSec = s;
+				mapSecTag = st;
+				break;
+			}
 		}
 
-		if (mapSec == -1) // virgin executable
+		if (mapSec == null) // virgin executable
 		{
+			// setup I/O stuff
+			FileInputStream inStream = new FileInputStream(base);
+			FileChannel inChan = inStream.getChannel();
 			int numMaps = 95;
 			inChan.position(0x937B0); // seek to start of mapdatas
 			for (int i = 0; i < numMaps; i++) {
-				Mapdata newMap = new Mapdata(i);
 				// for each map
 				uBuf = ByteBuffer.allocate(200);
 				uBuf.order(ByteOrder.LITTLE_ENDIAN);
 				inChan.read(uBuf);
 				uBuf.flip();
-				byte[] buffer = new byte[0x23];
-				uBuf.get(buffer, 0, 0x20);
-				newMap.setTileset(StrTools.CString(buffer, encoding));
-				uBuf.get(buffer, 0, 0x20);
-				String fileName = StrTools.CString(buffer, encoding);
-				newMap.setFileName(fileName);
-				newMap.setScrollType(uBuf.getInt() & 0xFF);
-				uBuf.get(buffer, 0, 0x20);
-				newMap.setBgName(StrTools.CString(buffer, encoding));
-				uBuf.get(buffer, 0, 0x20);
-				newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
-				uBuf.get(buffer, 0, 0x20);
-				newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
-				// newMap.setBossNum(uBuf.get());
-				uBuf.get();
-				uBuf.get(buffer, 0, 0x23);
-				newMap.setMapName(StrTools.CString(buffer, encoding));
-				mapdata.add(newMap);
+				mapdata.add(new Mapdata(i, uBuf, type, encoding));
 				notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
-			} // for each map
+			}
+			inStream.close();
 		} else { // exe has been edited probably
-			if (secHeaders[mapSec].contains(".blmap")) {
-				// booster's lab
-				uBuf = ByteBuffer.allocate(4);
-				uBuf.order(ByteOrder.LITTLE_ENDIAN);
-				inChan.position(0x208 + 0x28 * mapSec + 0x10); // read the PE header
-				inChan.read(uBuf);
-				uBuf.clear();
-				inChan.read(uBuf);
-				uBuf.flip();
-				int pData = uBuf.getInt();
-				uBuf.clear();
-
-				inChan.position(pData);// seek to start of CS map data
-				inChan.read(uBuf);
-				uBuf.flip();
-				int numMaps = uBuf.getInt(); // get number of maps
+			ByteBuffer buf = ByteBuffer.wrap(mapSec.rawData);
+			int numMaps = mapSec.rawData.length / 200;
+			if (mapSecTag.contains(".csmap")) {
+				// cave editor/booster's lab
 				for (int i = 0; i < numMaps; i++) {
 					// for each map
-					Mapdata newMap = new Mapdata(i);
-					uBuf = ByteBuffer.allocate(200);
-					uBuf.order(ByteOrder.LITTLE_ENDIAN);
-					inChan.read(uBuf);
-					uBuf.flip();
-					byte[] buffer = new byte[0x23];
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setTileset(StrTools.CString(buffer, encoding));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setFileName(StrTools.CString(buffer, encoding));
-					int argh = uBuf.getInt();
-					newMap.setScrollType(argh & 0xFF);
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setBgName(StrTools.CString(buffer, encoding));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
-					// newMap.setBossNum(uBuf.get());
-					uBuf.get();
-					uBuf.get(buffer, 0, 0x23);
-					newMap.setMapName(StrTools.CString(buffer, encoding));
-					mapdata.add(newMap);
-					notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
-				} // for each map
-			} else if (secHeaders[mapSec].contains(".csmap")) {
-				// cave editor/old booster's lab
-				uBuf = ByteBuffer.allocate(4);
-				uBuf.order(ByteOrder.LITTLE_ENDIAN);
-				inChan.position(0x208 + 0x28 * mapSec + 0x10); // read the PE header
-				inChan.read(uBuf);
-				uBuf.flip();
-				int numMaps = uBuf.getInt() / 200;
-				uBuf.flip();
-				inChan.read(uBuf);
-				uBuf.flip();
-				int pData = uBuf.getInt();
-
-				inChan.position(pData);// seek to start of CS map data
-				for (int i = 0; i < numMaps; i++) {
-					// for each map
-					Mapdata newMap = new Mapdata(i);
-					uBuf = ByteBuffer.allocate(200);
-					uBuf.order(ByteOrder.LITTLE_ENDIAN);
-					inChan.read(uBuf);
-					uBuf.flip();
-					byte[] buffer = new byte[0x23];
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setTileset(StrTools.CString(buffer, encoding));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setFileName(StrTools.CString(buffer, encoding));
-					int argh = uBuf.getInt();
-					newMap.setScrollType(argh & 0xFF);
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setBgName(StrTools.CString(buffer, encoding));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet1(StrTools.CString(buffer, encoding));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet2(StrTools.CString(buffer, encoding));
-					// newMap.setBossNum(uBuf.get());
-					uBuf.get();
-					uBuf.get(buffer, 0, 0x23);
-					newMap.setMapName(StrTools.CString(buffer, encoding));
-					mapdata.add(newMap);
+					mapdata.add(new Mapdata(i, buf, type, encoding));
 					notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
 				} // for each map
 			} else {
 				// sue's workshop
-				uBuf = ByteBuffer.allocate(4);
-				uBuf.order(ByteOrder.LITTLE_ENDIAN);
-				inChan.position(0x208 + 0x28 * mapSec + 0x10);
-				inChan.read(uBuf);
-				uBuf.flip();
-				int numMaps = uBuf.getInt() / 200;
-				uBuf.flip();
-				inChan.read(uBuf);
-				uBuf.flip();
-				int pData = uBuf.getInt();
-				inChan.position(pData + 0x10);// seek to start of Sue's map data
 				int nMaps = 0;
 				while (true) {
 					// for each map
-					uBuf = ByteBuffer.allocate(200);
-					inChan.read(uBuf);
-					uBuf.flip();
-					// check if it's the FFFFFFFFFFFFFFinal map
-					if (uBuf.getInt(0) == -1)
-						break;
-					Mapdata newMap = new Mapdata(nMaps);
-					byte[] buffer = new byte[0x23];
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setTileset(StrTools.CString(buffer));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setFileName(StrTools.CString(buffer));
-					newMap.setScrollType(uBuf.getInt() & 0xFF);
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setBgName(StrTools.CString(buffer));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet1(StrTools.CString(buffer));
-					uBuf.get(buffer, 0, 0x20);
-					newMap.setNpcSheet2(StrTools.CString(buffer));
-					// newMap.setBossNum(uBuf.get());
-					uBuf.get();
-					uBuf.get(buffer, 0, 0x23);
-					newMap.setMapName(StrTools.CString(buffer));
-					mapdata.add(newMap);
+					mapdata.add(new Mapdata(nMaps, buf, type, encoding));
 					notifyListeners(false, EVENT_MAP_DATA, null, nMaps++, numMaps - 1);
-				} // for each map
+				}
 			}
 		}
-
-		inStream.close();
 	}
 
 	/**
@@ -1496,28 +1240,8 @@ public class ExeData {
 		dBuf.order(ByteOrder.LITTLE_ENDIAN);
 		inChan.read(dBuf);
 		dBuf.flip();
-		for (int i = 0; i < numMaps; i++) // for each map
-		{
-			Mapdata newMap = new Mapdata(i);
-			byte[] buf32 = new byte[32];
-			dBuf.get(buf32);
-			newMap.setTileset(StrTools.CString(buf32, encoding));
-			dBuf.get(buf32);
-			newMap.setFileName(StrTools.CString(buf32, encoding));
-			newMap.setScrollType(dBuf.getInt());
-			dBuf.get(buf32);
-			newMap.setBgName(StrTools.CString(buf32, encoding));
-			dBuf.get(buf32);
-			newMap.setNpcSheet1(StrTools.CString(buf32, encoding));
-			dBuf.get(buf32);
-			newMap.setNpcSheet2(StrTools.CString(buf32, encoding));
-			// newMap.setBoss(dBuf.get()); // not needed
-			dBuf.get();
-			dBuf.get(buf32);
-			// newMap.setJpName(buf32); // not needed
-			dBuf.get(buf32);
-			newMap.setMapName(StrTools.CString(buf32, encoding));
-			mapdata.add(newMap);
+		for (int i = 0; i < numMaps; i++) { // for each map
+			mapdata.add(new Mapdata(i, dBuf, type, encoding));
 			notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
 		}
 		inChan.close();
@@ -2149,12 +1873,12 @@ public class ExeData {
 	}
 
 	/**
-	 * Gets the executable's PE headers.
+	 * Gets the executable's PE data.
 	 *
-	 * @return headers
+	 * @return PE data
 	 */
-	public static ExeSec[] getHeaders() {
-		return headers;
+	public static PEFile getPEData() {
+		return peData;
 	}
 
 	/**

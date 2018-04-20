@@ -1,5 +1,10 @@
 package com.leo.cse.backend.exe;
 
+import java.nio.ByteBuffer;
+
+import com.leo.cse.backend.StrTools;
+import com.leo.cse.backend.exe.ExeData.ModType;
+
 // credit to Noxid for making Booster's Lab open source so I could steal code
 // from it
 /**
@@ -41,9 +46,88 @@ public class Mapdata {
 	 */
 	private String npcSheet2;
 	/**
+	 * The map's special boss ID.
+	 */
+	private int bossNum;
+	/**
 	 * The map's name.
 	 */
 	private String mapName;
+	/**
+	 * The map's name in Japanese. CS+ only.
+	 */
+	private byte[] jpName;
+
+	public Mapdata(int num, ByteBuffer buf, ModType format, String charEncoding) {
+		mapNum = num;
+		switch (format) {
+		case STANDARD: // from exe
+			/*
+			typedef struct {
+				   char tileset[32];
+				   char filename[32];
+				   char scrollType[4];
+				   char bgName[32];
+				   char npc1[32];
+				   char npc2[32];
+				   char bossNum;
+				   char mapName[35];
+				}nMapData;
+				*/
+			byte[] buffer = new byte[0x23];
+			buf.get(buffer, 0, 0x20);
+			tileset = StrTools.CString(buffer, charEncoding);
+			buf.get(buffer, 0, 0x20);
+			fileName = StrTools.CString(buffer, charEncoding);
+			scrollType = buf.getInt() & 0xFF;
+			buf.get(buffer, 0, 0x20);
+			bgName = StrTools.CString(buffer, charEncoding);
+			buf.get(buffer, 0, 0x20);
+			npcSheet1 = StrTools.CString(buffer, charEncoding);
+			buf.get(buffer, 0, 0x20);
+			npcSheet2 = StrTools.CString(buffer, charEncoding);
+			bossNum = buf.get();
+			buf.get(buffer, 0, 0x23);
+			mapName = StrTools.CString(buffer, charEncoding);
+			jpName = new byte[0x20];
+			break;
+		case PLUS: // from stage.tbl
+			/*
+			typedef struct {
+				   char tileset[32];
+				   char filename[32];
+				   char scrollType[4];
+				   char bgName[32];
+				   char npc1[32];
+				   char npc2[32];
+				   char bossNum;
+				   char jpName[32];
+				   char mapName[32];
+				}nMapData;
+				*/
+			byte[] buf32 = new byte[32];
+			buf.get(buf32);
+			tileset = StrTools.CString(buf32, charEncoding);
+			buf.get(buf32);
+			fileName = StrTools.CString(buf32, charEncoding);
+			scrollType = buf.getInt();
+			buf.get(buf32);
+			bgName = StrTools.CString(buf32, charEncoding);
+			buf.get(buf32);
+			npcSheet1 = StrTools.CString(buf32, charEncoding);
+			buf.get(buf32);
+			npcSheet2 = StrTools.CString(buf32, charEncoding);
+			bossNum = buf.get();
+			buf.get(buf32);
+			jpName = buf32.clone();
+			buf.get(buf32);
+			mapName = StrTools.CString(buf32, charEncoding);
+			break;
+		default:
+			// unknown/unused
+			break;
+		}
+	}
 
 	/**
 	 * Creates a new empty map.
@@ -57,6 +141,11 @@ public class Mapdata {
 		fileName = "0";
 		scrollType = 0;
 		bgName = "0";
+		npcSheet1 = "0";
+		npcSheet2 = "0";
+		bossNum = 0;
+		mapName = "Null";
+		jpName = new byte[0x20];
 	}
 
 	/**
@@ -69,32 +158,12 @@ public class Mapdata {
 	}
 
 	/**
-	 * Sets the map's ID.
-	 *
-	 * @param mapNum
-	 *            new map ID
-	 */
-	public void setMapNum(int mapNum) {
-		this.mapNum = mapNum;
-	}
-
-	/**
 	 * Gets the map's tileset.
 	 *
 	 * @return tileset
 	 */
 	public String getTileset() {
 		return tileset;
-	}
-
-	/**
-	 * Sets the map's tileset.
-	 *
-	 * @param tileset
-	 *            new tileset
-	 */
-	public void setTileset(String tileset) {
-		this.tileset = tileset;
 	}
 
 	/**
@@ -107,32 +176,12 @@ public class Mapdata {
 	}
 
 	/**
-	 * Sets the map's file name.
-	 *
-	 * @param fileName
-	 *            new file name
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	/**
 	 * Gets the map's scroll type.
 	 *
 	 * @return scroll type
 	 */
 	public int getScrollType() {
 		return scrollType;
-	}
-
-	/**
-	 * Sets the map's scroll type.
-	 *
-	 * @param scrollType
-	 *            new scroll type
-	 */
-	public void setScrollType(int scrollType) {
-		this.scrollType = scrollType;
 	}
 
 	/**
@@ -145,32 +194,12 @@ public class Mapdata {
 	}
 
 	/**
-	 * Sets the map's background image.
-	 *
-	 * @param bgName
-	 *            new background image
-	 */
-	public void setBgName(String bgName) {
-		this.bgName = bgName;
-	}
-
-	/**
 	 * Gets the map's 1st NPC sheet.
 	 *
 	 * @return 1st NPC sheet
 	 */
 	public String getNpcSheet1() {
 		return npcSheet1;
-	}
-
-	/**
-	 * Sets the map's 1st NPC sheet.
-	 *
-	 * @param npcSheet1
-	 *            new 1st NPC sheet
-	 */
-	public void setNpcSheet1(String npcSheet1) {
-		this.npcSheet1 = npcSheet1;
 	}
 
 	/**
@@ -183,13 +212,12 @@ public class Mapdata {
 	}
 
 	/**
-	 * Sets the map's 2nd NPC sheet.
-	 *
-	 * @param npcSheet2
-	 *            new 2nd NPC sheet
+	 * Gets the map's special boss ID.
+	 * 
+	 * @return boss number
 	 */
-	public void setNpcSheet2(String npcSheet2) {
-		this.npcSheet2 = npcSheet2;
+	public int getBossNum() {
+		return bossNum;
 	}
 
 	/**
@@ -202,13 +230,12 @@ public class Mapdata {
 	}
 
 	/**
-	 * Sets the map's name.
-	 *
-	 * @param mapName
-	 *            new display name
+	 * Gets the map's name in Japanese.
+	 * 
+	 * @return JP name
 	 */
-	public void setMapName(String mapName) {
-		this.mapName = mapName;
+	public byte[] getJpName() {
+		return jpName.clone();
 	}
 
 }
