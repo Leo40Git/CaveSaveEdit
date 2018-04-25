@@ -1178,7 +1178,7 @@ public class ExeData {
 		for (int i = 0; i < peData.sections.size(); i++) {
 			PEFile.Section s = peData.sections.get(i);
 			String st = s.decodeTag();
-			if (st.equals(".csmap") || st.equals(".csmap")) {
+			if (st.equals(".csmap") || st.equals(".swdata")) {
 				mapSec = s;
 				mapSecTag = st;
 				break;
@@ -1211,7 +1211,7 @@ public class ExeData {
 					// for each map
 					mapdata.add(new Mapdata(i, buf, type, encoding));
 					notifyListeners(false, EVENT_MAP_DATA, null, i, numMaps - 1);
-				} // for each map
+				}
 			} else {
 				// sue's workshop
 				int nMaps = 0;
