@@ -970,7 +970,7 @@ public class NormalProfile extends Profile {
 				@Override
 				public void setValue(int index, Object value) {
 					Integer[] vals = (Integer[]) value;
-					ByteUtils.writeInt(data, mapPtr, vals[0]);
+					ByteUtils.writeInt(data, ptrCorrector.apply(mapPtr), vals[0]);
 					ByteUtils.writeShort(data, ptrCorrector.apply(xPtr), int2Short(vals[1]));
 					ByteUtils.writeShort(data, ptrCorrector.apply(yPtr), int2Short(vals[2]));
 				}
