@@ -1,4 +1,10 @@
-4.0.2
+4.0.3
+HOTFIX 4.0.3:
+- Fix "New Profile" not working correctly
+- New profiles now start at the game/mod's start point, with the starting health!
+- Added "Show Player Above FG" option, toggles player overlay on top of foreground tiles
+- Dragging map view while Shift is held now automatically snaps position to grid
+- Fix "Run Game" option on CS+ only working with Steam installation on Windows, now works with all Steam installations and DRM-free installations!
 HOTFIX 4.0.2:
 - Fix weapon & warp fields being completely off
 - Fix 290.rec editor outputting "corrupt" records
