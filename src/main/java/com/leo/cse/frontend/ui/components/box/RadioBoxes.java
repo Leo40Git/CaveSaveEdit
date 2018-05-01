@@ -112,14 +112,14 @@ public class RadioBoxes extends Component {
 	}
 
 	@Override
-	public void updateHover(int x, int y, boolean hover) {
-		super.updateHover(x, y, hover);
+	public void updateHover(int x, int y, boolean hover, boolean shiftDown, boolean ctrlDown) {
+		super.updateHover(x, y, hover, shiftDown, ctrlDown);
 		for (RadioBox comp : radioBoxes) {
 			final int rx = comp.getX(), ry = comp.getY() + 17, rw = comp.getWidth(), rh = comp.getHeight();
 			boolean rbHover = false;
 			if (FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh))
 				rbHover = true;
-			comp.updateHover(x, y, rbHover);
+			comp.updateHover(x, y, rbHover, shiftDown, ctrlDown);
 		}
 	}
 

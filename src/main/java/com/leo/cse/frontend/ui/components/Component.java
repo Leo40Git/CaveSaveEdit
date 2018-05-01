@@ -31,7 +31,7 @@ public abstract class Component {
 	public void onClick(int x, int y, boolean shiftDown, boolean ctrlDown) {
 	}
 
-	public void updateHover(int x, int y, boolean hover) {
+	public void updateHover(int x, int y, boolean hover, boolean shiftDown, boolean ctrlDown) {
 		this.hover = hover;
 	}
 

@@ -10,7 +10,7 @@ public abstract class Dialog {
 
 	public abstract boolean wantsToClose();
 
-	public abstract void updateHover(int x, int y);
+	public abstract void updateHover(int x, int y, boolean shift, boolean ctrl);
 
 	public abstract void onKey(int code, boolean shift, boolean ctrl);
 

@@ -27,20 +27,20 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 	}
 
 	@Override
-	public void onDrag(int px, int py) {
+	public void onDrag(int px, int py, boolean shiftDown, boolean ctrlDown) {
 		if (px >= width - ScrollBar.WIDTH || scrolling) {
 			scrolling = true;
-			scrollbar.onDrag(px, py);
+			scrollbar.onDrag(px, py, shiftDown, ctrlDown);
 		} else if (wrappedD != null)
-			wrappedD.onDrag(px, py);
+			wrappedD.onDrag(px, py, shiftDown, ctrlDown);
 	}
 
 	@Override
-	public void onDragEnd(int px, int py) {
+	public void onDragEnd(int px, int py, boolean shiftDown, boolean ctrlDown) {
 		if (scrolling)
-			scrollbar.onDragEnd(px, py);
+			scrollbar.onDragEnd(px, py, shiftDown, ctrlDown);
 		if (wrappedD != null)
-			wrappedD.onDragEnd(px, py);
+			wrappedD.onDragEnd(px, py, shiftDown, ctrlDown);
 		scrolling = false;
 	}
 
@@ -88,11 +88,11 @@ public class ScrollWrapper extends Component implements IScrollable, IDraggable 
 	}
 
 	@Override
-	public void updateHover(int x, int y, boolean hover) {
-		super.updateHover(x, y, hover);
-		scrollbar.updateHover(x, y, (x > width - ScrollBar.WIDTH));
+	public void updateHover(int x, int y, boolean hover, boolean shiftDown, boolean ctrlDown) {
+		super.updateHover(x, y, hover, shiftDown, ctrlDown);
+		scrollbar.updateHover(x, y, (x > width - ScrollBar.WIDTH), shiftDown, ctrlDown);
 		int yo = (int) ((height - wrapped.getHeight()) * scrollbar.getValue());
-		wrapped.updateHover(x, y - yo, hover);
+		wrapped.updateHover(x, y - yo, hover, shiftDown, ctrlDown);
 	}
 
 	public ScrollBar getScrollbar() {

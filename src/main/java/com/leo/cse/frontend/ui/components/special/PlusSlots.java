@@ -266,7 +266,7 @@ public class PlusSlots extends Component {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			if (FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh)) {
 				comp.onClick(x, y, shiftDown, ctrlDown);
-				comp.updateHover(x, y, true);
+				comp.updateHover(x, y, true, shiftDown, ctrlDown);
 				break;
 			}
 		}
@@ -320,14 +320,14 @@ public class PlusSlots extends Component {
 	}
 
 	@Override
-	public void updateHover(int x, int y, boolean hover) {
-		super.updateHover(x, y, hover);
+	public void updateHover(int x, int y, boolean hover, boolean shiftDown, boolean ctrlDown) {
+		super.updateHover(x, y, hover, shiftDown, ctrlDown);
 		for (Component comp : comps) {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			boolean hoverC = hover;
 			if (hoverC)
 				hoverC = FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh);
-			comp.updateHover(x, y, hoverC);
+			comp.updateHover(x, y, hoverC, shiftDown, ctrlDown);
 		}
 	}
 

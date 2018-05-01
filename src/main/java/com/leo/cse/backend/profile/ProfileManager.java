@@ -195,8 +195,8 @@ public class ProfileManager {
 	private static void notifyListeners(String field, int id, Object oldValue, Object newValue) {
 		if (listeners == null)
 			return;
-		for (ProfileListener l : listeners)
-			l.onChange(field, id, oldValue, newValue);
+		for (int i = 0; i < listeners.size(); i++)
+			listeners.get(i).onChange(field, id, oldValue, newValue);
 	}
 
 	/**
@@ -530,7 +530,9 @@ public class ProfileManager {
 	 * @return <code>true</code> if a file is loaded, <code>false</code> otherwise.
 	 */
 	public static boolean isLoaded() {
-		return getLoadedFile() != null;
+		if (impl == null)
+			return false;
+		return impl.isLoaded();
 	}
 
 	/**

@@ -73,7 +73,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				+ (int) (camX / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ","
 				+ (int) (camY / 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1)) + ")";
 		final String instruct = "Move player by\nclicking/dragging\nOR\nwith WASD/arrow keys";
-		final String mod = "Mod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel";
+		final String mod = "Mod key effects:\nNone - 1 tile\nShift - 1/2 tile\nCtrl - 1/4 tile\nCtrl+Shift - 1 pixel\nWhile dragging:\nShift - snap to grid";
 		g.setFont(Resources.fontS);
 		g.setColor(Main.lineColor);
 		FrontUtils.drawString(g, camCoords + "\n\n" + instruct + "\n" + mod, x + 642, y);
@@ -247,8 +247,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 				Rectangle dest = e.getDrawArea();
 				int dstX = dest.x + offset.x;
 				int dstY = dest.y + offset.y;
-				g.drawImage(srcImg, dstX, dstY, dstX + dest.width, dstY + dest.height, srcX, srcY,
-						srcX2, srcY2, null);
+				g.drawImage(srcImg, dstX, dstY, dstX + dest.width, dstY + dest.height, srcX, srcY, srcX2, srcY2, null);
 			}
 		}
 	}
@@ -256,6 +255,8 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	private static final int DRAWTYPE_NORMAL = 0, DRAWTYPE_TRANS = 1, DRAWTYPE_HOVER = 2;
 
 	private void drawMyChar(Graphics2D g, int drawType) {
+		if (drawType == DRAWTYPE_TRANS && !SaveEditorPanel.showPlayerAboveFG)
+			return;
 		double snap = Math.max(1, 2 / (double) MCI.getInteger("Game.GraphicsResolution", 1));
 		int dir = 0;
 		long costume = 0;
@@ -369,6 +370,10 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			Short[] pos = new Short[2];
 			pos[0] = (short) (x - this.x + camX);
 			pos[1] = (short) (y - this.y + camY);
+			if (shiftDown) {
+				pos[0] = (short) (((pos[0] + 16) / 32) * 32);
+				pos[1] = (short) (((pos[1] + 16) / 32) * 32);
+			}
 			ProfileManager.setField(NormalProfile.FIELD_POSITION, pos);
 			updatePlayerPos();
 		}
@@ -413,7 +418,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 	}
 
 	@Override
-	public void onDrag(int x, int y) {
+	public void onDrag(int x, int y, boolean shiftDown, boolean ctrlDown) {
 		if (!ExeData.isLoaded())
 			return;
 		if (mapInfo == null)
@@ -424,11 +429,15 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		playerPos[0] = (short) Math.max(0, Math.min(map[0][0].length * 32, playerPos[0]));
 		playerPos[1] = (short) (y - 16 - this.y + camY);
 		playerPos[1] = (short) Math.max(0, Math.min(map[0].length * 32, playerPos[1]));
+		if (shiftDown) {
+			playerPos[0] = (short) (((playerPos[0] + 16) / 32) * 32);
+			playerPos[1] = (short) (((playerPos[1] + 16) / 32) * 32);
+		}
 		ignoreClick = 2;
 	}
 
 	@Override
-	public void onDragEnd(int px, int py) {
+	public void onDragEnd(int px, int py, boolean shiftDown, boolean ctrlDown) {
 		if (!ExeData.isLoaded())
 			return;
 		if (mapInfo == null)
@@ -438,14 +447,18 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		ProfileManager.setField(NormalProfile.FIELD_POSITION, playerPos);
 		updateCamCoords();
 		ignoreClick = 1;
-		updateHover(px, py, true);
+		updateHover(px, py, true, shiftDown, ctrlDown);
 	}
 
 	@Override
-	public void updateHover(int x, int y, boolean hover) {
-		super.updateHover(x, y, hover);
+	public void updateHover(int x, int y, boolean hover, boolean shiftDown, boolean ctrlDown) {
+		super.updateHover(x, y, hover, shiftDown, ctrlDown);
 		playerHoverX = (short) (x - this.x + camX);
 		playerHoverY = (short) (y - this.y + camY);
+		if (shiftDown) {
+			playerHoverX = (short) (((playerHoverX + 16) / 32) * 32);
+			playerHoverY = (short) (((playerHoverY) / 32) * 32 + 16);
+		}
 	}
 
 	@Override

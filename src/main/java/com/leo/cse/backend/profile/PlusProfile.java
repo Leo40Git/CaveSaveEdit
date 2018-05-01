@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.leo.cse.backend.ByteUtils;
+import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.exe.ExeData.StartPoint;
 import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
 import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager.ProfileMethodException;
@@ -267,6 +269,7 @@ public class PlusProfile extends NormalProfile {
 				@Override
 				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int secToReplace = (int) args[0];
+					final int newSection = secToReplace;
 					byte[] newData = new byte[SECTION_LENGTH];
 					ByteUtils.writeString(newData, 0, header);
 					ByteUtils.writeString(newData, 0x218, flagH);
@@ -278,7 +281,23 @@ public class PlusProfile extends NormalProfile {
 					}
 					try {
 						setField(field, secToReplace, true);
-					} catch (ProfileFieldException e) {
+						callMethod(METHOD_PUSH_ACTIVE_FILE, fcr, newSection);
+						// set start point fields
+						StartPoint sp = ExeData.getStartPoint();
+						if (sp != null) {
+							try {
+								setField(FIELD_MAP, -1, sp.map);
+								setField(FIELD_X_POSITION, -1, sp.positionX);
+								setField(FIELD_Y_POSITION, -1, sp.positionY);
+								setField(FIELD_DIRECTION, -1, sp.direction);
+								setField(FIELD_MAXIMUM_HEALTH, -1, sp.maxHealth);
+								setField(FIELD_CURRENT_HEALTH, -1, sp.curHealth);
+							} catch (ProfileFieldException e) {
+								e.printStackTrace();
+							}
+						}
+						callMethod(METHOD_POP_ACTIVE_FILE, fcr);
+					} catch (ProfileFieldException | ProfileMethodException e) {
 						e.printStackTrace();
 					}
 					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
@@ -437,6 +456,7 @@ public class PlusProfile extends NormalProfile {
 		// create data
 		data = new byte[FILE_LENGTH];
 		// set loaded file to null & set section
+		loaded = true;
 		loadedFile = null;
 		curSection = 0;
 	}
@@ -450,6 +470,7 @@ public class PlusProfile extends NormalProfile {
 				throw new IOException("file is too small");
 		}
 		// set loaded file & section
+		loaded = true;
 		loadedFile = file;
 		curSection = 0;
 	}

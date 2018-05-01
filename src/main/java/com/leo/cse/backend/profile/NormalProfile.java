@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.function.Function;
 
 import com.leo.cse.backend.ByteUtils;
+import com.leo.cse.backend.exe.ExeData;
+import com.leo.cse.backend.exe.ExeData.StartPoint;
 import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
 
 public class NormalProfile extends Profile {
@@ -185,6 +187,22 @@ public class NormalProfile extends Profile {
 		// insert header & flag header
 		ByteUtils.writeString(data, 0, header);
 		ByteUtils.writeString(data, 0x218, flagH);
+		// set start point fields
+		StartPoint sp = ExeData.getStartPoint();
+		if (sp != null) {
+			try {
+				setField(FIELD_MAP, -1, sp.map);
+				setField(FIELD_X_POSITION, -1, (short) (sp.positionX * 32));
+				setField(FIELD_Y_POSITION, -1, (short) (sp.positionY * 32));
+				setField(FIELD_DIRECTION, -1, sp.direction);
+				setField(FIELD_MAXIMUM_HEALTH, -1, sp.maxHealth);
+				setField(FIELD_CURRENT_HEALTH, -1, sp.curHealth);
+			} catch (ProfileFieldException e) {
+				e.printStackTrace();
+			}
+		}
+		// set loaded flag
+		loaded = true;
 		// set loaded file to null
 		loadedFile = null;
 	}
@@ -205,6 +223,8 @@ public class NormalProfile extends Profile {
 		String profFlagH = ByteUtils.readString(data, 0x218, flagH.length());
 		if (!flagH.equals(profFlagH))
 			throw new IOException("Flag header is missing!");
+		// set loaded flag
+		loaded = true;
 		// set loaded file
 		loadedFile = file;
 	}
@@ -256,6 +276,7 @@ public class NormalProfile extends Profile {
 	@Override
 	public void unload() {
 		data = null;
+		loaded = false;
 		loadedFile = null;
 	}
 

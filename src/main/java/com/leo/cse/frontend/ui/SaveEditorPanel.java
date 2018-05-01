@@ -283,6 +283,7 @@ public class SaveEditorPanel extends JPanel
 
 	public static boolean sortMapsAlphabetically = Config.getBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, false);
 	public static boolean showMapGrid = Config.getBoolean(Config.KEY_SHOW_MAP_GRID, false);
+	public static boolean showPlayerAboveFG = Config.getBoolean(Config.KEY_SHOW_PLAYER_ABOVE_FG, true);
 	public static boolean hideSystemFlags = Config.getBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, true);
 	public static boolean hideUndefinedFlags = Config.getBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, true);
 
@@ -450,6 +451,7 @@ public class SaveEditorPanel extends JPanel
 	public void saveSettings() {
 		Config.setBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, sortMapsAlphabetically);
 		Config.setBoolean(Config.KEY_SHOW_MAP_GRID, showMapGrid);
+		Config.setBoolean(Config.KEY_SHOW_PLAYER_ABOVE_FG, showPlayerAboveFG);
 		Config.setBoolean(Config.KEY_HIDE_UNDEFINED_FLAGS, hideSystemFlags);
 		Config.setBoolean(Config.KEY_HIDE_SYSTEM_FLAGS, hideUndefinedFlags);
 	}
@@ -974,14 +976,14 @@ public class SaveEditorPanel extends JPanel
 					if (comp instanceof IDraggable) {
 						IDraggable drag = (IDraggable) comp;
 						if (lastDragged.get(drag) != null) {
-							drag.onDragEnd(px, py);
+							drag.onDragEnd(px, py, shift, ctrl);
 							lastDragged.remove(drag);
 						}
 					}
 				}
 				if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 					comp.onClick(px, py - 17, shift, ctrl);
-					comp.updateHover(px, py, true);
+					comp.updateHover(px, py, true, shift, ctrl);
 					newFocus = comp;
 					break;
 				}
@@ -1032,15 +1034,18 @@ public class SaveEditorPanel extends JPanel
 		final Insets i = Main.window.getInsets();
 		px -= i.left + OFFSET_X;
 		py -= i.top + OFFSET_Y;
+		final int mod = e.getModifiersEx();
+		final boolean shift = (mod & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK,
+				ctrl = (mod & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
 		if (!dBoxes.isEmpty()) {
 			notDraggingComps = true;
-			mouseMoved(px, py + OFFSET_Y, false);
+			mouseMoved(px, py + OFFSET_Y, mod, false);
 			return;
 		}
 		final Dimension winSize2 = Main.window.getActualSize(false);
 		if (py <= 17 || currentMenubar != -1 || py >= winSize2.height - 18) {
 			notDraggingComps = true;
-			mouseMoved(px, py + OFFSET_Y, false);
+			mouseMoved(px, py + OFFSET_Y, mod, false);
 			return;
 		}
 		if (loading || !ProfileManager.isLoaded() || notDraggingComps)
@@ -1052,12 +1057,12 @@ public class SaveEditorPanel extends JPanel
 			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 				hover = true;
 			}
-			comp.updateHover(px, py, hover);
+			comp.updateHover(px, py, hover, shift, ctrl);
 			if (!(comp instanceof IDraggable))
 				continue;
 			IDraggable drag = (IDraggable) comp;
 			if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh) || lastDragged.get(drag) != null) {
-				drag.onDrag(px, py);
+				drag.onDrag(px, py, shift, ctrl);
 				lastDragged.put(drag, true);
 				newFocus = comp;
 			}
@@ -1068,10 +1073,10 @@ public class SaveEditorPanel extends JPanel
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		mouseMoved(e.getX(), e.getY(), true);
+		mouseMoved(e.getX(), e.getY(), e.getModifiersEx(), true);
 	}
 
-	private void mouseMoved(int px, int py, boolean applyInsets) {
+	private void mouseMoved(int px, int py, final int mod, boolean applyInsets) {
 		if (loading)
 			return;
 		if (applyInsets) {
@@ -1080,12 +1085,14 @@ public class SaveEditorPanel extends JPanel
 			py -= i.top + OFFSET_Y;
 		}
 		final Dimension winSize2 = Main.window.getActualSize(false);
+		final boolean shift = (mod & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK,
+				ctrl = (mod & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
 		menubarHover = -1;
 		tabHover = -1;
 		boolean somethingInFront = false;
 		if (!dBoxes.isEmpty()) {
 			somethingInFront = true;
-			dBoxes.get(0).updateHover(px, py);
+			dBoxes.get(0).updateHover(px, py, shift, ctrl);
 		}
 		if (py <= 17) {
 			// menu bar
@@ -1146,7 +1153,7 @@ public class SaveEditorPanel extends JPanel
 					if (FrontUtils.pointInRectangle(px, py, rx, ry, rw, rh)) {
 						hover = true;
 					}
-					comp.updateHover(px, py, hover);
+					comp.updateHover(px, py, hover, shift, ctrl);
 				}
 			}
 		}

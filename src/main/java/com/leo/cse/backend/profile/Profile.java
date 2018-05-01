@@ -164,6 +164,11 @@ public abstract class Profile {
 	}
 
 	/**
+	 * Loaded flag. If <code>true</code>, there's a profile in memory, even if
+	 * {@link #loadedFile} is <code>null</code>.
+	 */
+	protected boolean loaded;
+	/**
 	 * The currently loaded file.
 	 */
 	protected File loadedFile;
@@ -207,9 +212,17 @@ public abstract class Profile {
 	public abstract void unload();
 
 	/**
+	 * Checks if a profile is loaded.
+	 * @return <code>true</code> if loaded, <code>false</code> otherwise
+	 */
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	/**
 	 * Gets the loaded file.
 	 *
-	 * @return loaded file, or <code>null</code> if no file is loaded
+	 * @return loaded file
 	 */
 	public File getLoadedFile() {
 		return loadedFile;

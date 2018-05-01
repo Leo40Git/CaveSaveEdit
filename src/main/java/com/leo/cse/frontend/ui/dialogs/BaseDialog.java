@@ -101,7 +101,7 @@ public class BaseDialog extends Dialog {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			if (FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh)) {
 				comp.onClick(x, y, shift, ctrl);
-				comp.updateHover(x, y, true);
+				comp.updateHover(x, y, true, shift, ctrl);
 				break;
 			}
 		}
@@ -113,7 +113,7 @@ public class BaseDialog extends Dialog {
 	}
 
 	@Override
-	public void updateHover(int x, int y) {
+	public void updateHover(int x, int y, boolean shift, boolean ctrl) {
 		final int wx = getWindowX(), wy = getWindowY(false);
 		if (closeButton) {
 			closeHover = false;
@@ -127,7 +127,7 @@ public class BaseDialog extends Dialog {
 		for (Component comp : comps) {
 			final int rx = comp.getX(), ry = comp.getY(), rw = comp.getWidth(), rh = comp.getHeight();
 			boolean hover = FrontUtils.pointInRectangle(x, y, rx, ry, rw, rh);
-			comp.updateHover(x, y, hover);
+			comp.updateHover(x, y, hover, shift, ctrl);
 		}
 	}
 

@@ -646,6 +646,44 @@ public class ExeData {
 	 * PXA file repository.
 	 */
 	private static Map<File, byte[]> pxaMap;
+
+	/**
+	 * Stores information about the game's starting point.
+	 * 
+	 * @author Leo
+	 *
+	 */
+	public static class StartPoint {
+		/**
+		 * Starting maximum health.
+		 */
+		public short maxHealth;
+		/**
+		 * Starting current health.
+		 */
+		public short curHealth;
+		/**
+		 * Starting map.
+		 */
+		public int map;
+		/**
+		 * Starting X position.
+		 */
+		public short positionX;
+		/**
+		 * Starting Y position.
+		 */
+		public short positionY;
+		/**
+		 * Starting direction.
+		 */
+		public int direction;
+	}
+
+	/**
+	 * The currently loaded game/mod's starting point.
+	 */
+	private static StartPoint startPoint;
 	/**
 	 * "Title" graphics file.
 	 */
@@ -797,6 +835,7 @@ public class ExeData {
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
 			loadGraphics();
 			loadRsrc();
+			loadStartPoint();
 			loadMapInfo();
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
 		} catch (Exception e) {
@@ -829,9 +868,10 @@ public class ExeData {
 			loadNpcTbl();
 			fillMapdataPlus();
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
-			loadMapInfo();
 			loadGraphics();
 			loadGraphicsPlus();
+			initStartPointPlus();
+			loadMapInfo();
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
 		} catch (Exception e) {
 			loaded = false;
@@ -871,12 +911,22 @@ public class ExeData {
 		mapInfo = null;
 		imageMap = null;
 		pxaMap = null;
+		startPoint = null;
+		title = null;
+		pixel = null;
 		myChar = null;
 		armsImage = null;
 		itemImage = null;
 		stageImage = null;
-		npcRegu = null;
 		npcSym = null;
+		npcRegu = null;
+		textBox = null;
+		caret = null;
+		bullet = null;
+		face = null;
+		fade = null;
+		loading = null;
+		ui = null;
 		System.gc();
 		ProfileManager.setHeader(NormalProfile.DEFAULT_HEADER);
 		ProfileManager.setFlagHeader(NormalProfile.DEFAULT_FLAGH);
@@ -912,9 +962,10 @@ public class ExeData {
 			throw new IOException("Could not find .rsrc segment!");
 		dataBuf.position(0);
 		peData = new PEFile(dataBuf, 0x1000);
-		int rdataSec = peData.getSectionIndexByTag(".rdata");
-		if (rdataSec == -1)
+		int rdataSecId = peData.getSectionIndexByTag(".rdata");
+		if (rdataSecId == -1)
 			throw new IOException("Could not find .rdata segment!");
+		rdataSection = peData.sections.get(rdataSecId);
 	}
 
 	/**
@@ -1580,6 +1631,39 @@ public class ExeData {
 
 	// ".rsrc" segment code ends here
 
+	public static final int RVA_STARTING_HP_MAX = 0x14BD8;
+	public static final int RVA_STARTING_HP_CUR = 0x14BCF;
+	public static final int RVA_STARTING_MAP = 0x1D599;
+	public static final int RVA_STARTING_POS_X = 0x1D592;
+	public static final int RVA_STARTING_POS_Y = 0x1D590;
+	public static final int RVA_STARTING_DIR = 0x14B74;
+
+	/**
+	 * Reads the start point.
+	 */
+	private static void loadStartPoint() {
+		startPoint = new StartPoint();
+		startPoint.maxHealth = peData.setupRVAPoint(RVA_STARTING_HP_MAX).getShort();
+		startPoint.curHealth = peData.setupRVAPoint(RVA_STARTING_HP_CUR).getShort();
+		startPoint.map = Byte.toUnsignedInt(peData.setupRVAPoint(RVA_STARTING_MAP).get());
+		startPoint.positionX = (short) peData.setupRVAPoint(RVA_STARTING_POS_X).get();
+		startPoint.positionY = (short) peData.setupRVAPoint(RVA_STARTING_POS_Y).get();
+		startPoint.direction = peData.setupRVAPoint(RVA_STARTING_DIR).getInt();
+	}
+	
+	/**
+	 * Initializes the start point for CS+.
+	 */
+	private static void initStartPointPlus() {
+		startPoint = new StartPoint();
+		startPoint.maxHealth = 3;
+		startPoint.curHealth = startPoint.maxHealth;
+		startPoint.map = 13; // Start Point
+		startPoint.positionX = 10;
+		startPoint.positionY = 8;
+		startPoint.direction = 2; // Right
+	}
+
 	/**
 	 * Attempts to add an image to the repository.
 	 *
@@ -1927,6 +2011,15 @@ public class ExeData {
 	}
 
 	/**
+	 * Gets the game's starting point.
+	 * 
+	 * @return start point
+	 */
+	public static StartPoint getStartPoint() {
+		return startPoint;
+	}
+
+	/**
 	 * Gets the "Title" graphics file.
 	 *
 	 * @return Title file
@@ -1935,6 +2028,11 @@ public class ExeData {
 		return title;
 	}
 
+	/**
+	 * Gets the "PIXEL" resource file.
+	 * 
+	 * @return Pixel file
+	 */
 	public static File getPixel() {
 		return pixel;
 	}

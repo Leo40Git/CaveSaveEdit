@@ -51,7 +51,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static final Logger LOGGER = LogManager.getLogger("CSE");
 
 	public static final Dimension WINDOW_SIZE = new Dimension(870, 734);
-	public static final Version VERSION = new Version("4.0.1");
+	public static final Version VERSION = new Version("4.0.3");
 	public static final String UPDATE_CHECK_SITE = "https://raw.githubusercontent.com/Leo40Git/CaveSaveEdit/master/.version";
 	public static final String DOWNLOAD_SITE = "https://github.com/Leo40Git/CaveSaveEdit/releases/";
 	public static final Color COLOR_BG = new Color(0, 0, 25);

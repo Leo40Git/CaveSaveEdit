@@ -182,7 +182,7 @@ public class NikuEdit extends Component implements IScrollable {
 	}
 
 	@Override
-	public void updateHover(int x, int y, boolean hover) {
+	public void updateHover(int x, int y, boolean hover, boolean shiftDown, boolean ctrlDown) {
 		if (NikuRecord.isLoaded() && hover)
 			elemHover = getElement(x);
 		else

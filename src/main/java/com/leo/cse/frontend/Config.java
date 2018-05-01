@@ -26,6 +26,7 @@ public class Config {
 	public static final String KEY_SKIP_UPDATE_CHECK = "skip_update_check";
 	public static final String KEY_AUTOLOAD_EXE = "autoload_exe";
 	public static final String KEY_AUTOLOAD_PROFILE = "autoload_profile";
+	public static final String KEY_SHOW_PLAYER_ABOVE_FG = "show_player_above_fg";
 
 	private static Preferences config;
 

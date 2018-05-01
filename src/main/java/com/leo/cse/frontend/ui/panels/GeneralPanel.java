@@ -229,11 +229,15 @@ public class GeneralPanel extends Panel {
 		}
 		compList.add(mp = new MapView(winSize.width / 2 - 320, 164, () -> SaveEditorPanel.showMapGrid));
 		ProfileManager.addListener(mp);
-		compList.add(new BooleanBox("Show Grid?", false, 758, 406, () -> SaveEditorPanel.showMapGrid, t -> {
+		compList.add(new BooleanBox("Show Grid?", false, 758, 386, () -> SaveEditorPanel.showMapGrid, t -> {
 			SaveEditorPanel.showMapGrid = t;
 			return t;
 		}).setEnabled(() -> ExeData.isLoaded()));
-		compList.add(new Button("Snap to Grid", 758, 426, 100, 20, () -> {
+		compList.add(new BooleanBox("Show Player\nAbove FG?", false, 758, 406, () -> SaveEditorPanel.showPlayerAboveFG, t -> {
+			SaveEditorPanel.showPlayerAboveFG = t;
+			return t;
+		}).setEnabled(() -> ExeData.isLoaded()));
+		compList.add(new Button("Snap to Grid", 758, 446, 100, 20, () -> {
 			Short[] pos = new Short[2];
 			pos[0] = (short) (Math.round((Short) (ProfileManager.getField(NormalProfile.FIELD_X_POSITION)) / 32.0)
 					* 32);

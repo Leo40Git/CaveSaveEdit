@@ -160,8 +160,8 @@ public class MapFlagList extends Component {
 	}
 
 	@Override
-	public void updateHover(int x, int y, boolean hover) {
-		super.updateHover(x, y, hover);
+	public void updateHover(int x, int y, boolean hover, boolean shiftDown, boolean ctrlDown) {
+		super.updateHover(x, y, hover, shiftDown, ctrlDown);
 		calculateShownFlags();
 		recalculateHeight();
 		final int fx = 4;
