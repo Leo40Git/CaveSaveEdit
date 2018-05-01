@@ -413,7 +413,7 @@ public class SaveEditorPanel extends JPanel
 			return ExeData.isLoaded() && ExeData.doLoadNpc();
 		}));
 		menuBars.add(new MenuBar("Tools", mbiTools));
-		boolean plus = ExeData.isPlusMode();
+		boolean plus = ExeData.isPlusMode() && false; // TODO Actually implement CS+ panel
 		boolean var = !plus && MCI.getSpecial("VarHack");
 		boolean eqp = !var && MCI.getSpecial("EquipPlusHack");
 		int tabCount = 5;
