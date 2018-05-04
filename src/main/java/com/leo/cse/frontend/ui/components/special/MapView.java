@@ -461,12 +461,25 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		}
 	}
 
+	private short int2Short(int i) {
+		return (short) Math.min(Math.max(i, Short.MIN_VALUE), Short.MAX_VALUE);
+	}
+
 	@Override
 	public void onChange(String field, int id, Object oldValue, Object newValue) {
 		Short newShort = 0;
 		if (newValue instanceof Short)
 			newShort = (Short) newValue;
 		switch (field) {
+		case NormalProfile.FIELD_MAP_AND_POSITION:
+			if (newValue instanceof Integer[]) {
+				Integer[] playerPosI = (Integer[]) newValue;
+				lastMap = playerPosI[0];
+				playerPos = new Short[2];
+				playerPos[0] = int2Short(playerPosI[1]);
+				playerPos[1] = int2Short(playerPosI[2]);
+			}
+			break;
 		case NormalProfile.FIELD_POSITION:
 			if (newValue instanceof Short[]) {
 				playerPos = (Short[]) newValue;

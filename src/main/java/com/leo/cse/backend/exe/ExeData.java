@@ -51,6 +51,28 @@ public class ExeData {
 	 * A list of {@link ExeLoadListener}s.
 	 */
 	private static List<ExeLoadListener> listeners;
+	/**
+	 * A list of {@link ExeLoadListener}s that will be added next update.<br />
+	 * <i>NOTE: These will be notified immediately after being added.</i>
+	 */
+	private static List<ExeLoadListener> listenersToAdd;
+	/**
+	 * A list of {@link ExeLoadListener}s that will be remove next update.<br />
+	 * <i>NOTE: These will be removed before being notified.</i>
+	 */
+	private static List<ExeLoadListener> listenersToRemove;
+
+	/**
+	 * Initializes listener lists.
+	 */
+	private static void initListenerLists() {
+		if (listeners == null)
+			listeners = new LinkedList<>();
+		if (listenersToAdd == null)
+			listenersToAdd = new LinkedList<>();
+		if (listenersToRemove == null)
+			listenersToRemove = new LinkedList<>();
+	}
 
 	/**
 	 * Attaches a load listener.
@@ -59,15 +81,28 @@ public class ExeData {
 	 *            listener
 	 */
 	public static void addListener(ExeLoadListener l) {
-		if (listeners == null)
-			listeners = new LinkedList<>();
+		initListenerLists();
 		listeners.add(l);
 	}
 
+	/**
+	 * Detaches a load listener.
+	 * 
+	 * @param l
+	 *            listener
+	 */
 	public static void removeListener(ExeLoadListener l) {
-		if (listeners == null)
-			return;
+		initListenerLists();
 		listeners.remove(l);
+	}
+	
+	/**
+	 * Removes all listeners.
+	 */
+	public static void removeAllListeners() {
+		listeners = null;
+		listenersToAdd = null;
+		listenersToRemove = null;
 	}
 
 	public static final String EVENT_PRELOAD = "load.pre";
@@ -116,6 +151,14 @@ public class ExeData {
 	private static void notifyListeners(boolean sub, String event, String loadName, int loadId, int loadIdMax) {
 		if (listeners == null)
 			return;
+		if (listenersToAdd != null) {
+			listeners.addAll(listenersToAdd);
+			listenersToAdd.clear();
+		}
+		if (listenersToRemove != null) {
+			listeners.removeAll(listenersToRemove);
+			listenersToRemove.clear();
+		}
 		for (ExeLoadListener l : listeners)
 			if (sub)
 				l.onSubevent(event, loadName, loadId, loadIdMax);
@@ -1650,7 +1693,7 @@ public class ExeData {
 		startPoint.positionY = (short) peData.setupRVAPoint(RVA_STARTING_POS_Y).get();
 		startPoint.direction = peData.setupRVAPoint(RVA_STARTING_DIR).getInt();
 	}
-	
+
 	/**
 	 * Initializes the start point for CS+.
 	 */

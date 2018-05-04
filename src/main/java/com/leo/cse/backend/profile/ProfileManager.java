@@ -151,10 +151,32 @@ public class ProfileManager {
 	 */
 	private static List<ProfileListener> listeners;
 	/**
+	 * A list of {@link ProfileListener}s that will be added next update.<br />
+	 * <i>NOTE: These will be notified immediately after being added.</i>
+	 */
+	private static List<ProfileListener> listenersToAdd;
+	/**
+	 * A list of {@link ProfileListener}s that will be removed next update.<br />
+	 * <i>NOTE: These will be removed before being notified.</i>
+	 */
+	private static List<ProfileListener> listenersToRemove;
+	/**
 	 * Modified flag. If <code>true</code>, profile data has been modified since the
 	 * last save.
 	 */
 	private static boolean modified;
+
+	/**
+	 * Initialize listener lists.
+	 */
+	private static void initListenerLists() {
+		if (listeners == null)
+			listeners = new LinkedList<>();
+		if (listenersToAdd == null)
+			listenersToAdd = new LinkedList<>();
+		if (listenersToRemove == null)
+			listenersToRemove = new LinkedList<>();
+	}
 
 	/**
 	 * Adds a listener.
@@ -163,9 +185,8 @@ public class ProfileManager {
 	 *            listener
 	 */
 	public static void addListener(ProfileListener l) {
-		if (listeners == null)
-			listeners = new LinkedList<>();
-		listeners.add(l);
+		initListenerLists();
+		listenersToAdd.add(l);
 	}
 
 	/**
@@ -177,7 +198,16 @@ public class ProfileManager {
 	public static void removeListener(ProfileListener l) {
 		if (listeners == null)
 			return;
-		listeners.remove(l);
+		listenersToRemove.add(l);
+	}
+
+	/**
+	 * Removes all listeners.
+	 */
+	public static void removeAllListeners() {
+		listeners = null;
+		listenersToAdd = null;
+		listenersToRemove = null;
 	}
 
 	/**
@@ -195,8 +225,16 @@ public class ProfileManager {
 	private static void notifyListeners(String field, int id, Object oldValue, Object newValue) {
 		if (listeners == null)
 			return;
-		for (int i = 0; i < listeners.size(); i++)
-			listeners.get(i).onChange(field, id, oldValue, newValue);
+		if (listenersToAdd != null) {
+			listeners.addAll(listenersToAdd);
+			listenersToAdd.clear();
+		}
+		if (listenersToRemove != null) {
+			listeners.removeAll(listenersToRemove);
+			listenersToRemove.clear();
+		}
+		for (ProfileListener l : listeners)
+			l.onChange(field, id, oldValue, newValue);
 	}
 
 	/**
@@ -255,7 +293,12 @@ public class ProfileManager {
 		@Override
 		public void undo() throws CannotUndoException {
 			System.out.println("Attempting to undo: " + getUndoPresentationName());
-			setField(field, index, oldVal, false);
+			try {
+				setField(field, index, oldVal, false);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new CannotUndoException();
+			}
 			hasBeenUndone = true;
 		}
 
@@ -267,7 +310,12 @@ public class ProfileManager {
 		@Override
 		public void redo() throws CannotRedoException {
 			System.out.println("Attempting to redo: " + getRedoPresentationName());
-			setField(field, index, newVal, false);
+			try {
+				setField(field, index, newVal, false);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new CannotRedoException();
+			}
 			hasBeenUndone = false;
 		}
 

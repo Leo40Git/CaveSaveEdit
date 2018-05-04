@@ -437,17 +437,6 @@ public class SaveEditorPanel extends JPanel
 		progSubload = new LoadProgress();
 	}
 
-	private static class SavePoint {
-		public int map;
-		public short x, y;
-
-		public SavePoint(int map, short x, short y) {
-			this.map = map;
-			this.x = x;
-			this.y = y;
-		}
-	}
-
 	public void saveSettings() {
 		Config.setBoolean(Config.KEY_SORT_MAPS_ALPHABETICALLY, sortMapsAlphabetically);
 		Config.setBoolean(Config.KEY_SHOW_MAP_GRID, showMapGrid);
@@ -824,6 +813,30 @@ public class SaveEditorPanel extends JPanel
 		}
 	}
 
+	private static class SavePoint {
+		public int map;
+		public short x, y;
+
+		public SavePoint(int map, short x, short y) {
+			this.map = map;
+			this.x = x;
+			this.y = y;
+		}
+
+		@Override
+		public String toString() {
+			int eMap = map;
+			MapInfo eMapI = ExeData.getMapInfo(eMap);
+			int eX = x, eY = y;
+			return "(" + eX + ", " + eY + ") in map " + eMap + " (" + eMapI.getFileName() + " - " + eMapI.getMapName()
+					+ ")";
+		}
+	}
+
+	private short int2Short(int i) {
+		return (short) Math.min(Math.max(i, Short.MIN_VALUE), Short.MAX_VALUE);
+	}
+
 	private void jumpToSavePoint() {
 		final int saveEvent = MCI.getInteger("Game.SaveEvent", 16);
 		List<SavePoint> results = new LinkedList<>();
@@ -836,8 +849,19 @@ public class SaveEditorPanel extends JPanel
 				if (entity.getEvent() != saveEvent)
 					// if entity's event is not the save event, continue
 					continue;
+				int flagID = entity.getFlagID();
 				int entityFlags = entity.getFlags();
 				entityFlags |= entity.getInfo().getFlags();
+				if ((entityFlags & 0x0800) != 0)
+					// Appear once flagID set
+					// if entity isn't supposed to appear, continue
+					if (!(boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flagID))
+						continue;
+				if ((entityFlags & 0x4000) != 0)
+					// No Appear if flagID set
+					// if entity isn't supposed to appear, continue
+					if ((boolean) ProfileManager.getField(NormalProfile.FIELD_FLAGS, flagID))
+						continue;
 				if ((entityFlags & 0x2000) == 0)
 					// if entity cannot be interacted with, continue
 					continue;
@@ -850,15 +874,11 @@ public class SaveEditorPanel extends JPanel
 			return;
 		}
 		String[] resultStr = new String[results.size()];
-		for (int i = 0; i < resultStr.length; i++) {
-			SavePoint point = results.get(i);
-			int eMap = point.map;
-			MapInfo eMapI = ExeData.getMapInfo(eMap);
-			int eX = point.x, eY = point.y;
-			resultStr[i] = "(" + eX + ", " + eY + ") in map " + eMap + " (" + eMapI.getFileName() + " - "
-					+ eMapI.getMapName() + ")";
-		}
-		String sel = FrontUtils.showSelectionDialog(this, "Select Save Point to go to", resultStr, resultStr[0]);
+		for (int i = 0; i < resultStr.length; i++)
+			resultStr[i] = results.get(i).toString();
+		Integer[] mp = (Integer[]) ProfileManager.getField(NormalProfile.FIELD_MAP_AND_POSITION);
+		String curStr = new SavePoint(mp[0], int2Short(mp[1] / 32), int2Short(mp[2] / 32)).toString();
+		String sel = FrontUtils.showSelectionDialog(this, "Select Save Point to go to", resultStr, curStr);
 		if (sel == null)
 			return;
 		int selResult = -1;

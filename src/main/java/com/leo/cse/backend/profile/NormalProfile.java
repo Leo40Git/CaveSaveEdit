@@ -693,7 +693,7 @@ public class NormalProfile extends Profile {
 					byte flag = ret[index];
 					if (type)
 						return Byte.toUnsignedInt(flag) > 0x7F;
-					return flag == 0;
+					return flag != 0;
 				}
 
 				@Override
