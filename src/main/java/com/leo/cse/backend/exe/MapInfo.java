@@ -10,6 +10,7 @@ import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.leo.cse.backend.BackendLogger;
 import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.tsc.TSCFile;
 
@@ -201,8 +202,7 @@ public class MapInfo {
 			inStream.close();
 			mapBuf.flip();
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("Failed to load PXM:\n" + currentFileName);
+			BackendLogger.error("Failed to load PXM:\n" + currentFileName, e);
 			mapX = 21;
 			mapY = 16;
 			mapBuf = ByteBuffer.allocate(mapY * mapX);
@@ -231,9 +231,7 @@ public class MapInfo {
 		try {
 			rval = pxaData[tileNum];
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("pxa len: " + pxaData.length);
-			System.err.println("tile " + tileNum);
+			BackendLogger.error("Could not get tile " + tileNum + " in PXA (length is " + pxaData.length + ")", e);
 		}
 		return rval & 0xFF;
 	}
@@ -279,8 +277,7 @@ public class MapInfo {
 			inChan.close();
 			inStream.close();
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("Failed to load PXE:\n" + currentFileName);
+			BackendLogger.error("Failed to load PXE:\n" + currentFileName, e);
 			pxeList = null;
 		}
 	}
@@ -290,13 +287,12 @@ public class MapInfo {
 	 */
 	public void loadTSC() {
 		File directory = ExeData.getDataDir();
-		String stage = ExeData.getExeString(ExeData.STRING_STAGE_FOLDER);
+		String currentFileName = String.format(ExeData.getExeString(ExeData.STRING_TSC_EXT),
+				directory + "/" + ExeData.getExeString(ExeData.STRING_STAGE_FOLDER), fileName);
 		try {
-			tscFile = new TSCFile(
-					String.format(ExeData.getExeString(ExeData.STRING_TSC_EXT), directory + "/" + stage, fileName));
+			tscFile = new TSCFile(currentFileName);
 		} catch (IOException e) {
-			System.err.println("Failed to load TSC:\n" + fileName);
-			e.printStackTrace();
+			BackendLogger.error("Failed to load TSC:\n" + currentFileName, e);
 		}
 	}
 
@@ -583,11 +579,20 @@ public class MapInfo {
 	public String getMissingAssets() {
 		if (!hasMissingAssets())
 			return "";
-		final String[] assetName = new String[] { "PXM file", "tileset", "background image", "NPC sheet 1",
-				"NPC sheet 2", "PXE file" };
-		final boolean[] assetStat = new boolean[] { map == null, ExeData.getImage(tileset) == null,
-				ExeData.getImage(bgImage) == null, ExeData.doLoadNpc() && ExeData.getImage(npcSheet1) == null,
-				ExeData.doLoadNpc() && ExeData.getImage(npcSheet2) == null, ExeData.doLoadNpc() && pxeList == null };
+		final String[] assetName = new String[] {
+				"PXM file",
+				"tileset",
+				"background image",
+				"NPC sheet 1",
+				"NPC sheet 2",
+				"PXE file" };
+		final boolean[] assetStat = new boolean[] {
+				map == null,
+				ExeData.getImage(tileset) == null,
+				ExeData.getImage(bgImage) == null,
+				ExeData.doLoadNpc() && ExeData.getImage(npcSheet1) == null,
+				ExeData.doLoadNpc() && ExeData.getImage(npcSheet2) == null,
+				ExeData.doLoadNpc() && pxeList == null };
 		assert (assetName.length == assetStat.length);
 		String ret = "";
 		for (int i = 0; i < assetStat.length; i++)

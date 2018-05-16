@@ -109,8 +109,7 @@ public class MCI {
 		try (InputStreamReader isr = new InputStreamReader(is);) {
 			tcx.evaluateReader(tscope, isr, src.getName(), 0, null);
 		} catch (IOException e) {
-			System.err.println("MCI: Error while parsing script!");
-			e.printStackTrace();
+			Main.LOGGER.error("MCI: Error while parsing script!", e);
 			JOptionPane.showMessageDialog(Main.window, "An exception occured while parsing the MCI file:\n" + e,
 					"Error while parsing MCI file", JOptionPane.ERROR_MESSAGE);
 			throw e;
@@ -161,13 +160,13 @@ public class MCI {
 			tmp.put("Flag.SaveID", invokeFunction(tcx, tscope, "getSaveFlagID"));
 			readList(tmp, "Flag", invokeFunction(tcx, tscope, "getFlagDescriptions"));
 		} catch (NoSuchMethodException e) {
+			Main.LOGGER.error("MCI: Exception while assigning script results to properties object!", e);
 			JOptionPane.showMessageDialog(Main.window,
 					"Could not find definition for \"" + e.getMessage() + "\" in MCI file!", "Missing definition",
 					JOptionPane.ERROR_MESSAGE);
 			throw e;
 		} catch (Exception e) {
-			System.err.println("MCI: Exception while assigning script results to properties object!");
-			e.printStackTrace();
+			Main.LOGGER.error("MCI: Exception while assigning script results to properties object!", e);
 			JOptionPane.showMessageDialog(Main.window, "Something went wrong with the MCI file:\n" + e,
 					"Something went wrong", JOptionPane.ERROR_MESSAGE);
 			throw e;
@@ -272,9 +271,8 @@ public class MCI {
 		Integer ret;
 		try {
 			ret = Integer.parseUnsignedInt(val);
-		} catch (NumberFormatException ignore) {
-			System.err.println("MCI: " + key + " is not an integer!");
-			ignore.printStackTrace();
+		} catch (NumberFormatException e) {
+			Main.LOGGER.error("MCI: " + key + " is not an integer!", e);
 			return def;
 		}
 		return ret;
@@ -368,7 +366,7 @@ public class MCI {
 			oe1 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getPlayerFrame", x, y, leftright, costume),
 					Rectangle.class);
 		if (!(oe1 instanceof Rectangle)) {
-			System.err.println("oe1 is not Rectangle: " + oe1.getClass().getName());
+			Main.LOGGER.error("oe1 is not Rectangle: " + oe1.getClass().getName());
 			return null;
 		}
 		Rectangle frameRect = (Rectangle) oe1;
@@ -377,7 +375,7 @@ public class MCI {
 			oe2 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getPlayerOffset", x, y, leftright, costume),
 					Point.class);
 		if (!(oe2 instanceof Point)) {
-			System.err.println("oe2 is not Point: " + oe1.getClass().getName());
+			Main.LOGGER.error("oe2 is not Point: " + oe1.getClass().getName());
 			return null;
 		}
 		Point offset = (Point) oe2;
@@ -412,7 +410,7 @@ public class MCI {
 		if (oe1 == null)
 			oe1 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getEntityFrame", we), Rectangle.class);
 		if (!(oe1 instanceof Rectangle)) {
-			System.err.println("oe1 is not Rectangle: " + oe1.getClass().getName());
+			Main.LOGGER.error("oe1 is not Rectangle: " + oe1.getClass().getName());
 			return null;
 		}
 		Rectangle frameRect = (Rectangle) oe1;
@@ -420,7 +418,7 @@ public class MCI {
 		if (oe2 == null)
 			oe2 = Context.jsToJava(invokeFunction(defaultCx, defaultScope, "getEntityOffset", we), Point.class);
 		if (!(oe2 instanceof Point)) {
-			System.err.println("oe2 is not Point: " + oe1.getClass().getName());
+			Main.LOGGER.error("oe2 is not Point: " + oe1.getClass().getName());
 			return null;
 		}
 		Point offset = (Point) oe2;

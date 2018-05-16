@@ -204,14 +204,8 @@ public class SaveEditorPanel extends JPanel
 	public static SaveEditorPanel panel;
 
 	public enum EditorTab {
-		GENERAL("General", 0),
-		INVENTORY("Inventory", 1),
-		WARPS("Warps", 2),
-		FLAGS("Flags", 3),
-		MAP_FLAGS("Map Flags", 5),
-		VARIABLES("Variables", 4),
-		EQUIP_PLUS("Equip+", 6),
-		CS_PLUS("Cave Story+", 7);
+		GENERAL("General", 0), INVENTORY("Inventory", 1), WARPS("Warps", 2), FLAGS("Flags", 3), MAP_FLAGS("Map Flags",
+				5), VARIABLES("Variables", 4), EQUIP_PLUS("Equip+", 6), CS_PLUS("Cave Story+", 7);
 
 		String label;
 		int icon;
@@ -701,30 +695,29 @@ public class SaveEditorPanel extends JPanel
 			File run = new File(mainDir + "/run.bat");
 			if (run.exists()) {
 				// launch script, run it
-				System.out.print("Attempting to run launch script at: " + run.getAbsolutePath());
+				Main.LOGGER.trace("Attempting to run launch script at: " + run.getAbsolutePath());
 				try {
 					r.exec("\"" + run.getAbsolutePath() + "\"");
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					Main.LOGGER.error("Could not run launch script: " + run.getAbsolutePath(), e1);
 					JOptionPane.showMessageDialog(this, "Could not run game! The following exception occured:\n" + e1,
 							"Could not run game", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				File api = new File(mainDir + "/steam_api.dll");
 				if (api.exists()) {
-					System.out.println("Steamworks API detected, launching via Steam browser protocol");
+					Main.LOGGER.trace("Steamworks API detected, launching via Steam browser protocol");
 					URI steamSite = null;
 					try {
 						steamSite = new URI("steam://run/200900");
 					} catch (URISyntaxException e1) {
-						e1.printStackTrace();
+						Main.LOGGER.error("Steam protocol fail: bad URI syntax", e1);
 					}
 					if (Desktop.isDesktopSupported())
 						try {
 							Desktop.getDesktop().browse(steamSite);
 						} catch (IOException e) {
-							System.out.println("Browse to steam site failed: I/O error");
-							e.printStackTrace();
+							Main.LOGGER.trace("Steam protocol fail: I/O error");
 							JOptionPane.showMessageDialog(null, "Failed to launch game via Steam...",
 									"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
 						}
@@ -732,11 +725,11 @@ public class SaveEditorPanel extends JPanel
 						JOptionPane.showMessageDialog(null, "Can't launch game via Steam!",
 								"Operation not supported...", JOptionPane.ERROR_MESSAGE);
 				} else {
-					System.out.println("Directly launching EXE: " + mainDir.getAbsolutePath() + "/CaveStory+.exe");
+					Main.LOGGER.trace("Directly launching EXE: " + mainDir.getAbsolutePath() + "/CaveStory+.exe");
 					try {
 						r.exec("\"" + mainDir + "/CaveStory+.exe\"");
 					} catch (IOException e) {
-						e.printStackTrace();
+						Main.LOGGER.error("Direct launch fail: I/O error", e);
 						JOptionPane.showMessageDialog(this,
 								"Could not run game! The following exception occured:\n" + e, "Could not run game",
 								JOptionPane.ERROR_MESSAGE);
@@ -747,7 +740,7 @@ public class SaveEditorPanel extends JPanel
 			try {
 				Runtime.getRuntime().exec("\"" + ExeData.getBase().getAbsolutePath() + "\"");
 			} catch (IOException e) {
-				e.printStackTrace();
+				Main.LOGGER.error("Launch fail: I/O error", e);
 				JOptionPane.showMessageDialog(this, "Could not run game! The following exception occured:\n" + e,
 						"Could not run game", JOptionPane.ERROR_MESSAGE);
 			}
@@ -779,7 +772,7 @@ public class SaveEditorPanel extends JPanel
 		try {
 			ProfileManager.save();
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			Main.LOGGER.error("Failed to save profile", e1);
 			JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 					"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 		}
@@ -803,7 +796,7 @@ public class SaveEditorPanel extends JPanel
 			try {
 				ProfileManager.save(file);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				Main.LOGGER.error("Failed to save profile", e1);
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 				return;

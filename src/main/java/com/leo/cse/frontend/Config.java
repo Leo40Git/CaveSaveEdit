@@ -41,7 +41,7 @@ public class Config {
 			config.removeNode();
 			config = null;
 		} catch (BackingStoreException e) {
-			e.printStackTrace();
+			Main.LOGGER.error("Failed to wipe config", e);
 		}
 	}
 

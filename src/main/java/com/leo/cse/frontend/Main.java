@@ -15,10 +15,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ConcurrentModificationException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -33,10 +31,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.leo.cse.backend.BackendLogger;
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeLoadListener;
@@ -66,17 +64,17 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 
 	private static Thread repaintThread;
 	private static AtomicBoolean keepRepainting;
-	
+
 	private static class ProfileLoadInstruction {
 		public File file;
 		public boolean record;
-		
+
 		public ProfileLoadInstruction(File file, boolean record) {
 			this.file = file;
 			this.record = record;
 		}
 	}
-	
+
 	private static ProfileLoadInstruction profLoadInstruct = null;
 
 	private static class ConfirmCloseWindowListener extends WindowAdapter {
@@ -94,7 +92,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				try {
 					ProfileManager.save();
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("Failed to save profile", e);
 				}
 			else if (sel == JOptionPane.CANCEL_OPTION)
 				return;
@@ -108,7 +106,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		try {
 			repaintThread.join();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOGGER.error("Repaint thread kill interrupted", e);
 		}
 		if (reboot) {
 			window.dispose();
@@ -177,14 +175,13 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			try {
 				ExeData.load(file);
 			} catch (Exception e) {
-				e.printStackTrace();
-				System.err.println("Executable loading failed.");
+				LOGGER.error("Executable loading failed.", e);
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
 						"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 				succ = false;
 			}
 			if (succ) {
-				System.out.println("loaded exe " + ExeData.getBase());
+				LOGGER.info("Loaded executable: " + ExeData.getBase());
 				if (record)
 					Config.set(Config.KEY_LAST_MOD, file.getAbsolutePath());
 				String pExt = ExeData.getExeString(ExeData.STRING_PROFILE_NAME);
@@ -200,7 +197,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			try {
 				Thread.currentThread().join();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.error("EXE loading thread suicide interrupted", e);
 			}
 		}, "ExeLoad");
 		exeLoadThread.start();
@@ -209,21 +206,17 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static void loadExe(File file) {
 		loadExe(file, true);
 	}
-	
+
 	private static void loadProfile0(File file, boolean record) {
 		try {
 			ProfileManager.load(file);
-		} catch (ConcurrentModificationException e) {
-			// can be safely ignored
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Profile loading failed.");
+			LOGGER.error("Profile loading failed.", e);
 			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
 					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 			return;
 		} finally {
-			System.out.println("loaded profile " + ProfileManager.getLoadedFile());
+			LOGGER.info("Loaded profile " + ProfileManager.getLoadedFile());
 			if (record)
 				Config.set(Config.KEY_LAST_PROFILE, file.getAbsolutePath());
 			SwingUtilities.invokeLater(() -> {
@@ -322,7 +315,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	}
 
 	public static void resourceError(Throwable e) {
-		e.printStackTrace();
+		LOGGER.error("Could not load resources", e);
 		JOptionPane.showMessageDialog(null,
 				"Could not load resources!\nPlease report this error to the programmer.\nAn exception has occured:\n"
 						+ e,
@@ -333,21 +326,20 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 	public static LoadFrame updateCheck(boolean disposeOfLoadFrame, boolean showUpToDate) {
 		LoadFrame loadFrame = new LoadFrame();
 		File verFile = new File(System.getProperty("user.dir") + "/temp.version");
-		System.out.println("Update check: starting");
+		LOGGER.info("Update check: starting");
 		try {
 			FrontUtils.downloadFile(UPDATE_CHECK_SITE, verFile);
 		} catch (IOException e1) {
-			System.err.println("Update check failed: attempt to download caused exception");
-			e1.printStackTrace();
+			LOGGER.info("Update check failed: attempt to download caused exception", e1);
 			JOptionPane.showMessageDialog(null, "The update check has failed!\nAre you not connected to the internet?",
 					"Update check failed", JOptionPane.ERROR_MESSAGE);
 		}
 		if (verFile.exists()) {
-			System.out.println("Update check: reading version");
+			LOGGER.info("Update check: reading version");
 			try (FileReader fr = new FileReader(verFile); BufferedReader reader = new BufferedReader(fr);) {
 				Version check = new Version(reader.readLine());
 				if (VERSION.compareTo(check) < 0) {
-					System.out.println("Update check successful: have update");
+					LOGGER.info("Update check successful: have update");
 					JPanel panel = new JPanel();
 					panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 					panel.add(new JLabel("A new update is available: " + check));
@@ -376,8 +368,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 							try {
 								Desktop.getDesktop().browse(dlSite);
 							} catch (IOException e) {
-								System.out.println("Browse to download site failed: I/O error");
-								e.printStackTrace();
+								LOGGER.error("Browse to download site failed: I/O error", e);
 								JOptionPane.showMessageDialog(null, "Failed to browse to the download site...",
 										"Well, this is awkward.", JOptionPane.ERROR_MESSAGE);
 							}
@@ -389,7 +380,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 						System.exit(0);
 					}
 				} else {
-					System.out.println("Update check successful: up to date");
+					LOGGER.info("Update check successful: up to date");
 					if (showUpToDate) {
 						JOptionPane.showMessageDialog(null,
 								"You are using the most up to date version of CaveSaveEdit! Have fun!", "Up to date!",
@@ -397,18 +388,17 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 					}
 				}
 			} catch (IOException e) {
-				System.err.println("Update check failed: attempt to read downloaded file caused exception");
-				e.printStackTrace();
+				LOGGER.error("Update check failed: attempt to read downloaded file caused exception", e);
 				JOptionPane.showMessageDialog(null,
 						"The update check has failed!\nAn exception occured while reading update check results:\n" + e,
 						"Update check failed", JOptionPane.ERROR_MESSAGE);
 			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				LOGGER.error("Update check failed: bad URI syntax", e);
 			} finally {
 				verFile.delete();
 			}
 		} else
-			System.err.println("Update check failed: downloaded file doesn't exist");
+			LOGGER.error("Update check failed: downloaded file doesn't exist");
 		if (disposeOfLoadFrame) {
 			loadFrame.dispose();
 			return null;
@@ -416,109 +406,39 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 		return loadFrame;
 	}
 
-	private static PrintStream createLoggingRedirector(final PrintStream stream, final Level level) {
-		return new PrintStream(stream) {
-			private void write(String string) {
-				LOGGER.printf(level, string);
-			}
+	private static class Log4JBackendLogger implements BackendLogger.IBackendLogger {
 
-			@Override
-			public void print(String s) {
-				if (s == null)
-					s = "null";
-				write(s);
-			}
+		private Logger l;
 
-			@Override
-			public void print(boolean b) {
-				write(b ? "true" : "false");
-			}
+		public Log4JBackendLogger(Logger l) {
+			this.l = l;
+		}
 
-			@Override
-			public void print(char[] s) {
-				write(new String(s));
-			}
+		@Override
+		public void trace(String message, Throwable t) {
+			l.trace(message, t);
+		}
 
-			@Override
-			public void print(int i) {
-				write(String.valueOf(i));
-			}
+		@Override
+		public void info(String message, Throwable t) {
+			l.info(message, t);
+		}
 
-			@Override
-			public void print(float f) {
-				write(String.valueOf(f));
-			}
+		@Override
+		public void warn(String message, Throwable t) {
+			l.warn(message, t);
+		}
 
-			@Override
-			public void print(char c) {
-				write(String.valueOf(c));
-			}
+		@Override
+		public void error(String message, Throwable t) {
+			l.error(message, t);
+		}
 
-			@Override
-			public void print(double d) {
-				write(String.valueOf(d));
-			}
+		@Override
+		public void fatal(String message, Throwable t) {
+			l.fatal(message, t);
+		}
 
-			@Override
-			public void print(long l) {
-				write(String.valueOf(l));
-			}
-
-			@Override
-			public void print(Object obj) {
-				write(String.valueOf(obj));
-			}
-
-			@Override
-			public void println(String x) {
-				print(x);
-			}
-
-			@Override
-			public void println() {
-				return;
-			}
-
-			@Override
-			public void println(boolean x) {
-				print(x);
-			}
-
-			@Override
-			public void println(char x) {
-				print(x);
-			}
-
-			@Override
-			public void println(char[] x) {
-				print(x);
-			}
-
-			@Override
-			public void println(double x) {
-				print(x);
-			}
-
-			@Override
-			public void println(float x) {
-				print(x);
-			}
-
-			@Override
-			public void println(int x) {
-				print(x);
-			}
-
-			@Override
-			public void println(long x) {
-				print(x);
-			}
-
-			@Override
-			public void println(Object x) {
-				print(x);
-			}
-		};
 	}
 
 	public static void main(String[] args) {
@@ -527,18 +447,17 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			System.exit(0);
 		}
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
-		System.setOut(createLoggingRedirector(System.out, Level.INFO));
-		System.setErr(createLoggingRedirector(System.err, Level.ERROR));
+		BackendLogger.setImpl(new Log4JBackendLogger(LOGGER));
 		Config.init();
 		final String nolaf = "nolaf";
 		if (new File(System.getProperty("user.dir") + "/" + nolaf).exists())
-			System.out.println("No L&F file detected, skipping setting Look & Feel");
+			LOGGER.trace("No L&F file detected, skipping setting Look & Feel");
 		else
 			try {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 					| UnsupportedLookAndFeelException e) {
-				e.printStackTrace();
+				LOGGER.error("Could not set Look & Feel", e);
 				JOptionPane.showMessageDialog(null, "Could not set Look & Feel!\nPlease add a file named \"" + nolaf
 						+ "\" (all lowercase, no extension) to the application folder, and then restart the application.",
 						"Could not set Look & Feel", JOptionPane.ERROR_MESSAGE);
@@ -558,7 +477,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 			skipucF = skipucR;
 		}
 		if (skipucF) {
-			System.out.println("Update check: skip file detected, skipping");
+			LOGGER.trace("Update check: skip file detected, skipping");
 			loadFrame = new LoadFrame();
 		} else {
 			loadFrame = updateCheck(false, false);
@@ -597,7 +516,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						LOGGER.error("Repaint thread sleep interrupted", e);
 					}
 				}
 			}, "repaint");
@@ -639,7 +558,7 @@ public class Main extends JFrame implements ExeLoadListener, ProfileListener {
 				try {
 					ProfileManager.reload();
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("Failed to reload profile", e);
 				}
 			}
 			break;

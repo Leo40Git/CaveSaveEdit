@@ -11,6 +11,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
+import com.leo.cse.backend.BackendLogger;
 import com.leo.cse.frontend.Main;
 
 /**
@@ -114,12 +115,11 @@ public class ProfileManager {
 		try {
 			tmpClass = Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			System.err.println("Profile class not found: " + className + "\nUsing default NormalProfile class instead");
-			e.printStackTrace();
+			BackendLogger.error("Profile class not found: " + className + "\nUsing default NormalProfile class instead", e);
 			tmpClass = NormalProfile.class;
 		}
 		if (!Profile.class.isAssignableFrom(tmpClass)) {
-			System.err.println("Profile class does not implement Profile interface: " + className
+			BackendLogger.error("Profile class does not implement Profile interface: " + className
 					+ "\nUsing default NormalProfile class instead");
 			tmpClass = NormalProfile.class;
 		}
@@ -292,11 +292,11 @@ public class ProfileManager {
 
 		@Override
 		public void undo() throws CannotUndoException {
-			System.out.println("Attempting to undo: " + getUndoPresentationName());
+			BackendLogger.trace("Attempting to undo: " + getUndoPresentationName());
 			try {
 				setField(field, index, oldVal, false);
 			} catch (Exception e) {
-				e.printStackTrace();
+				BackendLogger.error("Error while undoing: " + getUndoPresentationName(), e);
 				throw new CannotUndoException();
 			}
 			hasBeenUndone = true;
@@ -309,11 +309,11 @@ public class ProfileManager {
 
 		@Override
 		public void redo() throws CannotRedoException {
-			System.out.println("Attempting to redo: " + getRedoPresentationName());
+			BackendLogger.trace("Attempting to redo: " + getRedoPresentationName());
 			try {
 				setField(field, index, newVal, false);
 			} catch (Exception e) {
-				e.printStackTrace();
+				BackendLogger.error("Error while redoing: " + getRedoPresentationName(), e);
 				throw new CannotRedoException();
 			}
 			hasBeenUndone = false;
@@ -326,6 +326,7 @@ public class ProfileManager {
 
 		@Override
 		public void die() {
+			field = null;
 			oldVal = null;
 			newVal = null;
 		}
@@ -430,9 +431,8 @@ public class ProfileManager {
 		try {
 			implObj = implClass.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			System.err.println("Profile class could not be initialized: " + implClass.getName()
-					+ "\nUsing default NormalProfile class instead");
-			e.printStackTrace();
+			BackendLogger.error("Profile class could not be initialized: " + implClass.getName()
+					+ "\nUsing default NormalProfile class instead", e);
 			implObj = new NormalProfile();
 		}
 		impl = (Profile) implObj;
@@ -474,8 +474,7 @@ public class ProfileManager {
 		try {
 			impl.load(file);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Profile loading failed.");
+			BackendLogger.error("Profile loading failed.", e);
 			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the profile file:\n" + e,
 					"Could not load profile file!", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -870,7 +869,7 @@ public class ProfileManager {
 			}
 			valueStr += "]";
 		}
-		System.out.println("setting field " + fieldStr + " to " + valueStr);
+		BackendLogger.trace("setting field " + fieldStr + " to " + valueStr);
 		Object oldValue = getField(field, index);
 		boolean different = false;
 		if (oldValue == null || value == null)

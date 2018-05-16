@@ -114,7 +114,7 @@ public class PlusSlots extends Component {
 			try {
 				pe = MCI.getPlayerExtras(xPixel, yPixel, false, costume);
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				Main.LOGGER.error("Failed to get player extras: not defined in MCI", e);
 			}
 			int sourceX2 = sourceX1 + 32, sourceY2 = sourceY1 + 32;
 			if (pe != null) {
@@ -228,7 +228,7 @@ public class PlusSlots extends Component {
 			try {
 				ProfileManager.save();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				Main.LOGGER.error("Failed to save profile", e1);
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the profile file:\n" + e1,
 						"Could not save profile file!", JOptionPane.ERROR_MESSAGE);
 			}
@@ -313,7 +313,7 @@ public class PlusSlots extends Component {
 					pasteFile();
 				break;
 			default:
-				System.out.println("Unknown mode " + mode);
+				Main.LOGGER.error("Unknown mode " + mode);
 				break;
 			}
 		}

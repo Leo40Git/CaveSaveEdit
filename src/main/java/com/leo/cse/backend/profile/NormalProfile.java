@@ -6,10 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.function.Function;
 
+import com.leo.cse.backend.BackendLogger;
 import com.leo.cse.backend.ByteUtils;
 import com.leo.cse.backend.exe.ExeData;
 import com.leo.cse.backend.exe.ExeData.StartPoint;
 import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
+import com.leo.cse.backend.profile.ProfileManager.ProfileMethodException;
 
 public class NormalProfile extends Profile {
 
@@ -123,18 +125,15 @@ public class NormalProfile extends Profile {
 	 */
 	public static final String FIELD_CASH = "cash";
 	/**
-	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
-	 * EQ+ variables.
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i> EQ+ variables.
 	 */
 	public static final String FIELD_EQP_VARIABLES = "eqp.variables";
 	/**
-	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
-	 * EQ+ "true" modifiers.
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i> EQ+ "true" modifiers.
 	 */
 	public static final String FIELD_EQP_MODS_TRUE = "eqp.mods.true";
 	/**
-	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i>
-	 * EQ+ "false" modifiers.
+	 * <i>(EQ+ STUFF NOT IMPLEMENTED YET!)</i> EQ+ "false" modifiers.
 	 */
 	public static final String FIELD_EQP_MODS_FALSE = "eqp.mods.false";
 
@@ -187,7 +186,21 @@ public class NormalProfile extends Profile {
 		// insert header & flag header
 		ByteUtils.writeString(data, 0, header);
 		ByteUtils.writeString(data, 0x218, flagH);
-		// set start point fields
+		// set default values using start point
+		setDefaultValues();
+		// set loaded flag
+		loaded = true;
+		// set loaded file to null
+		loadedFile = null;
+	}
+
+	/**
+	 * Set default values to some fields using {@linkplain ExeData#getStartPoint()
+	 * the starting point}.
+	 * 
+	 * @see StartPoint
+	 */
+	protected void setDefaultValues() {
 		StartPoint sp = ExeData.getStartPoint();
 		if (sp != null) {
 			try {
@@ -198,13 +211,9 @@ public class NormalProfile extends Profile {
 				setField(FIELD_MAXIMUM_HEALTH, -1, sp.maxHealth);
 				setField(FIELD_CURRENT_HEALTH, -1, sp.curHealth);
 			} catch (ProfileFieldException e) {
-				e.printStackTrace();
+				BackendLogger.error("Failed to set default values", e);
 			}
 		}
-		// set loaded flag
-		loaded = true;
-		// set loaded file to null
-		loadedFile = null;
 	}
 
 	@Override
@@ -253,19 +262,19 @@ public class NormalProfile extends Profile {
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			BackendLogger.error("Error while saving profile!", e);
 			if (backup != null) {
 				// attempt to recover
-				System.err.println("Error while saving profile! Attempting to recover backup.");
-				e.printStackTrace();
+				BackendLogger.error("Attempting to restore from backup...");
 				try (FileOutputStream fos = new FileOutputStream(file);
 						FileInputStream fis = new FileInputStream(backup)) {
 					byte[] data = new byte[FILE_LENGTH];
 					fis.read(data);
 					fos.write(data);
 				} catch (Exception e2) {
-					System.err.println("Error while recovering backup!");
-					e2.printStackTrace();
+					BackendLogger.error("Error while recovering backup!", e2);
+				} finally {
+					BackendLogger.error("Successfully restored backup! (yes this is supposed to be at error level");
 				}
 			}
 		}
@@ -327,30 +336,26 @@ public class NormalProfile extends Profile {
 
 				@Override
 				public Object getValue(int index) {
+					boolean[] flags = new boolean[27];
+					ByteUtils.readFlags(data, ptrCorrector.apply(0x600), flags);
 					long ret = 0;
-					for (int i = 7968; i < 7995; i++)
-						try {
-							if ((boolean) getField(FIELD_FLAGS, i))
-								ret |= 1 << (i - 7968);
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
+					for (int i = 0; i < flags.length; i++)
+						if (flags[i])
+							ret |= 1 << i;
 					return ret;
 				}
 
 				@Override
 				public void setValue(int index, Object value) {
+					boolean[] flags = new boolean[27];
 					long v = (Long) value;
-					for (int i = 7968; i < 7995; i++)
-						try {
-							setField(FIELD_FLAGS, i, (v & (1 << (i - 7968))) != 0);
-						} catch (ProfileFieldException e) {
-							e.printStackTrace();
-						}
+					for (int i = 0; i < flags.length; i++)
+						flags[i] = ((v & (1 << i)) != 0);
+					ByteUtils.writeFlags(data, ptrCorrector.apply(0x600), flags);
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 		makeFieldShorts(FIELD_VARIABLES, 123, 0, 0x50A);
 		makeFieldShorts(FIELD_PHYSICS_VARIABLES, 16, 0, 0x4DC);
@@ -364,6 +369,26 @@ public class NormalProfile extends Profile {
 	 * Function to correct pointers.
 	 */
 	protected Function<Integer, Integer> ptrCorrector = t -> t;
+
+	/**
+	 * Handles a {@link ProfileFieldException} from adding a field.
+	 * 
+	 * @param e
+	 *            exception to handle
+	 */
+	protected void handleFieldAddException(ProfileFieldException e) {
+		BackendLogger.error("Failed to add new profile field", e);
+	}
+
+	/**
+	 * Handles a {@link ProfileMethodException} from adding a method.
+	 * 
+	 * @param e
+	 *            exception to handle
+	 */
+	protected void handleMethodAddException(ProfileMethodException e) {
+		BackendLogger.error("Failed to add new profile method", e);
+	}
 
 	/**
 	 * Creates a <code>byte</code> field.
@@ -412,7 +437,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -473,7 +498,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -509,7 +534,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -570,7 +595,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -606,7 +631,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -653,14 +678,14 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
 	/**
 	 * Creates a <code>boolean</code> array field, with a byte representing each
-	 * boolean: 0
-	 * being <code>false</code>, and anything else being <code>true</code>.
+	 * boolean: 0 being <code>false</code>, and anything else being
+	 * <code>true</code>.
 	 *
 	 * @param name
 	 *            name of field
@@ -729,7 +754,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -790,7 +815,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -826,7 +851,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -887,7 +912,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -946,7 +971,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -997,7 +1022,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 
@@ -1040,7 +1065,7 @@ public class NormalProfile extends Profile {
 				}
 			});
 		} catch (ProfileFieldException e) {
-			e.printStackTrace();
+			handleFieldAddException(e);
 		}
 	}
 

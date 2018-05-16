@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
@@ -188,9 +189,13 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			int tilesetNum = e.getInfo().getTileset();
 			if (tilesetNum == 0) // title
 				srcImg = ExeData.getImage(ExeData.getTitle());
-			else if (tilesetNum == 1) // PIXEL
-				srcImg = ExeData.getImage(ExeData.getPixel());
-			else if (tilesetNum == 6) // fade
+			else if (tilesetNum == 1) { // PIXEL
+				File pixel = ExeData.getPixel();
+				if (pixel == null)
+					srcImg = null;
+				else
+					srcImg = ExeData.getImage(pixel);
+			} else if (tilesetNum == 6) // fade
 				srcImg = ExeData.getImage(ExeData.getFade());
 			else if (tilesetNum == 2) // map tileset
 				srcImg = ExeData.getImage(mapInfo.getTileset());
@@ -230,8 +235,8 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 			try {
 				ee = MCI.getEntityExtras(e);
 			} catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-				return;
+				Main.LOGGER.error("Failed to get entity extras: not defined in MCI", e1);
+				continue;
 			}
 			if (ee == null)
 				continue;
@@ -310,7 +315,7 @@ public class MapView extends Component implements IDraggable, ProfileListener {
 		try {
 			pe = MCI.getPlayerExtras(xPixel, yPixel, (dir == 1 ? true : false), costume);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			Main.LOGGER.error("Failed to get player extras: not defined in MCI", e);
 		}
 		int sourceX2 = 32, sourceY2 = sourceY1 + 32;
 		if (pe != null) {

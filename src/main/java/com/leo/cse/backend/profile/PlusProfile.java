@@ -7,9 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.leo.cse.backend.BackendLogger;
 import com.leo.cse.backend.ByteUtils;
-import com.leo.cse.backend.exe.ExeData;
-import com.leo.cse.backend.exe.ExeData.StartPoint;
 import com.leo.cse.backend.profile.ProfileManager.FieldChangeRecorder;
 import com.leo.cse.backend.profile.ProfileManager.ProfileFieldException;
 import com.leo.cse.backend.profile.ProfileManager.ProfileMethodException;
@@ -237,7 +236,7 @@ public class PlusProfile extends NormalProfile {
 						try {
 							setField(FIELD_DIFFICULTY, -1, (short) 0);
 						} catch (ProfileFieldException e) {
-							e.printStackTrace();
+							BackendLogger.error("Failed to set field", e);
 						}
 						curSection = oldSec;
 						dstSec -= 3;
@@ -246,7 +245,7 @@ public class PlusProfile extends NormalProfile {
 					try {
 						setField(field, dstSec, true);
 					} catch (ProfileFieldException e) {
-						e.printStackTrace();
+						BackendLogger.error("Failed to set field", e);
 					}
 					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
@@ -282,23 +281,13 @@ public class PlusProfile extends NormalProfile {
 					try {
 						setField(field, secToReplace, true);
 						callMethod(METHOD_PUSH_ACTIVE_FILE, fcr, newSection);
-						// set start point fields
-						StartPoint sp = ExeData.getStartPoint();
-						if (sp != null) {
-							try {
-								setField(FIELD_MAP, -1, sp.map);
-								setField(FIELD_X_POSITION, -1, sp.positionX);
-								setField(FIELD_Y_POSITION, -1, sp.positionY);
-								setField(FIELD_DIRECTION, -1, sp.direction);
-								setField(FIELD_MAXIMUM_HEALTH, -1, sp.maxHealth);
-								setField(FIELD_CURRENT_HEALTH, -1, sp.curHealth);
-							} catch (ProfileFieldException e) {
-								e.printStackTrace();
-							}
-						}
+						// set default values using start point
+						setDefaultValues();
 						callMethod(METHOD_POP_ACTIVE_FILE, fcr);
-					} catch (ProfileFieldException | ProfileMethodException e) {
-						e.printStackTrace();
+					} catch (ProfileFieldException e) {
+						BackendLogger.error("Failed to set field", e);
+					} catch (ProfileMethodException e) {
+						BackendLogger.error("Failed to call method", e);
 					}
 					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
@@ -330,7 +319,7 @@ public class PlusProfile extends NormalProfile {
 					try {
 						setField(field, secToReplace, false);
 					} catch (ProfileFieldException e) {
-						e.printStackTrace();
+						BackendLogger.error("Failed to set field", e);
 					}
 					fcr.addChange(ProfileManager.EVENT_DATA_MODIFIED, -1, null, null);
 					return null;
@@ -361,7 +350,7 @@ public class PlusProfile extends NormalProfile {
 					try {
 						exists = (boolean) getField(field, secToChk);
 					} catch (ProfileFieldException e) {
-						e.printStackTrace();
+						BackendLogger.error("Failed to get field value", e);
 					}
 					return exists;
 				}
@@ -447,7 +436,7 @@ public class PlusProfile extends NormalProfile {
 
 			});
 		} catch (ProfileMethodException e) {
-			e.printStackTrace();
+			handleMethodAddException(e);
 		}
 	}
 
@@ -499,19 +488,19 @@ public class PlusProfile extends NormalProfile {
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			BackendLogger.error("Error while saving profile!", e);
 			if (backup != null) {
 				// attempt to recover
-				System.err.println("Error while saving profile! Attempting to recover backup.");
-				e.printStackTrace();
+				BackendLogger.error("Attempting to restore from backup...");
 				try (FileOutputStream fos = new FileOutputStream(file);
 						FileInputStream fis = new FileInputStream(backup)) {
 					byte[] data = new byte[FILE_LENGTH];
 					fis.read(data);
 					fos.write(data);
 				} catch (Exception e2) {
-					System.err.println("Error while recovering backup!");
-					e2.printStackTrace();
+					BackendLogger.error("Error while recovering backup!", e2);
+				} finally {
+					BackendLogger.error("Successfully restored backup! (yes this is supposed to be at error level");
 				}
 			}
 		}

@@ -85,7 +85,7 @@ public class NikuEditDialog extends BaseDialog {
 			try {
 				NikuRecord.load(FrontUtils.getSelectedFile());
 			} catch (Exception e) {
-				e.printStackTrace();
+				Main.LOGGER.error("Failed to load 290.rec", e);
 				JOptionPane.showMessageDialog(Main.window, "An error occured while loading the 290.rec file:\n" + e,
 						"Could not load 290.rec file!", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -114,7 +114,7 @@ public class NikuEditDialog extends BaseDialog {
 			try {
 				NikuRecord.save(null);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Main.LOGGER.error("Failed to save 290.rec", e);
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the 290.rec file:\n" + e,
 						"Could not save 290.rec file!", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -140,7 +140,7 @@ public class NikuEditDialog extends BaseDialog {
 				}
 				NikuRecord.save(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Main.LOGGER.error("Failed to save 290.rec", e);
 				JOptionPane.showMessageDialog(Main.window, "An error occured while saving the 290.rec file:\n" + e,
 						"Could not save 290.rec file!", JOptionPane.ERROR_MESSAGE);
 				return;

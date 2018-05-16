@@ -32,7 +32,7 @@ public class StrTools {
 		try {
 			return new String(cbuf, encoding);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			BackendLogger.error("Unsupported encoding: " + encoding, e);
 		}
 		return ENCODING_ERROR;
 	}

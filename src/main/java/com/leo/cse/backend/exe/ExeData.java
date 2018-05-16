@@ -5,10 +5,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -19,10 +17,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import com.leo.cse.backend.BackendLogger;
 import com.leo.cse.backend.ResUtils;
 import com.leo.cse.backend.StrTools;
 import com.leo.cse.backend.profile.NormalProfile;
@@ -82,7 +82,7 @@ public class ExeData {
 	 */
 	public static void addListener(ExeLoadListener l) {
 		initListenerLists();
-		listeners.add(l);
+		listenersToAdd.add(l);
 	}
 
 	/**
@@ -93,9 +93,9 @@ public class ExeData {
 	 */
 	public static void removeListener(ExeLoadListener l) {
 		initListenerLists();
-		listeners.remove(l);
+		listenersToRemove.add(l);
 	}
-	
+
 	/**
 	 * Removes all listeners.
 	 */
@@ -339,11 +339,41 @@ public class ExeData {
 	/**
 	 * Array of pointers which point to string values.
 	 */
-	private static final int[] STRING_POINTERS = new int[] { ARMSITEM_PTR, IMG_EXT_PTR, CREDIT_PTR, NPC_TBL_PTR,
-			PIXEL_PTR, MYCHAR_PTR, TITLE_PTR, ARMSIMAGE_PTR, ARMS_PTR, ITEMIMAGE_PTR, DATA_FOLDER_PTR, STAGEIMAGE_PTR,
-			NPCSYM_PTR, NPCREGU_PTR, TEXTBOX_PTR, CARET_PTR, BULLET_PTR, FACE_PTR, FADE_PTR, LOADING_PTR, PXM_TAG_PTR,
-			PROFILE_NAME_PTR, PROFILE_HEADER_PTR, PROFILE_FLAGH_PTR, STAGESELECT_PTR, STAGE_FOLDER_PTR, PRT_PREFIX_PTR,
-			PXA_EXT_PTR, PXM_EXT_PTR, PXE_EXT_PTR, TSC_EXT_PTR, NPC_FOLDER_PTR, NPC_PREFIX_PTR, HEAD_PTR };
+	private static final int[] STRING_POINTERS = new int[] {
+			ARMSITEM_PTR,
+			IMG_EXT_PTR,
+			CREDIT_PTR,
+			NPC_TBL_PTR,
+			PIXEL_PTR,
+			MYCHAR_PTR,
+			TITLE_PTR,
+			ARMSIMAGE_PTR,
+			ARMS_PTR,
+			ITEMIMAGE_PTR,
+			DATA_FOLDER_PTR,
+			STAGEIMAGE_PTR,
+			NPCSYM_PTR,
+			NPCREGU_PTR,
+			TEXTBOX_PTR,
+			CARET_PTR,
+			BULLET_PTR,
+			FACE_PTR,
+			FADE_PTR,
+			LOADING_PTR,
+			PXM_TAG_PTR,
+			PROFILE_NAME_PTR,
+			PROFILE_HEADER_PTR,
+			PROFILE_FLAGH_PTR,
+			STAGESELECT_PTR,
+			STAGE_FOLDER_PTR,
+			PRT_PREFIX_PTR,
+			PXA_EXT_PTR,
+			PXM_EXT_PTR,
+			PXE_EXT_PTR,
+			TSC_EXT_PTR,
+			NPC_FOLDER_PTR,
+			NPC_PREFIX_PTR,
+			HEAD_PTR };
 
 	/**
 	 * Name for "ArmsItem.tsc".
@@ -587,8 +617,8 @@ public class ExeData {
 	}
 
 	/**
-	 * If <code>true</code>, TSC files will be loaded,
-	 * otherwise they will be ignored.
+	 * If <code>true</code>, TSC files will be loaded, otherwise they will be
+	 * ignored.
 	 */
 	private static boolean loadTSC = false;
 
@@ -656,9 +686,11 @@ public class ExeData {
 	 */
 	private static PEFile peData;
 	/**
-	 * ".rsrc" segment information.
+	 * The contents of the ".rsrc" section.
+	 * 
+	 * @see RsrcHandler
 	 */
-	private static ResourceInfo rsrcInfo;
+	private static RsrcHandler rsrcData;
 	/**
 	 * The "data" directory.
 	 */
@@ -727,6 +759,12 @@ public class ExeData {
 	 * The currently loaded game/mod's starting point.
 	 */
 	private static StartPoint startPoint;
+	/**
+	 * Alternate source for {@linkplain #startPoint the starting point}.<br>
+	 * Will only be used if <code>startPoint == null</code> (if there is no
+	 * game/mod loaded).
+	 */
+	private static Supplier<StartPoint> startPointSup;
 	/**
 	 * "Title" graphics file.
 	 */
@@ -810,8 +848,7 @@ public class ExeData {
 		try {
 			load0(base);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("EXE loading failed.");
+			BackendLogger.error("EXE loading failed.", e);
 			JOptionPane.showMessageDialog(Main.window, "An error occured while loading the executable:\n" + e,
 					"Could not load executable!", JOptionPane.ERROR_MESSAGE);
 		}
@@ -863,7 +900,7 @@ public class ExeData {
 		type = ModType.STANDARD;
 		try {
 			notifyListeners(false, EVENT_PRELOAD, null, -1, -1);
-			locateSegments();
+			locateSections();
 			loadExeStrings();
 			ProfileManager.setHeader(getExeString(STRING_PROFILE_HEADER));
 			ProfileManager.setFlagHeader(getExeString(STRING_PROFILE_FLAGH));
@@ -877,7 +914,12 @@ public class ExeData {
 			fillMapdata();
 			notifyListeners(false, EVENT_LOAD, null, -1, -1);
 			loadGraphics();
-			loadRsrc();
+			try {
+				loadRsrc();
+			} catch (Exception e) {
+				// this can be ignored
+				BackendLogger.error("Failed to laod embedded bitmaps! Luckily, they're not essential", e);
+			}
 			loadStartPoint();
 			loadMapInfo();
 			notifyListeners(false, EVENT_POSTLOAD, LOADNAME_POSTLOAD_SUCCESS, -1, -1);
@@ -978,37 +1020,36 @@ public class ExeData {
 	}
 
 	/**
-	 * Locate the executable segments.
+	 * Locate the executable sections.
 	 *
 	 * @throws IOException
 	 *             if an I/O exception occurs.
 	 */
-	private static void locateSegments() throws IOException {
+	private static void locateSections() throws IOException {
 		// setup I/O stuff
-		FileInputStream inStream;
-		inStream = new FileInputStream(base);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		byte[] buf = new byte[512];
-		while (inStream.available() > 0) {
-			int l = inStream.read(buf);
-			baos.write(buf, 0, l);
+		FileInputStream inStream = new FileInputStream(base);
+		FileChannel chan = inStream.getChannel();
+		long l = chan.size();
+		if (l > 0x7FFFFFFF) {
+			inStream.close();
+			throw new IOException("Too big!");
+		}
+		ByteBuffer bb = ByteBuffer.allocate((int) l);
+		if (chan.read(bb) != l) {
+			inStream.close();
+			throw new IOException("Didn't read whole file.");
 		}
 		inStream.close();
-		ByteBuffer dataBuf = ByteBuffer.wrap(baos.toByteArray());
-		// NOTE: The ByteBuffer doesn't get advanced, hence the use of no-side-effects
-		// functions like getInt(address).
-		// If you do something that advances it,
-		// use a position(0) to deal with that.
-		dataBuf.order(ByteOrder.LITTLE_ENDIAN);
-		rsrcInfo = getResources(dataBuf);
-		if (rsrcInfo == null)
-			throw new IOException("Could not find .rsrc segment!");
-		dataBuf.position(0);
-		peData = new PEFile(dataBuf, 0x1000);
+		peData = new PEFile(bb, 0x1000);
+		// get sections
 		int rdataSecId = peData.getSectionIndexByTag(".rdata");
 		if (rdataSecId == -1)
 			throw new IOException("Could not find .rdata segment!");
 		rdataSection = peData.sections.get(rdataSecId);
+		int rsrcSecId = peData.getResourcesIndex();
+		if (rsrcSecId == -1)
+			throw new IOException("Could not find .rsrc segment!");
+		rsrcData = new RsrcHandler(peData.sections.get(rsrcSecId));
 	}
 
 	/**
@@ -1111,14 +1152,9 @@ public class ExeData {
 		if (tblFile == null || !tblFile.exists())
 			throw new IOException("Could not find \"" + tblFile + "\"!");
 
-		try {
-			inStream = new FileInputStream(tblFile);
-			calculated_npcs = (int) (tblFile.length() / 24);
-			inChan = inStream.getChannel();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return;
-		}
+		inStream = new FileInputStream(tblFile);
+		calculated_npcs = (int) (tblFile.length() / 24);
+		inChan = inStream.getChannel();
 
 		short[] flagDat;
 		short[] healthDat;
@@ -1382,10 +1418,10 @@ public class ExeData {
 	 *            <code>true</code> if black pixels should be transparent,
 	 *            <code>false</code> otherwise
 	 * @return filtered image
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws Exception
+	 *             if an error occurs.
 	 */
-	private static BufferedImage loadImage(File srcFile, boolean trans) throws IOException {
+	private static BufferedImage loadImage(File srcFile, boolean trans) throws Exception {
 		if (srcFile == null)
 			return null;
 		try (FileInputStream is = new FileInputStream(srcFile)) {
@@ -1405,9 +1441,9 @@ public class ExeData {
 			after = scaleOp.filter(img, after);
 			return after;
 		} catch (Exception e) {
-			e.printStackTrace();
+			BackendLogger.error("Failed to load image " + srcFile, e);
+			throw e;
 		}
-		return null;
 	}
 
 	/**
@@ -1417,9 +1453,9 @@ public class ExeData {
 	 *            source image
 	 * @return filtered image
 	 * @throws IOException
-	 *             if an I/O error occurs.
+	 *             if an error occurs.
 	 */
-	private static BufferedImage loadImage(File srcFile) throws IOException {
+	private static BufferedImage loadImage(File srcFile) throws Exception {
 		return loadImage(srcFile, true);
 	}
 
@@ -1493,37 +1529,39 @@ public class ExeData {
 	 *             if an I/O error occurs.
 	 */
 	private static void loadRsrc() throws IOException {
-		// setup I/O stuff
-		FileInputStream inStream;
-		inStream = new FileInputStream(base);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		byte[] buf = new byte[512];
-		while (inStream.available() > 0) {
-			int l = inStream.read(buf);
-			baos.write(buf, 0, l);
-		}
-		inStream.close();
-		ByteBuffer dataBuf = ByteBuffer.wrap(baos.toByteArray());
-		dataBuf.order(ByteOrder.LITTLE_ENDIAN);
-		notifyListeners(false, EVENT_GRAPHICS_RSRC, null, -1, -1);
 		String pixelName = getExeString(STRING_PIXEL);
-		// Start finding information
-		DirectoryEntry bitmap = findDirectory(dataBuf, rsrcInfo,
-				DirectoryEntry.getEntries(dataBuf, rsrcInfo, rsrcInfo.offset), "2/" + pixelName + "/**");
-		ByteArrayInputStream bais = new ByteArrayInputStream(
-				transformBitmap(pullData(dataBuf, rsrcInfo, bitmap.fileOffset)));
-		BufferedImage bi = ImageIO.read(bais);
+		byte[] bmp = rsrcData.getBitmapData(pixelName, 1041);
+		if (bmp == null)
+			throw new IOException("Embedded bitmap \"" + pixelName + "\" was not found!");
+		try {
+			bmp = transformBitmap(bmp);
+		} catch (IOException e) {
+			throw new IOException("transformBitmap threw exception: " + e.getMessage(), e);
+		}
+		BufferedImage bi = ImageIO.read(new ByteArrayInputStream(bmp));
 		imageMap.put((pixel = new File(pixelName)), bi);
+		notifyListeners(false, EVENT_GRAPHICS_RSRC, null, -1, -1);
 	}
 
-	private static byte[] transformBitmap(byte[] bytes) {
+	/**
+	 * Converts a .rsrc bitmap to something readable using
+	 * {@link ImageIO#read(java.io.InputStream)}.
+	 * 
+	 * @param bytes
+	 *            .rsrc bitmap data
+	 * @return readable bitmap data (to wrap in a {@link ByteArrayInputStream})
+	 * @throws IOException
+	 *             if the bitmap data cannot be converted.
+	 * @author 20kdc
+	 */
+	private static byte[] transformBitmap(byte[] bytes) throws IOException {
 		byte[] bt = new byte[bytes.length + 14];
 		// Input buffer, used to get some details
 		ByteBuffer bb1 = ByteBuffer.wrap(bytes);
 		bb1.order(ByteOrder.LITTLE_ENDIAN);
 		int hdrSize = bb1.getInt(0);
 		if (hdrSize < 40)
-			throw new RuntimeException("Expected BITMAPINFOHEADER, got BITMAPCOREHEADER");
+			throw new IOException("Expected BITMAPINFOHEADER, got BITMAPCOREHEADER");
 		int palSize = bb1.getInt(0x20) * 4;
 		int bpp = bb1.getShort(0x0E) & 0xFFFF;
 		if (palSize == 0)
@@ -1542,134 +1580,6 @@ public class ExeData {
 		bb.putInt(start);
 		bb.put(bytes);
 		return bt;
-	}
-
-	private static byte[] pullData(ByteBuffer bb, ResourceInfo ri, int fileOffset) {
-		int addr = bb.getInt(fileOffset) + ri.rvaOffset;
-		int size = bb.getInt(fileOffset + 4);
-		dumpHex("FINADR", addr);
-		bb.position(addr);
-		byte[] data = new byte[size];
-		bb.get(data);
-		bb.position(0);
-		return data;
-	}
-
-	private static DirectoryEntry findDirectory(ByteBuffer bb, ResourceInfo ri, DirectoryEntry[] entries, String s) {
-		int idx = s.lastIndexOf('/');
-		if (idx != -1) {
-			DirectoryEntry de = findDirectory(bb, ri, entries, s.substring(0, idx));
-			if (!de.directory)
-				return de;
-			entries = DirectoryEntry.getEntries(bb, ri, de.fileOffset);
-			s = s.substring(idx + 1);
-		}
-		for (DirectoryEntry de : entries) {
-			System.out.println(s + " : " + de);
-			if (s.equals("*"))
-				return de;
-			if (s.equals("**")) {
-				if (de.directory)
-					return findDirectory(bb, ri, DirectoryEntry.getEntries(bb, ri, de.fileOffset), "**");
-				return de;
-			}
-			if (de.name == null) {
-				if (Integer.toString(de.id).equals(s))
-					return de;
-			} else if (de.name.equals(s)) {
-				return de;
-			}
-		}
-		return null;
-	}
-
-	private static void dumpHex(String rvaofs, int rvaOffset) {
-		System.out.println(rvaofs + ": 0x" + Integer.toHexString(rvaOffset));
-	}
-
-	public static ResourceInfo getResources(ByteBuffer bb) {
-		int view = bb.getInt(0x3C);
-		view += 0x04; // enter IMAGE_FILE_HEADER
-		int sectionCount = bb.getShort(view + 2) & 0xFFFF;
-		int toSkipOH = bb.getShort(view + 0x10) & 0xFFFF;
-		view += 0x14; // enter IMAGE_OPTIONAL_HEADER
-		int resourcesRVA = bb.getInt(view + 0x70);
-		// Now we need to calculate offset & rvaOffset
-		view += toSkipOH; // enter section headers
-		for (int i = 0; i < sectionCount; i++) {
-			int vSize = bb.getInt(view + 8);
-			int rva = bb.getInt(view + 0x0C);
-			int fileAddr = bb.getInt(view + 0x14);
-			if ((resourcesRVA >= rva) && (resourcesRVA < (rva + vSize))) {
-				ResourceInfo ri = new ResourceInfo();
-				ri.rvaOffset = fileAddr - rva;
-				ri.offset = resourcesRVA + ri.rvaOffset;
-				return ri;
-			}
-			view += 0x28;
-		}
-		return null;
-	}
-
-	public static class ResourceInfo {
-		// offset is what to modify an rsrc offset by to turn it into a file offset.
-		// In other words, it's the file address of the resource section
-		// rvaOffset is what to modify an RVA by to turn it into a file offset.
-		public int offset, rvaOffset;
-	}
-
-	public static class DirectoryEntry {
-		// May be NULL - See ID in this case
-		public String name;
-		public int id;
-		// The position in the file of the target
-		public int fileOffset;
-		public boolean directory;
-
-		public static DirectoryEntry[] getEntries(ByteBuffer bb, ResourceInfo ri, int view) {
-			dumpHex("ENTER-FA", view);
-			int namedCount = bb.getShort(view + 0x0C) & 0xFFFF;
-			int idCount = bb.getShort(view + 0x0E) & 0xFFFF;
-			view += 0x10;
-			DirectoryEntry[] entries = new DirectoryEntry[namedCount + idCount];
-			for (int i = 0; i < entries.length; i++) {
-				entries[i] = new DirectoryEntry(bb, ri, view);
-				view += 8;
-			}
-			return entries;
-		}
-
-		@Override
-		public String toString() {
-			String ts = name;
-			if (ts == null)
-				ts = Integer.toString(id);
-			ts += " = " + Integer.toHexString(fileOffset) + " " + directory;
-			return ts;
-		}
-
-		// Parses a specific directory entry.
-		public DirectoryEntry(ByteBuffer bb, ResourceInfo ri, int view) {
-			id = bb.getInt(view);
-			if (id < 0) {
-				int strStart = ri.offset + (id ^ 0x80000000);
-				name = pullString(bb, strStart);
-			}
-			fileOffset = bb.getInt(view + 4);
-			if (fileOffset < 0) {
-				fileOffset ^= 0x80000000;
-				directory = true;
-			}
-			fileOffset += ri.offset;
-		}
-
-		public static String pullString(ByteBuffer bb, int strStart) {
-			int count = bb.getShort(strStart) & 0xFFFF;
-			String s = "";
-			for (int i = 0; i < count; i++)
-				s += (char) (bb.getShort(strStart + 2 + (i * 2)) & 0xFFFF);
-			return s;
-		}
 	}
 
 	// ".rsrc" segment code ends here
@@ -1732,8 +1642,8 @@ public class ExeData {
 			if (imageMap.containsKey(srcFile))
 				return;
 			imageMap.put(srcFile, loadImage(srcFile));
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			BackendLogger.error("Failed to add image " + srcFile, e);
 		}
 		notifyListeners(true, SUBEVENT_END, srcFile.getAbsolutePath(), -1, -1);
 	}
@@ -1777,8 +1687,7 @@ public class ExeData {
 			return null;
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getGraphics();
-		System.err.println("Key not found for getImageGraphics");
-		System.err.println(key);
+		BackendLogger.error("Key not found for getImageGraphics: " + key);
 		return null;
 	}
 
@@ -1807,8 +1716,7 @@ public class ExeData {
 			key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key);
-		System.err.println("Key not found for getImage");
-		System.err.println(key);
+		BackendLogger.error("Key not found for getImage: " + key);
 		return null;
 	}
 
@@ -1836,8 +1744,7 @@ public class ExeData {
 		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getHeight();
-		System.err.println("Key not found for getImageHeight");
-		System.err.println(key);
+		BackendLogger.error("Key not found for getImageHeight: " + key);
 		return -1;
 	}
 
@@ -1865,8 +1772,7 @@ public class ExeData {
 		key = ResUtils.newFile(key.getAbsolutePath());
 		if (imageMap.containsKey(key))
 			return imageMap.get(key).getWidth();
-		System.err.println("Key not found for getImageWidth");
-		System.err.println(key);
+		BackendLogger.error("Key not found for getImageWidth: " + key);
 		return -1;
 	}
 
@@ -1890,32 +1796,30 @@ public class ExeData {
 	 */
 	public static byte[] addPxa(File srcFile) {
 		srcFile = ResUtils.newFile(srcFile.getAbsolutePath());
-		FileChannel inChan = null;
+		FileInputStream inStream = null;
 		if (pxaMap.containsKey(srcFile))
 			return pxaMap.get(srcFile);
 		byte[] pxaArray = null;
 		boolean succ = false;
 		notifyListeners(true, SUBEVENT_PXA, srcFile.getAbsolutePath(), -1, -1);
 		try {
-			FileInputStream inStream = new FileInputStream(srcFile);
-			inChan = inStream.getChannel();
+			inStream = new FileInputStream(srcFile);
+			FileChannel inChan = inStream.getChannel();
 			ByteBuffer pxaBuf = ByteBuffer.allocate(256);// this is the max size. Indeed, the only size..
 			inChan.read(pxaBuf);
-			inChan.close();
 			inStream.close();
 			pxaBuf.flip();
 			pxaArray = pxaBuf.array();
 			pxaMap.put(srcFile, pxaArray);
 			succ = true;
 		} catch (Exception e) {
-			System.err.print("Failed to load PXA:\n" + srcFile);
-			e.printStackTrace();
+			BackendLogger.error("Failed to load PXA:\n" + srcFile, e);
 		} finally {
-			if (inChan != null)
+			if (inStream != null)
 				try {
-					inChan.close();
+					inStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					BackendLogger.warn("failed to close PXA input stream");
 				}
 			if (!succ && srcFile != null) {
 				byte[] dummyArray = new byte[256];
@@ -2054,12 +1958,26 @@ public class ExeData {
 	}
 
 	/**
+	 * Sets {@linkplain #startPointSup the starting point supplier}.
+	 * 
+	 * @param startPointSup
+	 *            start point supplier
+	 */
+	public static void setStartPointSup(Supplier<StartPoint> startPointSup) {
+		ExeData.startPointSup = startPointSup;
+	}
+
+	/**
 	 * Gets the game's starting point.
 	 * 
 	 * @return start point
 	 */
 	public static StartPoint getStartPoint() {
-		return startPoint;
+		if (startPoint != null)
+			return startPoint;
+		else if (startPointSup != null)
+			return startPointSup.get();
+		return null;
 	}
 
 	/**

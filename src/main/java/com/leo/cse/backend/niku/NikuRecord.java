@@ -11,6 +11,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
+import com.leo.cse.backend.BackendLogger;
 import com.leo.cse.backend.ByteUtils;
 
 /**
@@ -248,22 +249,22 @@ public class NikuRecord {
 		fis.close();
 		for (int i = 0; i < 4; i++) {
 			int key = Byte.toUnsignedInt(buf[i + 16]);
-			System.out.println("result " + i + ": key=" + key);
+			BackendLogger.trace("result " + i + ": key=" + key);
 			int j = i * 4;
 			buf[j] = (byte) (buf[j] - key);
-			System.out.println("buf[" + j + "]=" + buf[j]);
+			BackendLogger.trace("buf[" + j + "]=" + buf[j]);
 			buf[j + 1] = (byte) (buf[j + 1] - key);
-			System.out.println("buf[" + (j + 1) + "]=" + buf[j + 1]);
+			BackendLogger.trace("buf[" + (j + 1) + "]=" + buf[j + 1]);
 			buf[j + 2] = (byte) (buf[j + 2] - key);
-			System.out.println("buf[" + (j + 2) + "]=" + buf[j + 2]);
+			BackendLogger.trace("buf[" + (j + 2) + "]=" + buf[j + 2]);
 			buf[j + 3] = (byte) (buf[j + 3] - key / 2);
-			System.out.println("buf[" + (j + 3) + "]=" + buf[j + 3]);
+			BackendLogger.trace("buf[" + (j + 3) + "]=" + buf[j + 3]);
 			result[i] = ByteUtils.readInt(buf, j);
 		}
-		System.out.println("result[0]=" + result[0]);
-		System.out.println("result[1]=" + result[1]);
-		System.out.println("result[2]=" + result[2]);
-		System.out.println("result[3]=" + result[3]);
+		BackendLogger.trace("result[0]=" + result[0]);
+		BackendLogger.trace("result[1]=" + result[1]);
+		BackendLogger.trace("result[2]=" + result[2]);
+		BackendLogger.trace("result[3]=" + result[3]);
 		if (result[0] != result[1] || result[0] != result[2] || result[0] != result[3])
 			throw new IOException("290.rec file is corrupt");
 		value = result[0];

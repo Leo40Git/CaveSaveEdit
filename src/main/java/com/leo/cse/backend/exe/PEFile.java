@@ -8,26 +8,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+import com.leo.cse.backend.BackendLogger;
+
 /**
- * Generic PE EXE handling classes, used to patch games.
- * The hope is that having something this generic will reduce the chance of any
- * faults going unseen.
- * THE FULL LIST OF ASSUMPTIONS:
- * 1. Tools expect (but we don't) sections to be in virtual order (this is my
- * fault -- PEONS dev)
- * 2. Tools and us expect .text to be at FA 0x1000, and for .text/.rdata/.data
- * to be linearized.
- * If we can't ensure this, we fail for safety. (The value is adjustible
- * per-game, but cannot be eliminated)
- * 3. Old-Style Relocations and Line Numbers never happen. If we encounter them,
- * we fail for safety.
- * 4. The executable is assumed to not have relocation data. If it does, we
- * ignore it - it's assumed we already know and can handle it.
- * 5. The resource chunk starts at its section and continues to the end of the
- * chunk.
- * If this is not the case, then Xin probably started cannibalizing it and we
- * should just pretend it's not a resource section,
- * but we do NOT have to fail in this case so long as that is kept in mind.
+ * Generic PE EXE handling classes, used to patch games. The hope is that having
+ * something this generic will reduce the chance of any faults going unseen. THE
+ * FULL LIST OF ASSUMPTIONS: 1. Tools expect (but we don't) sections to be in
+ * virtual order (this is my fault -- PEONS dev) 2. Tools and us expect .text to
+ * be at FA 0x1000, and for .text/.rdata/.data to be linearized. If we can't
+ * ensure this, we fail for safety. (The value is adjustible per-game, but
+ * cannot be eliminated) 3. Old-Style Relocations and Line Numbers never happen.
+ * If we encounter them, we fail for safety. 4. The executable is assumed to not
+ * have relocation data. If it does, we ignore it - it's assumed we already know
+ * and can handle it. 5. The resource chunk starts at its section and continues
+ * to the end of the chunk. If this is not the case, then Xin probably started
+ * cannibalizing it and we should just pretend it's not a resource section, but
+ * we do NOT have to fail in this case so long as that is kept in mind.
  * 
  * @author 20kdc
  */
@@ -38,7 +34,7 @@ public class PEFile {
 	public static final int SECCHR_EXECUTE = 0x20000000;
 	public static final int SECCHR_READ = 0x40000000;
 	public static final int SECCHR_WRITE = 0x80000000;
-	
+
 	// NOTE: The section headers in this are not to be trusted.
 	// They get rewritten on write().
 	// Also note, this implicitly defines the expectedTex.
@@ -128,8 +124,8 @@ public class PEFile {
 				boolean ok = false;
 				if (s.metaLinearize) {
 					if (alignForward(s.virtualAddrRelative, fileAlignment) != s.virtualAddrRelative)
-						System.err.println(
-								"Warning: File alignment being broken for linearization. This isn't a critical error, but it's not a good thing.");
+						BackendLogger.warn(
+								"File alignment being broken for linearization. This isn't a critical error, but it's not a good thing.");
 					ok = checkAllocation(map, new AllocationSpan(s.virtualAddrRelative, s.rawData.length));
 					s.cachedFutureFileAddress = s.virtualAddrRelative;
 				}
@@ -323,8 +319,7 @@ public class PEFile {
 	}
 
 	/**
-	 * A section, loaded into memory.
-	 * Yes, this means temporary higher memory use,
+	 * A section, loaded into memory. Yes, this means temporary higher memory use,
 	 * but it's a 2MB EXE at max. and frankly this code has to be as readable as
 	 * possible.
 	 */
