@@ -36,14 +36,9 @@ public class PlusProfile extends NormalProfile {
 	public static final String FIELD_DIFFICULTY = "difficulty";
 
 	/**
-	 * Used normal slots.
+	 * Used slots. 0-2 are normal, 3-5 are Curly Story.
 	 */
-	public static final String FIELD_USED_SLOTS_NORMAL = "used_slots.normal";
-
-	/**
-	 * Used Curly Story slots.
-	 */
-	public static final String FIELD_USED_SLOTS_CURLY = "used_slots.curly";
+	public static final String FIELD_USED_SLOTS = "used_slots";
 
 	/**
 	 * Music volume. Goes from 1-10 (0 is the same as 1 and 10+ is earrape
@@ -192,8 +187,53 @@ public class PlusProfile extends NormalProfile {
 	protected void setupFieldsPlus() {
 		makeFieldLong(FIELD_MODIFY_DATE, 0x608);
 		makeFieldShort(FIELD_DIFFICULTY, 0x610);
-		makeFieldFlags(FIELD_USED_SLOTS_NORMAL, 3, 0x1F020);
-		makeFieldFlags(FIELD_USED_SLOTS_CURLY, 3, 0x1F021);
+		// normal: 0x1F020
+		// curly: 0x1F021
+		try {
+			addField(FIELD_USED_SLOTS, new ProfileField() {
+				@Override
+				public Class<?> getType() {
+					return Boolean.class;
+				}
+
+				@Override
+				public boolean acceptsValue(int index, Object value) {
+					if (index < 0 || index > 5)
+						return false;
+					if (value instanceof Boolean)
+						return true;
+					return false;
+				}
+				
+				private int[] getPointer(int index) {
+					int ptr = 0x1F020; // normal
+					if (index > 2) {
+						index -= 3;
+						ptr = 0x1F021; // curly
+					}
+					return new int[] { ptrCorrector.apply(ptr), index };
+				}
+
+				@Override
+				public Object getValue(int index) {
+					int[] ip = getPointer(index);
+					boolean[] f = new boolean[3];
+					ByteUtils.readFlags(data, ip[0], f);
+					return f[ip[1]];
+				}
+
+				@Override
+				public void setValue(int index, Object value) {
+					int[] ip = getPointer(index);
+					boolean[] f = new boolean[3];
+					ByteUtils.readFlags(data, ip[0], f);
+					f[ip[1]] = (Boolean) value;
+					ByteUtils.writeFlags(data, ip[0], f);
+				}
+			});
+		} catch (ProfileFieldException e) {
+			e.printStackTrace();
+		}
 		makeFieldLong(FIELD_MUSIC_VOLUME, 0x1F1040);
 		makeFieldLong(FIELD_SOUND_VOLUME, 0x1F1044);
 		makeFieldByte(FIELD_SOUNDTRACK_TYPE, 0x1F1049);
@@ -229,7 +269,6 @@ public class PlusProfile extends NormalProfile {
 					int srcSec = (int) args[0];
 					int dstSec = (int) args[1];
 					System.arraycopy(data, srcSec * SECTION_LENGTH, data, dstSec * SECTION_LENGTH, SECTION_LENGTH);
-					String field = FIELD_USED_SLOTS_NORMAL;
 					if (dstSec > 2) {
 						int oldSec = curSection;
 						curSection = dstSec;
@@ -239,11 +278,9 @@ public class PlusProfile extends NormalProfile {
 							BackendLogger.error("Failed to set field", e);
 						}
 						curSection = oldSec;
-						dstSec -= 3;
-						field = FIELD_USED_SLOTS_CURLY;
 					}
 					try {
-						setField(field, dstSec, true);
+						setField(FIELD_USED_SLOTS, dstSec, true);
 					} catch (ProfileFieldException e) {
 						BackendLogger.error("Failed to set field", e);
 					}
@@ -273,13 +310,8 @@ public class PlusProfile extends NormalProfile {
 					ByteUtils.writeString(newData, 0, header);
 					ByteUtils.writeString(newData, 0x218, flagH);
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
-					String field = FIELD_USED_SLOTS_NORMAL;
-					if (secToReplace > 2) {
-						secToReplace -= 3;
-						field = FIELD_USED_SLOTS_CURLY;
-					}
 					try {
-						setField(field, secToReplace, true);
+						setField(FIELD_USED_SLOTS, secToReplace, true);
 						callMethod(METHOD_PUSH_ACTIVE_FILE, fcr, newSection);
 						// set default values using start point
 						setDefaultValues();
@@ -311,13 +343,8 @@ public class PlusProfile extends NormalProfile {
 					int secToReplace = (int) args[0];
 					byte[] newData = new byte[SECTION_LENGTH];
 					System.arraycopy(newData, 0, data, secToReplace * SECTION_LENGTH, SECTION_LENGTH);
-					String field = FIELD_USED_SLOTS_NORMAL;
-					if (secToReplace > 2) {
-						secToReplace -= 3;
-						field = FIELD_USED_SLOTS_CURLY;
-					}
 					try {
-						setField(field, secToReplace, false);
+						setField(FIELD_USED_SLOTS, secToReplace, false);
 					} catch (ProfileFieldException e) {
 						BackendLogger.error("Failed to set field", e);
 					}
@@ -341,14 +368,9 @@ public class PlusProfile extends NormalProfile {
 				@Override
 				public Object call(FieldChangeRecorder fcr, Object... args) {
 					int secToChk = (int) args[0];
-					String field = FIELD_USED_SLOTS_NORMAL;
-					if (secToChk > 2) {
-						secToChk -= 3;
-						field = FIELD_USED_SLOTS_CURLY;
-					}
 					boolean exists = false;
 					try {
-						exists = (boolean) getField(field, secToChk);
+						exists = (boolean) getField(FIELD_USED_SLOTS, secToChk);
 					} catch (ProfileFieldException e) {
 						BackendLogger.error("Failed to get field value", e);
 					}
